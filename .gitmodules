@@ -1,0 +1,3 @@
+[submodule "extlib/cppmath"]
+	path = extlib/cppmath
+	url = https://github.com/mall0c/cppmath.git
