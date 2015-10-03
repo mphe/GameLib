@@ -1,5 +1,5 @@
-#include "tile/ObjectSet.hpp"
-#include "tile/Tile.hpp"
+#include "engine/tile/ObjectSet.hpp"
+#include "engine/tile/Tile.hpp"
 #include <cassert>
 
 using namespace engine;

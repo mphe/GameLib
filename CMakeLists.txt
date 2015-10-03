@@ -1,11 +1,23 @@
 cmake_minimum_required(VERSION 2.6)
 project(TileEngine)
 
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNLOGDEBUG")
+option(DEBUG_LOG_RELEASE "Show debug log entries in release build" OFF)
+option(DEBUG_LOG_DEBUG "Show debug log entries in debug build" ON)
+option(BUILD_TESTS "Build tests" ON)
 
-enable_testing()
+if(NOT DEBUG_LOG_DEBUG)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE} -DNLOGDEBUG")
+endif()
+
+if(NOT DEBUG_LOG_RELEASE)
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNLOGDEBUG")
+endif()
+
 
 add_subdirectory(extlib)
-add_subdirectory(src)
-add_subdirectory(test)
+add_subdirectory(src/engine)
 
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif()
