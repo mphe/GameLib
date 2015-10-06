@@ -76,7 +76,7 @@ namespace engine
 
             // _evmgr.update();
 
-            _window.clear();
+            _window.clear(_bgcolor);
             for (auto& i : _states)
             {
                 i->render(_window);
@@ -125,7 +125,7 @@ namespace engine
         auto size = _window.getSize();
         size.x = node.get("width", size.x).asUInt();
         size.y = node.get("height", size.y).asUInt();
-        LOG_DEBUG(LOG_DUMP(size.x), LOG_DUMP(size.y));
+        LOG_DEBUG(LOG_DUMP(size.x), ", ", LOG_DUMP(size.y));
         _window.setSize(size);
 
         if (node.isMember("maxfps"))
@@ -138,6 +138,14 @@ namespace engine
         {
             LOG_DEBUG("vsync: ", node["vsync"].asBool());
             _window.setVerticalSyncEnabled(node["vsync"].asBool());
+        }
+
+        if (node.isMember("bg"))
+        {
+            const auto& bg = node["bg"];
+            _bgcolor.r = bg.get("r", _bgcolor.r).asUInt();
+            _bgcolor.g = bg.get("g", _bgcolor.g).asUInt();
+            _bgcolor.b = bg.get("b", _bgcolor.b).asUInt();
         }
 
         return true;

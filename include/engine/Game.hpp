@@ -42,6 +42,7 @@ namespace engine
             // void unregEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me = 0);
 
         private:
+            sf::Color _bgcolor;
             sf::RenderWindow _window;
             std::vector<GameStatePtr> _states;
             bool _active;
@@ -56,7 +57,12 @@ namespace engine
  *     "width": <window width>,
  *     "height": <window height>,
  *     "maxfps": <fps limit, 0 for no limit>,
- *     "vsync": <true|false>
+ *     "vsync": <true|false>,
+ *     "bg": {
+ *         "r": <red>,
+ *         "g": <green>,
+ *         "b": <blue>
+ *     }
  * }
  */
 
