@@ -4,7 +4,6 @@ set(ENGINE_SOURCES
     Game.cpp
     event/EventManager.cpp
     tile/TileSet.cpp
-    tile/ObjectSet.cpp
     tile/Tile.cpp
     tile/FloatingTile.cpp
     tile/tilemap/StaticTileMap.cpp

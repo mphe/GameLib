@@ -16,4 +16,3 @@ include_directories(
 
 gen_test(log log.cpp)
 gen_test(factory factory.cpp)
-gen_test(objectset objectset.cpp)

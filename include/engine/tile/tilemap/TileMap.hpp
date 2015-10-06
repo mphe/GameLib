@@ -13,7 +13,6 @@ namespace sf
 namespace engine
 {
     class Camera;
-    class ObjectSet;
     class TileSet;
 
     class TileMap : public Json::JsonObject
@@ -29,7 +28,6 @@ namespace engine
 
             virtual TileID getTileID(int x, int y) const = 0;
             // virtual const Tile* getTile(int x, int y) const = 0;
-            // virtual ObjectSet& getObjectSet() const;
 
         public:
             inline int getTilesRendered() const { return _tilesRendered; }
