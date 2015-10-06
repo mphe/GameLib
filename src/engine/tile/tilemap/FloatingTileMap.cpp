@@ -3,12 +3,10 @@
 #include "engine/tile/TileSet.hpp"
 #include "engine/utils/log.hpp"
 #include <SFML/Graphics.hpp>
-#include <iostream>
 
 namespace engine
 {
-    FloatingTileMap::FloatingTileMap(Game* game, const TileSet& tileset) :
-        _game(game),
+    FloatingTileMap::FloatingTileMap(const TileSet& tileset) :
         _tileset(tileset)
     { }
 
@@ -18,17 +16,17 @@ namespace engine
 
         if (node.isMember("tiles"))
         {
-            ///////////////////////////////////////
-            // TODO: outsource this to a factory //
-            ///////////////////////////////////////
-
             auto& tiles = node["tiles"];
-            for (auto i = tiles.begin(); i != tiles.end(); ++i)
+            for (Json::ArrayIndex i = 0; i < tiles.size(); ++i)
             {
-                // if (i->name == "player")
-                //     _tiles.push_back(FloatingTilePtr(new gravity::Player(_game, _tileset, i->value)));
-                // else
-                //     LOG_WARN("Tile \"", i->name.GetString(), "\" is not implemented -> Skipping");
+                FloatingTilePtr ptr(new FloatingTile(_tileset));
+                if (ptr->loadFromJson(tiles[i]))
+                {
+                    add(std::move(ptr));
+                    LOG_DEBUG("FloatingTile ", i, " loaded");
+                }
+                else
+                    LOG_ERROR("Failed to load FloatingTile ", i);
             }
         }
         return true;
@@ -37,7 +35,7 @@ namespace engine
     void FloatingTileMap::destroy()
     {
         _tiles.clear();
-        LOG_WARN("FloatingTileMap destroyed");
+        LOG_DEBUG_WARN("FloatingTileMap destroyed");
     }
 
 
@@ -60,8 +58,8 @@ namespace engine
     }
 
 
-    TileID FloatingTileMap::getTileID(int x, int y) const
+    void FloatingTileMap::add(FloatingTilePtr tile)
     {
-        throw "Not implemented";
+        _tiles.push_back(std::move(tile));
     }
 }

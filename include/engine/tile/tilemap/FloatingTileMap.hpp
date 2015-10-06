@@ -4,31 +4,30 @@
 #include <memory>
 #include <vector>
 #include "TileMap.hpp"
+#include "engine/tile/FloatingTile.hpp"
 
 namespace engine
 {
     class Game;
     class TileSet;
-    class FloatingTile;
 
     typedef std::unique_ptr<FloatingTile> FloatingTilePtr;
 
     class FloatingTileMap : public TileMap
     {
         public:
-            FloatingTileMap(Game* game, const TileSet& tileset);
+            FloatingTileMap(const TileSet& tileset);
+            virtual ~FloatingTileMap() {}
 
-            using TileMap::loadFromJson;
-            bool loadFromJson(const Json::Value& node);
-            void destroy();
+            virtual bool loadFromJson(const Json::Value& node);
+            virtual void destroy();
 
-            void update(float fps);
-            void render(sf::RenderTarget& target, const Camera& cam) const;
+            virtual void update(float fps);
+            virtual void render(sf::RenderTarget& target, const Camera& cam) const;
 
-            TileID getTileID(int x, int y) const;
+            virtual void add(FloatingTilePtr tile);
 
-        private:
-            Game* _game;
+        protected:
             const TileSet& _tileset;
             std::vector<FloatingTilePtr> _tiles;
     };
@@ -38,16 +37,16 @@ namespace engine
  * Config file structure:
  *
  * {
- *     "tiles" : {
- *         <"player" | "cube"> : {
+ *     "tiles" : [
+ *         {
+ *             "tileid" : <tileid>
  *             "x" : <x>,
  *             "y" : <y>
  *             "xt" : <tile x>,
  *             "yt" : <tile y>,
- *             ...
  *         },
  *         ...
- *     }
+ *     ]
  * }
 */
 
