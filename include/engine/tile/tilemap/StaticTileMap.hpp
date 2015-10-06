@@ -22,6 +22,7 @@ namespace engine
     {
         public:
             StaticTileMap(const TileSet& tileset);
+            virtual ~StaticTileMap() {}
 
             void update(float fps);
             void render(sf::RenderTarget& surface, const Camera& cam) const;
