@@ -13,12 +13,14 @@ namespace sf
 namespace engine
 {
     class Camera;
-    class TileSet;
+    class Layer;
 
     class TileMap : public Json::JsonObject
     {
+        friend class Layer;
+
         public:
-            TileMap() : _tilesRendered(0) {}
+            TileMap();
             virtual ~TileMap() {}
 
             virtual void destroy() = 0;
@@ -26,14 +28,12 @@ namespace engine
             virtual void update(float fps) = 0;
             virtual void render(sf::RenderTarget& target, const Camera& cam) const = 0;
 
-            virtual TileID getTileID(int x, int y) const = 0;
-            // virtual const Tile* getTile(int x, int y) const = 0;
-
-        public:
-            inline int getTilesRendered() const { return _tilesRendered; }
+            int getTilesRendered() const;
+            Layer* getLayer() const;
 
         protected:
-            mutable int _tilesRendered;
+            mutable int _tilesRendered; // mutable to be able to change it inside a const render function
+            Layer* _layer;
     };
 }
 

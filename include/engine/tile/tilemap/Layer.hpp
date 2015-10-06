@@ -14,6 +14,7 @@ namespace engine
 {
     class TileMap;
     class Camera;
+    class Scene;
 
     typedef std::unique_ptr<TileMap> TileMapPtr;
 
@@ -30,7 +31,11 @@ namespace engine
 
     class Layer
     {
+        friend class Scene;
+
         public:
+            Layer() : _scene(0) {}
+
             void destroy();
 
             void update(float fps);
@@ -40,9 +45,11 @@ namespace engine
             TileMap* addMap(const MapData& md);
 
             TileMap* getMap(size_t index) const;
+            Scene* getScene() const;
             size_t size() const;
             
         private:
+            Scene* _scene;
             std::vector<MapData> _maps;
     };
 }

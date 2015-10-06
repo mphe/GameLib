@@ -6,6 +6,7 @@ set(ENGINE_SOURCES
     tile/TileSet.cpp
     tile/Tile.cpp
     tile/FloatingTile.cpp
+    tile/tilemap/TileMap.cpp
     tile/tilemap/StaticTileMap.cpp
     tile/tilemap/FloatingTileMap.cpp
     tile/tilemap/Layer.cpp

@@ -33,6 +33,7 @@ namespace engine
     Layer& Scene::addLayer(LayerPtr layer)
     {
         _layers.push_back(layer ? std::move(layer) : LayerPtr(new Layer()));
+        _layers.back()->_scene = this;
         return *_layers.back();
     }
 

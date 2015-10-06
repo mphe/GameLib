@@ -10,7 +10,7 @@ namespace engine
     void Layer::destroy()
     {
         _maps.clear();
-        LOG_WARN("Layer destroyed");
+        LOG_DEBUG_WARN("Layer destroyed");
     }
 
 
@@ -26,7 +26,8 @@ namespace engine
     {
         assert("Map pointer is a null pointer" && md.map);
         _maps.push_back(md);
-        LOG("Added map to layer");
+        _maps.back().map->_layer = this;
+        LOG_DEBUG("Added map to layer");
         return _maps.back().map.get();
     }
 
@@ -50,6 +51,23 @@ namespace engine
             i.map->render(target, paracam);
         }
         target.setView(tmp);
+    }
+
+
+    TileMap* Layer::getMap(size_t index) const
+    {
+        assert("Map index out of bounds" && index < _maps.size());
+        return _maps[index].map.get();
+    }
+
+    Scene* Layer::getScene() const
+    {
+        return _scene;
+    }
+
+    size_t Layer::size() const
+    {
+        return _maps.size();
     }
 
 
