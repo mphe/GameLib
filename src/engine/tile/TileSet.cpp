@@ -65,7 +65,7 @@ namespace engine
             }
 
             _tiles[i].id = i;
-            td.index = t.get("index", 0).asInt();
+            td.index = t.get("index", InvalidTile).asInt();
             td.offset = t.get("offset", 0).asFloat();
             td.length = t.get("anilen", 1).asInt();
             td.speed = t.get("anispeed", 0).asFloat();
