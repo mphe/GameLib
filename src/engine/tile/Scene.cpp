@@ -12,7 +12,7 @@ namespace engine
     {
         _layers.clear();
         _cams.clear();
-        LOG_WARN("Scene destroyed");
+        LOG_DEBUG_WARN("Scene destroyed");
     }
 
 
@@ -20,7 +20,7 @@ namespace engine
     {
         assert("Camera pointer is a null pointer" && cam);
         _cams.push_back(std::move(cam));
-        LOG("Added camera to scene");
+        LOG_DEBUG("Added camera to scene");
         return *_cams.back();
     }
 
@@ -32,10 +32,7 @@ namespace engine
 
     Layer& Scene::addLayer(LayerPtr layer)
     {
-        if (!layer)
-            _layers.push_back(LayerPtr(new Layer()));
-        else
-            _layers.push_back(std::move(layer));
+        _layers.push_back(layer ? std::move(layer) : LayerPtr(new Layer()));
         return *_layers.back();
     }
 
