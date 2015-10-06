@@ -23,7 +23,6 @@ namespace engine
         public:
             TileSet() {};
 
-            using JsonObject::loadFromJson;
             bool loadFromJson(const Json::Value& node);
             void destroy();
 
@@ -35,6 +34,8 @@ namespace engine
 
             const TileData& getTile(TileID tileid) const;
             const TileData& getTile(const std::string& name) const;
+
+            TileID getTileID(const std::string& name) const;
 
             bool hasTile(TileID id) const;
             bool hasTile(const std::string& name) const;

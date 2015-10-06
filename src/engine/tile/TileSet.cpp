@@ -41,7 +41,6 @@ namespace engine
             if (t.isMember("name"))
             {
                 _aliases[t["name"].asString()] = &_tiles[i];
-                LOG_DEBUG("alias: ", t["name"].asString());
             }
 
             if (t.isMember("flags"))
@@ -70,10 +69,6 @@ namespace engine
             td.offset = t.get("offset", 0).asFloat();
             td.length = t.get("anilen", 1).asInt();
             td.speed = t.get("anispeed", 0).asFloat();
-            LOG_DEBUG(LOG_DUMP(td.index));
-            LOG_DEBUG(LOG_DUMP(td.offset));
-            LOG_DEBUG(LOG_DUMP(td.length));
-            LOG_DEBUG(LOG_DUMP(td.speed));
         }
 
         LOG("Tileset with ", _tiles.size(), " tiles loaded");
@@ -136,6 +131,13 @@ namespace engine
     {
         assert("Alias does not exist" && _aliases.count(name) > 0); 
         return *_aliases.at(name);
+    }
+
+
+    TileID TileSet::getTileID(const std::string& name) const
+    {
+        auto it = _aliases.find(name);
+        return it == _aliases.end() ? InvalidTile : it->second->id;
     }
 
 
