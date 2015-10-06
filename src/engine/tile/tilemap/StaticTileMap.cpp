@@ -71,7 +71,7 @@ namespace engine
         _tiles.reserve(_tileset.size());
         for (size_t i = 0; i < _tileset.size(); ++i)
         {
-            _tiles.push_back(_tileset.getTile(i));
+            _tiles.push_back(Tile(_tileset, i));
         }
 
         LOG("StaticTileMap loaded");

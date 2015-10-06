@@ -7,11 +7,13 @@
 
 namespace engine
 {
+    class TileSet;
+
     class Tile : public Json::JsonObject
     {
         public:
-            Tile() {}
-            Tile(const TileData& data) : _tiledata(data) {}
+            Tile(const TileSet& tileset, TileID id = InvalidTile);
+            // Tile(const TileData& data) : _tiledata(data) {}
             virtual ~Tile() {};
 
             virtual void update(float fps);
@@ -19,6 +21,11 @@ namespace engine
             const TileData& getTileData() const;
 
         protected:
+            void _change(TileID id);
+            sf::IntRect _getTexRect() const;
+
+        protected:
+            const TileSet& _tileset;
             TileData _tiledata;
     };
 }

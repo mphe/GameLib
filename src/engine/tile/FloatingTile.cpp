@@ -1,18 +1,17 @@
 #include "engine/tile/FloatingTile.hpp"
 #include "engine/tile/TileSet.hpp"
+#include "engine/utils/log.hpp"
 
 namespace engine
 {
-    FloatingTile::FloatingTile(const TileSet& tileset) :
-        _tileset(tileset)
-    {
-        _sprite = _tileset.getSprite(InvalidTile);
-    }
+    FloatingTile::FloatingTile(const TileSet& tileset, float x, float y) :
+        FloatingTile(tileset, InvalidTile, x, y)
+    { }
 
     FloatingTile::FloatingTile(const TileSet& tileset, TileID id, float x, float y) :
-        _tileset(tileset)
+        Tile(tileset)
     {
-        _sprite = _tileset.getSprite(InvalidTile);
+        _sprite = _tileset.getSprite(id, 0);
         _change(id);
         _sprite.setPosition(x, y);
     }
@@ -20,13 +19,19 @@ namespace engine
 
     bool FloatingTile::loadFromJson(const Json::Value& node)
     {
+        LOG_DEBUG("Loading FloatingTile from Json");
         float x = node.get("xt", 0).asInt() * _tileset.getTileSize().x,
               y = node.get("yt", 0).asInt() * _tileset.getTileSize().y;
         x += node.get("x", 0).asFloat();
         y += node.get("y", 0).asFloat();
 
-        _change(node.get("tileid", InvalidTile).asInt());
+        LOG_DEBUG(LOG_DUMP(x), ", ", LOG_DUMP(y));
+
+        TileID id = node.isMember("tileid") ? _tileset.getTileID(node["tileid"].asString()) : InvalidTile;
+        _change(id);
         _sprite.setPosition(x, y);
+
+        LOG_DEBUG(LOG_DUMP(_tiledata.id));
 
         return true;
     }
@@ -45,12 +50,7 @@ namespace engine
 
     void FloatingTile::_change(TileID id)
     {
-        _tiledata = _tileset.getTile(id);
+        Tile::_change(id);
         _sprite.setTextureRect(_getTexRect());
-    }
-
-    sf::IntRect FloatingTile::_getTexRect() const
-    {
-        return _tileset.getTexRect(_tiledata.id, _tiledata.texdata.offset);
     }
 }

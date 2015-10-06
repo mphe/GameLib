@@ -12,7 +12,7 @@ namespace engine
     class FloatingTile : public Tile
     {
         public:
-            FloatingTile(const TileSet& tileset);
+            FloatingTile(const TileSet& tileset, float x = 0, float y = 0);
             FloatingTile(const TileSet& tileset, TileID id, float x, float y);
             virtual ~FloatingTile() {};
 
@@ -21,11 +21,9 @@ namespace engine
             virtual void render(sf::RenderTarget& target) const;
 
         protected:
-            void _change(TileID id);
-            sf::IntRect _getTexRect() const;
+            virtual void _change(TileID id);
 
         protected:
-            const TileSet& _tileset;
             sf::Sprite _sprite;
     };
 }
