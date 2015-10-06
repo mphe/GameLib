@@ -14,5 +14,8 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/extlib/jsoncpp/include
 )
 
-gen_test(log log.cpp)
-gen_test(factory factory.cpp)
+gen_test(factorytest factory.cpp)
+
+add_executable(logtest log.cpp)
+add_test(NAME logtest COMMAND logtest)
+set_property(TARGET logtest PROPERTY CXX_STANDARD 11)
