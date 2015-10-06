@@ -10,9 +10,9 @@
 namespace engine
 {
     StaticTileMap::StaticTileMap(const TileSet& tileset) :
-            _tileset(tileset),
-            _size(0, 0),
-            _repeat(noRepeat, noRepeat)
+        _tileset(tileset),
+        _size(0, 0),
+        _repeat(noRepeat, noRepeat)
     { }
 
 
