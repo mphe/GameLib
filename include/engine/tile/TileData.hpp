@@ -3,8 +3,9 @@
 
 namespace engine
 {
+    // TODO: Merge into Tile?
+
     typedef int TileID;
-    typedef int TileType;
     constexpr TileID InvalidTile = -1;
 
     struct TexData
@@ -20,12 +21,12 @@ namespace engine
         public:
             TileData() :
                 id(InvalidTile),
-                type(InvalidTile)
+                flags(0)
             { }
 
         public:
             TileID id;
-            TileType type;
+            int flags;
             TexData texdata;
             //collision mask
     };

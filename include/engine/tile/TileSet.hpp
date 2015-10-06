@@ -66,6 +66,7 @@ namespace engine
  *              "anilen" : <animation length>,
  *              "anispeed" : <animation speed in frames per second>,
  *              "offset" : <initial frame index>,
+ *              "flags" : <bit flags>
  *          },
  *          ...
  *      ]

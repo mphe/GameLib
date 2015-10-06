@@ -43,12 +43,33 @@ namespace engine
                 _aliases[t["name"].asString()] = &_tiles[i];
                 LOG_DEBUG("alias: ", t["name"].asString());
             }
+
+            if (t.isMember("flags"))
+            {
+                const auto& flags = t["flags"];
+                const auto* flagnames = node.isMember("flags") ? &node["flags"] : 0;
+                for (Json::ArrayIndex i = 0; i < flags.size(); ++i)
+                {
+                    if (flags[i].isString())
+                    {
+                        const auto& f = flags[i].asString();
+                        if (flagnames && flagnames->isMember(f))
+                            _tiles[i].flags |= (*flagnames)[f].asInt();
+                        else
+                            LOG_ERROR("Unknown flag ", f);
+                    }
+                    else
+                    {
+                        _tiles[i].flags |= flags[i].asInt();
+                    }
+                }
+            }
+
             _tiles[i].id = i;
             td.index = t.get("index", 0).asInt();
             td.offset = t.get("offset", 0).asFloat();
             td.length = t.get("anilen", 1).asInt();
             td.speed = t.get("anispeed", 0).asFloat();
-
             LOG_DEBUG(LOG_DUMP(td.index));
             LOG_DEBUG(LOG_DUMP(td.offset));
             LOG_DEBUG(LOG_DUMP(td.length));
