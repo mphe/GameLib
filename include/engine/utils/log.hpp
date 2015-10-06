@@ -3,29 +3,42 @@
 
 #include <iostream>
 
-namespace logutils
-{
+#define LOG_NORMAL_PREFIX ""
+#define LOG_WARNING_PREFIX "WARNING: "
+#define LOG_ERROR_PREFIX "ERROR: "
+#define LOG_DEBUG_PREFIX "DEBUG: "
+
 // Use like this:
 // int x = 5;
 // LOG("Some log entry");
 // LOG("some variable: ", x);
 // LOG_WARN("Something is wrong: ", x, "!");
-#define LOG logutils::logfunc<logutils::normal, std::cout, true>
-#define LOG_WARN logutils::logfunc<logutils::warning, std::cout, true>
-#define LOG_ERROR logutils::logfunc<logutils::error, std::cerr, true>
+#define LOG(...)        logutils::logfunc_join<std::cout, true>(LOG_NORMAL_PREFIX, ##__VA_ARGS__)
+#define LOG_WARN(...)   logutils::logfunc_join<std::cout, true>(LOG_WARNING_PREFIX, ##__VA_ARGS__)
+#define LOG_ERROR(...)  logutils::logfunc_join<std::cerr, true>(LOG_ERROR_PREFIX, ##__VA_ARGS__)
 
 // Same as above but without appending a new line character at the end
-#define LOG_RAW logutils::logfunc<logutils::normal, std::cout, false>
-#define LOG_WARN_RAW  logutils::logfunc<logutils::warning, std::cout, false>
-#define LOG_ERROR_RAW  logutils::logfunc<logutils::error, std::cerr, false>
+#define LOG_RAW(...)        logutils::logfunc_join<std::cout, false>(LOG_NORMAL_PREFIX, ##__VA_ARGS__)
+#define LOG_WARN_RAW(...)   logutils::logfunc_join<std::cout, false>(LOG_WARNING_PREFIX, ##__VA_ARGS__)
+#define LOG_ERROR_RAW(...)  logutils::logfunc_join<std::cerr, false>(LOG_ERROR_PREFIX, ##__VA_ARGS__)
 
 // Same as above but will only be displayed when NLOGDEBUG is NOT defined
 #ifndef NLOGDEBUG
-#   define LOG_DEBUG logutils::logfunc<logutils::debug, std::cout, true>
-#   define LOG_DEBUG_RAW logutils::logfunc<logutils::debug, std::cout, false>
+#   define LOG_DEBUG(...)       LOG(LOG_DEBUG_PREFIX, ##__VA_ARGS__)
+#   define LOG_DEBUG_WARN(...)  LOG_WARN(LOG_DEBUG_PREFIX, ##__VA_ARGS__)
+#   define LOG_DEBUG_ERROR(...) LOG_ERROR(LOG_DEBUG_PREFIX, ##__VA_ARGS__)
+
+#   define LOG_DEBUG_RAW(...)       LOG_RAW(LOG_DEBUG_PREFIX, ##__VA_ARGS__)
+#   define LOG_DEBUG_WARN_RAW(...)  LOG_WARN_RAW(LOG_DEBUG_PREFIX, ##__VA_ARGS__)
+#   define LOG_DEBUG_ERROR_RAW(...) LOG_ERROR_RAW(LOG_DEBUG_PREFIX, ##__VA_ARGS__)
 #else // No, no, Mr. Debug no here.
 #   define LOG_DEBUG(...)
+#   define LOG_DEBUG_WARN(...)
+#   define LOG_DEBUG_ERROR(...)
+
 #   define LOG_DEBUG_RAW(...)
+#   define LOG_DEBUG_WARN_RAW(...)
+#   define LOG_DEBUG_ERROR_RAW(...)
 #endif
 
 // Use like this:
@@ -34,14 +47,8 @@ namespace logutils
 #define LOG_DUMP(var) #var, ": ", (var)
 
 
-    enum Severity
-    {
-        normal,
-        debug,
-        warning,
-        error
-    };
-
+namespace logutils
+{
     template<std::ostream& stream, bool nl>
     void logfunc_join()
     {
@@ -56,24 +63,6 @@ namespace logutils
     {
        stream<<arg;
        logfunc_join<stream, nl>(rest...);
-    }
-
-    template<Severity type, std::ostream& stream, bool nl, class... Args>
-    void logfunc(const Args&... args)
-    {
-        switch (type)
-        {
-            case debug:
-                stream<<"DEBUG: ";
-                break;
-            case warning:
-                stream<<"WARNING: ";
-                break;
-            case error:
-                stream<<"ERROR: ";
-                break;
-        }
-        logfunc_join<stream, nl>(args...);
     }
 }
 
