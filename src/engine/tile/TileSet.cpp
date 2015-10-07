@@ -1,5 +1,6 @@
 #include "engine/tile/TileSet.hpp"
 #include "engine/utils/log.hpp"
+#include "engine/utils/bitflags.hpp"
 #include <cassert>
 
 namespace engine
@@ -47,11 +48,11 @@ namespace engine
             {
                 const auto& flags = t["flags"];
                 const auto* flagnames = node.isMember("flags") ? &node["flags"] : 0;
-                for (Json::ArrayIndex i = 0; i < flags.size(); ++i)
+                for (Json::ArrayIndex fi = 0; fi < flags.size(); ++fi)
                 {
-                    if (flags[i].isString())
+                    if (flags[fi].isString())
                     {
-                        const auto& f = flags[i].asString();
+                        const auto& f = flags[fi].asString();
                         if (flagnames && flagnames->isMember(f))
                             _tiles[i].flags |= (*flagnames)[f].asInt();
                         else
@@ -59,7 +60,7 @@ namespace engine
                     }
                     else
                     {
-                        _tiles[i].flags |= flags[i].asInt();
+                        bitflag::addflag(_tiles[i].flags, flags[fi].asInt());
                     }
                 }
             }
