@@ -32,7 +32,13 @@ namespace engine
 
             void setRepeatSize(int w, int h);
 
+            const TileSet& getTileSet() const;
             TileID getTileID(int x, int y) const;
+            bool hasFlags(int x, int y, int flags) const;
+
+            // Return NULL if there's no tile
+            Tile* getTile(int x, int y);
+            const Tile* getTile(int x, int y) const;
 
         private:
             TileID _get(int tilex, int tiley) const;

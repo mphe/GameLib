@@ -2,10 +2,11 @@
 #include <SFML/Graphics.hpp>
 #include <cassert>
 #include "engine/utils/SpriteBatch.hpp"
-#include "math/math.hpp"
 #include "engine/utils/log.hpp"
+#include "engine/utils/bitflags.hpp"
 #include "engine/tile/TileSet.hpp"
 #include "engine/Camera.hpp"
+#include "math/math.hpp"
 
 namespace engine
 {
@@ -89,10 +90,36 @@ namespace engine
     }
 
 
+
+    const TileSet& StaticTileMap::getTileSet() const
+    {
+        return _tileset;
+    }
+
     TileID StaticTileMap::getTileID(int x, int y) const
     {
-        return _get(x / _tileset.getTileSize().x, _tileset.getTileSize().y);
+        return _get(x / _tileset.getTileSize().x, y / _tileset.getTileSize().y);
     }
+
+    const Tile* StaticTileMap::getTile(int x, int y) const
+    {
+        TileID id = getTileID(x, y);
+        return id == InvalidTile ? NULL : &_tiles[id];
+    }
+
+    Tile* StaticTileMap::getTile(int x, int y)
+    {
+        TileID id = getTileID(x, y);
+        return id == InvalidTile ? NULL : &_tiles[id];
+    }
+
+
+    bool StaticTileMap::hasFlags(int x, int y, int flags) const
+    {
+        const Tile* t = getTile(x, y);
+        return t ? bitflag::hasflag(t->getTileData().flags, flags) : false;
+    }
+
 
     void StaticTileMap::setRepeatSize(int w, int h)
     {
@@ -172,6 +199,7 @@ namespace engine
     }
 
 
+    // Return the tile at x/y (tile coordinates)
     TileID StaticTileMap::_get(int x, int y) const
     {
         // Applies the repeat-rules to the given coordinate
