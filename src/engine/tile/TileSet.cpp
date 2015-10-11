@@ -98,6 +98,8 @@ namespace engine
 
     sf::IntRect TileSet::getTexRect(TileID tileid, int offset) const
     {
+        if (tileid == InvalidTile)
+            return getTexRect(InvalidTile);
         return getTexRect(_tiles[tileid].texdata.index + offset);
     }
 

@@ -21,7 +21,10 @@ namespace engine
 
     void Tile::_change(TileID id)
     {
-        _tiledata = _tileset.getTile(id);
+        if (id == InvalidTile)
+            _tiledata = TileData();
+        else
+            _tiledata = _tileset.getTile(id);
     }
 
     sf::IntRect Tile::_getTexRect() const
