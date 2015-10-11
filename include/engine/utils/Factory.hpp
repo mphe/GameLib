@@ -12,31 +12,31 @@ class Factory
 
     public:
         template <class Derive>
-            static Base* defaultCreator(Args... args)
-            {
-                return new Derive(args...);
-            }
+        static Base* defaultCreator(Args... args)
+        {
+            return new Derive(args...);
+        }
 
     public:
         // TODO: consider using rvalue references and std::forward
-        Base* create(ID id, const Args&... args) const
+        Base* create(const ID& id, Args&... args) const
         {
             assert(_makers.find(id) != _makers.end());
             return _makers.find(id)->second(args...);
         }
 
-        void add(ID id, CreatorFunction callback)
+        void add(const ID& id, CreatorFunction callback)
         {
             _makers[id] = callback;
         }
 
         template <class Derive>
-            void add(ID id)
-            {
-                add(id, defaultCreator<Derive>);
-            }
+        void add(const ID& id)
+        {
+            add(id, defaultCreator<Derive>);
+        }
 
-        void del(ID id)
+        void del(const ID& id)
         {
             _makers.erase(id);
         }
