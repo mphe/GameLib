@@ -4,58 +4,55 @@
 #include <cassert>
 #include <map>
 
-namespace factory
+template <class Base, class ID, class... Args>
+class Factory
 {
-    template <class Base, class ID, class... Args>
-    class Factory
-    {
-        public:
-            typedef Base*(*CreatorFunction)(Args...);
+    public:
+        typedef Base*(*CreatorFunction)(Args...);
 
-        public:
-            template <class Derive>
+    public:
+        template <class Derive>
             static Base* defaultCreator(Args... args)
             {
                 return new Derive(args...);
             }
 
-        public:
-            // TODO: consider using rvalue references and std::forward
-            Base* create(ID id, const Args&... args) const
-            {
-                assert(_makers.find(id) != _makers.end());
-                return _makers.find(id)->second(args...);
-            }
+    public:
+        // TODO: consider using rvalue references and std::forward
+        Base* create(ID id, const Args&... args) const
+        {
+            assert(_makers.find(id) != _makers.end());
+            return _makers.find(id)->second(args...);
+        }
 
-            void add(ID id, CreatorFunction callback)
-            {
-                _makers[id] = callback;
-            }
+        void add(ID id, CreatorFunction callback)
+        {
+            _makers[id] = callback;
+        }
 
-            template <class Derive>
+        template <class Derive>
             void add(ID id)
             {
                 add(id, defaultCreator<Derive>);
             }
 
-            void del(ID id)
-            {
-                _makers.erase(id);
-            }
+        void del(ID id)
+        {
+            _makers.erase(id);
+        }
 
-            void clear()
-            {
-                _makers.clear();
-            }
+        void clear()
+        {
+            _makers.clear();
+        }
 
-            size_t size() const
-            {
-                return _makers.size();
-            }
+        size_t size() const
+        {
+            return _makers.size();
+        }
 
-        private:
-            std::map<ID, CreatorFunction> _makers;
-    };
-}
+    private:
+        std::map<ID, CreatorFunction> _makers;
+};
 
 #endif
