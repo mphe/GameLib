@@ -51,7 +51,7 @@ namespace engine
     {
         for (auto& i : _tiles)
         {
-            // if inside cam ...
+            // TODO: if inside cam ...
             i->render(target);
         }
         _tilesRendered = _tiles.size();
@@ -61,5 +61,15 @@ namespace engine
     void FloatingTileMap::add(FloatingTilePtr tile)
     {
         _tiles.push_back(std::move(tile));
+    }
+
+    void FloatingTileMap::add(const std::string& tile, float x, float y)
+    {
+        add(_tileset.getTileID(tile), x, y);
+    }
+
+    void FloatingTileMap::add(TileID tile, float x, float y)
+    {
+        add(FloatingTilePtr(new FloatingTile(_tileset, tile, x, y)));
     }
 }

@@ -26,6 +26,8 @@ namespace engine
             virtual void render(sf::RenderTarget& target, const Camera& cam) const;
 
             virtual void add(FloatingTilePtr tile);
+            virtual void add(const std::string& tile, float x, float y);
+            virtual void add(TileID tile, float x, float y);
 
         protected:
             const TileSet& _tileset;
