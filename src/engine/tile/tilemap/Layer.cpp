@@ -7,6 +7,33 @@
 
 namespace engine
 {
+    bool Layer::loadFromJson(const Json::Value& node)
+    {
+        for (auto it = node.begin(); it != node.end(); ++it)
+        {
+            if (!_mapfactory || !_mapfactory->haskey(it.key().asString()))
+            {
+                LOG_ERROR("Unknown map id: ", it.key().asString(), " -> Skipping");
+                continue;
+            }
+
+            TileMapPtr ptr(_mapfactory->create(it.key().asString()));
+            if (it->isMember("config") && !ptr->loadFromFile((*it)["config"].asString()))
+            {
+                LOG_ERROR("Failed to load map -> Skipping");
+                continue;
+            }
+
+            MapData md;
+            md.offset.x = it->get("paraoffsetx", md.offset.x).asInt();
+            md.offset.y = it->get("paraoffsety", md.offset.y).asInt();
+            md.depth = it->get("paradepth", md.depth).asFloat();
+            md.map = std::move(ptr);
+            addMap(md);
+        }
+        return true;
+    }
+
     void Layer::destroy()
     {
         _maps.clear();
@@ -51,6 +78,12 @@ namespace engine
             i.map->render(target, paracam);
         }
         target.setView(tmp);
+    }
+
+
+    void Layer::setMapFactory(const MapFactory* factory)
+    {
+        _mapfactory = factory;
     }
 
 

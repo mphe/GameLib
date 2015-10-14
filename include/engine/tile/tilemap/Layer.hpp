@@ -1,9 +1,12 @@
 #ifndef LAYER_HPP
 #define LAYER_HPP
 
+#include <string>
 #include <vector>
 #include <memory>
 #include "math/geometry/Vector2.hpp"
+#include "engine/utils/Factory.hpp"
+#include "engine/utils/JsonObject.hpp"
 
 namespace sf
 {
@@ -29,13 +32,17 @@ namespace engine
         MapData& operator=(const MapData& md);
     };
 
-    class Layer
+    class Layer : public Json::JsonObject
     {
         friend class Scene;
 
         public:
-            Layer() : _scene(0) {}
+            typedef Factory<TileMap, std::string> MapFactory;
 
+        public:
+            Layer() : _scene(0), _mapfactory(0) {};
+
+            bool loadFromJson(const Json::Value& node);
             void destroy();
 
             void update(float fps);
@@ -44,14 +51,31 @@ namespace engine
             TileMap* addMap(TileMapPtr map, float depth = 1.0);
             TileMap* addMap(const MapData& md);
 
+            void setMapFactory(const MapFactory* factory);
+
             TileMap* getMap(size_t index) const;
             Scene* getScene() const;
             size_t size() const;
             
         private:
             Scene* _scene;
+            const MapFactory* _mapfactory;
             std::vector<MapData> _maps;
     };
 }
+
+/*
+ * Config file structure:
+ *
+ * {
+ *     <mapid>: {
+ *         "paraoffsetx": <parallax x offset>,
+ *         "paraoffsety": <parallax y offset>,
+ *         "paradepth": <parallax depth>,
+ *         "config": <path to this map's config file>,
+ *     },
+ *     ...
+ * }
+ */
 
 #endif
