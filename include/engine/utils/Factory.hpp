@@ -41,6 +41,11 @@ class Factory
             _makers.erase(id);
         }
 
+        bool haskey(const ID& id) const
+        {
+            return _makers.find(id) != _makers.end();
+        }
+
         void clear()
         {
             _makers.clear();
