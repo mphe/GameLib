@@ -2,7 +2,6 @@
 #include <string>
 #include <cassert>
 
-using namespace factory;
 using namespace std;
 
 class Foo
