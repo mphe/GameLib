@@ -12,6 +12,8 @@ set(GAMELIB_SOURCES
     tile/tilemap/Layer.cpp
     tile/Scene.cpp
     Camera.cpp
+    Sprite.cpp
+    SpriteSet.cpp
 )
 
 set(EXT_LIBRARIES

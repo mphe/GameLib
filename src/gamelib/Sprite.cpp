@@ -1,22 +1,14 @@
-#include "engine/Sprite.hpp"
+#include "gamelib/Sprite.hpp"
 
-namespace engine
+namespace gamelib
 {
-    AnimationData::AnimationData() :
-        startx(0),
-        starty(0),
-        length(0),
-        speed(0),
-        offset(0)
-    { }
-
-    void AnimatedSprite::update(float fps)
+    void Sprite::update(float fps)
     {
-        anidata.offset = std::fmod(anidata.offset + anidata.speed / fps, anidata.length);
-        sf::IntRect rect = sfmlsprite.getTextureRect();
-        int x = anidata.startx + (int)anidata.offset * rect.width;
-        rect.left = x % sfmlsprite.getTexture()->getSize().x;
-        rect.top = anidata.starty + x / sfmlsprite.getTexture()->getSize().x * rect.height,
-        sfmlsprite.setTextureRect(rect);
+        offset = std::fmod(offset + speed / fps, length);
+        sf::IntRect rect = sfsprite.getTextureRect();
+        int x = startx + (int)offset * rect.width;
+        rect.left = x % sfsprite.getTexture()->getSize().x;
+        rect.top = starty + x / sfsprite.getTexture()->getSize().x * rect.height,
+        sfsprite.setTextureRect(rect);
     }
 }

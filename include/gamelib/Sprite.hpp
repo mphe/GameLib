@@ -1,33 +1,27 @@
-#ifndef ANIMATED_SPRITE_HPP
-#define ANIMATED_SPRITE_HPP
+#ifndef GAMELIB_SPRITE_HPP
+#define GAMELIB_SPRITE_HPP
 
 #include <SFML/Graphics.hpp>
 
-namespace engine
+namespace gamelib
 {
-    struct AnimationData
-    {
-        AnimationData();
-        int startx;
-        int starty;
-        int length;
-        float speed;
-        float offset;
-    };
-
-    class AnimatedSprite
+    class Sprite
     {
         public:
-            AnimatedSprite() {}
-            AnimatedSprite(const sf::Texture& tex) : sfmlsprite(tex) {}
-            AnimatedSprite(const sf::Texture& tex, const sf::IntRect& rect) : sfmlsprite(tex, rect) {}
-            virtual ~AnimatedSprite() {};
+            Sprite() {}
+            Sprite(const sf::Texture& tex) : sfsprite(tex) {}
+            Sprite(const sf::Texture& tex, const sf::IntRect& rect) : sfsprite(tex, rect) {}
+            virtual ~Sprite() {};
 
             void update(float fps);
 
         public:
-            AnimationData anidata;
-            sf::Sprite sfmlsprite;
+            int length;
+            float speed;
+            float offset;
+            int startx;
+            int starty;
+            sf::Sprite sfsprite;
     };
 }
 

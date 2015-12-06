@@ -1,48 +1,45 @@
 #ifndef SPRITE_SET_HPP
 #define SPRITE_SET_HPP
 
-#include <vector>
 #include <string>
+#include <unordered_map>
 #include <SFML/Graphics.hpp>
-#include "engine/utils/JsonObject.hpp"
+#include "gamelib/utils/JsonObject.hpp"
+#include "Sprite.hpp"
 
-namespace engine
+namespace gamelib
 {
-    typedef int SpriteID;
-
-    struct SpriteData
-    {
-        SpriteID id;
-        int length;
-        float speed;
-        float offset;
-        sf::IntRect rect;
-    };
+    typedef std::string SpriteID;
 
     class SpriteSet : public Json::JsonObject
     {
+        private:
+            // SpriteSet uses SpriteData to store sprite settings, instead of using
+            // sf::Sprite or gamelib::Sprite, to be more memory efficient.
+            // Maybe this will change later.
+            struct SpriteData
+            {
+                int length;
+                float speed;
+                float offset;
+                sf::IntRect rect;
+            };
+
         public:
-            bool loadFromJson(const Json::Value& node);
-            void destroy();
+            auto loadFromJson(const Json::Value& node)  -> bool;
+            auto destroy()                              -> void;
 
-            SpriteID add(const std::string& name, const SpriteData& sprdata);
-            void setSpriteSheet(const sf::Texture& tex);
+            auto add(const SpriteID& key, const SpriteData& spr)    -> void;
+            auto setSpriteSheet(const sf::Texture& tex)             -> void;
 
-            sf::Sprite getSprite(const std::string& name, int offset = 0) const;
-            sf::Sprite getSprite(SpriteID id, int offset = 0) const;
-
-            sf::IntRect getTexRect(const std::string& name, int offset = 0) const;
-            sf::IntRect getTexRect(SpriteID id, int offset = 0) const;
-
-            const SpriteData& getSpriteData(const std::string& name) const;
-            const SpriteData& getSpriteData(SpriteID id) const;
-
-            const sf::Texture& getTexSheet() const;
-            size_t size() const;
+            auto getTexRect(const SpriteID& key, int offset = 0)    const -> sf::IntRect;
+            auto getSprite(const SpriteID& key)                     const -> const Sprite;
+            auto getSFMLSprite(const SpriteID& key, int offset = 0) const -> sf::Sprite;
+            auto getSpriteSheet()                                   const -> const sf::Texture&;
+            auto size()                                             const -> size_t;
 
         private:
-            std::vector<SpriteData> _sprites;
-            std::map<std::string, SpriteData*> _aliases;
+            std::unordered_map<SpriteID, SpriteData> _sprites;
             sf::Texture _sheet;
     };
 }

@@ -1,19 +1,26 @@
-#include "engine/SpriteSet.hpp"
-#include "engine/utils/log.hpp"
+#include "gamelib/SpriteSet.hpp"
+#include "gamelib/utils/log.hpp"
 #include <cassert>
 
-namespace engine
+namespace gamelib
 {
-
     bool SpriteSet::loadFromJson(const Json::Value& node)
     {
+        destroy();
+
         if (!node.isMember("sheet") || !_sheet.loadFromFile(node["sheet"].asString()))
         {
             LOG_ERROR("Failed to load sprite sheet");
             return false;
         }
 
-        for (auto i = node.begin(); i != node.end(); ++i)
+        if (!node.isMember("sprites"))
+        {
+            LOG_WARN("No sprites defined");
+            return true;
+        }
+
+        for (auto i = node["sprites"].begin(), end = node["sprites"].end(); i != end; ++i)
         {
             SpriteData data;
             data.speed = i->get("speed", 0).asFloat();
@@ -28,6 +35,8 @@ namespace engine
                 data.rect.width = rect.get("w", 0).asInt();
                 data.rect.height = rect.get("h", 0).asInt();
             }
+            else
+                LOG_WARN("No rect specified for \"", i.key().asString(), "\"");
 
             add(i.key().asString(), data);
         }
@@ -40,18 +49,14 @@ namespace engine
     void SpriteSet::destroy()
     {
         _sprites.clear();
-        _aliases.clear();
         _sheet = sf::Texture();
         LOG_DEBUG_WARN("SpriteSet destroyed");
     }
 
 
-    SpriteID SpriteSet::add(const std::string& name, const SpriteData& sprdata)
+    void SpriteSet::add(const SpriteID& key, const SpriteData& spr)
     {
-        _sprites.push_back(sprdata);
-        _sprites.back().id = _sprites.size() - 1;
-        _aliases[name] = &_sprites.back();
-        return _sprites.size() - 1;
+        _sprites.insert(std::make_pair(key, spr));
     }
 
     void SpriteSet::setSpriteSheet(const sf::Texture& tex)
@@ -60,48 +65,34 @@ namespace engine
     }
 
 
-    sf::Sprite SpriteSet::getSprite(const std::string& name, int offset) const
+    sf::Sprite SpriteSet::getSFMLSprite(const SpriteID& key, int offset) const
     {
-        assert("Sprite does not exist" && _aliases.find(name) != _aliases.end());
-        return sf::Sprite(_sheet, getTexRect(_aliases.find(name)->second->id, offset));
+        assert("Sprite does not exist" && _sprites.find(key) != _sprites.end());
+        return sf::Sprite(_sheet, getTexRect(key, offset));
     }
 
-    sf::Sprite SpriteSet::getSprite(SpriteID id, int offset) const
+    sf::IntRect SpriteSet::getTexRect(const SpriteID& key, int offset) const
     {
-        return sf::Sprite(_sheet, getTexRect(id, offset));
+        assert("Sprite does not exist" && _sprites.find(key) != _sprites.end());
+        sf::IntRect rect = _sprites.find(key)->second.rect;
+        rect.left = (rect.left + offset * rect.width) % _sheet.getSize().x;
+        rect.top += ((offset * rect.width) / _sheet.getSize().x) * rect.height;
+        return rect;
     }
 
-
-    sf::IntRect SpriteSet::getTexRect(const std::string& name, int offset) const
+    const Sprite SpriteSet::getSprite(const SpriteID& key) const
     {
-        assert("Sprite does not exist" && _aliases.find(name) != _aliases.end());
-        return getTexRect(_aliases.find(name)->second->id, offset);
+        Sprite spr(_sheet, getTexRect(key));
+        auto& data = _sprites.find(key)->second;
+        spr.length = data.length;
+        spr.speed = data.speed;
+        spr.offset = data.offset;
+        spr.startx = data.rect.left;
+        spr.starty = data.rect.top;
+        return spr;
     }
 
-    sf::IntRect SpriteSet::getTexRect(SpriteID id, int offset) const
-    {
-        const sf::IntRect& rect = _sprites[id].rect;
-        return sf::IntRect( // left, top, width, height
-            (rect.left + offset * rect.width) % _sheet.getSize().x,
-            rect.top + ((offset * rect.width) / _sheet.getSize().x) * rect.height,
-            rect.width,
-            rect.height
-        );
-    }
-
-
-    const SpriteData& SpriteSet::getSpriteData(const std::string& name) const
-    {
-        return *_aliases.find(name)->second;
-    }
-
-    const SpriteData& SpriteSet::getSpriteData(SpriteID id) const
-    {
-        return _sprites[id];
-    }
-
-
-    const sf::Texture& SpriteSet::getTexSheet() const
+    const sf::Texture& SpriteSet::getSpriteSheet() const
     {
         return _sheet;
     }
