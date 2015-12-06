@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-project(TileEngine)
+project(GameLib)
 
 option(DEBUG_LOG_RELEASE "Show debug log entries in release build" OFF)
 option(DEBUG_LOG_DEBUG "Show debug log entries in debug build" ON)
@@ -15,7 +15,7 @@ endif()
 
 
 add_subdirectory(extlib)
-add_subdirectory(src/engine)
+add_subdirectory(src/gamelib)
 
 if(BUILD_TESTS)
     enable_testing()

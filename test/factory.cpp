@@ -1,4 +1,4 @@
-#include "engine/utils/Factory.hpp"
+#include "gamelib/utils/Factory.hpp"
 #include <string>
 #include <cassert>
 
@@ -36,7 +36,7 @@ class Bla : public Bar
 
 int main()
 {
-    Factory<Foo, int> fac;
+    gamelib::Factory<Foo, int> fac;
     fac.add(42, Bar::create);
     fac.add<Bla>(75);
     assert(fac.size() == 2);
@@ -57,7 +57,7 @@ int main()
     fac.clear();
     assert(fac.size() == 0);
 
-    Factory<Foo, int, const string&> argfac;
+    gamelib::Factory<Foo, int, const string&> argfac;
     argfac.add(42, Bar::create);
     argfac.add<Bla>(75);
 
