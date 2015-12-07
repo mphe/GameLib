@@ -1,4 +1,4 @@
-#include "gamelib/tile/Scene.hpp"
+#include "gamelib/tile/TileScene.hpp"
 #include <SFML/Graphics.hpp>
 #include <cassert>
 #include "gamelib/tile/tilemap/Layer.hpp"
@@ -8,7 +8,7 @@
 
 namespace gamelib
 {
-    void Scene::destroy()
+    void TileScene::destroy()
     {
         _layers.clear();
         _cams.clear();
@@ -16,7 +16,7 @@ namespace gamelib
     }
 
 
-    Camera& Scene::addCamera(CameraPtr cam)
+    Camera& TileScene::addCamera(CameraPtr cam)
     {
         assert("Camera pointer is a null pointer" && cam);
         _cams.push_back(std::move(cam));
@@ -24,37 +24,37 @@ namespace gamelib
         return *_cams.back();
     }
 
-    Camera& Scene::getCamera(size_t index) const
+    Camera& TileScene::getCamera(size_t index) const
     {
         return *_cams[index];
     }
 
 
-    Layer& Scene::addLayer(LayerPtr layer)
+    Layer& TileScene::addLayer(LayerPtr layer)
     {
         _layers.push_back(layer ? std::move(layer) : LayerPtr(new Layer()));
         _layers.back()->_scene = this;
         return *_layers.back();
     }
 
-    Layer& Scene::getLayer(size_t index) const
+    Layer& TileScene::getLayer(size_t index) const
     {
         assert("Index out of bounds" && index < _layers.size());
         return *_layers[index];
     }
 
-    Layer& Scene::getLayer() const
+    Layer& TileScene::getLayer() const
     {
         return *_layers.back();
     }
 
-    size_t Scene::getLayerCount() const
+    size_t TileScene::getLayerCount() const
     {
         return _layers.size();
     }
 
 
-    void Scene::update(float fps)
+    void TileScene::update(float fps)
     {
         for (size_t i = _layers.size(); i > 0; --i)
         {
@@ -67,7 +67,7 @@ namespace gamelib
         }
     }
 
-    void Scene::render(sf::RenderTarget& target) const
+    void TileScene::render(sf::RenderTarget& target) const
     {
         for (auto& c : _cams)
         {

@@ -10,10 +10,11 @@ set(GAMELIB_SOURCES
     tile/tilemap/StaticTileMap.cpp
     tile/tilemap/FloatingTileMap.cpp
     tile/tilemap/Layer.cpp
-    tile/Scene.cpp
+    tile/TileScene.cpp
     Camera.cpp
     Sprite.cpp
     SpriteSet.cpp
+    Scene.cpp
 )
 
 set(EXT_LIBRARIES

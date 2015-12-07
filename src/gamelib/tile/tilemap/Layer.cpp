@@ -93,7 +93,7 @@ namespace gamelib
         return _maps[index].map.get();
     }
 
-    Scene* Layer::getScene() const
+    TileScene* Layer::getScene() const
     {
         return _scene;
     }

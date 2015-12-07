@@ -17,7 +17,7 @@ namespace gamelib
 {
     class TileMap;
     class Camera;
-    class Scene;
+    class TileScene;
 
     typedef std::unique_ptr<TileMap> TileMapPtr;
 
@@ -34,7 +34,7 @@ namespace gamelib
 
     class Layer : public Json::JsonObject
     {
-        friend class Scene;
+        friend class TileScene;
 
         public:
             typedef Factory<TileMap, std::string> MapFactory;
@@ -54,11 +54,11 @@ namespace gamelib
             void setMapFactory(const MapFactory* factory);
 
             TileMap* getMap(size_t index) const;
-            Scene* getScene() const;
+            TileScene* getScene() const;
             size_t size() const;
-            
+
         private:
-            Scene* _scene;
+            TileScene* _scene;
             const MapFactory* _mapfactory;
             std::vector<MapData> _maps;
     };

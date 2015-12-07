@@ -1,5 +1,5 @@
-#ifndef SCENE_HPP
-#define SCENE_HPP
+#ifndef GAMELIB_TILESCENE_HPP
+#define GAMELIB_TILESCENE_HPP
 
 #include <memory>
 #include <vector>
@@ -17,7 +17,7 @@ namespace gamelib
     typedef std::unique_ptr<Camera> CameraPtr;
     typedef std::unique_ptr<Layer> LayerPtr;
 
-    class Scene
+    class TileScene
     {
         public:
             void destroy();
