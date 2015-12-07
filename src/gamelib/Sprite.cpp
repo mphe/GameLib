@@ -11,4 +11,9 @@ namespace gamelib
         rect.top = starty + x / sfsprite.getTexture()->getSize().x * rect.height,
         sfsprite.setTextureRect(rect);
     }
+
+    void Sprite::render(sf::RenderTarget& target) const
+    {
+        target.draw(sfsprite);
+    }
 }

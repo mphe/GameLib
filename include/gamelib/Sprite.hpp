@@ -2,10 +2,11 @@
 #define GAMELIB_SPRITE_HPP
 
 #include <SFML/Graphics.hpp>
+#include "GameObject.hpp"
 
 namespace gamelib
 {
-    class Sprite
+    class Sprite : public GameObject
     {
         public:
             Sprite() {}
@@ -14,6 +15,7 @@ namespace gamelib
             virtual ~Sprite() {};
 
             void update(float fps);
+            void render(sf::RenderTarget& target) const;
 
         public:
             int length;
