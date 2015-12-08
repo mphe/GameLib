@@ -26,7 +26,7 @@ namespace gamelib
         pos.y = node.get("y", 0).asFloat();
         size.x = node.get("w", 0).asInt();
         size.y = node.get("h", 0).asInt();
-        zoom = node.get("zoom", 1).asInt();
+        zoom = node.get("zoom", 1).asFloat();
 
         LOG_DEBUG(LOG_DUMP(pos.x), ", ", LOG_DUMP(pos.y));
         LOG_DEBUG(LOG_DUMP(size.x), ", ", LOG_DUMP(size.y));
