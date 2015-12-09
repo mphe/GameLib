@@ -48,6 +48,8 @@ namespace gamelib
             sf::RenderWindow _window;
             std::vector<GameStatePtr> _states;
             bool _active;
+            bool _handleclose;
+            bool _escclose;
             EventManager _evmgr;
     };
 }
@@ -60,6 +62,9 @@ namespace gamelib
  *     "height": <window height>,
  *     "maxfps": <fps limit, 0 for no limit>,
  *     "vsync": <true|false>,
+ *     "handleclose": <close when close button is pressed: true|false>,
+ *     "escclose": <close when escape is pressed: true|false>,
+ *     "repeatkeys": <true|false>,
  *     "bg": {
  *         "r": <red>,
  *         "g": <green>,

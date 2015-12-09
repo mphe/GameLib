@@ -10,10 +10,16 @@
 #define GAME_TITLE "Unnamed game"
 #define GAME_MAX_FPS 0
 #define GAME_VSYNC false
+#define GAME_ESCCLOSE true
+#define GAME_CLOSEBUTTON true
+#define GAME_REPEATKEYS false
 
 namespace gamelib
 {
-    Game::Game()
+    Game::Game() :
+        _active(true),
+        _handleclose(GAME_CLOSEBUTTON),
+        _escclose(GAME_ESCCLOSE)
     { }
 
     Game::~Game()
@@ -28,6 +34,7 @@ namespace gamelib
         _window.create(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), GAME_TITLE, sf::Style::Close);
         _window.setFramerateLimit(GAME_MAX_FPS);
         _window.setVerticalSyncEnabled(GAME_VSYNC);
+        _window.setKeyRepeatEnabled(GAME_REPEATKEYS);
 
         return true;
     }
@@ -47,7 +54,7 @@ namespace gamelib
                 switch (ev->ev.type)
                 {
                     case sf::Event::KeyPressed:
-                        if (ev->ev.key.code == sf::Keyboard::Escape || ev->ev.key.code == sf::Keyboard::Q)
+                        if (_escclose && ev->ev.key.code == sf::Keyboard::Escape)
                         {
                             close();
                             return;
@@ -55,8 +62,12 @@ namespace gamelib
                         break;
 
                     case sf::Event::Closed:
-                        close();
-                        return;
+                        if (_handleclose)
+                        {
+                            close();
+                            return;
+                        }
+                        break;
 
                     case sf::Event::GainedFocus:
                         _active = true;
@@ -118,28 +129,24 @@ namespace gamelib
     bool Game::loadFromJson(const Json::Value& node)
     {
         if (node.isMember("title"))
-        {
-            LOG_DEBUG("title: ", node["title"].asString());
             _window.setTitle(node["title"].asString());
-        }
 
         auto size = _window.getSize();
         size.x = node.get("width", size.x).asUInt();
         size.y = node.get("height", size.y).asUInt();
-        LOG_DEBUG(LOG_DUMP(size.x), ", ", LOG_DUMP(size.y));
         _window.setSize(size);
 
         if (node.isMember("maxfps"))
-        {
-            LOG_DEBUG("maxfps: ", node["maxfps"].asUInt());
             _window.setFramerateLimit(node["maxfps"].asUInt());
-        }
 
         if (node.isMember("vsync"))
-        {
-            LOG_DEBUG("vsync: ", node["vsync"].asBool());
             _window.setVerticalSyncEnabled(node["vsync"].asBool());
-        }
+
+        if (node.isMember("repeatkeys"))
+            _window.setKeyRepeatEnabled(node["repeatkeys"].asBool());
+
+        _handleclose = node.get("handleclose", _handleclose).asBool();
+        _escclose = node.get("escclose", _escclose).asBool();
 
         if (node.isMember("bg"))
         {
