@@ -54,6 +54,11 @@ namespace gamelib
                 _callbacks.clear();
             };
 
+            size_t size() const
+            {
+                return _callbacks.size();
+            }
+
         private:
             std::vector<CallbackInfo> _callbacks;
     };

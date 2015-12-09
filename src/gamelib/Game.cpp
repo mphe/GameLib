@@ -3,8 +3,7 @@
 #include <iostream>
 #include "gamelib/GameState.hpp"
 #include "gamelib/utils/log.hpp"
-// #include "event/KeyEvent.hpp"
-// #include "event/MouseEvent.hpp"
+#include "gamelib/event/SFMLEvent.hpp"
 
 #define GAME_WIDTH 640
 #define GAME_HEIGHT 480
@@ -37,18 +36,18 @@ namespace gamelib
     {
         float fps = 1; // TODO: Consider switching to double
         sf::Clock clock;
+        std::shared_ptr<SFMLEvent> ev(new SFMLEvent());
 
         while (_window.isOpen())
         {
             clock.restart();
-            sf::Event ev;
 
-            while (_window.pollEvent(ev))
+            while (_window.pollEvent(ev->ev))
             {
-                switch (ev.type)
+                switch (ev->ev.type)
                 {
                     case sf::Event::KeyPressed:
-                        if (ev.key.code == sf::Keyboard::Escape || ev.key.code == sf::Keyboard::Q)
+                        if (ev->ev.key.code == sf::Keyboard::Escape || ev->ev.key.code == sf::Keyboard::Q)
                         {
                             close();
                             return;
@@ -67,6 +66,8 @@ namespace gamelib
                         _active = false;
                         break;
                 }
+                _evmgr.triggerEvent(ev);
+                ev.reset(new SFMLEvent());
             }
 
             for (auto& i : _states)
@@ -74,7 +75,7 @@ namespace gamelib
                 i->update(fps);
             }
 
-            // _evmgr.update();
+            _evmgr.update();
 
             _window.clear(_bgcolor);
             for (auto& i : _states)
@@ -184,14 +185,16 @@ namespace gamelib
         return _active && sf::Keyboard::isKeyPressed(key);
     }
 
-    // void Game::regEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me)
-    // {
-    //     _evmgr.regCallback(id, callback, me);
-    // }
-    //
-    // void Game::unregEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me)
-    // {
-    //     _evmgr.unregCallback(id, callback, me);
-    // }
+    void Game::regEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me)
+    {
+        _evmgr.regCallback(id, callback, me);
+        LOG_DEBUG("Added event callback: ev: ", id, ", obj: ", me);
+    }
+
+    void Game::unregEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me)
+    {
+        _evmgr.unregCallback(id, callback, me);
+        LOG_DEBUG("Removed event callback: ev: ", id, ", obj: ", me);
+    }
 }
 

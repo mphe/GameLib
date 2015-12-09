@@ -6,7 +6,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include "gamelib/utils/JsonObject.hpp"
-// #include "event/EventManager.hpp"
+#include "event/EventManager.hpp"
 
 namespace gamelib
 {
@@ -22,10 +22,12 @@ namespace gamelib
             bool init();
             void run();
 
-            // Closes the windows -> stops the game loop
+            // Closes the windows -> stops the game loop.
+            // Use this inside the game loop to quit the game.
             void close();
 
-            // Cleans up resources (and closes the window)
+            // Cleans up resources (and closes the window).
+            // Use this outside the game loop.
             void destroy();
 
             using JsonObject::loadFromJson;
@@ -38,15 +40,15 @@ namespace gamelib
             bool isActive() const;
             bool isKeyPressed(sf::Keyboard::Key key) const;
 
-            // void regEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me = 0);
-            // void unregEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me = 0);
+            void regEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me = 0);
+            void unregEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me = 0);
 
         private:
             sf::Color _bgcolor;
             sf::RenderWindow _window;
             std::vector<GameStatePtr> _states;
             bool _active;
-            // EventManager _evmgr;
+            EventManager _evmgr;
     };
 }
 

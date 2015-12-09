@@ -1,22 +1,27 @@
 #ifndef GAMELIB_EVENT_HPP
 #define GAMELIB_EVENT_HPP
 
-#include <memory>
+#include "BaseEvent.hpp"
+
+// Simple wrapper around BaseEvent.
+// It takes an optional event ID as template parameter and provides a getID() method, which returns the given ID.
+// If no ID is passed, invalidEvent will be used.
+// Additionally a static (constexpr) variable "id" is set to store the ID.
 
 namespace gamelib
 {
-    typedef unsigned int EventID;
-
-    constexpr EventID invalidEvent = -1;
-
-    class Event
+    template <int ID = invalidEvent>
+    class Event : public BaseEvent
     {
         public:
-            virtual ~Event() {}
-            virtual EventID getID() const = 0;
-    };
+            static constexpr EventID id = ID;
 
-    typedef std::shared_ptr<Event> EventPtr;
+        public:
+            EventID getID() const
+            {
+                return id;
+            }
+    };
 }
 
 #endif
