@@ -17,6 +17,8 @@ namespace gamelib
             static constexpr EventID id = ID;
 
         public:
+            virtual ~Event() {}
+
             EventID getID() const
             {
                 return id;
