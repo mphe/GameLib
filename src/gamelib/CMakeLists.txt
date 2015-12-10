@@ -15,6 +15,7 @@ set(GAMELIB_SOURCES
     Sprite.cpp
     SpriteSet.cpp
     Scene.cpp
+    collision/CollisionSystem.cpp
 )
 
 set(EXT_LIBRARIES
