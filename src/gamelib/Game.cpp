@@ -177,9 +177,14 @@ namespace gamelib
         _states.pop_back();
     }
 
-    GameState& Game::pullState() const 
+    GameState& Game::pullState() const
     {
         return *_states.back().get();
+    }
+
+    sf::RenderWindow& Game::getWindow()
+    {
+        return _window;
     }
 
     bool Game::isActive() const

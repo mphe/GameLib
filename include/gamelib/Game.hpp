@@ -37,6 +37,8 @@ namespace gamelib
             void popState();
             GameState& pullState() const;
 
+            sf::RenderWindow& getWindow();
+
             bool isActive() const;
             bool isKeyPressed(sf::Keyboard::Key key) const;
 
