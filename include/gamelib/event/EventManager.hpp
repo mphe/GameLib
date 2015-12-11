@@ -13,8 +13,8 @@ namespace gamelib
     class EventManager
     {
         public:
-            void regCallback(EventID id, void (*callback)(void*, EventPtr), void* me = 0);
-            void unregCallback(EventID id, void (*callback)(void*, EventPtr), void* me = 0);
+            void regCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
+            void unregCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
 
             void triggerEvent(EventPtr event) const;
             void queueEvent(EventPtr event);

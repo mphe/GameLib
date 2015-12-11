@@ -42,8 +42,8 @@ namespace gamelib
             bool isActive() const;
             bool isKeyPressed(sf::Keyboard::Key key) const;
 
-            void regEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me = 0);
-            void unregEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me = 0);
+            void regEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
+            void unregEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
 
         private:
             sf::Color _bgcolor;
