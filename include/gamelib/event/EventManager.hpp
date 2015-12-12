@@ -8,13 +8,13 @@
 
 namespace gamelib
 {
-    typedef void (*EventCallback)(void*, EventPtr);
+    typedef CallbackHandler<void(EventPtr)>::CallbackFunction EventCallback;
 
     class EventManager
     {
         public:
-            void regCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
-            void unregCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
+            void regCallback(EventID id, const EventCallback& callback);
+            void unregCallback(EventID id, const EventCallback& callback);
 
             void triggerEvent(EventPtr event) const;
             void queueEvent(EventPtr event);
@@ -23,7 +23,7 @@ namespace gamelib
 
         private:
             std::queue<EventPtr> _evqueue;
-            std::map<EventID, CallbackHandler<void, EventPtr> > _callbacks;
+            std::map<EventID, CallbackHandler<void(EventPtr)> > _callbacks;
     };
 }
 

@@ -2,27 +2,31 @@
 
 namespace gamelib
 {
-    void EventManager::regCallback(EventID id, void (*callback)(void*, EventPtr), void* me)
+    void EventManager::regCallback(EventID id, const EventCallback& callback)
     {
-        _callbacks[id].regCallback(callback, me);
+        _callbacks[id].regCallback(callback);
     }
 
-    void EventManager::unregCallback(EventID id, void (*callback)(void*, EventPtr), void* me)
+    void EventManager::unregCallback(EventID id, const EventCallback& callback)
     {
         auto it = _callbacks.find(id);
         if (it == _callbacks.end())
             return;
-        it->second.unregCallback(callback, me);
 
-        if (!it->second.size()) // remove the callback handler if it is empty
+        it->second.unregCallback(callback);
+
+        // remove the callback handler if it is empty
+        if (!it->second.size())
             _callbacks.erase(it);
     }
 
     void EventManager::triggerEvent(EventPtr event) const
     {
         auto it = _callbacks.find(event->getID());
-        if (it != _callbacks.end())
-            it->second.call(event);
+        if (it == _callbacks.end())
+            return;
+
+        it->second.call(event);
     }
 
     void EventManager::queueEvent(EventPtr event)

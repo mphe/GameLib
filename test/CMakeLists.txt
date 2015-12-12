@@ -8,6 +8,13 @@ macro(gen_test TESTNAME SOURCE_LIST)
     set_property(TARGET ${TESTNAME} PROPERTY CXX_STANDARD 11)
 endmacro()
 
+macro(gen_test_simple TESTNAME SOURCE_LIST)
+    # message("name: ${TESTNAME}, sources: ${SOURCE_LIST}")
+    add_executable(${TESTNAME} ${SOURCE_LIST})
+    add_test(NAME ${TESTNAME} COMMAND ${TESTNAME})
+    set_property(TARGET ${TESTNAME} PROPERTY CXX_STANDARD 11)
+endmacro()
+
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/extlib/cppmath/include
@@ -16,6 +23,5 @@ include_directories(
 
 gen_test(factorytest factory.cpp)
 
-add_executable(logtest log.cpp)
-add_test(NAME logtest COMMAND logtest)
-set_property(TARGET logtest PROPERTY CXX_STANDARD 11)
+gen_test_simple(logtest log.cpp)
+gen_test_simple(callbackhandlertest callbackhandler.cpp)

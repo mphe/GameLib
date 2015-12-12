@@ -197,16 +197,16 @@ namespace gamelib
         return _active && sf::Keyboard::isKeyPressed(key);
     }
 
-    void Game::regEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me)
+    void Game::regEventCallback(EventID id, const EventCallback& callback)
     {
-        _evmgr.regCallback(id, callback, me);
-        LOG_DEBUG("Added event callback: ev: ", id, ", obj: ", me);
+        _evmgr.regCallback(id, callback);
+        LOG_DEBUG("Added event callback for ", id);
     }
 
-    void Game::unregEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me)
+    void Game::unregEventCallback(EventID id, const EventCallback& callback)
     {
-        _evmgr.unregCallback(id, callback, me);
-        LOG_DEBUG("Removed event callback: ev: ", id, ", obj: ", me);
+        _evmgr.unregCallback(id, callback);
+        LOG_DEBUG("Removed event callback for ", id);
     }
 }
 
