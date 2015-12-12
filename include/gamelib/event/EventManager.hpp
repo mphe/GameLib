@@ -16,7 +16,7 @@ namespace gamelib
             void regCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
             void unregCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
 
-            void triggerEvent(EventPtr event) const;
+            void triggerEvent(EventPtr event);
             void queueEvent(EventPtr event);
 
             void update();

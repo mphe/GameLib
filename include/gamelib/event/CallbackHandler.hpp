@@ -3,65 +3,59 @@
 
 #include <vector>
 #include <algorithm>
+#include <utility>
 
 namespace gamelib
 {
-    template <class _Ret, class ..._Args>
+    template <class Ret, class... Args>
     class CallbackHandler
     {
         public:
-            typedef _Ret (*CallbackFunction)(void*, _Args...);
+            typedef Ret (*CallbackFunction)(void*, Args...);
 
         private:
             struct CallbackInfo
             {
                 void* me;
                 CallbackFunction callback;
+                bool remove;
 
                 CallbackInfo(void* me_, CallbackFunction callback_) :
                     me(me_),
-                    callback(callback_)
+                    callback(callback_),
+                    remove(false)
                 {}
 
                 bool operator==(const CallbackInfo& ci) const
                 {
-                    return me == ci.me && callback == ci.callback;
+                    return me == ci.me && callback == ci.callback && remove == ci.remove;
                 }
             };
 
         public:
-            void regCallback(CallbackFunction callback, void* me = 0)
-            {
-                _callbacks.push_back(CallbackInfo(me, callback));
-            };
+            void regCallback(CallbackFunction callback, void* me);
 
-            void unregCallback(CallbackFunction callback, void* me = 0)
-            {
-                auto it = std::find(_callbacks.begin(), _callbacks.end(), CallbackInfo(me, callback));
-                _callbacks.erase(it);
-            };
+            // The entry won't be erased immediatelly, because it could damage the iterators in call().
+            // Instead it will be erased when calling clean() or when iterating over it inside call().
+            void unregCallback(CallbackFunction callback, void* me);
 
-            void call(const _Args... args) const
-            {
-                for (auto& i : _callbacks)
-                {
-                    i.callback(i.me, args...);
-                }
-            };
+            template <class... Args2>
+            void call(Args2&&... args);
 
-            void clear()
-            {
-                _callbacks.clear();
-            };
+            void clear();
 
-            size_t size() const
-            {
-                return _callbacks.size();
-            }
+            // Iterates through the list and removes every entry marked for removal
+            // DON'T CALL THIS INSIDE CALL() OR A KITTEN WILL DIE AND SEGFAULTS MAY RAIN UPON YOU!
+            void clean();
+
+            // Might not always report the correct size, because there could still be entrys marked for removal, that haven't been removed yet.
+            size_t size() const;
 
         private:
             std::vector<CallbackInfo> _callbacks;
     };
 }
+
+#include "CallbackHandler.inl"
 
 #endif

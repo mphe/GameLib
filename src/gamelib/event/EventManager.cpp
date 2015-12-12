@@ -18,7 +18,7 @@ namespace gamelib
             _callbacks.erase(it);
     }
 
-    void EventManager::triggerEvent(EventPtr event) const
+    void EventManager::triggerEvent(EventPtr event)
     {
         auto it = _callbacks.find(event->getID());
         if (it != _callbacks.end())
