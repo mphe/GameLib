@@ -41,7 +41,7 @@ namespace gamelib
 
     void Game::run()
     {
-        float fps = 1; // TODO: Consider switching to double
+        float fps = 60; // TODO: Consider switching to double
         sf::Clock clock;
         std::shared_ptr<SFMLEvent> ev(new SFMLEvent());
 
