@@ -2,7 +2,10 @@
 #define UTILS_FACTORY_HPP
 
 #include <cassert>
-#include <map>
+#include <unordered_map>
+#include <utility>
+
+// TODO: Use std::function
 
 namespace gamelib
 {
@@ -14,17 +17,17 @@ namespace gamelib
 
             public:
                 template <class Derive>
-                    static Base* defaultCreator(Args... args)
-                    {
-                        return new Derive(args...);
-                    }
+                static Base* defaultCreator(Args... args)
+                {
+                    return new Derive(args...);
+                }
 
             public:
-                // TODO: consider using rvalue references and std::forward
-                Base* create(const ID& id, Args&... args) const
+                template <class... Args2>
+                Base* create(const ID& id, Args2&&... args) const
                 {
                     assert(_makers.find(id) != _makers.end());
-                    return _makers.find(id)->second(args...);
+                    return _makers.find(id)->second(std::forward<Args2>(args)...);
                 }
 
                 void add(const ID& id, CreatorFunction callback)
@@ -33,10 +36,10 @@ namespace gamelib
                 }
 
                 template <class Derive>
-                    void add(const ID& id)
-                    {
-                        add(id, defaultCreator<Derive>);
-                    }
+                void add(const ID& id)
+                {
+                    add(id, defaultCreator<Derive>);
+                }
 
                 void del(const ID& id)
                 {
@@ -59,7 +62,7 @@ namespace gamelib
                 }
 
             private:
-                std::map<ID, CreatorFunction> _makers;
+                std::unordered_map<ID, CreatorFunction> _makers;
         };
 }
 
