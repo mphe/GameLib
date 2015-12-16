@@ -38,6 +38,13 @@ namespace gamelib
             else
                 LOG_WARN("No rect specified for \"", i.key().asString(), "\"");
 
+            if (i->isMember("origin"))
+            {
+                auto& origin = (*i)["origin"];
+                data.origin.x = origin.get("x", 0).asFloat();
+                data.origin.y = origin.get("y", 0).asFloat();
+            }
+
             add(i.key().asString(), data);
         }
 
@@ -89,6 +96,7 @@ namespace gamelib
         spr.offset = data.offset;
         spr.startx = data.rect.left;
         spr.starty = data.rect.top;
+        spr.sfsprite.setOrigin(data.origin);
         return spr;
     }
 

@@ -23,6 +23,7 @@ namespace gamelib
                 float speed;
                 float offset;
                 sf::IntRect rect;
+                sf::Vector2f origin;
             };
 
         public:
@@ -59,6 +60,10 @@ namespace gamelib
  *                 "y": <y>,
  *                 "w": <width>,
  *                 "h": <height>
+ *             },
+ *             "origin": {
+ *                 "x": <x>,
+ *                 "y": <y>
  *             }
  *         },
  *         ...
