@@ -3,7 +3,7 @@
 
 #include <queue>
 #include <map>
-#include "BaseEvent.hpp"
+#include "Event.hpp"
 #include "CallbackHandler.hpp"
 
 namespace gamelib
