@@ -12,8 +12,9 @@ set(GAMELIB_SOURCES
     tile/tilemap/Layer.cpp
     tile/TileScene.cpp
     Camera.cpp
-    Sprite.cpp
-    SpriteSet.cpp
+    sprite/AnimatedSprite.cpp
+    sprite/SpriteSet.cpp
+    sprite/SpriteData.cpp
     Scene.cpp
     collision/CollisionSystem.cpp
 )

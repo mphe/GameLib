@@ -1,4 +1,4 @@
-#include "gamelib/SpriteSet.hpp"
+#include "gamelib/sprite/SpriteSet.hpp"
 #include "gamelib/utils/log.hpp"
 #include <cassert>
 
@@ -23,17 +23,17 @@ namespace gamelib
         for (auto i = node["sprites"].begin(), end = node["sprites"].end(); i != end; ++i)
         {
             SpriteData data;
-            data.speed = i->get("speed", 0).asFloat();
-            data.length = i->get("length", 1).asInt();
-            data.offset = i->get("offset", 0).asFloat();
+            data.anidata.speed = i->get("speed", 0).asFloat();
+            data.anidata.length = i->get("length", 1).asInt();
+            data.anidata.offset = i->get("offset", 0).asFloat();
 
             if (i->isMember("rect"))
             {
                 const auto& rect = (*i)["rect"];
-                data.rect.left = rect.get("x", 0).asInt();
-                data.rect.top = rect.get("y", 0).asInt();
-                data.rect.width = rect.get("w", 0).asInt();
-                data.rect.height = rect.get("h", 0).asInt();
+                data.anidata.rect.left = rect.get("x", 0).asInt();
+                data.anidata.rect.top = rect.get("y", 0).asInt();
+                data.anidata.rect.width = rect.get("w", 0).asInt();
+                data.anidata.rect.height = rect.get("h", 0).asInt();
             }
             else
                 LOG_WARN("No rect specified for \"", i.key().asString(), "\"");
@@ -72,32 +72,22 @@ namespace gamelib
     }
 
 
-    sf::Sprite SpriteSet::getSFMLSprite(const SpriteID& key, int offset) const
+    sf::Sprite SpriteSet::getSprite(const SpriteID& key) const
     {
         assert("Sprite does not exist" && _sprites.find(key) != _sprites.end());
-        return sf::Sprite(_sheet, getTexRect(key, offset));
+        return sf::Sprite(_sheet, _sprites.find(key)->second.anidata.getRect(_sheet.getSize().x, _sheet.getSize().y));
     }
 
-    sf::IntRect SpriteSet::getTexRect(const SpriteID& key, int offset) const
+    AnimatedSprite SpriteSet::getAnimatedSprite(const SpriteID& key) const
     {
         assert("Sprite does not exist" && _sprites.find(key) != _sprites.end());
-        sf::IntRect rect = _sprites.find(key)->second.rect;
-        rect.left = (rect.left + offset * rect.width) % _sheet.getSize().x;
-        rect.top += ((offset * rect.width) / _sheet.getSize().x) * rect.height;
-        return rect;
+        return AnimatedSprite(_sheet, _sprites.find(key)->second);
     }
 
-    const Sprite SpriteSet::getSprite(const SpriteID& key) const
+    const SpriteData& SpriteSet::getSpriteData(const SpriteID& key) const
     {
-        Sprite spr(_sheet, getTexRect(key));
-        auto& data = _sprites.find(key)->second;
-        spr.length = data.length;
-        spr.speed = data.speed;
-        spr.offset = data.offset;
-        spr.startx = data.rect.left;
-        spr.starty = data.rect.top;
-        spr.sfsprite.setOrigin(data.origin);
-        return spr;
+        assert("Sprite does not exist" && _sprites.find(key) != _sprites.end());
+        return _sprites.find(key)->second;
     }
 
     const sf::Texture& SpriteSet::getSpriteSheet() const

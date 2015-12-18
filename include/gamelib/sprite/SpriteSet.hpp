@@ -5,7 +5,8 @@
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
 #include "gamelib/utils/JsonObject.hpp"
-#include "Sprite.hpp"
+#include "AnimatedSprite.hpp"
+#include "SpriteData.hpp"
 
 namespace gamelib
 {
@@ -13,19 +14,6 @@ namespace gamelib
 
     class SpriteSet : public Json::JsonObject
     {
-        private:
-            // SpriteSet uses SpriteData to store sprite settings, instead of using
-            // sf::Sprite or gamelib::Sprite, to be more memory efficient.
-            // Maybe this will change later.
-            struct SpriteData
-            {
-                int length;
-                float speed;
-                float offset;
-                sf::IntRect rect;
-                sf::Vector2f origin;
-            };
-
         public:
             auto loadFromJson(const Json::Value& node)  -> bool;
             auto destroy()                              -> void;
@@ -33,11 +21,12 @@ namespace gamelib
             auto add(const SpriteID& key, const SpriteData& spr)    -> void;
             auto setSpriteSheet(const sf::Texture& tex)             -> void;
 
-            auto getTexRect(const SpriteID& key, int offset = 0)    const -> sf::IntRect;
-            auto getSprite(const SpriteID& key)                     const -> const Sprite;
-            auto getSFMLSprite(const SpriteID& key, int offset = 0) const -> sf::Sprite;
-            auto getSpriteSheet()                                   const -> const sf::Texture&;
-            auto size()                                             const -> size_t;
+            auto getAnimatedSprite(const SpriteID& key)   const -> AnimatedSprite;
+            auto getSprite(const SpriteID& key)           const -> sf::Sprite;
+            auto getSpriteData(const SpriteID& key)       const -> const SpriteData&;
+
+            auto getSpriteSheet()                         const -> const sf::Texture&;
+            auto size()                                   const -> size_t;
 
         private:
             std::unordered_map<SpriteID, SpriteData> _sprites;
