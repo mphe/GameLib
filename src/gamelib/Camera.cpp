@@ -28,10 +28,6 @@ namespace gamelib
         size.y = node.get("h", 0).asInt();
         zoom = node.get("zoom", 1).asFloat();
 
-        LOG_DEBUG(LOG_DUMP(pos.x), ", ", LOG_DUMP(pos.y));
-        LOG_DEBUG(LOG_DUMP(size.x), ", ", LOG_DUMP(size.y));
-        LOG_DEBUG(LOG_DUMP(zoom));
-
         if (size.x == 0 || size.y == 0)
             LOG_WARN("Camera size is 0");
 
@@ -40,9 +36,6 @@ namespace gamelib
         viewport.pos.y = vp.get("y", 0).asFloat();
         viewport.size.x = vp.get("w", 1).asFloat();
         viewport.size.y = vp.get("h", 1).asFloat();
-
-        LOG_DEBUG(LOG_DUMP(viewport.pos.x), ", ", LOG_DUMP(viewport.pos.y));
-        LOG_DEBUG(LOG_DUMP(viewport.size.x), ", ", LOG_DUMP(viewport.size.y));
 
         if (viewport.size.x == 0 || viewport.size.y == 0)
             LOG_WARN("Camera viewport size is 0");
