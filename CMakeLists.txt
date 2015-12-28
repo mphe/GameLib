@@ -1,16 +1,22 @@
 cmake_minimum_required(VERSION 2.6)
 project(GameLib)
 
+option(DISABLE_LOGGING "Disable logging completely" OFF)
 option(DEBUG_LOG_RELEASE "Show debug log entries in release build" OFF)
 option(DEBUG_LOG_DEBUG "Show debug log entries in debug build" ON)
 option(BUILD_TESTS "Build tests" ON)
 
 if(NOT DEBUG_LOG_DEBUG)
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE} -DNLOGDEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DNLOGDEBUG")
 endif()
 
 if(NOT DEBUG_LOG_RELEASE)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNLOGDEBUG")
+endif()
+
+if(DISABLE_LOGGING)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDISABLE_LOGGING")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDISABLE_LOGGING")
 endif()
 
 

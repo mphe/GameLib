@@ -3,6 +3,18 @@
 
 #include <iostream>
 
+// Visual Studio fails compiling this file.
+#ifdef DISABLE_LOGGING
+#   define LOG(...)
+#   define LOG_WARN(...)
+#   define LOG_ERROR(...)
+#   define LOG_DEBUG(...)
+#   define LOG_DEBUG_WARN(...)
+#   define LOG_DEBUG_ERROR(...)
+#   define LOG_RAW(...)
+#   define LOG_DEBUG_RAW(...)
+#else
+
 #define LOG_NORMAL_PREFIX ""
 #define LOG_WARNING_PREFIX "WARNING: "
 #define LOG_ERROR_PREFIX "ERROR: "
@@ -13,32 +25,24 @@
 // LOG("Some log entry");
 // LOG("some variable: ", x);
 // LOG_WARN("Something is wrong: ", x, "!");
-#define LOG(...)        logutils::logfunc_join<std::cout, true>(LOG_NORMAL_PREFIX, ##__VA_ARGS__)
-#define LOG_WARN(...)   logutils::logfunc_join<std::cout, true>(LOG_WARNING_PREFIX, ##__VA_ARGS__)
-#define LOG_ERROR(...)  logutils::logfunc_join<std::cerr, true>(LOG_ERROR_PREFIX, ##__VA_ARGS__)
+#define LOG(...)        logutils::logfunc_init(__VA_ARGS__)
+#define LOG_WARN(...)   logutils::logfunc_init<logutils::Warning>(__VA_ARGS__)
+#define LOG_ERROR(...)  logutils::logfunc_init<logutils::Error, std::cerr>(__VA_ARGS__)
 
 // Same as above but without appending a new line character at the end
-#define LOG_RAW(...)        logutils::logfunc_join<std::cout, false>(LOG_NORMAL_PREFIX, ##__VA_ARGS__)
-#define LOG_WARN_RAW(...)   logutils::logfunc_join<std::cout, false>(LOG_WARNING_PREFIX, ##__VA_ARGS__)
-#define LOG_ERROR_RAW(...)  logutils::logfunc_join<std::cerr, false>(LOG_ERROR_PREFIX, ##__VA_ARGS__)
+#define LOG_RAW(...)        logutils::logfunc_init<logutils::Normal, std::cout, false>(__VA_ARGS__)
 
 // Same as above but will only be displayed when NLOGDEBUG is NOT defined
 #ifndef NLOGDEBUG
-#   define LOG_DEBUG(...)       LOG(LOG_DEBUG_PREFIX, ##__VA_ARGS__)
-#   define LOG_DEBUG_WARN(...)  LOG_WARN(LOG_DEBUG_PREFIX, ##__VA_ARGS__)
-#   define LOG_DEBUG_ERROR(...) LOG_ERROR(LOG_DEBUG_PREFIX, ##__VA_ARGS__)
-
-#   define LOG_DEBUG_RAW(...)       LOG_RAW(LOG_DEBUG_PREFIX, ##__VA_ARGS__)
-#   define LOG_DEBUG_WARN_RAW(...)  LOG_WARN_RAW(LOG_DEBUG_PREFIX, ##__VA_ARGS__)
-#   define LOG_DEBUG_ERROR_RAW(...) LOG_ERROR_RAW(LOG_DEBUG_PREFIX, ##__VA_ARGS__)
+#   define LOG_DEBUG(...)           logutils::logfunc_init<logutils::Debug>(__VA_ARGS__)
+#   define LOG_DEBUG_WARN(...)      logutils::logfunc_init<logutils::DebugWarning>(__VA_ARGS__)
+#   define LOG_DEBUG_ERROR(...)     logutils::logfunc_init<logutils::DebugError, std::cerr>(__VA_ARGS__)
+#   define LOG_DEBUG_RAW(...)       logutils::logfunc_init<logutils::Debug, std::cout, false>(__VA_ARGS__)
 #else // No, no, Mr. Debug no here.
 #   define LOG_DEBUG(...)
 #   define LOG_DEBUG_WARN(...)
 #   define LOG_DEBUG_ERROR(...)
-
 #   define LOG_DEBUG_RAW(...)
-#   define LOG_DEBUG_WARN_RAW(...)
-#   define LOG_DEBUG_ERROR_RAW(...)
 #endif
 
 // Use like this:
@@ -49,6 +53,16 @@
 
 namespace logutils
 {
+    enum LogLevel
+    {
+        Normal,
+        Warning,
+        Error,
+        Debug,
+        DebugWarning,
+        DebugError
+    };
+
     template<std::ostream& stream, bool nl>
     void logfunc_join()
     {
@@ -61,9 +75,35 @@ namespace logutils
     template<std::ostream& stream, bool nl, class T, class... Args>
     void logfunc_join(const T& arg, const Args&... rest)
     {
-       stream<<arg;
-       logfunc_join<stream, nl>(rest...);
+        stream<<arg;
+        logfunc_join<stream, nl>(rest...);
+    }
+
+    template<LogLevel level = Normal, std::ostream& stream = std::cout, bool nl = true, class... Args>
+    void logfunc_init(const Args&... args)
+    {
+        switch (level)
+        {
+            case DebugWarning:
+            case Warning:
+                stream<<LOG_WARNING_PREFIX;
+                break;
+
+            case DebugError:
+            case Error:
+                stream<<LOG_ERROR_PREFIX;
+                break;
+
+            case Normal:
+            default:
+                stream<<LOG_NORMAL_PREFIX;
+                break;
+        }
+        if (level >= 3)
+            stream<<LOG_DEBUG_PREFIX;
+        logfunc_join<stream, nl>(args...);
     }
 }
+#endif
 
 #endif
