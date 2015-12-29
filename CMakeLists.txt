@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 2.6)
 project(GameLib)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+
 option(DISABLE_LOGGING "Disable logging completely" OFF)
 option(DEBUG_LOG_RELEASE "Show debug log entries in release build" OFF)
 option(DEBUG_LOG_DEBUG "Show debug log entries in debug build" ON)
 option(BUILD_TESTS "Build tests" ON)
+set(SFML_ROOT "" CACHE PATH "SFML library directory (optional)")
 
 if(NOT DEBUG_LOG_DEBUG)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DNLOGDEBUG")

@@ -1,5 +1,7 @@
 set(CXX_STANDARD_REQUIRED ON)
 
+find_package(SFML 2.3 COMPONENTS system window graphics REQUIRED)
+
 set(GAMELIB_SOURCES
     Game.cpp
     event/EventManager.cpp
@@ -20,9 +22,7 @@ set(GAMELIB_SOURCES
 )
 
 set(EXT_LIBRARIES
-    sfml-graphics
-    sfml-system
-    sfml-window
+    ${SFML_LIBRARIES}
     cppmath
     jsoncpp
 )
@@ -37,6 +37,7 @@ set(UTILS_SOURCES
 source_group(gamelib FILES ${GAMELIB_SOURCES})
 
 include_directories(
+    ${SFML_INCLUDE_DIR}
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/extlib/cppmath/include
     ${PROJECT_SOURCE_DIR}/extlib/jsoncpp/include
