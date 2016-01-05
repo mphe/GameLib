@@ -21,3 +21,4 @@ include_directories(
 
 gen_test(factorytest factory.cpp)
 gen_test(logtest log.cpp)
+gen_test_full(entity_component entity_component.cpp)

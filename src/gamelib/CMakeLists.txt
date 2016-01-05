@@ -19,6 +19,7 @@ set(GAMELIB_SOURCES
     sprite/SpriteData.cpp
     Scene.cpp
     collision/CollisionSystem.cpp
+    component/Entity.cpp
 )
 
 set(EXT_LIBRARIES
