@@ -1,27 +1,21 @@
-#ifndef GAMELIB_IDENTIFIABLE_HPP
-#define GAMELIB_IDENTIFIABLE_HPP
+#ifndef GAMELIB_INTERFACE_IDENTIFIABLE_HPP
+#define GAMELIB_INTERFACE_IDENTIFIABLE_HPP
 
-#include "IdentifiableBase.hpp"
-
-// A wrapper around IdentifiableBase.
-// It takes an ID as template parameter and provides a getID() method, which returns the given ID.
-// Additionally a static (constexpr) variable "id" is set to allow static access to the class's ID.
+// Base class for objects with an ID.
+// It only defines a virtual method to get the object's ID.
+// Consider inheriting from Identifier instead (see Identifier.hpp).
 
 namespace gamelib
 {
-    template <ID ID_>
-    class Identifiable : virtual public IdentifiableBase
+    typedef unsigned int ID;
+
+    constexpr ID invalidID = -1;
+
+    class Identifiable
     {
         public:
-            static constexpr ID id = ID_;
-
-        public:
-            virtual ~Identifiable() {}
-
-            inline ID getID() const
-            {
-                return id;
-            }
+            virtual ~Identifiable() {};
+            virtual ID getID() const = 0;
     };
 }
 

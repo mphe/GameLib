@@ -3,7 +3,7 @@
 
 #include "math/geometry/Vector2.hpp"
 #include "math/geometry/AABB.hpp"
-#include "gamelib/IdentifiableBase.hpp"
+#include "gamelib/Identifiable.hpp"
 
 namespace sf
 {
@@ -12,7 +12,7 @@ namespace sf
 
 namespace gamelib
 {
-    class Collidable : virtual public IdentifiableBase
+    class Collidable : public Identifiable
     {
         public:
             virtual ~Collidable() {};

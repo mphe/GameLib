@@ -2,20 +2,20 @@
 #define GAMELIB_EVENT_HPP
 
 #include <memory>
-#include "../Identifiable.hpp"
+#include "../Identifier.hpp"
 
 namespace gamelib
 {
     typedef ID EventID;
     constexpr EventID invalidEvent = invalidID;
 
-    typedef IdentifiableBase BaseEvent; // Event Interface
+    typedef Identifiable BaseEvent; // Event Interface
 
     typedef std::shared_ptr<BaseEvent> EventPtr;
 
-    // Wrapper (see Identifiable.hpp)
-    template <int ID>
-    using Event = Identifiable<ID>;
+    // Wrapper (see Identifier.hpp)
+    template <ID id>
+    using Event = Identifier<id, BaseEvent>;
 }
 
 #endif
