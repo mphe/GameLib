@@ -1,6 +1,7 @@
 #ifndef GAMELIB_IDENTIFIER_HPP
 #define GAMELIB_IDENTIFIER_HPP
 
+#include <type_traits>
 #include "Identifiable.hpp"
 
 // A wrapper around Identifiable, used to avoid implementing the same code everytime again by hand.
@@ -34,6 +35,23 @@ namespace gamelib
             {
                 return id;
             }
+    };
+
+    // Based on http://stackoverflow.com/a/32489730/4778400
+    // Check if a class is derived from Identifier.
+    // TODO: This is getting ridiculous...
+    //       How about a less sucking approach to identifiables (without templates)?
+    template <typename Derived>
+    struct isIdentifiable
+    {
+        using U = typename std::remove_cv<Derived>::type;
+
+        template <ID id, class T>
+        static std::true_type test(Identifier<id, T>*);
+        static std::false_type test(void*);
+
+        using type = decltype(test(std::declval<U*>()));
+        static constexpr bool value = isIdentifiable<Derived>::type::value;
     };
 }
 
