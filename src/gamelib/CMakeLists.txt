@@ -20,6 +20,8 @@ set(GAMELIB_SOURCES
     Scene.cpp
     collision/CollisionSystem.cpp
     component/Entity.cpp
+    component/subsystem/UpdateSystem.cpp
+    component/UpdateComponent.cpp
 )
 
 set(EXT_LIBRARIES
