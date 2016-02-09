@@ -14,11 +14,15 @@
 namespace gamelib
 {
     class Entity;
+    class Subsystem;
 
     class Component : public Identifiable
     {
         public:
             virtual ~Component() {}
+
+            // Gets called after the component is added to a subsystem.
+            virtual bool init(Subsystem* subsystem) { return true; }
 
             // Gets called after the component is added to an entity.
             virtual void setEntity(Entity* entity) {}
