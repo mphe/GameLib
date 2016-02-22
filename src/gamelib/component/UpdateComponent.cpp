@@ -33,4 +33,10 @@ namespace gamelib
             _subsys = NULL;
         }
     }
+
+    void UpdateComponent::setDepth(int depth)
+    {
+        if (_subsys)
+            _subsys->setDepth(this, depth);
+    }
 }

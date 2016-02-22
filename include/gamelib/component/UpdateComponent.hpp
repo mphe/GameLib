@@ -34,6 +34,8 @@ namespace gamelib
 
             virtual void update(float fps) = 0;
 
+            void setDepth(int depth);
+
         protected:
             UpdateSystem* _subsys;
 
