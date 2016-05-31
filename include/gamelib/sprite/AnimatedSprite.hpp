@@ -39,7 +39,7 @@ namespace gamelib
             ~AnimatedSprite() {};
 
             void update(float fps);
-            void render(sf::RenderTarget& target) const;
+            void render(sf::RenderTarget& target);
 
             void change(const AnimationData& anidata);
             void change(const SpriteData& spritedata);

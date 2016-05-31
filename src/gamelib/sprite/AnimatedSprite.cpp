@@ -35,7 +35,7 @@ namespace gamelib
         setTextureRect(_anidata.getRect(getTexture()->getSize().x, getTexture()->getSize().y));
     }
 
-    void AnimatedSprite::render(sf::RenderTarget& target) const
+    void AnimatedSprite::render(sf::RenderTarget& target)
     {
         target.draw(*this);
     }
