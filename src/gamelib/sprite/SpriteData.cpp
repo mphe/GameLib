@@ -1,4 +1,5 @@
 #include "gamelib/sprite/SpriteData.hpp"
+#include <cmath>
 
 namespace gamelib
 {
