@@ -38,12 +38,10 @@ namespace gamelib
             GameState& pullState() const;
 
             sf::RenderWindow& getWindow();
+            EventManager& getEventManager();
 
             bool isActive() const;
             bool isKeyPressed(sf::Keyboard::Key key) const;
-
-            void regEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
-            void unregEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
 
         private:
             sf::Color _bgcolor;

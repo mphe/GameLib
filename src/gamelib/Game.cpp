@@ -187,6 +187,11 @@ namespace gamelib
         return _window;
     }
 
+    EventManager& Game::getEventManager()
+    {
+        return _evmgr;
+    }
+
     bool Game::isActive() const
     {
         return _active;
@@ -195,18 +200,6 @@ namespace gamelib
     bool Game::isKeyPressed(sf::Keyboard::Key key) const
     {
         return _active && sf::Keyboard::isKeyPressed(key);
-    }
-
-    void Game::regEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me)
-    {
-        _evmgr.regCallback(id, callback, me);
-        LOG_DEBUG("Added event callback: ev: ", id, ", obj: ", me);
-    }
-
-    void Game::unregEventCallback(EventID id, void (*callback)(void*, EventPtr), void* me)
-    {
-        _evmgr.unregCallback(id, callback, me);
-        LOG_DEBUG("Removed event callback: ev: ", id, ", obj: ", me);
     }
 }
 
