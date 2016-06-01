@@ -13,6 +13,25 @@ namespace gamelib
     class EventManager
     {
         public:
+            template <class T>
+            void regCallback(EventID id, void (*callback)(T*, EventPtr), T* me)
+            {
+                _callbacks[id].regCallback((EventCallback)callback, me);
+            }
+
+            template <class T>
+            void unregCallback(EventID id, void (*callback)(T*, EventPtr), T* me)
+            {
+                auto it = _callbacks.find(id);
+                if (it == _callbacks.end())
+                    return;
+                it->second.unregCallback((EventCallback)callback, me);
+
+                if (!it->second.size()) // remove the callback handler if it is empty
+                    _callbacks.erase(it);
+            }
+
+
             void regCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
             void unregCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
 
