@@ -9,7 +9,27 @@ namespace gamelib
     typedef ID EventID;
     constexpr EventID invalidEvent = invalidID;
 
-    typedef Identifiable BaseEvent; // Event Interface
+    // typedef Identifiable BaseEvent; // Event Interface
+
+    class BaseEvent : public Identifiable
+    {
+        public:
+            virtual ~BaseEvent() {}
+
+            // Returns a pointer T*.
+            // Can be used to easily cast to the derived class.
+            template <class T>
+            const T* get() const
+            {
+                return static_cast<const T*>(this);
+            }
+
+            template <class T>
+            T* get()
+            {
+                return static_cast<T*>(this);
+            }
+    };
 
     typedef std::shared_ptr<BaseEvent> EventPtr;
 
