@@ -5,70 +5,99 @@
 
 namespace gamelib
 {
-    Scene::Scene() : _currentcam(NULL)
+    Scene::Scene() : _currentcam(0), _cams(1)
     {}
 
     void Scene::destroy()
     {
-        _objs.clear();
+        _update.clear();
+        _render.clear();
         _cams.clear();
+        _cams.emplace_back();
+        _currentcam = 0;
         LOG_DEBUG_WARN("Scene destroyed");
     }
 
     void Scene::update(float fps)
     {
         for (auto& i : _cams)
-            i->update(fps);
-        for (size_t i = _objs.size(); i-- > 0;) // objects in the front get the "focus" first
-            _objs[i]->update(fps);
+            i.update(fps);
+        for (size_t i = _update.size(); i-- > 0;)
+            _update[i]->update(fps);
     }
 
-    void Scene::render(sf::RenderTarget& target) const
+    void Scene::render(sf::RenderTarget& target)
     {
-        if (!_cams.empty())
+        sf::View tmp(target.getView()); // backup view
+        for (size_t i = 0; i < _cams.size(); ++i)
         {
-            sf::View tmp(target.getView()); // backup view
-            for (auto& c : _cams)
-            {
-                _currentcam = c.get();
-                target.setView(c->getView());
-                for (auto& o : _objs)
-                    o->render(target);
-            }
-            target.setView(tmp); // reset view
-        }
-        else
-        {
-            for (auto& o : _objs)
+            _currentcam = i;
+            target.setView(_cams[i].getView());
+            for (auto& o : _render)
                 o->render(target);
         }
+        target.setView(tmp); // reset view
+        _currentcam = 0;
     }
 
-    GameObject& Scene::addObject(GameObjectPtr obj)
+    Updatable* Scene::addObject(Updatable* obj)
+    {
+        assert("Updatable pointer is a null pointer" && obj);
+        _update.push_back(obj);
+        LOG_DEBUG("Added Updatable to scene");
+        return obj;
+    }
+
+    Renderable* Scene::addObject(Renderable* obj)
+    {
+        assert("Renderable pointer is a null pointer" && obj);
+        _render.push_back(obj);
+        LOG_DEBUG("Added Renderable to scene");
+        return obj;
+    }
+
+    GameObject* Scene::addObject(GameObject* obj)
     {
         assert("GameObject pointer is a null pointer" && obj);
-        _objs.push_back(std::move(obj));
-        LOG_DEBUG("Added object to scene");
-        return *_objs.back();
+        addObject(static_cast<Updatable*>(obj));
+        addObject(static_cast<Renderable*>(obj));
+        return obj;
     }
 
-    Camera& Scene::addCamera(CameraPtr cam)
+    Camera& Scene::addCamera()
     {
-        assert("Camera pointer is a null pointer" && cam);
-        _cams.push_back(std::move(cam));
-        _currentcam = _cams.front().get();
+        _cams.emplace_back();
         LOG_DEBUG("Added camera to scene");
-        return *_cams.back();
+        return _cams.back();
     }
 
-    Camera& Scene::getCamera(size_t index) const
+    Camera& Scene::addCamera(const Camera& cam)
     {
-        return *_cams[index];
+        _cams.push_back(cam);
+        LOG_DEBUG("Added camera to scene");
+        return _cams.back();
     }
 
-    Camera* Scene::getCurrentCamera() const
+    Camera& Scene::getCamera(size_t index)
     {
-        return _currentcam;
+        assert("Trying to access non existing camera" && index < _cams.size());
+        return _cams[index];
+    }
+
+    const Camera& Scene::getCamera(size_t index) const
+    {
+        assert("Trying to access non existing camera" && index < _cams.size());
+        return _cams[index];
+    }
+
+    Camera& Scene::getCurrentCamera()
+    {
+        return _cams[_currentcam];
+    }
+
+    const Camera& Scene::getCurrentCamera() const
+    {
+        return _cams[_currentcam];
     }
 
     size_t Scene::getCameraCount() const
