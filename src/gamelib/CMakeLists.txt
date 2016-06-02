@@ -11,8 +11,6 @@ set(GAMELIB_SOURCES
     tile/tilemap/TileMap.cpp
     tile/tilemap/StaticTileMap.cpp
     tile/tilemap/FloatingTileMap.cpp
-    tile/tilemap/Layer.cpp
-    tile/TileScene.cpp
     Camera.cpp
     sprite/AnimatedSprite.cpp
     sprite/SpriteSet.cpp
