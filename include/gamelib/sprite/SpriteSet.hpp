@@ -1,5 +1,5 @@
-#ifndef SPRITE_SET_HPP
-#define SPRITE_SET_HPP
+#ifndef GAMELIB_SPRITE_SET_HPP
+#define GAMELIB_SPRITE_SET_HPP
 
 #include <string>
 #include <unordered_map>
@@ -15,6 +15,16 @@ namespace gamelib
     class SpriteSet : public Json::JsonObject
     {
         public:
+            typedef std::unordered_map<SpriteID, SpriteData> SpriteMap;
+            typedef SpriteMap::iterator iterator;
+            typedef SpriteMap::const_iterator const_iterator;
+            typedef SpriteMap::difference_type difference_type;
+            typedef SpriteMap::size_type size_type;
+            typedef SpriteMap::value_type value_type;
+            typedef SpriteMap::pointer pointer;
+            typedef SpriteMap::reference reference;
+
+        public:
             auto loadFromJson(const Json::Value& node)  -> bool;
             auto destroy()                              -> void;
 
@@ -24,12 +34,22 @@ namespace gamelib
             auto getAnimatedSprite(const SpriteID& key)   const -> AnimatedSprite;
             auto getSprite(const SpriteID& key)           const -> sf::Sprite;
             auto getSpriteData(const SpriteID& key)       const -> const SpriteData&;
+            auto hasSprite(const SpriteID& key)           const -> bool;
+
+            auto getAnimatedSprite(const const_iterator& it)   const -> AnimatedSprite;
+            auto getSprite(const const_iterator& it)           const -> sf::Sprite;
 
             auto getSpriteSheet()                         const -> const sf::Texture&;
             auto size()                                   const -> size_t;
 
+            auto begin()       -> iterator;
+            auto begin() const -> const_iterator;
+
+            auto end()       -> iterator;
+            auto end() const -> const_iterator;
+
         private:
-            std::unordered_map<SpriteID, SpriteData> _sprites;
+            SpriteMap _sprites;
             sf::Texture _sheet;
     };
 }

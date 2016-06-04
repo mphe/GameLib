@@ -74,14 +74,12 @@ namespace gamelib
 
     sf::Sprite SpriteSet::getSprite(const SpriteID& key) const
     {
-        assert("Sprite does not exist" && _sprites.find(key) != _sprites.end());
-        return sf::Sprite(_sheet, _sprites.find(key)->second.anidata.getRect(_sheet.getSize().x, _sheet.getSize().y));
+        return getSprite(_sprites.find(key));
     }
 
     AnimatedSprite SpriteSet::getAnimatedSprite(const SpriteID& key) const
     {
-        assert("Sprite does not exist" && _sprites.find(key) != _sprites.end());
-        return AnimatedSprite(_sheet, _sprites.find(key)->second);
+        return getAnimatedSprite(_sprites.find(key));
     }
 
     const SpriteData& SpriteSet::getSpriteData(const SpriteID& key) const
@@ -89,6 +87,25 @@ namespace gamelib
         assert("Sprite does not exist" && _sprites.find(key) != _sprites.end());
         return _sprites.find(key)->second;
     }
+
+    bool SpriteSet::hasSprite(const SpriteID& key) const
+    {
+        return _sprites.find(key) != _sprites.end();
+    }
+
+
+    sf::Sprite SpriteSet::getSprite(const const_iterator& it) const
+    {
+        assert("Sprite does not exist" && it != _sprites.end());
+        return sf::Sprite(_sheet, it->second.anidata.getRect(_sheet.getSize().x, _sheet.getSize().y));
+    }
+
+    AnimatedSprite SpriteSet::getAnimatedSprite(const const_iterator& it) const
+    {
+        assert("Sprite does not exist" && it != _sprites.end());
+        return AnimatedSprite(_sheet, it->second);
+    }
+
 
     const sf::Texture& SpriteSet::getSpriteSheet() const
     {
@@ -100,4 +117,25 @@ namespace gamelib
         return _sprites.size();
     }
 
+
+    SpriteSet::iterator SpriteSet::begin()
+    {
+        return _sprites.begin();
+    }
+
+    SpriteSet::const_iterator SpriteSet::begin() const
+    {
+        return _sprites.begin();
+    }
+
+
+    SpriteSet::iterator SpriteSet::end()
+    {
+        return _sprites.end();
+    }
+
+    SpriteSet::const_iterator SpriteSet::end() const
+    {
+        return _sprites.end();
+    }
 }
