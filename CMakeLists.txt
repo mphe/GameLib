@@ -11,6 +11,9 @@ option(BUILD_TESTS "Build tests" ON)
 option(USE_CCACHE "Use ccache if available" ON)
 set(SFML_ROOT "" CACHE PATH "SFML library directory (optional)")
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fdiagnostics-color=auto")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fdiagnostics-color=auto")
+
 if(NOT DEBUG_LOG_DEBUG)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DNLOGDEBUG")
 endif()
