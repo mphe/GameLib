@@ -1,0 +1,15 @@
+{
+    "title": "Shadow",
+    "width": 720,
+    "height": 480,
+    "maxfps": 0,
+    "vsync": true,
+    "handleclose": true,
+    "escclose" : true,
+    "repeatkeys": false,
+    "bg": {
+        "r": 0,
+        "g": 0,
+        "b": 0
+    }
+}

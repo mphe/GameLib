@@ -8,6 +8,7 @@ option(DISABLE_LOGGING "Disable logging completely" OFF)
 option(DEBUG_LOG_RELEASE "Show debug log entries in release build" OFF)
 option(DEBUG_LOG_DEBUG "Show debug log entries in debug build" ON)
 option(BUILD_TESTS "Build tests" ON)
+option(BUILD_EXAMPLES "Build examples" OFF)
 option(USE_CCACHE "Use ccache if available" ON)
 set(SFML_ROOT "" CACHE PATH "SFML library directory (optional)")
 
@@ -41,6 +42,10 @@ endif(USE_CCACHE)
 
 add_subdirectory(extlib)
 add_subdirectory(src/gamelib)
+
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
 
 if(BUILD_TESTS)
     enable_testing()

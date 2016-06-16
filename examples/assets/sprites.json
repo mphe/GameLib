@@ -1,0 +1,90 @@
+{
+    "sheet": "assets/sheet.png",
+    "sprites": {
+        "player_stand": {
+            "offset": 2,
+            "rect": {
+                "x": 0,
+                "y": 64,
+                "w": 32,
+                "h": 32
+            },
+            "origin": {
+                "x": 16,
+                "y": 32
+            }
+        },
+        "player_walk": {
+            "speed": 8,
+            "length": 8,
+            "offset": 0,
+            "rect": {
+                "x": 0,
+                "y": 64,
+                "w": 32,
+                "h": 32
+            },
+            "origin": {
+                "x": 16,
+                "y": 32
+            }
+        },
+        "player_jump": {
+            "offset": 4,
+            "rect": {
+                "x": 0,
+                "y": 64,
+                "w": 32,
+                "h": 32
+            },
+            "origin": {
+                "x": 16,
+                "y": 32
+            }
+        },
+        "wall": {
+            "rect": {
+                "x": 0,
+                "y": 0,
+                "w": 32,
+                "h": 32
+            }
+        },
+        "bg1": {
+            "offset": 6,
+            "rect": {
+                "x": 0,
+                "y": 0,
+                "w": 32,
+                "h": 32
+            }
+        },
+        "bg2": {
+            "offset": 7,
+            "rect": {
+                "x": 0,
+                "y": 0,
+                "w": 32,
+                "h": 32
+            }
+        },
+        "bg3": {
+            "offset": 6,
+            "rect": {
+                "x": 0,
+                "y": 32,
+                "w": 32,
+                "h": 32
+            }
+        },
+        "bg4": {
+            "offset": 7,
+            "rect": {
+                "x": 0,
+                "y": 32,
+                "w": 32,
+                "h": 32
+            }
+        }
+    }
+}
