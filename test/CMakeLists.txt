@@ -1,14 +1,14 @@
 set(CXX_STANDARD_REQUIRED ON)
 
-macro(gen_test_full TESTNAME SOURCE_LIST)
-    add_executable(${TESTNAME} ${SOURCE_LIST})
+macro(gen_test_full TESTNAME SOURCE)
+    add_executable(${TESTNAME} ${SOURCE} ${ARGN})
     target_link_libraries(${TESTNAME} ${PROJECT_NAME})
     add_test(NAME ${TESTNAME} COMMAND ${TESTNAME})
     set_property(TARGET ${TESTNAME} PROPERTY CXX_STANDARD 11)
 endmacro()
 
-macro(gen_test TESTNAME SOURCE_LIST)
-    add_executable(${TESTNAME} ${SOURCE_LIST})
+macro(gen_test TESTNAME SOURCE)
+    add_executable(${TESTNAME} ${SOURCE} ${ARGN})
     add_test(NAME ${TESTNAME} COMMAND ${TESTNAME})
     set_property(TARGET ${TESTNAME} PROPERTY CXX_STANDARD 11)
 endmacro()
