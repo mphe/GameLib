@@ -10,7 +10,8 @@ set(GAMELIB_SOURCES
     sprite/AnimatedSprite.cpp
     sprite/SpriteSet.cpp
     sprite/SpriteData.cpp
-    Scene.cpp
+    Scene/Scene.cpp
+    Scene/TilemapAdapter.cpp
     collision/CollisionSystem.cpp
     component/Entity.cpp
     component/subsystem/UpdateSystem.cpp

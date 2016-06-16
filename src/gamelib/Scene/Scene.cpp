@@ -1,4 +1,4 @@
-#include "gamelib/Scene.hpp"
+#include "gamelib/Scene/Scene.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <cassert>
 #include "gamelib/utils/log.hpp"
