@@ -11,7 +11,8 @@ namespace gamelib
 
     void AnimationData::update(float fps)
     {
-        offset = std::fmod(offset + speed / fps, length);
+        if (length > 1 && speed != 0)
+            offset = std::fmod(offset + speed / fps, length);
     }
 
     sf::IntRect AnimationData::getRect(int texw, int texh) const
