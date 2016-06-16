@@ -21,6 +21,7 @@ namespace gamelib
             typedef SpriteMap::difference_type difference_type;
             typedef SpriteMap::size_type size_type;
             typedef SpriteMap::value_type value_type;
+            typedef SpriteMap::key_type key_type;
             typedef SpriteMap::pointer pointer;
             typedef SpriteMap::reference reference;
 
@@ -29,6 +30,8 @@ namespace gamelib
             auto destroy()                              -> void;
 
             auto add(const SpriteID& key, const SpriteData& spr)    -> void;
+            auto add(SpriteID&& key, const SpriteData& spr)    -> void;
+
             auto setSpriteSheet(const sf::Texture& tex)             -> void;
 
             auto getAnimatedSprite(const SpriteID& key)   const -> AnimatedSprite;
@@ -47,6 +50,9 @@ namespace gamelib
 
             auto end()       -> iterator;
             auto end() const -> const_iterator;
+
+            auto find (const SpriteID& key)         -> iterator;
+            auto find (const SpriteID& key) const   -> const_iterator;
 
         private:
             SpriteMap _sprites;

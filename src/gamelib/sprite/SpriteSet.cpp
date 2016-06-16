@@ -63,7 +63,12 @@ namespace gamelib
 
     void SpriteSet::add(const SpriteID& key, const SpriteData& spr)
     {
-        _sprites.insert(std::make_pair(key, spr));
+        _sprites[key] = spr;
+    }
+
+    void SpriteSet::add(SpriteID&& key, const SpriteData& spr)
+    {
+        _sprites[key] = spr;
     }
 
     void SpriteSet::setSpriteSheet(const sf::Texture& tex)
@@ -137,5 +142,15 @@ namespace gamelib
     SpriteSet::const_iterator SpriteSet::end() const
     {
         return _sprites.end();
+    }
+
+    SpriteSet::iterator SpriteSet::find (const SpriteID& key)
+    {
+        return _sprites.find(key);
+    }
+
+    SpriteSet::const_iterator SpriteSet::find (const SpriteID& key) const
+    {
+        return _sprites.find(key);
     }
 }
