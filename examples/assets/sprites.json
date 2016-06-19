@@ -1,6 +1,6 @@
 {
     "sheet": "assets/sheet.png",
-    "sprites": {
+    "objects": {
         "player_stand": {
             "offset": 2,
             "rect": {
