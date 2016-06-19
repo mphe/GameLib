@@ -12,6 +12,10 @@ option(BUILD_EXAMPLES "Build examples" OFF)
 option(USE_CCACHE "Use ccache if available" ON)
 set(SFML_ROOT "" CACHE PATH "SFML library directory (optional)")
 
+# All binarys are tests, except examples, whose paths are set separately in examples/CMakeLists.txt
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/test)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fdiagnostics-color=auto")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fdiagnostics-color=auto")
 
