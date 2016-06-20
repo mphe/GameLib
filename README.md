@@ -9,7 +9,7 @@
 1. Open a terminal in a directory where you want to download the repository and type:
 
     ```shell
-    $ git clone https://github.com/mall0c/GameLib.git
+    $ git clone https://github.com/mphe/GameLib.git
     $ cd GameLib
     $ git submodule update --init --recursive
     ```
@@ -25,6 +25,7 @@
     Flag                |   Function
     --------------------|-------------------------------------------------
     BUILD_TESTS         |   Build unit tests
+    BUILD_EXAMPLES      |   Build examples
     DEBUG_LOG_DEBUG     |   Print debug log entries in a debug-build
     DEBUG_LOG_RELEASE   |   Print debug log entries in a release-build
     DISABLE_LOGGING     |   Completely disable logging **(currently required when compiling with Visual Studio 2015, because of a compiler bug)**.
@@ -36,3 +37,5 @@
 7. After successful configuration hit "Generate" to generate the project files.
 
 8. Compile it using the generated project files
+
+9. The output files are stored in the build directory under "bin" and "lib".
