@@ -16,6 +16,7 @@ set(GAMELIB_SOURCES
     component/Entity.cpp
     component/subsystem/UpdateSystem.cpp
     component/UpdateComponent.cpp
+    misc/Acceleration.cpp
 )
 
 set(EXT_LIBRARIES
