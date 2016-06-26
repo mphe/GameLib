@@ -57,7 +57,7 @@ namespace gamelib
                     if (it != trans.end())
                         trans[s] = it->second;
                     else
-                        LOG_WARN("Alias '", s, "' links to unknown value '", it->second, "' -> Skipping");
+                        LOG_WARN("Alias '", s, "' links to unknown value '", i->asString(), "' -> Skipping");
                 }
             }
         }
