@@ -102,6 +102,21 @@ namespace gamelib
     }
 
     template <class T>
+    void StaticTilemap<T>::globalToTileCoords(int* x, int* y) const
+    {
+        *x = *x / _tsize[X] - (*x < 0 ? 1 : 0);
+        *y = *y / _tsize[Y] - (*y < 0 ? 1 : 0);
+    }
+
+    template <class T>
+    void StaticTilemap<T>::tileToGlobalCoords(int* x, int* y) const
+    {
+        *x = _tsize[X] * *x;
+        *y = _tsize[Y] * *y;
+    }
+
+
+    template <class T>
     void StaticTilemap<T>::set(int x, int y, TileID id)
     {
         (*_get(x, y)) = id;

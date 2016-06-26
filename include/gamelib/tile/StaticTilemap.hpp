@@ -68,6 +68,9 @@ namespace gamelib
             void setTileSet(const std::vector<T>& set);
             void setTileSet(std::vector<T>&& set);
 
+            void globalToTileCoords(int* x, int* y) const;
+            void tileToGlobalCoords(int* x, int* y) const;
+
         protected:
             // Returns a pointer to the position in the map at tilex/tiley
             // regarding the virtual size. If the position is outside the
