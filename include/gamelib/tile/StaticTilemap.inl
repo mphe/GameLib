@@ -133,7 +133,7 @@ namespace gamelib
     {
         x = _adaptCoords(x, X);
         y = _adaptCoords(y, Y);
-        if (x < _size[X] && y < _size[Y])
+        if (x >= 0 && y >= 0 && x < _size[X] && y < _size[Y])
             return &_map[y * _size[X] + x];
         return NULL;
     }
@@ -141,7 +141,7 @@ namespace gamelib
     template <class T>
     int StaticTilemap<T>::_adaptCoords(int val, int index) const
     {
-        if (_virtsize[index] == infiniteRepeat || val < _virtsize[index])
+        if (_virtsize[index] == infiniteRepeat || (val < _virtsize[index] && val >= 0))
             return std::abs(val) % _size[index];
         return val;
     }
