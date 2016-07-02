@@ -26,9 +26,15 @@ namespace gamelib
     constexpr int noRepeat = 0;
     constexpr int infiniteRepeat = -1;
 
+    template <class>
+    class TilemapCollider;
+
     template <class T>
     class StaticTilemap
     {
+        template <class, unsigned int>
+        friend class TilemapCollider;
+
         public:
             StaticTilemap();
             virtual ~StaticTilemap() {}

@@ -22,6 +22,7 @@ include_directories(
 gen_test(factorytest factory.cpp)
 gen_test(logtest log.cpp)
 gen_test(stablevector_test stablevector_test.cpp)
+gen_test(tilemap_collider_test tilemap_collider.cpp)
 gen_test_full(statictilemap statictilemap.cpp)
 gen_test_full(static_dataset_tilemap static_dataset_tilemap.cpp)
 gen_test_full(entity_component entity_component.cpp)
