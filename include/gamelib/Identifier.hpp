@@ -37,6 +37,11 @@ namespace gamelib
             }
     };
 
+    // Usage:
+    // auto foobar = gamelib::identify<MyClass, 0xdeadbeef>();
+    template <class T, ID id>
+    using identify = Identifier<id, T>;
+
     // Based on http://stackoverflow.com/a/32489730/4778400
     // Check if a class is derived from Identifier.
     // TODO: This is getting ridiculous...
