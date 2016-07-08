@@ -1,4 +1,4 @@
-#include "gamelib/misc/Acceleration.hpp"
+#include "gamelib/movement/Acceleration.hpp"
 #include <algorithm> // std::min
 
 namespace gamelib
