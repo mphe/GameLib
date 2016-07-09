@@ -13,6 +13,7 @@ set(GAMELIB_SOURCES
     Scene/Scene.cpp
     Scene/TilemapAdapter.cpp
     collision/CollisionSystem.cpp
+    collision/AABBCollision.cpp
     component/Entity.cpp
     component/subsystem/UpdateSystem.cpp
     component/UpdateComponent.cpp
