@@ -15,8 +15,18 @@
 
 namespace gamelib
 {
+    /* Hides the actual implementation. Useful when a TilemapCollider of any
+     * type is needed, for example in TileWalker.
+     */
+    class BaseTilemapCollider : public Collidable
+    {
+        public:
+            virtual ~BaseTilemapCollider() {};
+            virtual geometry::Vector2<int> getTilesize() const = 0;
+    };
+
     template <class T>
-    class TilemapCollider : public Collidable
+    class TilemapCollider : public BaseTilemapCollider
     {
         typedef bool(*Callback)(const T&);
 
@@ -27,6 +37,8 @@ namespace gamelib
             bool contains(const geometry::Vector2<float>& point) const;
             bool intersects(const geometry::AABB<float>& rect) const;
             geometry::AABB<float> getBBox() const;
+
+            geometry::Vector2<int> getTilesize() const;
 
         private:
             const StaticTilemap<T>& _map;

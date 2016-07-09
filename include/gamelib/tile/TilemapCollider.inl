@@ -60,6 +60,12 @@ namespace gamelib
             _map._virtsize[1] == infiniteRepeat ? fmax : _map._tsize[1] * _map._size[1]
             );
     }
+
+    template <class T>
+    geometry::Vector2<int> TilemapCollider<T>::getTilesize() const
+    {
+        return geometry::Vector2<int>(_map._tsize[0], _map._tsize[1]);
+    }
 }
 
 #endif
