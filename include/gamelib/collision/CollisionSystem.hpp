@@ -6,6 +6,7 @@
 #include "math/geometry/Vector2.hpp"
 #include "math/geometry/AABB.hpp"
 #include "Collidable.hpp"
+#include "gamelib/Identifiable.hpp"
 
 // TODO: Use quadtrees
 
@@ -22,8 +23,8 @@ namespace gamelib
     class CollisionSystem
     {
         public:
-            void add(Collidable* col);
-            void remove(Collidable* col);
+            void add(Collidable* col, ID id);
+            void remove(Collidable* col, ID id);
             void destroy();
             size_t size() const;
 

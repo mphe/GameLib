@@ -3,16 +3,10 @@
 
 #include "math/geometry/Vector2.hpp"
 #include "math/geometry/AABB.hpp"
-#include "gamelib/Identifiable.hpp"
-
-namespace sf
-{
-    class RenderTarget;
-}
 
 namespace gamelib
 {
-    class Collidable : public Identifiable
+    class Collidable
     {
         public:
             virtual ~Collidable() {};

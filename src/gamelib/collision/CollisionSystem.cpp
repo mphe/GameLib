@@ -2,18 +2,16 @@
 #include <cassert>
 #include <algorithm>
 
-// TODO: Could be optimized for less code duplication.
-
 namespace gamelib
 {
-    void CollisionSystem::add(Collidable* col)
+    void CollisionSystem::add(Collidable* col, ID id)
     {
-        _objs[col->getID()].push_back(col);
+        _objs[id].push_back(col);
     }
 
-    void CollisionSystem::remove(Collidable* col)
+    void CollisionSystem::remove(Collidable* col, ID id)
     {
-        auto it = _objs.find(col->getID());
+        auto it = _objs.find(id);
         if (it != _objs.end())
         {
             it->second.erase(std::find(it->second.begin(), it->second.end(), col));

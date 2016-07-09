@@ -15,8 +15,8 @@
 
 namespace gamelib
 {
-    template <class T, ID id>
-    class TilemapCollider : public Identifier<id, Collidable>
+    template <class T>
+    class TilemapCollider : public Collidable
     {
         typedef bool(*Callback)(const T&);
 

@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
                        1, 0, 0, 0, 0, 1,
                        1, 1, 1, 1, 1, 1 });
 
-    TilemapCollider<Tile, 0xdeadbeef> tcol(map,
+    TilemapCollider<Tile> tcol(map,
             [](const Tile& t) { return t.x == 1; });
 
     geometry::AABB<float> rect;

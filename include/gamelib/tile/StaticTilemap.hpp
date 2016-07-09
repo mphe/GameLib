@@ -32,7 +32,7 @@ namespace gamelib
     template <class T>
     class StaticTilemap
     {
-        template <class, unsigned int>
+        template <class>
         friend class TilemapCollider;
 
         public:
