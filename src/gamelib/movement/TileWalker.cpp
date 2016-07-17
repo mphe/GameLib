@@ -33,7 +33,7 @@ namespace gamelib
         // Move outside
         if (_col.intersects(_rect))
         {
-            auto tsize = _col.getTilesize();
+            auto tsize = _col.getTileSize();
 
             // Calculate the amount of pixels the object has moved the current tile.
             float a;

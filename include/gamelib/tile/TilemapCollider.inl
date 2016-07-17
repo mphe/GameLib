@@ -62,9 +62,9 @@ namespace gamelib
     }
 
     template <class T>
-    geometry::Vector2<int> TilemapCollider<T>::getTilesize() const
+    const int* TilemapCollider<T>::getTileSize() const
     {
-        return geometry::Vector2<int>(_map._tsize[0], _map._tsize[1]);
+        return _map.getTileSize();
     }
 }
 

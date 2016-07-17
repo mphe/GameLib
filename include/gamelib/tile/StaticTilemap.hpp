@@ -77,6 +77,10 @@ namespace gamelib
             void globalToTileCoords(int* x, int* y) const;
             void tileToGlobalCoords(int* x, int* y) const;
 
+            // Returns a pointer to an array of length 2 containing the
+            // dimensions. 0 = x, 1 = y.
+            const int* getTileSize() const;
+
         protected:
             // Returns a pointer to the position in the map at tilex/tiley
             // regarding the virtual size. If the position is outside the

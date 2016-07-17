@@ -145,6 +145,12 @@ namespace gamelib
             return std::abs(val) % _size[index];
         return val;
     }
+
+    template <class T>
+    const int* StaticTilemap<T>::getTileSize() const
+    {
+        return _tsize;
+    }
 }
 
 #endif

@@ -22,7 +22,7 @@ namespace gamelib
     {
         public:
             virtual ~BaseTilemapCollider() {};
-            virtual geometry::Vector2<int> getTilesize() const = 0;
+            virtual const int* getTileSize() const = 0;
     };
 
     template <class T>
@@ -38,7 +38,7 @@ namespace gamelib
             bool intersects(const geometry::AABB<float>& rect) const;
             geometry::AABB<float> getBBox() const;
 
-            geometry::Vector2<int> getTilesize() const;
+            const int* getTileSize() const;
 
         private:
             const StaticTilemap<T>& _map;
