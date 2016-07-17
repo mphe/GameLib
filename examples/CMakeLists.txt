@@ -14,3 +14,5 @@ macro(add_example EXNAME SOURCE)
 endmacro()
 
 add_example(scene_tilemap scene_tilemap/main.cpp scene_tilemap/MainState.hpp scene_tilemap/MainState.cpp)
+# add_example(tilewalker tilewalker/main.cpp)
+add_example(tilewalker tilewalker/main.cpp tilewalker/MainState.hpp tilewalker/MainState.cpp)
