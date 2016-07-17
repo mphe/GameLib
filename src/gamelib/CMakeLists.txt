@@ -18,6 +18,7 @@ set(GAMELIB_SOURCES
     component/subsystem/UpdateSystem.cpp
     component/UpdateComponent.cpp
     movement/Acceleration.cpp
+    movement/TileWalker.cpp
 )
 
 set(EXT_LIBRARIES
