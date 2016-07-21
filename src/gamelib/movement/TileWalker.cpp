@@ -4,7 +4,7 @@ namespace gamelib
 {
     TileWalker::TileWalker(float x, float y, float w, float h, const BaseTilemapCollider& c) :
         AABBCollision(x, y, w, h),
-        _col(c)
+        _col(&c)
     { }
 
     void TileWalker::move(float x, float y)
@@ -31,9 +31,9 @@ namespace gamelib
         _rect.pos[index] += val;
 
         // Move outside
-        if (_col.intersects(_rect))
+        if (_col->intersects(_rect))
         {
-            auto tsize = _col.getTileSize();
+            auto tsize = _col->getTileSize();
 
             // Calculate the amount of pixels the object has moved the current tile.
             float a;
@@ -54,7 +54,7 @@ namespace gamelib
 
             _rect.pos[index] -= math::sign(val) * a;
 
-            while (_col.intersects(_rect))
+            while (_col->intersects(_rect))
                 _rect.pos[index] -= math::sign(val) * tsize[index];
         }
     }

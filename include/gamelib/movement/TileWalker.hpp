@@ -29,7 +29,7 @@ namespace gamelib
             void _moveContact(float val, int index);
 
         private:
-            const BaseTilemapCollider& _col;
+            const BaseTilemapCollider* _col;
     };
 }
 
