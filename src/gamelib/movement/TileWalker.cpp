@@ -20,6 +20,17 @@ namespace gamelib
             _moveContact(dy, 1);
     }
 
+    bool TileWalker::placeFree(float x, float y) const
+    {
+        return !_col->intersects(geometry::AABBf(x, y, _rect.size.x, _rect.size.y));
+    }
+
+    bool TileWalker::placeFreeRelative(float x, float y) const
+    {
+        return !_col->intersects(geometry::AABBf(_rect.pos.x + x, _rect.pos.y + y,
+                    _rect.size.x, _rect.size.y));
+    }
+
     geometry::Vector2<float> TileWalker::getPosition() const
     {
         return _rect.pos;
@@ -35,14 +46,11 @@ namespace gamelib
         {
             auto tsize = _col->getTileSize();
 
-            // Calculate the amount of pixels the object has moved the current tile.
+            // Calculate the amount of pixels the object has moved into the current tile.
             float a;
             if (val < 0)
             {
-                if (_rect.pos[index] < 0)
-                    a = tsize[index] + std::fmod(_rect.pos[index], tsize[index]);
-                else
-                    a = tsize[index] - std::fmod(_rect.pos[index], tsize[index]);
+                a = tsize[index] - math::sign(_rect.pos[index]) * std::fmod(_rect.pos[index], tsize[index]);
             }
             else if (val > 0)
             {

@@ -17,11 +17,13 @@ namespace gamelib
             TileWalker(float x, float y, float w, float h, const BaseTilemapCollider& c);
             virtual ~TileWalker() {};
 
-            void move(float x, float y);
-
             // Splits up movement in x and y direction.
             // Moves first in x direction, then y direction
             void moveContact(float x, float y);
+            void move(float x, float y);
+
+            bool placeFree(float x, float y) const;
+            bool placeFreeRelative(float x, float y) const;
 
             geometry::Vector2<float> getPosition() const;
 
