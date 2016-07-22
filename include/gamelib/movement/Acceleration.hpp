@@ -14,9 +14,13 @@ namespace gamelib
 
             void update(float fps);
 
-            geometry::Vector2<float> getVector() const;
-
+            // Set speed to min
             void reset();
+
+            // Set speed to 0
+            void stop();
+
+            geometry::Vector2<float> getVector() const;
 
         public:
             float min;

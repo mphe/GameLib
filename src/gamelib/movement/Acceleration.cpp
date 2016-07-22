@@ -19,7 +19,10 @@ namespace gamelib
     {
         // TODO: Frame independency works for any constant framerate, e.g. 10, 30, 60, 100, ...
         // Not tested with varying/unstable framerates yet.
-        speed = std::min(speed + accl / fps, max);
+        if (accl > 0)
+            speed = std::min(speed + accl / fps, max);
+        else
+            speed = std::max(speed + accl / fps, max);
     }
 
     geometry::Vector2<float> Acceleration::getVector() const
@@ -30,5 +33,10 @@ namespace gamelib
     void Acceleration::reset()
     {
         speed = min;
+    }
+
+    void Acceleration::stop()
+    {
+        speed = 0;
     }
 }
