@@ -3,28 +3,58 @@
 
 #include <vector>
 #include <string>
+#include <sstream>
 #include <SFML/Graphics.hpp>
+#include "gamelib/Renderable.hpp"
 
 namespace gamelib
 {
-    class DebugGui
+    class DebugGui : public Renderable
     {
         public:
-            DebugGui(const sf::Font& font, unsigned int size = 16);
+            DebugGui(const sf::Font& font, unsigned int size = 14);
             virtual ~DebugGui() {};
 
             void setColor(const sf::Color& col);
 
-            void drawText(float x, float y, const std::string& text);
-            void drawDebug(const std::string& text);
+            template <class... Args>
+            void drawText(float x, float y, Args&&... args)
+            {
+                std::stringstream ss;
+                _joinString(ss, std::forward<Args>(args)...);
+                _text.emplace_back(ss.str(), *_font, _fontsize);
+                // _text.back().setStyle(sf::Text::Bold);
+                _text.back().setPosition(x, y);
+                _text.back().setColor(_color);
+            }
+
+            template <class... Args>
+            void drawDebug(Args&&... args)
+            {
+                drawText(8, 8 + _dbgSize++ * _fontsize, std::forward<Args>(args)...);
+            }
 
             void render(sf::RenderTarget& target);
+
+        private:
+            template <class T, class... Args>
+            void _joinString(std::stringstream& ss, const T& arg, Args&&... rest)
+            {
+                ss << arg;
+                _joinString(ss, std::forward<Args>(rest)...);
+            }
+
+            template <class T>
+            void _joinString(std::stringstream& ss, const T& arg)
+            {
+                ss << arg;
+            }
 
         private:
             int _fontsize;
             int _dbgSize;
             sf::Color _color;
-            const sf::Font& _font;
+            const sf::Font* _font;
             std::vector<sf::Text> _text;
     };
 }
