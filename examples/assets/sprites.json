@@ -15,7 +15,7 @@
             }
         },
         "player_walk": {
-            "speed": 8,
+            "speed": 16,
             "length": 8,
             "offset": 0,
             "rect": {
@@ -43,6 +43,15 @@
             }
         },
         "wall": {
+            "rect": {
+                "x": 0,
+                "y": 0,
+                "w": 32,
+                "h": 32
+            }
+        },
+        "box": {
+            "offset": 2,
             "rect": {
                 "x": 0,
                 "y": 0,
