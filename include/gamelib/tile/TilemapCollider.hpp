@@ -41,7 +41,7 @@ namespace gamelib
             const int* getTileSize() const;
 
         private:
-            const StaticTilemap<T>& _map;
+            const StaticTilemap<T>* _map;
             Callback _callback;
     };
 
