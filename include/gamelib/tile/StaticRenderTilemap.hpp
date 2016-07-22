@@ -23,7 +23,7 @@ namespace gamelib
 
             void update(float fps);
             // Make a copy from rect because it will be modified
-            void render(sf::RenderTarget& surface, geometry::AABB<int> rect);
+            void render(sf::RenderTarget& surface, geometry::AABB<float> rect);
 
         private:
             size_t _tilesRendered;
