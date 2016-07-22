@@ -8,12 +8,10 @@ using namespace geometry;
 namespace gamelib
 {
     Camera::Camera() :
-            targetobj(0),
             zoom(1)
     { }
 
     Camera::Camera(const Vector2<float>& pos, const Vector2<float>& size) :
-            targetobj(0),
             zoom(1),
             pos(pos),
             size(size)
@@ -46,10 +44,7 @@ namespace gamelib
 
     void Camera::update(float fps)
     {
-        if (targetobj)
-            center(targetobj->getPosition());
-        else
-            pos += _speed / fps;
+        pos += _speed / fps;
     }
 
 
@@ -82,30 +77,9 @@ namespace gamelib
         pos.y += y;
     }
 
-    void Camera::render(sf::RenderTarget& target) const
-    {
-        AABB<int> rect(getCamRect());
-
-        sf::VertexArray va(sf::PrimitiveType::Lines, 8);
-        va.append(sf::Vertex(sf::Vector2f(rect.pos.x, rect.pos.y), sf::Color::Black));
-        va.append(sf::Vertex(sf::Vector2f(rect.pos.x, rect.pos.y + rect.size.y), sf::Color::Black));
-
-        va.append(sf::Vertex(sf::Vector2f(rect.pos.x + rect.size.x, rect.pos.y), sf::Color::Black));
-        va.append(sf::Vertex(sf::Vector2f(rect.pos.x + rect.size.x, rect.pos.y + rect.size.y), sf::Color::Black));
-
-        va.append(sf::Vertex(sf::Vector2f(rect.pos.x, rect.pos.y + rect.size.y), sf::Color::Black));
-        va.append(sf::Vertex(sf::Vector2f(rect.pos.x + rect.size.x, rect.pos.y + rect.size.y), sf::Color::Black));
-
-        va.append(sf::Vertex(sf::Vector2f(rect.pos.x, rect.pos.y), sf::Color::Black));
-        va.append(sf::Vertex(sf::Vector2f(rect.pos.x + rect.size.x, rect.pos.y), sf::Color::Black));
-
-        target.draw(va);
-    }
-
-
     AABB<float> Camera::getCamRect() const
     {
-        return AABB<float>(pos, size * zoom);
+        return AABB<float>(pos + (size - (size * zoom)) / 2, size * zoom);
     }
 
     sf::Transform Camera::getTransform() const
@@ -122,7 +96,7 @@ namespace gamelib
         sf::View view;
         view.setSize(size.x, size.y);
         view.zoom(zoom);
-        view.setCenter(pos.x + size.x / 2 * zoom, pos.y + size.y / 2 * zoom);
+        view.setCenter(pos.x + size.x / 2, pos.y + size.y / 2);
         view.setViewport(sf::FloatRect(viewport.pos.x, viewport.pos.y, viewport.size.x, viewport.size.y));
         return view;
     }

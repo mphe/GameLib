@@ -4,6 +4,7 @@
 #include "math/geometry/Vector2.hpp"
 #include "math/geometry/AABB.hpp"
 #include "gamelib/utils/JsonObject.hpp"
+#include "gamelib/Updatable.hpp"
 
 namespace sf
 {
@@ -14,21 +15,12 @@ namespace sf
 
 namespace gamelib
 {
-    class CameraTarget
-    {
-        public:
-            virtual ~CameraTarget() {};
-            virtual geometry::Vector2<float> getPosition() const = 0;
-    };
-
-
-    class Camera : public Json::JsonObject
+    class Camera : public Json::JsonObject, public gamelib::Updatable
     {
         public:
             Camera();
             Camera(const geometry::Vector2<float>& pos, const geometry::Vector2<float>& size);
 
-            using JsonObject::loadFromJson;
             bool loadFromJson(const Json::Value& node);
 
             void update(float fps);
@@ -40,8 +32,6 @@ namespace gamelib
             void center(const geometry::Vector2<float>& pos);
             void move(float x, float y);
 
-            void render(sf::RenderTarget& surface) const; //Renders the cam rect
-
             geometry::AABB<float> getCamRect() const;
             sf::Transform getTransform() const;
             sf::View getView() const;
@@ -49,9 +39,8 @@ namespace gamelib
         public:
             float zoom;
             geometry::Vector2<float> pos;
-            geometry::Vector2<int> size;
+            geometry::Vector2<float> size;
             geometry::AABB<float> viewport;
-            CameraTarget* targetobj;
 
         private:
             geometry::Vector2<float> _speed;
