@@ -8,7 +8,6 @@
 #include "gamelib/Scene/Scene.hpp"
 #include "gamelib/tile/StaticRenderTilemap.hpp"
 #include "gamelib/event/SFMLEvent.hpp"
-#include "gamelib/utils/DebugGui.hpp"
 #include "Player.hpp"
 
 namespace gamelib
