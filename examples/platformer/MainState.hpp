@@ -5,7 +5,6 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "gamelib/GameState.hpp"
 #include "gamelib/sprite/SpriteSet.hpp"
-#include "gamelib/Scene/Scene.hpp"
 #include "gamelib/tile/StaticRenderTilemap.hpp"
 #include "gamelib/event/SFMLEvent.hpp"
 #include "Player.hpp"
@@ -13,7 +12,6 @@
 namespace gamelib
 {
     class Game;
-    class EventManager;
 }
 
 class MainState : public gamelib::GameState
