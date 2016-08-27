@@ -12,4 +12,26 @@ namespace gamelib
     {
         map.render(target, scene.getCurrentCamera().getCamRect());
     }
+
+    StaticRenderTilemap& TilemapAdapter::operator*()
+    {
+        return map;
+    }
+
+    const StaticRenderTilemap& TilemapAdapter::operator*() const
+    {
+        return map;
+    }
+
+    StaticRenderTilemap* TilemapAdapter::operator->()
+    {
+
+        return &map;
+    }
+
+    const StaticRenderTilemap* TilemapAdapter::operator->() const
+    {
+        return &map;
+    }
+
 }

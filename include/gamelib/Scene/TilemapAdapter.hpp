@@ -19,6 +19,11 @@ namespace gamelib
             TilemapAdapter(const Scene& scene, const SpriteSet& set);
             void render(sf::RenderTarget& target);
 
+            StaticRenderTilemap& operator*();
+            const StaticRenderTilemap& operator*() const;
+            StaticRenderTilemap* operator->();
+            const StaticRenderTilemap* operator->() const;
+
         public:
             StaticRenderTilemap map;
 
