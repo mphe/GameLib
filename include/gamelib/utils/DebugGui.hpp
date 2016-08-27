@@ -2,10 +2,9 @@
 #define GAMELIB_DEBUG_GUI_HPP
 
 #include <vector>
-#include <string>
-#include <sstream>
 #include <SFML/Graphics.hpp>
 #include "gamelib/Renderable.hpp"
+#include "string.hpp"
 
 namespace gamelib
 {
@@ -20,9 +19,7 @@ namespace gamelib
             template <class... Args>
             void drawText(float x, float y, Args&&... args)
             {
-                std::stringstream ss;
-                _joinString(ss, std::forward<Args>(args)...);
-                _text.emplace_back(ss.str(), *_font, _fontsize);
+                _text.emplace_back(join(std::forward<Args>(args)...), *_font, _fontsize);
                 // _text.back().setStyle(sf::Text::Bold);
                 _text.back().setPosition(x, y);
                 _text.back().setColor(_color);
