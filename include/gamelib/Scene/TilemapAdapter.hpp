@@ -1,7 +1,7 @@
 #ifndef GAMELIB_TILEMAP_ADAPTER_HPP
 #define GAMELIB_TILEMAP_ADAPTER_HPP
 
-#include "../Renderable.hpp"
+#include "../GameObject.hpp"
 #include "../tile/StaticRenderTilemap.hpp"
 
 /*
@@ -13,10 +13,11 @@ namespace gamelib
 {
     class Scene;
 
-    class TilemapAdapter : public Renderable
+    class TilemapAdapter : public GameObject
     {
         public:
             TilemapAdapter(const Scene& scene, const SpriteSet& set);
+            void update(float fps);
             void render(sf::RenderTarget& target);
 
             StaticRenderTilemap& operator*();

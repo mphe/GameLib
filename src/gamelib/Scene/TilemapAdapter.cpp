@@ -13,6 +13,11 @@ namespace gamelib
         map.render(target, scene.getCurrentCamera().getCamRect());
     }
 
+    void TilemapAdapter::update(float fps)
+    {
+        map.update(fps);
+    }
+
     StaticRenderTilemap& TilemapAdapter::operator*()
     {
         return map;
