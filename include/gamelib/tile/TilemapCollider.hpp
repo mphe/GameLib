@@ -3,7 +3,6 @@
 
 #include "StaticTilemap.hpp"
 #include "gamelib/collision/Collidable.hpp"
-#include "gamelib/Identifier.hpp"
 
 /*
  * TilemapCollider is a Collidable that checks for collisions with a tilemap

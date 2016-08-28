@@ -22,8 +22,7 @@ namespace gamelib
             ~StaticRenderTilemap() {}
 
             void update(float fps);
-            // Make a copy from rect because it will be modified
-            void render(sf::RenderTarget& surface, geometry::AABB<float> rect);
+            void render(sf::RenderTarget& surface, const geometry::AABB<float>& rect);
 
         private:
             size_t _tilesRendered;

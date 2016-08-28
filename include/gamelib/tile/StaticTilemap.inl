@@ -115,6 +115,35 @@ namespace gamelib
         *y = _tsize[Y] * *y;
     }
 
+    template <class T>
+    template <class Functor>
+    void StaticTilemap<T>::foreach(geometry::AABB<float> rect, Functor callback) const
+    {
+        if (!_map.empty())
+        {
+            rect.size.x = std::ceil(rect.size.x);
+            rect.size.y = std::ceil(rect.size.y);
+            rect.size += rect.pos;
+
+            for (int i = 0; i < 2; ++i)
+            {
+                if (_virtsize[i] != infiniteRepeat)
+                {
+                    rect.pos[i] = std::max(rect.pos[i], 0.f);
+                    rect.size[i] = std::min(rect.size[i], (float)_virtsize[i] * _tsize[i]);
+                }
+                rect.pos[i] -= std::fmod(rect.pos[i], _tsize[i]) + (rect.pos[i] < 0 ? _tsize[i] : 0);
+            }
+
+            const T* tile;
+
+            for (float y = rect.pos.y; y < rect.size.y; y += _tsize[Y])
+                for (float x = rect.pos.x; x < rect.size.x; x += _tsize[X])
+                    if ((tile = getTile(x / _tsize[X], y / _tsize[Y])))
+                        if (callback(tile, x, y))
+                            return;
+        }
+    }
 
     template <class T>
     void StaticTilemap<T>::set(int x, int y, TileID id)

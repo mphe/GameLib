@@ -2,6 +2,7 @@
 #define GAMELIB_STATIC_TILEMAP_HPP
 
 #include <vector>
+#include "math/geometry/AABB.hpp"
 
 /*
  * StaticTilemap provides basic functionality (accessing, setting, ...)
@@ -73,6 +74,14 @@ namespace gamelib
             // Manually set the tileset without a DataSet.
             void setTileSet(const std::vector<T>& set);
             void setTileSet(std::vector<T>&& set);
+
+            // Calls a function for each element in the given area.
+            // Empty tiles are ignored.
+            // Functor must be a callable with: bool(const T*, float x, float y).
+            // To exit the loop early, return true, otherwise false.
+            // TODO: Add a range class to provide iterators for traversing.
+            template <class Functor>
+            void foreach(geometry::AABB<float> rect, Functor callback) const;
 
             void globalToTileCoords(int* x, int* y) const;
             void tileToGlobalCoords(int* x, int* y) const;
