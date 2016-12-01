@@ -11,7 +11,7 @@ namespace gamelib
         public:
             virtual ~Subsystem() {};
 
-            virtual void update(float fps) = 0;
+            virtual void update(float elapsed) = 0;
             virtual void destroy() = 0;
             virtual size_t size() const = 0;
     };

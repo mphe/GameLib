@@ -29,9 +29,9 @@ namespace gamelib
     }
 
 
-    void AnimatedSprite::update(float fps)
+    void AnimatedSprite::update(float elapsed)
     {
-        _anidata.update(fps);
+        _anidata.update(elapsed);
         setTextureRect(_anidata.getRect(getTexture()->getSize().x, getTexture()->getSize().y));
     }
 

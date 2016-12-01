@@ -28,9 +28,9 @@ void MainState::quit()
     _spriteset.destroy();
 }
 
-void MainState::update(float fps)
+void MainState::update(float elapsed)
 {
-    float walkspeed = 200 / fps;
+    float walkspeed = 200 * elapsed;
 
     // TileWalker
     if (_game->isKeyPressed(sf::Keyboard::A))
@@ -45,7 +45,7 @@ void MainState::update(float fps)
     if (_game->isKeyPressed(sf::Keyboard::W))
         _luke.moveContact(0, -walkspeed);
 
-    _map.update(fps);
+    _map.update(elapsed);
 }
 
 void MainState::render(sf::RenderTarget& target)

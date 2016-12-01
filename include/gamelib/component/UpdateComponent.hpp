@@ -32,7 +32,7 @@ namespace gamelib
             // Unregisters from subsystem (_subsys).
             virtual void destroy();
 
-            virtual void update(float fps) = 0;
+            virtual void update(float elapsed) = 0;
 
             void setDepth(int depth);
 

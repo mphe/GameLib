@@ -21,7 +21,7 @@ namespace gamelib
             StaticRenderTilemap(const SpriteSet& spriteset);
             ~StaticRenderTilemap() {}
 
-            void update(float fps);
+            void update(float elapsed);
             void render(sf::RenderTarget& surface, const geometry::AABB<float>& rect);
 
         private:

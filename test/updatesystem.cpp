@@ -14,7 +14,7 @@ class FooComponent : public Identifier<0xbeefbeef, UpdateComponent>
     public:
         FooComponent() : x(0) {}
 
-        void update(float fps)
+        void update(float elapsed)
         {
             x = 5;
             compOrder.push_back(this);
@@ -27,7 +27,7 @@ class FooComponent : public Identifier<0xbeefbeef, UpdateComponent>
 class BarComponent : public Identifier<0xdeadbeef, UpdateComponent>
 {
     public:
-        void update(float fps)
+        void update(float elapsed)
         {
             compOrder.push_back(this);
             destroy(); // unregister from subsys

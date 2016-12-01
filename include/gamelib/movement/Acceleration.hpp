@@ -12,7 +12,7 @@ namespace gamelib
             Acceleration();
             Acceleration(float accl, float dir = 270, float min = 0, float max = std::numeric_limits<float>::max());
 
-            void update(float fps);
+            void update(float elapsed);
 
             // Set speed to min
             void reset();

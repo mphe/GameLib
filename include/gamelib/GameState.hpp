@@ -15,7 +15,7 @@ namespace gamelib
             virtual bool init(Game* game) = 0;
             virtual void quit() = 0;
 
-            virtual void update(float fps) = 0;
+            virtual void update(float elapsed) = 0;
             virtual void render(sf::RenderTarget& target) = 0;
     };
 }

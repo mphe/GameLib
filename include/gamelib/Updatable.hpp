@@ -7,7 +7,7 @@ namespace gamelib
     {
         public:
             virtual ~Updatable() {};
-            virtual void update(float fps) = 0;
+            virtual void update(float elapsed) = 0;
     };
 }
 

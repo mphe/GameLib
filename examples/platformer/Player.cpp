@@ -18,7 +18,7 @@ Player::Player(MainState& mainstate, float x, float y) :
 { }
 
 
-void Player::update(float fps)
+void Player::update(float elapsed)
 {
     geometry::Vector2<float> motion;
     const gamelib::Game& game = _mainstate->getGame();
@@ -54,12 +54,12 @@ void Player::update(float fps)
 
         if (game.isKeyPressed(sf::Keyboard::A))
         {
-            motion.x -= _options.walkspeed / fps;
+            motion.x -= _options.walkspeed * elapsed;
             _sprite.setScale(-1, 1);
         }
         else if (game.isKeyPressed(sf::Keyboard::D))
         {
-            motion.x += _options.walkspeed / fps;
+            motion.x += _options.walkspeed * elapsed;
             _sprite.setScale(1, 1);
         }
     }
@@ -76,20 +76,20 @@ void Player::update(float fps)
     else if (!game.isKeyPressed(sf::Keyboard::W))
     {
         _canjump = true;
-        _jumpspeed.update(fps);
+        _jumpspeed.update(elapsed);
     }
 
     if (!_onground)
-        _gravity.update(fps);
+        _gravity.update(elapsed);
 
-    motion.y += _gravity.speed / fps;
-    motion.y += _jumpspeed.speed / fps;
+    motion.y += _gravity.speed * elapsed;
+    motion.y += _jumpspeed.speed * elapsed;
 
     // Apply movement
     moveContact(motion.x, motion.y);
 
     // Update sprite
-    _sprite.update(fps);
+    _sprite.update(elapsed);
     _sprite.setPosition(_rect.pos.x + _options.origin.x, _rect.pos.y + _options.origin.y);
 }
 

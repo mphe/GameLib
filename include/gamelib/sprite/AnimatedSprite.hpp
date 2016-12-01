@@ -38,7 +38,7 @@ namespace gamelib
             AnimatedSprite(const sf::Texture& tex, const SpriteData& spritedata);
             ~AnimatedSprite() {};
 
-            void update(float fps);
+            void update(float elapsed);
             void render(sf::RenderTarget& target);
 
             void change(const AnimationData& anidata);

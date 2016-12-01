@@ -9,10 +9,10 @@ namespace gamelib
         offset(0)
     { }
 
-    void AnimationData::update(float fps)
+    void AnimationData::update(float elapsed)
     {
         if (length > 1 && speed != 0)
-            offset = std::fmod(offset + speed / fps, length);
+            offset = std::fmod(offset + speed * elapsed, length);
     }
 
     sf::IntRect AnimationData::getRect(int texw, int texh) const

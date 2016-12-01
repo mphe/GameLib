@@ -50,10 +50,10 @@ void MainState::quit()
     LOG_DEBUG("MainState unloaded");
 }
 
-void MainState::update(float fps)
+void MainState::update(float elapsed)
 {
-    float mvspeed = CAM_MOVE_SPEED / fps,
-          zspeed = 1 - CAM_ZOOM_SPEED / fps;
+    float mvspeed = CAM_MOVE_SPEED * elapsed,
+          zspeed = 1 - CAM_ZOOM_SPEED * elapsed;
 
     gamelib::Camera& cam = _scene.getCamera();
 
@@ -75,7 +75,7 @@ void MainState::update(float fps)
     if (_game->isKeyPressed(sf::Keyboard::O))
         cam.zoom /= zspeed;
 
-    _scene.update(fps);
+    _scene.update(elapsed);
 }
 
 void MainState::render(sf::RenderTarget& target)

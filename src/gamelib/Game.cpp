@@ -41,7 +41,7 @@ namespace gamelib
 
     void Game::run()
     {
-        float fps = 60; // TODO: Consider switching to double
+        float elapsed = 0; // TODO: Consider switching to double
         sf::Clock clock;
         std::shared_ptr<SFMLEvent> ev(new SFMLEvent());
 
@@ -82,23 +82,19 @@ namespace gamelib
             }
 
             for (auto& i : _states)
-            {
-                i->update(fps);
-            }
+                i->update(elapsed);
 
             _evmgr.update();
 
             _window.clear(_bgcolor);
             for (auto& i : _states)
-            {
                 i->render(_window);
-            }
             _window.display();
 
-            //calculate fps
-            sf::Int32 elapsed = clock.getElapsedTime().asMilliseconds();
-            fps = 1000.0f / (elapsed ? elapsed : 1);
-            LOG_DEBUG_RAW("\r", LOG_DUMP(elapsed), "ms, ", LOG_DUMP(fps), "     \r"); // write some spaces to overwrite existing characters
+            // Get elapsed time
+            elapsed = clock.getElapsedTime().asMilliseconds() / 1000.0f;
+            float fps = 1.0f / elapsed;
+            LOG_DEBUG_RAW("\r", LOG_DUMP(elapsed), "ms, ", LOG_DUMP(fps), "              \r"); // write some spaces to overwrite existing characters
         }
     }
 

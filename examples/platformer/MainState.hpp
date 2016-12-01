@@ -22,7 +22,7 @@ class MainState : public gamelib::GameState
         bool init(gamelib::Game* game);
         void quit();
 
-        void update(float fps);
+        void update(float elapsed);
         void render(sf::RenderTarget& target);
 
         const gamelib::Game& getGame() const;

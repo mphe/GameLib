@@ -17,7 +17,7 @@ namespace gamelib
     {
         public:
             TilemapAdapter(const Scene& scene, const SpriteSet& set);
-            void update(float fps);
+            void update(float elapsed);
             void render(sf::RenderTarget& target);
 
             StaticRenderTilemap& operator*();

@@ -12,11 +12,11 @@ namespace gamelib
     { }
 
 
-    void StaticRenderTilemap::update(float fps)
+    void StaticRenderTilemap::update(float elapsed)
     {
         if (!_map.empty())
             for (auto& i : _tiles)
-                i.anidata.update(fps);
+                i.anidata.update(elapsed);
     }
 
     void StaticRenderTilemap::render(sf::RenderTarget& surface, const geometry::AABB<float>& rect)

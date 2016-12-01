@@ -32,7 +32,7 @@ namespace gamelib
             void remove(UpdateComponent* comp);
             void setDepth(UpdateComponent* comp, int depth);
 
-            void update(float fps);
+            void update(float elapsed);
             void destroy();
             size_t size() const;
 

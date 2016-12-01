@@ -23,7 +23,7 @@ namespace gamelib
 
             bool loadFromJson(const Json::Value& node);
 
-            void update(float fps);
+            void update(float elapsed);
 
             void setMotion(float speed, float dir);
             void addMotion(float speed, float dir);

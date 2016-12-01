@@ -9,7 +9,7 @@ namespace gamelib
     {
         public:
             AnimationData();
-            void update(float fps);
+            void update(float elapsed);
             sf::IntRect getRect(int texw, int texh) const;
 
         public:

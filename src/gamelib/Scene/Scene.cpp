@@ -18,12 +18,12 @@ namespace gamelib
         LOG_DEBUG_WARN("Scene destroyed");
     }
 
-    void Scene::update(float fps)
+    void Scene::update(float elapsed)
     {
         for (auto& i : _cams)
-            i.update(fps);
+            i.update(elapsed);
         for (size_t i = _update.size(); i-- > 0;)
-            _update[i]->update(fps);
+            _update[i]->update(elapsed);
     }
 
     void Scene::render(sf::RenderTarget& target)

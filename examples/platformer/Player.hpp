@@ -26,7 +26,7 @@ class Player : public gamelib::GameObject, public Json::JsonObject, public gamel
         Player(MainState& mainstate);
         Player(MainState& mainstate, float x, float y);
 
-        void update(float fps);
+        void update(float elapsed);
         void render(sf::RenderTarget& target);
 
         bool loadFromJson(const Json::Value& node);

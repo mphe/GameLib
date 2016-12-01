@@ -39,10 +39,10 @@ void MainState::quit()
     LOG_DEBUG("MainState unloaded");
 }
 
-void MainState::update(float fps)
+void MainState::update(float elapsed)
 {
-    _map.update(fps);
-    _player.update(fps);
+    _map.update(elapsed);
+    _player.update(elapsed);
 }
 
 void MainState::render(sf::RenderTarget& target)

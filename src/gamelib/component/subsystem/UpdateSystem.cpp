@@ -55,7 +55,7 @@ namespace gamelib
         LOG_DEBUG_WARN("UpdateSystem destroyed");
     }
 
-    void UpdateSystem::update(float fps)
+    void UpdateSystem::update(float elapsed)
     {
         if (_insert)
         {
@@ -84,7 +84,7 @@ namespace gamelib
         // Use indexes instead of iterators because adding new elements could invalidate iterators.
         for (size_t i = 0, s = _comps.size(); i < s; ++i)
             if (!_comps[i].remove)
-                _comps[i].comp->update(fps);
+                _comps[i].comp->update(elapsed);
     }
 
     size_t UpdateSystem::size() const

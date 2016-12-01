@@ -15,14 +15,14 @@ namespace gamelib
         dir(dir)
     { }
 
-    void Acceleration::update(float fps)
+    void Acceleration::update(float elapsed)
     {
         // TODO: Frame independency works for any constant framerate, e.g. 10, 30, 60, 100, ...
         // Not tested with varying/unstable framerates yet.
         if (accl > 0)
-            speed = std::min(speed + accl / fps, max);
+            speed = std::min(speed + accl * elapsed, max);
         else
-            speed = std::max(speed + accl / fps, max);
+            speed = std::max(speed + accl * elapsed, max);
     }
 
     geometry::Vector2<float> Acceleration::getVector() const

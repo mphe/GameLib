@@ -40,7 +40,7 @@ namespace gamelib
             // Removes all Updatables, Renderables and cameras
             void destroy();
 
-            void update(float fps);
+            void update(float elapsed);
             void render(sf::RenderTarget& surface);
 
             Renderable* addObject(Renderable* obj);

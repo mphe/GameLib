@@ -42,9 +42,9 @@ namespace gamelib
     }
 
 
-    void Camera::update(float fps)
+    void Camera::update(float elapsed)
     {
-        pos += _speed / fps;
+        pos += _speed * elapsed;
     }
 
 
