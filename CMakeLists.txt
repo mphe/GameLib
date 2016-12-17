@@ -16,8 +16,17 @@ set(SFML_ROOT "" CACHE PATH "SFML library directory (optional)")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/test)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+# Colored compiler output
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fdiagnostics-color=auto")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fdiagnostics-color=auto")
+
+# Enable warnings
+if (CMAKE_COMPILER_IS_GNUCC)
+    add_definitions(-Wall -Wno-switch)
+elseif (MSVC)
+    # Untested
+    add_definitions(/W3)
+endif()
 
 if(NOT DEBUG_LOG_DEBUG)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DNLOGDEBUG")
