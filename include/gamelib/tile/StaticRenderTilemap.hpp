@@ -22,7 +22,7 @@ namespace gamelib
             ~StaticRenderTilemap() {}
 
             void update(float elapsed);
-            void render(sf::RenderTarget& surface, const geometry::AABB<float>& rect);
+            void render(sf::RenderTarget& surface, const math::AABB<float>& rect);
 
         private:
             size_t _tilesRendered;

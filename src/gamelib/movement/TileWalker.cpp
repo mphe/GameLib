@@ -22,16 +22,16 @@ namespace gamelib
 
     bool TileWalker::placeFree(float x, float y) const
     {
-        return !_col->intersects(geometry::AABBf(x, y, _rect.size.x, _rect.size.y));
+        return !_col->intersects(math::AABBf(x, y, _rect.size.x, _rect.size.y));
     }
 
     bool TileWalker::placeFreeRelative(float x, float y) const
     {
-        return !_col->intersects(geometry::AABBf(_rect.pos.x + x, _rect.pos.y + y,
+        return !_col->intersects(math::AABBf(_rect.pos.x + x, _rect.pos.y + y,
                     _rect.size.x, _rect.size.y));
     }
 
-    geometry::Vector2<float> TileWalker::getPosition() const
+    math::Vector2<float> TileWalker::getPosition() const
     {
         return _rect.pos;
     }

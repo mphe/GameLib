@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     TilemapCollider<Tile> tcol(map,
             [](const Tile& t) { return t.x == 1; });
 
-    geometry::AABB<float> rect;
+    math::AABB<float> rect;
 
     for (size_t i = 0; i < 100; ++i)
     {

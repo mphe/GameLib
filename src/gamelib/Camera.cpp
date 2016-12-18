@@ -3,7 +3,7 @@
 #include "math/math.hpp"
 #include "gamelib/utils/log.hpp"
 
-using namespace geometry;
+using namespace math;
 
 namespace gamelib
 {
@@ -60,7 +60,7 @@ namespace gamelib
         _speed.y += math::lengthdirY(speed, dir);
     }
 
-    void Camera::center(const geometry::Vector2<float>& pos)
+    void Camera::center(const math::Vector2<float>& pos)
     {
         center(pos.x, pos.y);
     }

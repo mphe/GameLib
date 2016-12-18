@@ -117,7 +117,7 @@ namespace gamelib
 
     template <class T>
     template <class Functor>
-    void StaticTilemap<T>::foreach(geometry::AABB<float> rect, Functor callback) const
+    void StaticTilemap<T>::foreach(math::AABB<float> rect, Functor callback) const
     {
         if (!_map.empty())
         {

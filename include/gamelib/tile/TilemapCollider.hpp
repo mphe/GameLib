@@ -33,9 +33,9 @@ namespace gamelib
             TilemapCollider(const StaticTilemap<T>& map,
                     Callback callback = [](const T&){ return true; });
 
-            bool contains(const geometry::Vector2<float>& point) const;
-            bool intersects(const geometry::AABB<float>& rect) const;
-            geometry::AABB<float> getBBox() const;
+            bool contains(const math::Vector2<float>& point) const;
+            bool intersects(const math::AABB<float>& rect) const;
+            math::AABB<float> getBBox() const;
 
             const int* getTileSize() const;
 
@@ -49,12 +49,12 @@ namespace gamelib
         template <class T, bool = std::is_base_of<Collidable, T>::value>
         struct CollidableForwarder
         {
-            static bool contains(const T& t, const geometry::Vector2<float>& point)
+            static bool contains(const T& t, const math::Vector2<float>& point)
             {
                 return t.contains(point);
             }
 
-            static bool intersects(const T& t, const geometry::AABB<float>& rect)
+            static bool intersects(const T& t, const math::AABB<float>& rect)
             {
                 return t.intersects(rect);
             }
@@ -63,12 +63,12 @@ namespace gamelib
         template <class T>
         struct CollidableForwarder<T, false>
         {
-            constexpr static bool contains(const T& t, const geometry::Vector2<float>& point)
+            constexpr static bool contains(const T& t, const math::Vector2<float>& point)
             {
                 return true;
             }
 
-            constexpr static bool intersects(const T& t, const geometry::AABB<float>& rect)
+            constexpr static bool intersects(const T& t, const math::AABB<float>& rect)
             {
                 return true;
             }

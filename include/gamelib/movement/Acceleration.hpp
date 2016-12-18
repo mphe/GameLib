@@ -20,7 +20,7 @@ namespace gamelib
             // Set speed to 0
             void stop();
 
-            geometry::Vector2<float> getVector() const;
+            math::Vector2<float> getVector() const;
 
         public:
             float min;

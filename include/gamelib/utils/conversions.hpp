@@ -9,25 +9,25 @@
 namespace conversions
 {
     template <class T>
-    geometry::Vector2<T> convert(const sf::Vector2<T>& vec)
+    math::Vector2<T> convert(const sf::Vector2<T>& vec)
     {
-        return geometry::Vector2<T>(vec.x, vec.y);
+        return math::Vector2<T>(vec.x, vec.y);
     }
 
     template <class T>
-    geometry::AABB<T> convert(const sf::Rect<T>& rect)
+    math::AABB<T> convert(const sf::Rect<T>& rect)
     {
-        return geometry::AABB<T>(rect.left, rect.top, rect.width, rect.height);
+        return math::AABB<T>(rect.left, rect.top, rect.width, rect.height);
     }
 
     template <class T>
-    sf::Vector2<T> convert(const geometry::Vector2<T>& vec)
+    sf::Vector2<T> convert(const math::Vector2<T>& vec)
     {
         return sf::Vector2<T>(vec.x, vec.y);
     }
 
     template <class T>
-    sf::Rect<T> convert(const geometry::AABB<T>& rect)
+    sf::Rect<T> convert(const math::AABB<T>& rect)
     {
         return sf::Rect<T>(rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
     }

@@ -25,7 +25,7 @@ namespace gamelib
             bool placeFree(float x, float y) const;
             bool placeFreeRelative(float x, float y) const;
 
-            geometry::Vector2<float> getPosition() const;
+            math::Vec2f getPosition() const;
 
         private:
             void _moveContact(float val, int index);

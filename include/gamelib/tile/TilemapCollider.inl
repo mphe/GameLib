@@ -13,7 +13,7 @@ namespace gamelib
     { }
 
     template <class T>
-    bool TilemapCollider<T>::contains(const geometry::Vector2<float>& point) const
+    bool TilemapCollider<T>::contains(const math::Vector2<float>& point) const
     {
         const T* t = _map->get(point.x, point.y);
         if (t && internal::CollidableForwarder<T>::contains(*t, point))
@@ -22,7 +22,7 @@ namespace gamelib
     }
 
     template <class T>
-    bool TilemapCollider<T>::intersects(const geometry::AABB<float>& rect) const
+    bool TilemapCollider<T>::intersects(const math::AABB<float>& rect) const
     {
         const float w = rect.pos.x + rect.size.x,
                     h = rect.pos.y + rect.size.y;
@@ -49,11 +49,11 @@ namespace gamelib
     }
 
     template <class T>
-    geometry::AABB<float> TilemapCollider<T>::getBBox() const
+    math::AABB<float> TilemapCollider<T>::getBBox() const
     {
         const float fmin = std::numeric_limits<float>::min(),
                     fmax = std::numeric_limits<float>::max();
-        return geometry::AABB<float>(
+        return math::AABB<float>(
             _map->_virtsize[0] == infiniteRepeat ? fmin : 0,
             _map->_virtsize[1] == infiniteRepeat ? fmin : 0,
             _map->_virtsize[0] == infiniteRepeat ? fmax : _map->_tsize[0] * _map->_size[0],

@@ -25,9 +25,9 @@ namespace gamelib
             speed = std::max(speed + accl * elapsed, max);
     }
 
-    geometry::Vector2<float> Acceleration::getVector() const
+    math::Vector2<float> Acceleration::getVector() const
     {
-        return geometry::Vector2<float>::fromDirection(speed, dir);
+        return math::Vector2<float>::fromDirection(speed, dir);
     }
 
     void Acceleration::reset()

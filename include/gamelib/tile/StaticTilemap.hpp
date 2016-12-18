@@ -81,7 +81,7 @@ namespace gamelib
             // To exit the loop early, return true, otherwise false.
             // TODO: Add a range class to provide iterators for traversing.
             template <class Functor>
-            void foreach(geometry::AABB<float> rect, Functor callback) const;
+            void foreach(math::AABB<float> rect, Functor callback) const;
 
             void globalToTileCoords(int* x, int* y) const;
             void tileToGlobalCoords(int* x, int* y) const;

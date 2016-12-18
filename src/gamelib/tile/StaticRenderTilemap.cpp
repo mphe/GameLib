@@ -19,7 +19,7 @@ namespace gamelib
                 i.anidata.update(elapsed);
     }
 
-    void StaticRenderTilemap::render(sf::RenderTarget& surface, const geometry::AABB<float>& rect)
+    void StaticRenderTilemap::render(sf::RenderTarget& surface, const math::AABB<float>& rect)
     {
         SpriteBatch batch(&_dataset->getSpriteSheet());
 

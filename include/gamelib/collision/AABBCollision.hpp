@@ -11,12 +11,12 @@ namespace gamelib
             AABBCollision(float x, float y, float w, float h);
             virtual ~AABBCollision() {}
 
-            bool contains(const geometry::Vector2<float>& point) const;
-            bool intersects(const geometry::AABB<float>& rect) const;
-            geometry::AABB<float> getBBox() const;
+            bool contains(const math::Vec2f& point) const;
+            bool intersects(const math::AABBf& rect) const;
+            math::AABBf getBBox() const;
 
         protected:
-            geometry::AABB<float> _rect;
+            math::AABBf _rect;
     };
 }
 

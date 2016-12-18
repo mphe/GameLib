@@ -19,7 +19,7 @@ namespace gamelib
     {
         public:
             Camera();
-            Camera(const geometry::Vector2<float>& pos, const geometry::Vector2<float>& size);
+            Camera(const math::Vector2<float>& pos, const math::Vector2<float>& size);
 
             bool loadFromJson(const Json::Value& node);
 
@@ -29,21 +29,21 @@ namespace gamelib
             void addMotion(float speed, float dir);
 
             void center(float x, float y);
-            void center(const geometry::Vector2<float>& pos);
+            void center(const math::Vector2<float>& pos);
             void move(float x, float y);
 
-            geometry::AABB<float> getCamRect() const;
+            math::AABB<float> getCamRect() const;
             sf::Transform getTransform() const;
             sf::View getView() const;
 
         public:
             float zoom;
-            geometry::Vector2<float> pos;
-            geometry::Vector2<float> size;
-            geometry::AABB<float> viewport;
+            math::Vector2<float> pos;
+            math::Vector2<float> size;
+            math::AABB<float> viewport;
 
         private:
-            geometry::Vector2<float> _speed;
+            math::Vector2<float> _speed;
     };
 }
 
