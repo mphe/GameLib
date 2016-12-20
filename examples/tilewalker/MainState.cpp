@@ -52,7 +52,7 @@ void MainState::render(sf::RenderTarget& target)
 {
     _game->getWindow().clear(sf::Color::White);
 
-    _map.render(target, geometry::AABBf(0, 0, _game->getWindow().getSize().x, _game->getWindow().getSize().y));
+    _map.render(target, math::AABBf(0, 0, _game->getWindow().getSize().x, _game->getWindow().getSize().y));
 
     sf::RectangleShape walker(sf::Vector2f(32, 32));
     walker.setFillColor(sf::Color::Blue);

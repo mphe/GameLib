@@ -33,7 +33,7 @@ namespace gamelib
         return c;
     }
 
-    Collidable* CollisionSystem::contains(const math::Vector2<float>& point) const
+    Collidable* CollisionSystem::contains(const math::Vec2f& point) const
     {
         for (auto& i : _objs)
             for (auto o : i.second)
@@ -51,7 +51,7 @@ namespace gamelib
         return NULL;
     }
 
-    Collidable* CollisionSystem::contains(const math::Vector2<float>& point, ID id) const
+    Collidable* CollisionSystem::contains(const math::Vec2f& point, ID id) const
     {
         auto it = _objs.find(id);
         if (it != _objs.end())

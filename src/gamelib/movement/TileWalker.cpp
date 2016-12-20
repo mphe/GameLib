@@ -31,7 +31,7 @@ namespace gamelib
                     _rect.size.x, _rect.size.y));
     }
 
-    math::Vector2<float> TileWalker::getPosition() const
+    math::Vec2f TileWalker::getPosition() const
     {
         return _rect.pos;
     }

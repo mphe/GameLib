@@ -5,7 +5,7 @@
 #include "gamelib/GameObject.hpp"
 #include "gamelib/sprite/AnimatedSprite.hpp"
 #include "gamelib/utils/JsonObject.hpp"
-#include "math/geometry/Vector2.hpp"
+#include "math/geometry/Vector.hpp"
 #include "gamelib/movement/Acceleration.hpp"
 #include "gamelib/movement/TileWalker.hpp"
 #include "gamelib/event/SFMLEvent.hpp"
@@ -46,7 +46,7 @@ class Player : public gamelib::GameObject, public Json::JsonObject, public gamel
     private:
         struct {
             float walkspeed;
-            geometry::Vector2f origin;
+            math::Vec2f origin;
             const gamelib::SpriteData* spritedata[StateCount];
         } _options;
 

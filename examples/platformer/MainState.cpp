@@ -48,7 +48,7 @@ void MainState::update(float elapsed)
 void MainState::render(sf::RenderTarget& target)
 {
     _game->getWindow().clear(sf::Color::White);
-    _map.render(target, geometry::AABBf(0, 0, _game->getWindow().getSize().x, _game->getWindow().getSize().y));
+    _map.render(target, math::AABBf(0, 0, _game->getWindow().getSize().x, _game->getWindow().getSize().y));
     _player.render(target);
 }
 

@@ -13,7 +13,7 @@ namespace gamelib
     { }
 
     template <class T>
-    bool TilemapCollider<T>::contains(const math::Vector2<float>& point) const
+    bool TilemapCollider<T>::contains(const math::Vec2f& point) const
     {
         const T* t = _map->get(point.x, point.y);
         if (t && internal::CollidableForwarder<T>::contains(*t, point))

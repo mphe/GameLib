@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
         rect.size.x = random() % 640;
         rect.size.y = random() % 640;
 
-        if (rect.intersects(tcol.getBBox()) &&
+        if (rect.intersect(tcol.getBBox()) &&
                 (rect.pos.x < 32 || rect.pos.x + rect.size.x > 5 * 32 ||
                 rect.pos.y < 32 || rect.pos.y + rect.size.y > 4 * 32))
             assert("rect should intersect" && tcol.intersects(rect));

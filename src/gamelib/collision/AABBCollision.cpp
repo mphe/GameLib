@@ -8,37 +8,16 @@ namespace gamelib
 
     bool AABBCollision::contains(const math::Vec2f& point) const
     {
-        return _rect.contains(point);
-    }
-
-    bool AABBCollision::intersects(const math::Line2f& line) const
-    {
-
+        return _rect.contains(point.asPoint());
     }
 
     bool AABBCollision::intersects(const math::AABB<float>& rect) const
     {
-        return _rect.intersects(rect);
+        return _rect.intersect(rect);
     }
 
     math::AABB<float> AABBCollision::getBBox() const
     {
         return _rect;
-    }
-
-    void AABBCollision::move(float x, float y)
-    {
-        _rect.pos.x += x;
-        _rect.pos.y += y;
-    }
-
-    void AABBCollision::setPosition(float x, float y)
-    {
-        _rect.pos.fill(x, y);
-    }
-
-    math::Vec2f AABBCollision::getPosition() const
-    {
-        return _rect.pos;
     }
 }

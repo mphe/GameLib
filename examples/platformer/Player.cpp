@@ -12,15 +12,15 @@ Player::Player(MainState& mainstate, float x, float y) :
     _options{ 0 },
     _mainstate(&mainstate),
     _state(Stand),
+    _col(mainstate.getCollisionMap()),
     _onground(true),
-    _canjump(true),
-    _col(mainstate.getCollisionMap())
+    _canjump(true)
 { }
 
 
 void Player::update(float elapsed)
 {
-    geometry::Vector2<float> motion;
+    math::Vec2f motion;
     const gamelib::Game& game = _mainstate->getGame();
 
     // Contact ground event
