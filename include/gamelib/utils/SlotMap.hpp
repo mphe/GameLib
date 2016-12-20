@@ -44,6 +44,33 @@
 
 namespace gamelib
 {
+    // T is the vector to iterate over, IndexType is the same as in SlotMap.
+    template <typename T, typename IndexType, typename ValueType>
+    class SlotMapIterator : public std::iterator<std::forward_iterator_tag, ValueType>
+    {
+        public:
+            typedef SlotMapIterator<T, IndexType, ValueType> type;
+            typedef SlotMapIterator<const T, IndexType, const ValueType> const_iterator;
+
+        public:
+            SlotMapIterator();
+            SlotMapIterator(T& vec, IndexType i);
+
+            auto operator++() -> type&;
+            auto operator++(int) -> type;
+
+            auto operator==(const type& rhs) const -> bool;
+            auto operator!=(const type& rhs) const -> bool;
+
+            auto operator*() -> ValueType&;
+
+            operator const_iterator() const;
+
+        private:
+            IndexType _index;
+            T* _vec;
+    };
+
     template <typename T, typename IndexType = unsigned int, typename VersionType = unsigned int>
     class SlotMap
     {
@@ -57,6 +84,26 @@ namespace gamelib
                 SlotKey(IndexType i, VersionType v) : index(i), version(v) {}
             };
 
+        private:
+            struct DataField
+            {
+                VersionType version;
+                IndexType nextempty;
+                T data;
+
+                DataField() : version(0), nextempty(-1) {}
+            };
+
+        public:
+            typedef SlotMap<T, IndexType, VersionType> selftype;
+            typedef std::ptrdiff_t difference_type;
+            typedef IndexType size_type;
+            typedef T value_type;
+            typedef T* pointer;
+            typedef T& reference;
+            typedef SlotMapIterator<std::vector<DataField>, IndexType, T> iterator;
+            typedef typename iterator::const_iterator const_iterator;
+
         public:
             SlotMap();
             SlotMap(unsigned int size);
@@ -65,23 +112,20 @@ namespace gamelib
             auto destroy(SlotKey key)       -> void;
             auto isValid(SlotKey key) const -> bool;
             auto clear()                    -> void;
-            auto size() const               -> unsigned int;
+            // auto size() const               -> unsigned int;
+
+            auto begin() -> iterator;
+            auto begin() const -> const_iterator;
+
+            auto end() -> iterator;
+            auto end() const -> const_iterator;
 
             auto operator[](SlotKey key) const  -> const T&;
             auto operator[](SlotKey key)        -> T&;
 
         private:
-            struct DataField
-            {
-                VersionType version;
-                T data;
-
-                DataField() : version(0) {}
-            };
-
-        private:
+            IndexType _firstempty;
             std::vector<DataField> _data;
-            std::vector<IndexType> _free;
     };
 
     template <typename T>

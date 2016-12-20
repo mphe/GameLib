@@ -1,8 +1,10 @@
 #include <cassert>
 #include <memory>
+#include <iostream>
 #include "gamelib/utils/SlotMap.hpp"
 
 using namespace gamelib;
+using namespace std;
 
 struct Foo
 {
@@ -45,7 +47,7 @@ int main()
     assert(key2.index == 1 && "Wrong index");
     assert(key2.version == 0 && "Wrong version tag");
     assert(map.isValid(key2) && "Key should be valid");
-    assert(map.size() == 2 && "Wrong size");
+    // assert(map.size() == 2 && "Wrong size");
 
     map.destroy(key);
 
@@ -56,6 +58,23 @@ int main()
     assert(key.index == 0 && "Wrong index");
     assert(key.version == 1 && "Wrong version tag");
     assert(map.isValid(key) && "Key should be valid");
+
+    for (int i = 0; i < 10; ++i)
+        map.acquire();
+
+    int num = 0;
+    for (auto it = map.begin(), end = map.end(); it != end; ++it)
+        num++;
+
+    assert(num == 12 && "Wrong size");
+
+    map.clear();
+
+    num = 0;
+    for (auto& i : map)
+        num++;
+
+    assert(num == 0 && "Wrong size");
 
     return 0;
 }

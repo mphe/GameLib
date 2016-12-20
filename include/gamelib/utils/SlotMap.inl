@@ -7,11 +7,13 @@
 namespace gamelib
 {
     template <typename T, typename IT, typename VT>
-    SlotMap<T, IT, VT>::SlotMap()
+    SlotMap<T, IT, VT>::SlotMap() :
+        _firstempty(-1)
     { }
 
     template <typename T, typename IT, typename VT>
-    SlotMap<T, IT, VT>::SlotMap(unsigned int size)
+    SlotMap<T, IT, VT>::SlotMap(unsigned int size) :
+        _firstempty(-1)
     {
         _data.reserve(size);
     }
@@ -19,14 +21,22 @@ namespace gamelib
     template <typename T, typename IT, typename VT>
     typename SlotMap<T, IT, VT>::SlotKey SlotMap<T, IT, VT>::acquire()
     {
-        if (_free.empty())
+        if (_firstempty == (IT)-1)
         {
             _data.emplace_back();
             return SlotKey(_data.size() - 1, 0);
         }
-        auto& i = _free.back();
-        _free.pop_back();
-        return SlotKey(i, _data[i].version);
+        else
+        {
+            auto i = _firstempty;
+            if (i == _data[i].nextempty)
+                _firstempty = -1;
+            else
+                _firstempty = _data[i].nextempty;
+
+            _data[i].nextempty = -1;
+            return SlotKey(i, _data[i].version);
+        }
     }
 
     template <typename T, typename IT, typename VT>
@@ -34,10 +44,15 @@ namespace gamelib
     {
         if (isValid(key))
         {
+            if (_firstempty == (IT)-1)
+                _data[key.index].nextempty = key.index;
+            else
+                _data[key.index].nextempty = _firstempty;
+
+            _firstempty = key.index;
             _data[key.index].version++;
             if (std::is_class<T>::value)
                 _data[key.index].data = T();
-            _free.push_back(key.index);
         }
     }
 
@@ -45,36 +60,124 @@ namespace gamelib
     bool SlotMap<T, IT, VT>::isValid(SlotKey key) const
     {
         return key.index < _data.size() &&
-            key.version == _data[key.index].version;
+            key.version == _data[key.index].version &&
+            _data[key.index].nextempty == (IT)-1;
     }
 
     template <typename T, typename IT, typename VT>
     void SlotMap<T, IT, VT>::clear()
     {
         _data.clear();
-        _free.clear();
+        _firstempty = -1;
+    }
+
+    // template <typename T, typename IT, typename VT>
+    // unsigned int SlotMap<T, IT, VT>::size() const
+    // {
+    //     throw "Not implemented";
+    // }
+
+    template <typename T, typename IT, typename VT>
+    typename SlotMap<T, IT, VT>::iterator SlotMap<T, IT, VT>::begin()
+    {
+        if (_data.empty() || _data[0].nextempty != (IT)-1)
+            return ++iterator(_data, 0);
+        return iterator(_data, 0);
     }
 
     template <typename T, typename IT, typename VT>
-    unsigned int SlotMap<T, IT, VT>::size() const
+    typename SlotMap<T, IT, VT>::const_iterator SlotMap<T, IT, VT>::begin() const
     {
-        return _data.size();
+        if (_data.empty() || _data[0].nextempty != (IT)-1)
+            return ++const_iterator(_data, 0);
+        return const_iterator(_data, 0);
+    }
+
+    template <typename T, typename IT, typename VT>
+    typename SlotMap<T, IT, VT>::iterator SlotMap<T, IT, VT>::end()
+    {
+        return iterator(_data, -1);
+    }
+
+    template <typename T, typename IT, typename VT>
+    typename SlotMap<T, IT, VT>::const_iterator SlotMap<T, IT, VT>::end() const
+    {
+        return const_iterator(_data, -1);
     }
 
     template <typename T, typename IT, typename VT>
     const T& SlotMap<T, IT, VT>::operator[](SlotKey key) const
     {
-        assert(isValid(key) && "Key not valid (anymore)");
+        assert(isValid(key) && "Key is not valid (anymore)");
         return _data[key.index].data;
     }
 
     template <typename T, typename IT, typename VT>
     T& SlotMap<T, IT, VT>::operator[](SlotKey key)
     {
-        assert(isValid(key) && "Key not valid (anymore)");
+        assert(isValid(key) && "Key is not valid (anymore)");
         return _data[key.index].data;
     }
 
+
+    // Iterator
+
+    template <typename T, typename IndexType, typename ValueType>
+    SlotMapIterator<T, IndexType, ValueType>::SlotMapIterator() :
+        _index(-1),
+        _vec(nullptr)
+    { };
+
+    template <typename T, typename IndexType, typename ValueType>
+    SlotMapIterator<T, IndexType, ValueType>::SlotMapIterator(T& vec, IndexType i) :
+        _index(i),
+        _vec(&vec)
+    { };
+
+    template <typename T, typename IndexType, typename ValueType>
+    SlotMapIterator<T, IndexType, ValueType>& SlotMapIterator<T, IndexType, ValueType>::operator++()
+    {
+        do
+            ++_index;
+        while (_index < _vec->size() && (*_vec)[_index].nextempty != (IndexType)-1);
+
+        if (_index >= _vec->size())
+            _index = -1;
+
+        return *this;
+    }
+
+    template <typename T, typename IndexType, typename ValueType>
+    SlotMapIterator<T, IndexType, ValueType> SlotMapIterator<T, IndexType, ValueType>::operator++(int)
+    {
+        auto tmp = *this;
+        this->operator++();
+        return tmp;
+    }
+
+    template <typename T, typename IndexType, typename ValueType>
+    bool SlotMapIterator<T, IndexType, ValueType>::operator==(const type& rhs) const
+    {
+        return _index == rhs._index && _vec == rhs._vec;
+    }
+
+    template <typename T, typename IndexType, typename ValueType>
+    bool SlotMapIterator<T, IndexType, ValueType>::operator!=(const type& rhs) const
+    {
+        return _index != rhs._index || _vec != rhs._vec;
+    }
+
+    template <typename T, typename IndexType, typename ValueType>
+    ValueType& SlotMapIterator<T, IndexType, ValueType>::operator*()
+    {
+        return (*_vec)[_index].data;
+    }
+
+    template <typename T, typename IndexType, typename ValueType>
+    SlotMapIterator<T, IndexType, ValueType>::operator const_iterator() const
+    {
+        return const_iterator(_vec, _index);
+    }
 }
 
 #endif
