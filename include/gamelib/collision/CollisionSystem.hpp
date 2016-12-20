@@ -1,41 +1,49 @@
 #ifndef GAMELIB_COLLISION_SYSTEM_HPP
 #define GAMELIB_COLLISION_SYSTEM_HPP
 
-#include <map> // TODO: not unordered_map ?
 #include <vector>
-#include "math/geometry/Vector.hpp"
-#include "math/geometry/AABB.hpp"
+#include "math/geometry/Line2.hpp"
 #include "Collidable.hpp"
-#include "gamelib/Identifiable.hpp"
 
 // TODO: Use quadtrees
 
 // The CollisionSystem class keeps track of Collidable-based objects.
-// It doesn't manage the objects' lifetime, it only takes pointers to Collidables.
-// Allocating and freeing objects is up to the user.
-// It provides an easy to use collision system by defining methods for common collision checks.
+// It doesn't manage the objects' lifetime, it only takes pointers to
+// Collidables. Allocating and freeing objects is up to the user.
 // To register an object call add() and to unregister remove().
 
 namespace gamelib
 {
     class Collidable;
 
+    class TraceResult
+    {
+        public:
+            TraceResult();
+            operator bool() const;
+
+        public:
+            Collidable* obj;
+            Intersection isec;
+    };
+
     class CollisionSystem
     {
         public:
-            void add(Collidable* col, ID id);
-            void remove(Collidable* col, ID id);
-            void destroy();
-            size_t size() const;
+            auto add(Collidable* col)       -> void;
+            auto remove(Collidable* col)    -> void;
+            auto destroy()                  -> void;
+            auto size() const               -> size_t;
 
-            // Returns the colliding object if there is a collison at the given point/rect, otherwise NULL.
-            Collidable* contains(const math::Vec2f& point) const;
-            Collidable* intersects(const math::AABBf& rect) const;
-            Collidable* contains(const math::Vec2f& point, ID id) const;
-            Collidable* intersects(const math::AABBf& rect, ID id) const;
+            // Returns the colliding object if there is a collison at the
+            // given point/rect, otherwise NULL.
+            auto trace(const math::Point2f& point, unsigned int flags = 0) const
+                -> Collidable*;
+            auto trace(const math::Line2f& line, unsigned int flags = 0) const
+                -> TraceResult;
 
         private:
-            std::map<ID, std::vector<Collidable*> > _objs;
+            std::vector<Collidable*> _objs;
     };
 }
 

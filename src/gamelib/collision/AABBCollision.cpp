@@ -2,21 +2,43 @@
 
 namespace gamelib
 {
-    AABBCollision::AABBCollision(float x, float y, float w, float h) :
+    AABBCollision::AABBCollision(float x, float y, float w, float h, unsigned int flags) :
+        Collidable(flags),
         _rect(x, y, w, h)
     { }
 
-    bool AABBCollision::contains(const math::Vec2f& point) const
+    bool AABBCollision::intersect(const math::Point2f& point) const
     {
-        return _rect.contains(point.asPoint());
+        return _rect.contains(point);
     }
 
-    bool AABBCollision::intersects(const math::AABB<float>& rect) const
+    Intersection AABBCollision::intersect(const math::Line2f& line) const
     {
-        return _rect.intersect(rect);
+        return line.intersect(_rect);
     }
 
-    math::AABB<float> AABBCollision::getBBox() const
+    Intersection AABBCollision::intersect(const math::AABBf& rect) const
+    {
+        return rect.intersect(_rect);
+    }
+
+    void AABBCollision::move(float x, float y)
+    {
+        _rect.pos.x += x;
+        _rect.pos.y += y;
+    }
+
+    void AABBCollision::setPosition(float x, float y)
+    {
+        _rect.pos.fill(x, y);
+    }
+
+    const math::Vec2f& AABBCollision::getPosition() const
+    {
+        return _rect.pos;
+    }
+
+    const math::AABBf AABBCollision::getBBox() const
     {
         return _rect;
     }

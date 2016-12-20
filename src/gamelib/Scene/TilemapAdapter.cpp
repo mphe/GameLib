@@ -4,8 +4,8 @@
 namespace gamelib
 {
     TilemapAdapter::TilemapAdapter(const Scene& scene_, const SpriteSet& set) :
-        scene(scene_),
-        map(set)
+        map(set),
+        scene(scene_)
     { }
 
     void TilemapAdapter::render(sf::RenderTarget& target)

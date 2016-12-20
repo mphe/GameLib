@@ -4,7 +4,7 @@
 #include "gamelib/GameState.hpp"
 #include "gamelib/sprite/SpriteSet.hpp"
 #include "gamelib/tile/StaticRenderTilemap.hpp"
-#include "gamelib/tile/TilemapCollider.hpp"
+#include "gamelib/collision/TilemapCollider.hpp"
 #include "gamelib/movement/TileWalker.hpp"
 
 namespace gamelib

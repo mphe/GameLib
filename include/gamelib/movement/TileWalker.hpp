@@ -2,7 +2,7 @@
 #define GAMELIB_TILE_WALKER_HPP
 
 #include "Physical.hpp"
-#include "gamelib/tile/TilemapCollider.hpp"
+#include "gamelib/collision/TilemapCollider.hpp"
 #include "gamelib/collision/AABBCollision.hpp"
 
 /*
@@ -20,12 +20,9 @@ namespace gamelib
             // Splits up movement in x and y direction.
             // Moves first in x direction, then y direction
             void moveContact(float x, float y);
-            void move(float x, float y);
 
             bool placeFree(float x, float y) const;
             bool placeFreeRelative(float x, float y) const;
-
-            math::Vec2f getPosition() const;
 
         private:
             void _moveContact(float val, int index);

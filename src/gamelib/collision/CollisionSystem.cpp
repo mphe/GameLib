@@ -1,23 +1,16 @@
 #include "gamelib/collision/CollisionSystem.hpp"
-#include <cassert>
 #include <algorithm>
 
 namespace gamelib
 {
-    void CollisionSystem::add(Collidable* col, ID id)
+    void CollisionSystem::add(Collidable* col)
     {
-        _objs[id].push_back(col);
+        _objs.push_back(col);
     }
 
-    void CollisionSystem::remove(Collidable* col, ID id)
+    void CollisionSystem::remove(Collidable* col)
     {
-        auto it = _objs.find(id);
-        if (it != _objs.end())
-        {
-            it->second.erase(std::find(it->second.begin(), it->second.end(), col));
-            if (it->second.empty())
-                _objs.erase(it);
-        }
+        _objs.erase(std::find(_objs.begin(), _objs.end(), col));
     }
 
     void CollisionSystem::destroy()
@@ -27,47 +20,45 @@ namespace gamelib
 
     size_t CollisionSystem::size() const
     {
-        size_t c = 0;
-        for (auto& i : _objs)
-            c += i.second.size();
-        return c;
+        return _objs.size();
     }
 
-    Collidable* CollisionSystem::contains(const math::Vec2f& point) const
+    Collidable* CollisionSystem::trace(const math::Point2f& point, unsigned int flags) const
     {
         for (auto& i : _objs)
-            for (auto o : i.second)
-                if (o->contains(point))
-                    return o;
-        return NULL;
+            if ((!flags || i->flags & flags) && i->intersect(point))
+                return i;
+        return nullptr;
     }
 
-    Collidable* CollisionSystem::intersects(const math::AABB<float>& rect) const
+    TraceResult CollisionSystem::trace(const math::Line2f& line, unsigned int flags) const
     {
+        TraceResult nearest;
         for (auto& i : _objs)
-            for (auto o : i.second)
-                if (o->intersects(rect))
-                    return o;
-        return NULL;
+        {
+            if ((!flags || i->flags & flags))
+            {
+                auto isec = i->intersect(line);
+                if (isec.type == math::LinexLine)
+                    std::swap(isec.near, isec.far);
+
+                if (!nearest || isec.near < nearest.isec.near)
+                {
+                    nearest.obj = i;
+                    nearest.isec = isec;
+                }
+            }
+        }
+        return nearest;
     }
 
-    Collidable* CollisionSystem::contains(const math::Vec2f& point, ID id) const
-    {
-        auto it = _objs.find(id);
-        if (it != _objs.end())
-            for (auto o : it->second)
-                if (o->contains(point))
-                    return o;
-        return NULL;
-    }
 
-    Collidable* CollisionSystem::intersects(const math::AABB<float>& rect, ID id) const
+    TraceResult::TraceResult() :
+        obj(nullptr)
+    { }
+
+    TraceResult::operator bool() const
     {
-        auto it = _objs.find(id);
-        if (it != _objs.end())
-            for (auto o : it->second)
-                if (o->intersects(rect))
-                    return o;
-        return NULL;
+        return isec;
     }
 }

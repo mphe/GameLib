@@ -2,18 +2,40 @@
 #define GAMELIB_COLLISION_COLLIDABLE
 
 #include "math/geometry/Vector.hpp"
+#include "math/geometry/Line2.hpp"
 #include "math/geometry/AABB.hpp"
+
+/*
+ * Base class for objects that have a "body" and can collide with others.
+ * A collidable object can be moved to a different position, has a
+ * bounding box and can intersect at least with points and lines.
+ * Additionally there is a "flags" field that can be used for various
+ * collision related flags, e.g. solid, kill, hurt, ... .
+ */
 
 namespace gamelib
 {
+    typedef math::Intersection<float> Intersection;
+
     class Collidable
     {
         public:
+            Collidable() : flags(0) {};
+            Collidable(unsigned int flags_) : flags(flags_) {};
             virtual ~Collidable() {};
 
-            virtual auto contains(const math::Vec2f& point) const  -> bool = 0;
-            virtual auto intersects(const math::AABBf& rect) const -> bool = 0;
-            virtual auto getBBox() const                           -> math::AABBf = 0;
+            virtual auto intersect(const math::Point2f& point) const -> bool = 0;
+            virtual auto intersect(const math::Line2f& line) const   -> Intersection = 0;
+            virtual auto intersect(const math::AABBf& rect) const    -> Intersection = 0;
+
+            virtual auto move(float x, float y)         -> void = 0;
+            virtual auto setPosition(float x, float y)  -> void = 0;
+
+            virtual auto getPosition() const    -> const math::Vec2f& = 0;
+            virtual auto getBBox() const        -> const math::AABBf = 0;
+
+        public:
+            unsigned int flags;
     };
 }
 

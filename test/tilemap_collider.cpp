@@ -1,7 +1,7 @@
 #include <cassert>
 #include <time.h>
 #include "gamelib/tile/StaticTilemap.hpp"
-#include "gamelib/tile/TilemapCollider.hpp"
+#include "gamelib/collision/TilemapCollider.hpp"
 
 using namespace std;
 using namespace gamelib;
@@ -39,9 +39,9 @@ int main(int argc, char *argv[])
         if (rect.intersect(tcol.getBBox()) &&
                 (rect.pos.x < 32 || rect.pos.x + rect.size.x > 5 * 32 ||
                 rect.pos.y < 32 || rect.pos.y + rect.size.y > 4 * 32))
-            assert("rect should intersect" && tcol.intersects(rect));
+            assert("rect should intersect" && tcol.intersect(rect));
         else
-            assert("rect should not intersect" && !tcol.intersects(rect));
+            assert("rect should not intersect" && !tcol.intersect(rect));
     }
 
     return 0;

@@ -7,11 +7,6 @@ namespace gamelib
         _col(&c)
     { }
 
-    void TileWalker::move(float x, float y)
-    {
-        _rect.pos.set(x, y);
-    }
-
     void TileWalker::moveContact(float dx, float dy)
     {
         if (dx)
@@ -22,18 +17,13 @@ namespace gamelib
 
     bool TileWalker::placeFree(float x, float y) const
     {
-        return !_col->intersects(math::AABBf(x, y, _rect.size.x, _rect.size.y));
+        return !_col->intersect(math::AABBf(x, y, _rect.size.x, _rect.size.y));
     }
 
     bool TileWalker::placeFreeRelative(float x, float y) const
     {
-        return !_col->intersects(math::AABBf(_rect.pos.x + x, _rect.pos.y + y,
+        return !_col->intersect(math::AABBf(_rect.pos.x + x, _rect.pos.y + y,
                     _rect.size.x, _rect.size.y));
-    }
-
-    math::Vec2f TileWalker::getPosition() const
-    {
-        return _rect.pos;
     }
 
     void TileWalker::_moveContact(float val, int index)
@@ -42,7 +32,7 @@ namespace gamelib
         _rect.pos[index] += val;
 
         // Move outside
-        if (_col->intersects(_rect))
+        if (_col->intersect(_rect))
         {
             auto tsize = _col->getTileSize();
 
@@ -62,7 +52,7 @@ namespace gamelib
 
             _rect.pos[index] -= math::sign(val) * a;
 
-            while (_col->intersects(_rect))
+            while (_col->intersect(_rect))
                 _rect.pos[index] -= math::sign(val) * tsize[index];
         }
     }
