@@ -2,7 +2,7 @@
 #define GAMELIB_ACCELERATION_HPP
 
 #include <limits>
-#include "math/geometry/Vector2.hpp"
+#include "math/geometry/Vector.hpp"
 
 namespace gamelib
 {
@@ -20,7 +20,7 @@ namespace gamelib
             // Set speed to 0
             void stop();
 
-            math::Vector2<float> getVector() const;
+            math::Vec2f getVector() const;
 
         public:
             float min;

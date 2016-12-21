@@ -11,7 +11,7 @@ namespace gamelib
             zoom(1)
     { }
 
-    Camera::Camera(const Vector2<float>& pos, const Vector2<float>& size) :
+    Camera::Camera(const Vec2f& pos, const Vec2f& size) :
             zoom(1),
             pos(pos),
             size(size)
@@ -60,7 +60,7 @@ namespace gamelib
         _speed.y += math::lengthdirY(speed, dir);
     }
 
-    void Camera::center(const math::Vector2<float>& pos)
+    void Camera::center(const math::Vec2f& pos)
     {
         center(pos.x, pos.y);
     }
@@ -77,9 +77,9 @@ namespace gamelib
         pos.y += y;
     }
 
-    AABB<float> Camera::getCamRect() const
+    AABBf Camera::getCamRect() const
     {
-        return AABB<float>(pos + (size - (size * zoom)) / 2, size * zoom);
+        return AABBf(pos + (size - (size * zoom)) / 2, size * zoom);
     }
 
     sf::Transform Camera::getTransform() const

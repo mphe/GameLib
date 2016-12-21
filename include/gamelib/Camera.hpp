@@ -1,7 +1,7 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include "math/geometry/Vector2.hpp"
+#include "math/geometry/Vector.hpp"
 #include "math/geometry/AABB.hpp"
 #include "gamelib/utils/JsonObject.hpp"
 #include "gamelib/Updatable.hpp"
@@ -19,7 +19,7 @@ namespace gamelib
     {
         public:
             Camera();
-            Camera(const math::Vector2<float>& pos, const math::Vector2<float>& size);
+            Camera(const math::Vec2f& pos, const math::Vec2f& size);
 
             bool loadFromJson(const Json::Value& node);
 
@@ -29,7 +29,7 @@ namespace gamelib
             void addMotion(float speed, float dir);
 
             void center(float x, float y);
-            void center(const math::Vector2<float>& pos);
+            void center(const math::Vec2f& pos);
             void move(float x, float y);
 
             math::AABB<float> getCamRect() const;
@@ -38,12 +38,12 @@ namespace gamelib
 
         public:
             float zoom;
-            math::Vector2<float> pos;
-            math::Vector2<float> size;
-            math::AABB<float> viewport;
+            math::Vec2f pos;
+            math::Vec2f size;
+            math::AABBf viewport;
 
         private:
-            math::Vector2<float> _speed;
+            math::Vec2f _speed;
     };
 }
 

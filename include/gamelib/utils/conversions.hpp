@@ -3,15 +3,15 @@
 
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
-#include "math/geometry/Vector2.hpp"
+#include "math/geometry/Vector.hpp"
 #include "math/geometry/AABB.hpp"
 
 namespace conversions
 {
     template <class T>
-    math::Vector2<T> convert(const sf::Vector2<T>& vec)
+    math::Vec2<T> convert(const sf::Vector2<T>& vec)
     {
-        return math::Vector2<T>(vec.x, vec.y);
+        return math::Vec2<T>(vec.x, vec.y);
     }
 
     template <class T>
@@ -21,7 +21,7 @@ namespace conversions
     }
 
     template <class T>
-    sf::Vector2<T> convert(const math::Vector2<T>& vec)
+    sf::Vector2<T> convert(const math::Vec2<T>& vec)
     {
         return sf::Vector2<T>(vec.x, vec.y);
     }
