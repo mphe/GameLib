@@ -28,7 +28,7 @@ namespace gamelib
 
     void Scene::render(sf::RenderTarget& target)
     {
-        sf::View tmp(target.getView()); // backup view
+        // sf::View tmp(target.getView()); // backup view
         for (size_t i = 0; i < _cams.size(); ++i)
         {
             _currentcam = i;
@@ -36,7 +36,7 @@ namespace gamelib
             for (auto& o : _render)
                 o->render(target);
         }
-        target.setView(tmp); // reset view
+        // target.setView(tmp); // reset view
         _currentcam = 0;
     }
 
