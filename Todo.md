@@ -1,7 +1,7 @@
 # Todo
 
-* FPS interpolation in Game class (using median)
 * Move JsonObject into gamelib namespace
+  * Make JsonObject a "Serializable" instead
 * Consider making Renderable::render const
 * FPS scaling
-* Create an (abstract) Tilemap base class
+* Simplify the whole tilemap/dataset hell

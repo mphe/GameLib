@@ -7,6 +7,9 @@
 #include "utils/log.hpp"
 
 /*
+ * TODO: Find out if this bullshit is REALLY necessary. Reading it now, long
+ * after I wrote it, gives me headaches.
+ *
  * A collection to store a set of data (duh).
  *
  * This is the implementation for a basic dataset and should work in most
