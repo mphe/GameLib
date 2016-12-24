@@ -12,6 +12,7 @@ set(GAMELIB_SOURCES
     sprite/SpriteData.cpp
     Scene/Scene.cpp
     Scene/TilemapAdapter.cpp
+    Scene/VimCam.cpp
     collision/CollisionSystem.cpp
     collision/AABBCollision.cpp
     collision/TriangleStrip.cpp
