@@ -55,7 +55,7 @@ namespace gamelib
             // Creates a new camera using its copy constructor.
             Camera& addCamera(const Camera& cam);
 
-            // Returns the camera it index
+            // Returns the camera at index
             Camera& getCamera(size_t index = 0);
             const Camera& getCamera(size_t index = 0) const;
 

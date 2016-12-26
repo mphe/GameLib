@@ -77,6 +77,16 @@ namespace gamelib
         pos.y += y;
     }
 
+    void Camera::zoomTowards(float x, float y, float zoom_)
+    {
+        auto box = getCamRect();
+        Vec2f diff = Vec2f(x, y) - (box.pos + box.size / 2);
+        zoom += zoom_;
+        pos -= diff * zoom_;
+        // TODO: Fix this. It's not entirely accurate, but good enough
+        // (for small values) for now.
+    }
+
     AABBf Camera::getCamRect() const
     {
         return AABBf(pos + (size - (size * zoom)) / 2, size * zoom);

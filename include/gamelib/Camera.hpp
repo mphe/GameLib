@@ -13,6 +13,8 @@ namespace sf
     class Transform;
 }
 
+// TODO: Consider using a sf::View internally
+
 namespace gamelib
 {
     class Camera : public Json::JsonObject, public gamelib::Updatable
@@ -31,6 +33,8 @@ namespace gamelib
             void center(float x, float y);
             void center(const math::Vec2f& pos);
             void move(float x, float y);
+
+            void zoomTowards(float x, float y, float zoom);
 
             math::AABB<float> getCamRect() const;
             sf::Transform getTransform() const;
