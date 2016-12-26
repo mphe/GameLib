@@ -93,8 +93,8 @@ namespace gamelib
 
             // Get elapsed time
             elapsed = clock.getElapsedTime().asMilliseconds() / 1000.0f;
-            float fps = 1.0f / elapsed;
-            LOG_DEBUG_RAW("\r", LOG_DUMP(elapsed), "ms, ", LOG_DUMP(fps), "              \r"); // write some spaces to overwrite existing characters
+            // float fps = 1.0f / elapsed;
+            // LOG_DEBUG_RAW("\r", LOG_DUMP(elapsed), "ms, ", LOG_DUMP(fps), "              \r"); // write some spaces to overwrite existing characters
         }
     }
 
