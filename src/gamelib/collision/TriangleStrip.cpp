@@ -2,8 +2,8 @@
 
 namespace gamelib
 {
-    TriangleStrip::TriangleStrip(unsigned int flags) :
-        Collidable(flags)
+    TriangleStrip::TriangleStrip(unsigned int flags, void* owner) :
+        Collidable(flags, owner)
     { }
 
     bool TriangleStrip::intersect(const math::Point2f& point) const

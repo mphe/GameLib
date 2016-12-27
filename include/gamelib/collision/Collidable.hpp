@@ -9,8 +9,10 @@
  * Base class for objects that have a "body" and can collide with others.
  * A collidable object can be moved to a different position, has a
  * bounding box and can intersect at least with points and lines.
- * Additionally there is a "flags" field that can be used for various
- * collision related flags, e.g. solid, kill, hurt, ... .
+ * Additionally, there are 2 fields "flags" and "owner".
+ * "flags" can be used for various collision related flags,
+ * e.g. solid, kill, hurt, ... .
+ * "owner" is useful in entity-component like systems.
  */
 
 namespace gamelib
@@ -20,8 +22,9 @@ namespace gamelib
     class Collidable
     {
         public:
-            Collidable() : flags(0) {};
-            Collidable(unsigned int flags_) : flags(flags_) {};
+            Collidable() : flags(0), owner(nullptr) {};
+            Collidable(unsigned int flags_, void* owner_) :
+                flags(flags_), owner(owner_) {};
             virtual ~Collidable() {};
 
             virtual auto intersect(const math::Point2f& point) const -> bool = 0;
@@ -36,6 +39,7 @@ namespace gamelib
 
         public:
             unsigned int flags;
+            void* owner;
     };
 }
 

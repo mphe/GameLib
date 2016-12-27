@@ -8,7 +8,7 @@ namespace gamelib
     class AABBCollision : public Collidable
     {
         public:
-            AABBCollision(float x, float y, float w, float h, unsigned int flags = 0);
+            AABBCollision(float x, float y, float w, float h, unsigned int flags = 0, void* owner = nullptr);
             virtual ~AABBCollision() {}
 
             auto intersect(const math::Point2f& point) const -> bool;

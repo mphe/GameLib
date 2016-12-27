@@ -2,8 +2,8 @@
 
 namespace gamelib
 {
-    AABBCollision::AABBCollision(float x, float y, float w, float h, unsigned int flags) :
-        Collidable(flags),
+    AABBCollision::AABBCollision(float x, float y, float w, float h, unsigned int flags, void* owner) :
+        Collidable(flags, owner),
         _rect(x, y, w, h)
     { }
 
