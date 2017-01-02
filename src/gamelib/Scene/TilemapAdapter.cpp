@@ -30,7 +30,6 @@ namespace gamelib
 
     StaticRenderTilemap* TilemapAdapter::operator->()
     {
-
         return &map;
     }
 

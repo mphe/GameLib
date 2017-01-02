@@ -25,17 +25,21 @@ namespace gamelib
 
     Collidable* CollisionSystem::trace(const math::Point2f& point, unsigned int flags) const
     {
-        for (auto& i : _objs)
+        for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
+        {
+            Collidable* i = (*it);
             if ((!flags || i->flags & flags) && i->intersect(point))
                 return i;
+        }
         return nullptr;
     }
 
     TraceResult CollisionSystem::trace(const math::Line2f& line, unsigned int flags) const
     {
         TraceResult nearest;
-        for (auto& i : _objs)
+        for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
         {
+            Collidable* i = (*it);
             if ((!flags || i->flags & flags))
             {
                 auto isec = i->intersect(line);
