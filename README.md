@@ -22,15 +22,15 @@
 
 6. Configure the project as you wish and run "Configure" again when you make changes.
 
-    Flag                |   Function
-    --------------------|-------------------------------------------------
-    BUILD_TESTS         |   Build unit tests
-    BUILD_EXAMPLES      |   Build examples
-    DEBUG_LOG_DEBUG     |   Print debug log entries in a debug-build
-    DEBUG_LOG_RELEASE   |   Print debug log entries in a release-build
-    DISABLE_LOGGING     |   Completely disable logging **(currently required when compiling with Visual Studio 2015, because of a compiler bug)**.
-    USE_CCACHE          |   Use ccache if available
-    SFML_ROOT           |   Points to the SFML directory. Only set this if it could not be found automatically. On Windows you usually have to set it manually.
+    Flag                        |   Function
+    ----------------------------|-------------------------------------------------
+    GAMELIB_BUILD_TESTS         |   Build unit tests
+    GAMELIB_BUILD_EXAMPLES      |   Build examples
+    GAMELIB_DEBUG_LOG_DEBUG     |   Print debug log entries in a debug-build
+    GAMELIB_DEBUG_LOG_RELEASE   |   Print debug log entries in a release-build
+    GAMELIB_DISABLE_LOGGING     |   Completely disable logging **(currently required when compiling with Visual Studio 2015, because of a compiler bug)**.
+    GAMELIB_USE_CCACHE          |   Use ccache if available
+    GAMELIB_SFML_ROOT           |   Points to the SFML directory. Only set this if it could not be found automatically. On Windows you usually have to set it manually.
 
     Don't touch anything else unless you know what you do.
 
