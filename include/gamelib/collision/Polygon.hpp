@@ -1,15 +1,16 @@
-#ifndef GAMELIB_TRIANGLESTRIP_COLLISON_HPP
-#define GAMELIB_TRIANGLESTRIP_COLLISON_HPP
+#ifndef GAMELIB_POLYGON_COLLISON_HPP
+#define GAMELIB_POLYGON_COLLISON_HPP
 
 #include "Collidable.hpp"
-#include "math/geometry/TriangleStrip.hpp"
+#include "math/geometry/Polygon.hpp"
 
 namespace gamelib
 {
-    class TriangleStrip : public Collidable
+    class Polygon : public Collidable
     {
         public:
-            TriangleStrip(unsigned int flags = 0, void* owner = nullptr);
+            Polygon();
+            Polygon(math::PolygonType type, unsigned int flags = 0, void* owner = nullptr);
 
             auto intersect(const math::Point2f& point) const -> bool;
             auto intersect(const math::Line2f& line) const   -> Intersection;
@@ -22,7 +23,7 @@ namespace gamelib
             auto getBBox() const        -> const math::AABBf;
 
         public:
-            math::TriangleStrip<float> polygon;
+            math::Polygon<float> polygon;
     };
 }
 
