@@ -3,7 +3,7 @@
 
 #include "math/geometry/Vector.hpp"
 #include "math/geometry/AABB.hpp"
-#include "gamelib/utils/JsonObject.hpp"
+#include "gamelib/res/JsonSerializer.hpp"
 #include "gamelib/Updatable.hpp"
 
 namespace sf
@@ -17,7 +17,7 @@ namespace sf
 
 namespace gamelib
 {
-    class Camera : public Json::JsonObject, public gamelib::Updatable
+    class Camera : public gamelib::JsonSerializer, public gamelib::Updatable
     {
         public:
             Camera();

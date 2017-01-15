@@ -5,7 +5,7 @@
 #include <memory>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Keyboard.hpp>
-#include "gamelib/utils/JsonObject.hpp"
+#include "gamelib/res/JsonSerializer.hpp"
 #include "event/EventManager.hpp"
 
 namespace gamelib
@@ -13,7 +13,7 @@ namespace gamelib
     class GameState;
     typedef std::unique_ptr<GameState> GameStatePtr;
 
-    class Game : public Json::JsonObject
+    class Game : public gamelib::JsonSerializer
     {
         public:
             Game();
@@ -30,7 +30,6 @@ namespace gamelib
             // Use this outside the game loop.
             void destroy();
 
-            using JsonObject::loadFromJson;
             bool loadFromJson(const Json::Value& node);
 
             void pushState(std::unique_ptr<GameState> state);

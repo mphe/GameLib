@@ -2,7 +2,7 @@
 #define GAMELIB_STATIC_DATASET_TILEMAP_HPP
 
 #include "StaticTilemap.hpp"
-#include "gamelib/utils/JsonObject.hpp"
+#include "gamelib/res/JsonSerializer.hpp"
 #include "gamelib/DataSet.hpp"
 
 /*
@@ -60,7 +60,7 @@ namespace gamelib
     typedef std::unordered_map<DataSetKey, TileID> TranslationMap;
 
     template <class T, class DataSetType = DataSet<T> >
-    class StaticDataSetTilemap : public StaticTilemap<T>, public Json::JsonObject
+    class StaticDataSetTilemap : public StaticTilemap<T>, public gamelib::JsonSerializer
     {
         public:
             // This does not import dset. It's equal to calling setDataSet.

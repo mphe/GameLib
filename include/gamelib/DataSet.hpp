@@ -3,7 +3,7 @@
 
 #include <string>
 #include <unordered_map>
-#include "utils/JsonObject.hpp"
+#include "res/JsonSerializer.hpp"
 #include "utils/log.hpp"
 
 /*
@@ -15,7 +15,7 @@
  * This is the implementation for a basic dataset and should work in most
  * cases. It's mostly a wrapper around std::unordered_map (using private
  * inheritance) and optionally extends it with functions to load from json
- * (by inheriting from JsonObject).
+ * (by inheriting from JsonSerializer).
  * See further down for more information to the different DataSet types.
  *
  * Classes that require a dataset, for example StaticDataSetTilemap, should
@@ -111,7 +111,7 @@ namespace gamelib
      */
 
     template <class T>
-    class JsonDataSet : public DataSet<T>, public Json::JsonObject
+    class JsonDataSet : public DataSet<T>, public gamelib::JsonSerializer
     {
         public:
             JsonDataSet(DataSetCallback<T> callback) : _callback(callback) {}

@@ -4,7 +4,7 @@
 #include <string>
 #include "gamelib/GameObject.hpp"
 #include "gamelib/sprite/AnimatedSprite.hpp"
-#include "gamelib/utils/JsonObject.hpp"
+#include "gamelib/res/JsonSerializer.hpp"
 #include "math/geometry/Vector.hpp"
 #include "gamelib/movement/Acceleration.hpp"
 #include "gamelib/movement/TileWalker.hpp"
@@ -18,7 +18,7 @@ namespace gamelib
 
 class MainState;
 
-class Player : public gamelib::GameObject, public Json::JsonObject, public gamelib::TileWalker
+class Player : public gamelib::GameObject, public gamelib::JsonSerializer, public gamelib::TileWalker
 {
     typedef gamelib::StaticTilemap<int> CollisionMap;
 

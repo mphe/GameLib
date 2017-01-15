@@ -21,6 +21,7 @@ set(GAMELIB_SOURCES
     component/UpdateComponent.cpp
     movement/Acceleration.cpp
     movement/TileWalker.cpp
+    res/JsonSerializer.cpp
 )
 
 set(EXT_LIBRARIES
@@ -30,7 +31,6 @@ set(EXT_LIBRARIES
 )
 
 set(UTILS_SOURCES
-    utils/JsonObject.cpp
     utils/SpriteBatch.cpp
     utils/DebugGui.cpp
 )
