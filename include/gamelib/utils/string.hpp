@@ -29,6 +29,11 @@ namespace gamelib
         internal::joinString(ss, std::forward<Args>(args)...);
         return ss.str();
     }
+
+    // Replace '/' or '\' with each other, depending on which platform the
+    // code is compiled. The algorithm works in-place and returns a reference
+    // to the string.
+    std::string& adaptPath(std::string& path);
 }
 
 #endif

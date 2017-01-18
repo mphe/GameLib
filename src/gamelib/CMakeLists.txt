@@ -33,6 +33,7 @@ set(EXT_LIBRARIES
 set(UTILS_SOURCES
     utils/SpriteBatch.cpp
     utils/DebugGui.cpp
+    utils/string.cpp
 )
 
 
