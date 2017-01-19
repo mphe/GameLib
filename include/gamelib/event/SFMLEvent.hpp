@@ -6,7 +6,7 @@
 
 namespace gamelib
 {
-    class SFMLEvent : public Event<0x3BFF2E8B>
+    class SFMLEvent : public Event<0x3BFF2E8B, SFMLEvent>
     {
         public:
             SFMLEvent() {}

@@ -34,8 +34,19 @@ namespace gamelib
     typedef std::shared_ptr<BaseEvent> EventPtr;
 
     // Wrapper (see Identifier.hpp)
-    template <ID id>
-    using Event = Identifier<id, BaseEvent>;
+    // The first template parameter is the event ID, the second is the
+    // derived event class. The second one is optional and provides a static
+    // create() function that returns an EventPtr to the derived class.
+    template <ID id, typename T = void>
+    class Event : public Identifier<id, BaseEvent>
+    {
+        public:
+            template <typename... Args, typename TT = T, typename = typename std::enable_if<!std::is_void<TT>::value>::type>
+            static EventPtr create(Args&&... args)
+            {
+                return EventPtr(new T(std::forward<Args>(args)...));
+            }
+    };
 }
 
 #endif
