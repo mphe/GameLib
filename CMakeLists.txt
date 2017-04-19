@@ -10,7 +10,7 @@ option(GAMELIB_DEBUG_LOG_DEBUG "Show debug log entries in debug build" ON)
 option(GAMELIB_BUILD_TESTS "Build tests" OFF)
 option(GAMELIB_BUILD_EXAMPLES "Build examples" OFF)
 option(GAMELIB_USE_CCACHE "Use ccache if available" ON)
-set(GAMELIB_SFML_ROOT "" CACHE PATH "SFML library directory (optional)")
+set(SFML_ROOT "" CACHE PATH "SFML library directory (optional)")
 
 # All binarys are tests, except examples, whose paths are set separately in examples/CMakeLists.txt
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/test)

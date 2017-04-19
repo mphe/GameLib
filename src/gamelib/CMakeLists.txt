@@ -1,6 +1,6 @@
 set(CXX_STANDARD_REQUIRED ON)
 
-find_package(SFML 2.3 COMPONENTS system window graphics REQUIRED)
+find_package(SFML 2.4 COMPONENTS system window graphics REQUIRED)
 
 set(GAMELIB_SOURCES
     Game.cpp
