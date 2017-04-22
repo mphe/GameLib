@@ -15,7 +15,6 @@ set(GAMELIB_SOURCES
     Scene/VimCam.cpp
     collision/CollisionSystem.cpp
     collision/AABBCollision.cpp
-    collision/Polygon.cpp
     component/Entity.cpp
     component/subsystem/UpdateSystem.cpp
     component/UpdateComponent.cpp
