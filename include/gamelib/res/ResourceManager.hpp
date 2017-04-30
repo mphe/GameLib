@@ -8,7 +8,7 @@
 #include "JsonSerializer.hpp"
 
 // To prevent possible segfaults after calling clean(), objects should store
-// the corresponding ResourcePtr to keep up the reference count.
+// the corresponding BaseResourceHandle to keep up the reference count.
 
 // Config file structure:
 // (Lines starting with # are comments and are not valid json.)
@@ -37,7 +37,7 @@ namespace gamelib
     class ResourceManager : public JsonSerializer
     {
         public:
-            typedef ResourcePtr(*LoaderCallback)(const std::string&, ResourceManager* resmgr);
+            typedef BaseResourceHandle(*LoaderCallback)(const std::string&, ResourceManager* resmgr);
 
         public:
             ResourceManager(EventManager* evmgr = nullptr);
@@ -47,13 +47,13 @@ namespace gamelib
             auto writeToJson(Json::Value& node)        -> void;
 
             // (Re-)Load a resource.
-            auto load(const std::string& fname) -> ResourcePtr;
+            auto load(const std::string& fname) -> BaseResourceHandle;
 
             // Return the resource and load it if it doesn't exist.
-            auto get(const std::string& fname) -> ResourcePtr;
+            auto get(const std::string& fname) -> BaseResourceHandle;
 
             // Check if the resource exists and return a (null)pointer to it.
-            auto find(const std::string& fname) -> ResourcePtr;
+            auto find(const std::string& fname) -> BaseResourceHandle;
 
             // Link a file extension to a loader-callback
             auto registerFileType(const std::string& ext, LoaderCallback cb) -> void;
@@ -70,18 +70,18 @@ namespace gamelib
             auto destroy() -> void;
 
             // Calls a callback for each resource (of the given type).
-            // Callback format: callback(const std::string&, BaseResource&)
+            // Callback format: callback(const std::string&, BaseResourceHandle)
             template <typename F>
             auto foreach(F callback, ID type = invalidID) -> void
             {
                 for (auto it = _res.begin(); it != _res.end(); ++it)
-                    if (type == invalidID || it->second->getID() == type)
-                        callback(it->first, (*it->second));
+                    if (type == invalidID || it->second.getResource()->getID() == type)
+                        callback(it->first, it->second);
             }
 
         private:
             EventManager* _evmgr;
-            std::unordered_map<std::string, ResourcePtr> _res;
+            std::unordered_map<std::string, BaseResourceHandle> _res;
             std::unordered_map<std::string, LoaderCallback> _typemap;
             std::string _searchpath;
     };
@@ -89,13 +89,13 @@ namespace gamelib
     class ResourceReloadEvent : public Event<0x05eb2119, ResourceReloadEvent>
     {
         public:
-            ResourceReloadEvent(const std::string& fname, ResourcePtr ptr);
+            ResourceReloadEvent(const std::string& fname, BaseResourceHandle ptr);
 
             // The new resource's filename (relative to search path)
             std::string fname;
 
             // The new resource
-            ResourcePtr res;
+            BaseResourceHandle res;
     };
 }
 

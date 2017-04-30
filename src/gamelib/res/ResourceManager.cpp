@@ -34,7 +34,7 @@ namespace gamelib
             else
             {
                 // Store references to prevent cleanup of loaded resources
-                std::vector<ResourcePtr> res;
+                std::vector<BaseResourceHandle> res;
                 res.reserve(flist.size());
                 for (auto& fname : flist)
                     res.push_back(get(fname.asString()));
@@ -58,7 +58,7 @@ namespace gamelib
             files[i++] = it.first;
     }
 
-    ResourcePtr ResourceManager::load(const std::string& fname)
+    BaseResourceHandle ResourceManager::load(const std::string& fname)
     {
         LOG_DEBUG("Loading file ", fname, "...");
 
@@ -101,7 +101,7 @@ namespace gamelib
         return res;
     }
 
-    ResourcePtr ResourceManager::get(const std::string& fname)
+    BaseResourceHandle ResourceManager::get(const std::string& fname)
     {
         auto ptr = find(fname);
         if (ptr)
@@ -109,7 +109,7 @@ namespace gamelib
         return load(fname);
     }
 
-    ResourcePtr ResourceManager::find(const std::string& fname)
+    BaseResourceHandle ResourceManager::find(const std::string& fname)
     {
         auto it = _res.find(fname);
         if (it == _res.end())
@@ -162,7 +162,7 @@ namespace gamelib
 
 
 
-    ResourceReloadEvent::ResourceReloadEvent(const std::string& fname_, ResourcePtr ptr) :
+    ResourceReloadEvent::ResourceReloadEvent(const std::string& fname_, BaseResourceHandle ptr) :
         fname(fname_),
         res(ptr)
     { }

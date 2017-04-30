@@ -22,6 +22,7 @@ set(GAMELIB_SOURCES
     movement/TileWalker.cpp
     res/JsonSerializer.cpp
     res/ResourceManager.cpp
+    res/predefs.cpp
 )
 
 set(EXT_LIBRARIES
