@@ -60,8 +60,8 @@ namespace gamelib
                     if (_callback(*t))
                     {
                         // TODO: Do this properly
-                        LOG_DEBUG_WARN("Tilemap vs AABB intersection check not properly implemented! Don't use delta!");
-                        return Intersection(math::Vec2f());
+                        LOG_DEBUG_WARN("Tilemap vs AABB intersection check not properly implemented! Don't use delta and normal!");
+                        return Intersection(math::Vec2f(), math::Vec2f());
                     }
             }
         }

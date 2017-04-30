@@ -139,8 +139,8 @@ bool Player::loadFromJson(const Json::Value& node)
      *      +-----------+
      */
 
-    _options.origin.set(node.get("originx", 0).asFloat(), node.get("originy", 0).asFloat());
-    _rect.size.set(node.get("width", 0).asFloat(), node.get("height", 0).asFloat());
+    _options.origin.fill(node.get("originx", 0).asFloat(), node.get("originy", 0).asFloat());
+    _rect.size.fill(node.get("width", 0).asFloat(), node.get("height", 0).asFloat());
 
     _gravity.min = node.get("mingravity", _gravity.min).asFloat();
     _gravity.max = node.get("maxgravity", _gravity.max).asFloat();
