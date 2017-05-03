@@ -1,7 +1,7 @@
 #ifndef GAMELIB_VIM_CAM_HPP
 #define GAMELIB_VIM_CAM_HPP
 
-#include "../Updatable.hpp"
+#include "gamelib/Updatable.hpp"
 
 /*
  * Allows moving a camera with vim-like keybindings

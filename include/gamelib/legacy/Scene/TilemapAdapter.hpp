@@ -1,8 +1,8 @@
 #ifndef GAMELIB_TILEMAP_ADAPTER_HPP
 #define GAMELIB_TILEMAP_ADAPTER_HPP
 
-#include "../GameObject.hpp"
-#include "../tile/StaticRenderTilemap.hpp"
+#include "gamelib/GameObject.hpp"
+#include "gamelib/tile/StaticRenderTilemap.hpp"
 
 /*
  * A simple wrapper around StaticRenderTilemap that provides a Renderable

@@ -1,5 +1,5 @@
-#include "gamelib/Scene/TilemapAdapter.hpp"
-#include "gamelib/Scene/Scene.hpp"
+#include "gamelib/legacy/Scene/TilemapAdapter.hpp"
+#include "gamelib/legacy/Scene/Scene.hpp"
 
 namespace gamelib
 {

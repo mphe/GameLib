@@ -4,8 +4,8 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "gamelib/GameState.hpp"
 #include "gamelib/sprite/SpriteSet.hpp"
-#include "gamelib/Scene/Scene.hpp"
-#include "gamelib/Scene/TilemapAdapter.hpp"
+#include "gamelib/legacy/Scene/Scene.hpp"
+#include "gamelib/legacy/Scene/TilemapAdapter.hpp"
 #include "gamelib/event/SFMLEvent.hpp"
 
 namespace gamelib

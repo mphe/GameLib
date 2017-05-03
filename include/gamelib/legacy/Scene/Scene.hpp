@@ -3,10 +3,10 @@
 
 #include <memory>
 #include <vector>
-#include "../Updatable.hpp"
-#include "../Renderable.hpp"
-#include "../GameObject.hpp"
-#include "../Camera.hpp"
+#include "gamelib/Updatable.hpp"
+#include "gamelib/Renderable.hpp"
+#include "gamelib/GameObject.hpp"
+#include "gamelib/Camera.hpp"
 
 /**
  * Scenes stores and updates Camera, Updatable and Renderable objects.

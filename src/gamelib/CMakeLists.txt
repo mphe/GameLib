@@ -10,9 +10,9 @@ set(GAMELIB_SOURCES
     sprite/AnimatedSprite.cpp
     sprite/SpriteSet.cpp
     sprite/SpriteData.cpp
-    Scene/Scene.cpp
-    Scene/TilemapAdapter.cpp
-    Scene/VimCam.cpp
+    # legacy/Scene/Scene.cpp
+    # legacy/Scene/TilemapAdapter.cpp
+    # legacy/Scene/VimCam.cpp
     collision/CollisionSystem.cpp
     collision/AABBCollision.cpp
     component/Entity.cpp
@@ -23,6 +23,9 @@ set(GAMELIB_SOURCES
     res/JsonSerializer.cpp
     res/ResourceManager.cpp
     res/predefs.cpp
+    rendering/Scene.cpp
+    rendering/SceneObject.cpp
+    FreeCam.cpp
 )
 
 set(EXT_LIBRARIES

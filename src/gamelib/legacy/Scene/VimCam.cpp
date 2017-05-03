@@ -1,5 +1,5 @@
-#include "gamelib/Scene/VimCam.hpp"
-#include "gamelib/Scene/Scene.hpp"
+#include "gamelib/legacy/Scene/VimCam.hpp"
+#include "gamelib/legacy/Scene/Scene.hpp"
 #include <SFML/Window/Keyboard.hpp>
 
 namespace gamelib
