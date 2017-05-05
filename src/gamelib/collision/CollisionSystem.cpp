@@ -10,7 +10,9 @@ namespace gamelib
 
     void CollisionSystem::remove(Collidable* col)
     {
-        _objs.erase(std::find(_objs.begin(), _objs.end(), col));
+        auto it = std::find(_objs.begin(), _objs.end(), col);
+        if (it != _objs.end())
+            _objs.erase(it);
     }
 
     void CollisionSystem::destroy()
