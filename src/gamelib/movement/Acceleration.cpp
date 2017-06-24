@@ -27,7 +27,7 @@ namespace gamelib
 
     math::Vec2f Acceleration::getVector() const
     {
-        return math::Vec2f::fromDirection(speed, dir);
+        return math::Vec2f::fromAngle(speed, dir);
     }
 
     void Acceleration::reset()
