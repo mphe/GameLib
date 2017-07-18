@@ -45,21 +45,21 @@ namespace gamelib
         {
             sf::View backup;  // backup view
 
-            if (_default < _cams.size())
+            // _default is size_t, that means -1 is integer max, therefore it's bigger
+            if (_default >= _cams.size())
                 backup = target.getView();
+            else
+                backup = _cams[_default].getView();
 
             for (size_t i = 0; i < _cams.size(); ++i)
             {
-                if (i == _default)
-                    backup = _cams[i].getView();
-
                 _currentcam = i;
-                target.setView(backup);
+                target.setView(_cams[i].getView());
                 _render(target);
             }
 
             target.setView(backup); // reset view
-            _currentcam = -1;
+            _currentcam = _default;
         }
     }
 

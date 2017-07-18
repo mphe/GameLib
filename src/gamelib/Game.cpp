@@ -124,13 +124,28 @@ namespace gamelib
 
     bool Game::loadFromJson(const Json::Value& node)
     {
-        if (node.isMember("title"))
-            _window.setTitle(node["title"].asString());
-
         auto size = _window.getSize();
+        auto pos = _window.getPosition();
         size.x = node.get("width", size.x).asUInt();
         size.y = node.get("height", size.y).asUInt();
+
+        auto diff = size - _window.getSize();
+        pos.x -= diff.x / 2;
+        pos.y -= diff.y / 2;
+
         _window.setSize(size);
+        _window.setPosition(pos);
+        _window.setView(sf::View(sf::FloatRect(0, 0, size.x, size.y)));
+
+        // Don't create a new window, as it could lead to problems
+        // if (size != _window.getSize())
+        // {
+        //     _window.close();
+        //     _window.create(sf::VideoMode(size.x, size.y), GAME_TITLE, sf::Style::Close);
+        // }
+
+        if (node.isMember("title"))
+            _window.setTitle(node["title"].asString());
 
         if (node.isMember("maxfps"))
             _window.setFramerateLimit(node["maxfps"].asUInt());
