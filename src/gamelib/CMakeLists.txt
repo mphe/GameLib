@@ -4,6 +4,7 @@ find_package(SFML 2.4 COMPONENTS system window graphics REQUIRED)
 
 set(GAMELIB_SOURCES
     Game.cpp
+    System.cpp
     event/EventManager.cpp
     tile/StaticRenderTilemap.cpp
     Camera.cpp
