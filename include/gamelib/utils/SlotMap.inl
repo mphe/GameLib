@@ -4,6 +4,10 @@
 #include "SlotMap.hpp"
 #include <cassert>
 
+// TODO: Consider reverting back to the implementation where empty slots are
+//       stored in a separate vector and use the version tag to mark a slot
+//       as unused (-1).
+
 namespace gamelib
 {
     template <typename T, typename IT, typename VT>
@@ -12,19 +16,19 @@ namespace gamelib
     { }
 
     template <typename T, typename IT, typename VT>
-    SlotMap<T, IT, VT>::SlotMap(unsigned int size) :
+    SlotMap<T, IT, VT>::SlotMap(IT size) :
         _firstempty(-1)
     {
         _data.reserve(size);
     }
 
     template <typename T, typename IT, typename VT>
-    typename SlotMap<T, IT, VT>::SlotKey SlotMap<T, IT, VT>::acquire()
+    typename SlotMap<T, IT, VT>::Handle SlotMap<T, IT, VT>::acquire()
     {
         if (_firstempty == (IT)-1)
         {
             _data.emplace_back();
-            return SlotKey(_data.size() - 1, 0);
+            return Handle(_data.size() - 1, 0);
         }
         else
         {
@@ -35,12 +39,12 @@ namespace gamelib
                 _firstempty = _data[i].nextempty;
 
             _data[i].nextempty = -1;
-            return SlotKey(i, _data[i].version);
+            return Handle(i, _data[i].version);
         }
     }
 
     template <typename T, typename IT, typename VT>
-    void SlotMap<T, IT, VT>::destroy(SlotKey key)
+    void SlotMap<T, IT, VT>::destroy(Handle key)
     {
         if (isValid(key))
         {
@@ -50,14 +54,14 @@ namespace gamelib
                 _data[key.index].nextempty = _firstempty;
 
             _firstempty = key.index;
-            _data[key.index].version++;
+            ++_data[key.index].version;
             if (std::is_class<T>::value)
                 _data[key.index].data = T();
         }
     }
 
     template <typename T, typename IT, typename VT>
-    bool SlotMap<T, IT, VT>::isValid(SlotKey key) const
+    bool SlotMap<T, IT, VT>::isValid(Handle key) const
     {
         return key.index < _data.size() &&
             key.version == _data[key.index].version &&
@@ -106,14 +110,14 @@ namespace gamelib
     }
 
     template <typename T, typename IT, typename VT>
-    const T& SlotMap<T, IT, VT>::operator[](SlotKey key) const
+    const T& SlotMap<T, IT, VT>::operator[](Handle key) const
     {
         assert(isValid(key) && "Key is not valid (anymore)");
         return _data[key.index].data;
     }
 
     template <typename T, typename IT, typename VT>
-    T& SlotMap<T, IT, VT>::operator[](SlotKey key)
+    T& SlotMap<T, IT, VT>::operator[](Handle key)
     {
         assert(isValid(key) && "Key is not valid (anymore)");
         return _data[key.index].data;
@@ -177,6 +181,12 @@ namespace gamelib
     SlotMapIterator<T, IndexType, ValueType>::operator const_iterator() const
     {
         return const_iterator(_vec, _index);
+    }
+
+    template <typename T, typename IndexType, typename ValueType>
+    typename SlotMapIterator<T, IndexType, ValueType>::Handle SlotMapIterator<T, IndexType, ValueType>::handle() const
+    {
+        return Handle(_index, (*_vec)[_index].version);
     }
 }
 

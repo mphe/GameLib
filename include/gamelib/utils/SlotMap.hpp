@@ -44,6 +44,33 @@
 
 namespace gamelib
 {
+    template <typename IndexType = unsigned int, typename VersionType = unsigned int>
+    struct SlotKey
+    {
+        typedef SlotKey<IndexType, VersionType> type;
+
+        IndexType index;
+        VersionType version;
+
+        constexpr SlotKey() : index(-1), version(-1) {}
+        constexpr SlotKey(IndexType i, VersionType v) : index(i), version(v) {}
+
+        constexpr bool isNull() const
+        {
+            return index == (IndexType)-1 && version == (VersionType)-1;
+        }
+
+        constexpr bool operator==(const type& rhs) const
+        {
+            return index == rhs.index && version == rhs.version;
+        }
+
+        constexpr bool operator!=(const type& rhs) const
+        {
+            return index != rhs.index || version != rhs.version;
+        }
+    };
+
     // T is the vector to iterate over, IndexType is the same as in SlotMap.
     template <typename T, typename IndexType, typename ValueType>
     class SlotMapIterator : public std::iterator<std::forward_iterator_tag, ValueType>
@@ -51,6 +78,7 @@ namespace gamelib
         public:
             typedef SlotMapIterator<T, IndexType, ValueType> type;
             typedef SlotMapIterator<const T, IndexType, const ValueType> const_iterator;
+            typedef SlotKey<IndexType, decltype(T::value_type::version)> Handle;
 
         public:
             SlotMapIterator();
@@ -64,6 +92,8 @@ namespace gamelib
 
             auto operator*() -> ValueType&;
 
+            auto handle() const -> Handle;
+
             operator const_iterator() const;
 
         private:
@@ -74,16 +104,6 @@ namespace gamelib
     template <typename T, typename IndexType = unsigned int, typename VersionType = unsigned int>
     class SlotMap
     {
-        public:
-            struct SlotKey
-            {
-                IndexType index;
-                VersionType version;
-
-                SlotKey() : index(-1), version(-1) {}
-                SlotKey(IndexType i, VersionType v) : index(i), version(v) {}
-            };
-
         private:
             struct DataField
             {
@@ -96,6 +116,8 @@ namespace gamelib
 
         public:
             typedef SlotMap<T, IndexType, VersionType> selftype;
+            typedef SlotKey<IndexType, VersionType> Handle;
+
             typedef std::ptrdiff_t difference_type;
             typedef IndexType size_type;
             typedef T value_type;
@@ -106,22 +128,21 @@ namespace gamelib
 
         public:
             SlotMap();
-            SlotMap(unsigned int size);
+            SlotMap(IndexType size);
 
-            auto acquire()                  -> SlotKey;
-            auto destroy(SlotKey key)       -> void;
-            auto isValid(SlotKey key) const -> bool;
-            auto clear()                    -> void;
+            auto acquire()                 -> Handle;
+            auto destroy(Handle key)       -> void;
+            auto isValid(Handle key) const -> bool;
+            auto clear()                   -> void;
             // auto size() const               -> unsigned int;
 
-            auto begin() -> iterator;
+            auto begin()       -> iterator;
             auto begin() const -> const_iterator;
+            auto end()         -> iterator;
+            auto end() const   -> const_iterator;
 
-            auto end() -> iterator;
-            auto end() const -> const_iterator;
-
-            auto operator[](SlotKey key) const  -> const T&;
-            auto operator[](SlotKey key)        -> T&;
+            auto operator[](Handle key) const -> const T&;
+            auto operator[](Handle key)       -> T&;
 
         private:
             IndexType _firstempty;
@@ -130,6 +151,8 @@ namespace gamelib
 
     template <typename T>
     using SlotMapShort = SlotMap<T, unsigned short, unsigned short>;
+
+    using SlotKeyShort = SlotKey<unsigned short, unsigned short>;
 }
 
 #include "SlotMap.inl"

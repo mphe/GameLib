@@ -30,7 +30,7 @@ int main()
     assert(Foo::control && "Object didn't get overwritten");
 
     SlotMapShort<Foo> map(5);
-    static_assert(sizeof(SlotMapShort<Foo>::SlotKey) == 2 * sizeof(unsigned short),
+    static_assert(sizeof(SlotMapShort<Foo>::Handle) == 2 * sizeof(unsigned short),
             "Wrong key size");
 
     auto key = map.acquire();
@@ -48,6 +48,14 @@ int main()
     assert(key2.version == 0 && "Wrong version tag");
     assert(map.isValid(key2) && "Key should be valid");
     // assert(map.size() == 2 && "Wrong size");
+
+    int i = 0;
+    for (auto it = map.begin(), end = map.end(); it != end; ++it)
+    {
+        assert(it.handle().index == i && "Wrong index");;
+        assert(it.handle().version == 0 && "Wrong version tag");;
+        ++i;
+    }
 
     map.destroy(key);
 
