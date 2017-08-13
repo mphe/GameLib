@@ -26,6 +26,7 @@ set(GAMELIB_SOURCES
     res/predefs.cpp
     rendering/Scene.cpp
     rendering/SceneObject.cpp
+    rendering/Layer.cpp
     FreeCam.cpp
 )
 

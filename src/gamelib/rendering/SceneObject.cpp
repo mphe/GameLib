@@ -4,22 +4,22 @@
 namespace gamelib
 {
     SceneObject::SceneObject(int depth, unsigned int flags) :
-        _flags(flags), _depth(depth), _scene(nullptr)
-    {};
+        Layer(depth, 1, flags)
+    { };
 
-    void SceneObject::setDepth(int depth)
+    void SceneObject::setLayer(Layer::Handle layer)
     {
-        if (depth != _depth)
+        if (layer != _layer)
         {
-            _depth = depth;
+            _layer = layer;
             if (_scene)
                 _scene->_dirty = true;
         }
     }
 
-    int SceneObject::getDepth() const
+    Layer::Handle SceneObject::getLayer() const
     {
-        return _depth;
+        return _layer;
     }
 
     void SceneObject::unregister()

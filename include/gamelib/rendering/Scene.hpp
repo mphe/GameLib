@@ -2,8 +2,10 @@
 #define GAMELIB_SCENE_HPP
 
 #include <vector>
-#include "gamelib/rendering/SceneObject.hpp"
+#include "SceneObject.hpp"
+#include "Layer.hpp"
 #include "gamelib/Camera.hpp"
+#include "gamelib/utils/SlotMap.hpp"
 
 /*
  * Scenes are responsible for rendering SceneObjects and keeping track of
@@ -32,6 +34,8 @@
  * appear in the back, while objects with small depths appear in the front.
  * The currently processed camera inside the render loop can be accessed
  * using the getCurrentCamera() function.
+ *
+ * TODO: document layers
  */
 
 // TODO: render flags
@@ -41,6 +45,7 @@ namespace gamelib
     class Scene : public SceneObject
     {
         friend class SceneObject;
+        friend class Layer;
 
         public:
             Scene();
@@ -74,12 +79,27 @@ namespace gamelib
 
             auto getCameraCount() const -> size_t;
 
+            auto createLayer()                        -> Layer::Handle;
+            auto deleteLayer(Layer::Handle handle)    -> void;
+            auto getLayer(Layer::Handle handle) const -> const Layer*;
+            auto getLayer(Layer::Handle handle)       -> Layer*;
+
+            // Calls a function for each layer.
+            // Signature: void (Handle, Layer&)
+            template <typename F>
+            void foreachLayer(F f)
+            {
+                for (auto it = _layers.begin(), end = _layers.end(); it != end; ++it)
+                    f(it.handle(), *it);
+            }
+
         private:
             auto _render(sf::RenderTarget& surface) -> void;
 
         private:
             size_t _currentcam;
             size_t _default;
+            SlotMapShort<Layer> _layers;
             std::vector<SceneObject*> _renderQueue;
             std::vector<Camera> _cams;
             bool _dirty;

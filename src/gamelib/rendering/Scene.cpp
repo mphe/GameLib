@@ -29,8 +29,11 @@ namespace gamelib
         if (_dirty)
         {
             LOG_DEBUG("Scene content changed -> sorting");
-            std::sort(_renderQueue.begin(), _renderQueue.end(),
-                    [](SceneObject* a, SceneObject* b) { return a->_depth > b->_depth; });
+            std::sort(_renderQueue.begin(), _renderQueue.end(), [this](SceneObject* a, SceneObject* b) {
+                    const int da = _layers.isValid(a->_layer) ? _layers[a->_layer]._depth : 0,
+                              db = _layers.isValid(b->_layer) ? _layers[b->_layer]._depth : 0;
+                    return (da != db) ? da > db : a->_depth > b->_depth;
+                });
             _dirty = false;
         }
     }
@@ -127,6 +130,28 @@ namespace gamelib
     size_t Scene::getCameraCount() const
     {
         return _cams.size();
+    }
+
+    Layer::Handle Scene::createLayer()
+    {
+        auto hnd = _layers.acquire();
+        _layers[hnd]._scene = this;
+        return hnd;
+    }
+
+    void Scene::deleteLayer(Layer::Handle handle)
+    {
+        _layers.destroy(handle);
+    }
+
+    const Layer* Scene::getLayer(Layer::Handle handle) const
+    {
+        return (_layers.isValid(handle)) ? &_layers[handle] : nullptr;
+    }
+
+    Layer* Scene::getLayer(Layer::Handle handle)
+    {
+        return (_layers.isValid(handle)) ? &_layers[handle] : nullptr;
     }
 
     void Scene::_render(sf::RenderTarget& target)
