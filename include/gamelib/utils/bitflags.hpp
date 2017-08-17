@@ -1,5 +1,8 @@
-#ifndef UTILS_BITFLAGS_HPP
-#define UTILS_BITFLAGS_HPP
+#ifndef GAMELIB_UTILS_BITFLAGS_HPP
+#define GAMELIB_UTILS_BITFLAGS_HPP
+
+#define RMFLAG(set, flags) (set) = gamelib::rmflag(set, flags)
+#define ADDFLAG(set, flags) (set) = gamelib::addflag(set, flags)
 
 namespace gamelib
 {

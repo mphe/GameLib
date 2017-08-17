@@ -2,6 +2,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <cassert>
 #include "gamelib/utils/log.hpp"
+#include "gamelib/rendering/flags.hpp"
 
 namespace gamelib
 {
@@ -42,7 +43,7 @@ namespace gamelib
     {
         if (_cams.empty())
         {
-            _render(target);
+            _render(target, target.getView());
         }
         else
         {
@@ -57,12 +58,55 @@ namespace gamelib
             for (size_t i = 0; i < _cams.size(); ++i)
             {
                 _currentcam = i;
-                target.setView(_cams[i].getView());
-                _render(target);
+                // target.setView(_cams[i].getView());
+                _render(target, _cams[i].getView());
             }
 
             target.setView(backup); // reset view
             _currentcam = _default;
+        }
+    }
+
+    void Scene::_render(sf::RenderTarget& target, const sf::View& view)
+    {
+        float lastparallax = 1;
+
+        for (auto& o : _renderQueue)
+        {
+            unsigned int flags = o->flags | this->flags;
+            float parallax = o->getParallax() * getParallax();
+
+            if (_layers.isValid(o->getLayer()))
+            {
+                parallax *= _layers[o->getLayer()].getParallax();
+                flags |= _layers[o->getLayer()].flags;
+            }
+
+            if (flags & render_invisible)
+                continue;
+
+            if (flags & render_hidden && !(flags & render_drawhidden))
+                continue;
+
+            if (flags & render_noparallax)
+            {
+                if (!math::almostEquals(lastparallax, 1.0f))
+                {
+                    target.setView(view);
+                    lastparallax = 1;
+                }
+            }
+            else if (!math::almostEquals(lastparallax, parallax))
+            {
+                // TODO: object-level parallax needs to be distance(camera, obj) * parallax
+                sf::View paraview = target.getView();
+                paraview.setCenter(view.getCenter().x * parallax,
+                                   view.getCenter().y * parallax);
+                target.setView(paraview);
+                lastparallax = parallax;
+            }
+
+            o->render(target);
         }
     }
 
@@ -152,11 +196,5 @@ namespace gamelib
     Layer* Scene::getLayer(Layer::Handle handle)
     {
         return (_layers.isValid(handle)) ? &_layers[handle] : nullptr;
-    }
-
-    void Scene::_render(sf::RenderTarget& target)
-    {
-        for (auto& o : _renderQueue)
-            o->render(target);
     }
 }

@@ -94,7 +94,7 @@ namespace gamelib
             }
 
         private:
-            auto _render(sf::RenderTarget& surface) -> void;
+            auto _render(sf::RenderTarget& surface, const sf::View& view) -> void;
 
         private:
             size_t _currentcam;
