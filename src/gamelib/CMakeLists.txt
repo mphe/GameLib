@@ -11,14 +11,8 @@ set(GAMELIB_SOURCES
     sprite/AnimatedSprite.cpp
     sprite/SpriteSet.cpp
     sprite/SpriteData.cpp
-    # legacy/Scene/Scene.cpp
-    # legacy/Scene/TilemapAdapter.cpp
-    # legacy/Scene/VimCam.cpp
     collision/CollisionSystem.cpp
     collision/AABBCollision.cpp
-    component/Entity.cpp
-    component/subsystem/UpdateSystem.cpp
-    component/UpdateComponent.cpp
     movement/Acceleration.cpp
     movement/TileWalker.cpp
     res/JsonSerializer.cpp
@@ -28,6 +22,15 @@ set(GAMELIB_SOURCES
     rendering/SceneObject.cpp
     rendering/Layer.cpp
     FreeCam.cpp
+    ecs/Entity.cpp
+    ecs/Component.cpp
+    ecs/EntityManager.cpp
+    # legacy/Scene/Scene.cpp
+    # legacy/Scene/TilemapAdapter.cpp
+    # legacy/Scene/VimCam.cpp
+    # legacy/component/Entity.cpp
+    # legacy/component/subsystem/UpdateSystem.cpp
+    # legacy/component/UpdateComponent.cpp
 )
 
 set(EXT_LIBRARIES
