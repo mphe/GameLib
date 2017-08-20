@@ -3,6 +3,8 @@
 
 #include "gamelib/Identifiable.hpp"
 
+// TODO: Get the System from Entity
+
 namespace gamelib
 {
     class Entity;

@@ -30,6 +30,12 @@ namespace gamelib
         return nullptr;
     }
 
+    EntityManager* System::getEntityManager()
+    {
+        LOG_WARN("Trying to access non-existing EntityManager object");
+        return nullptr;
+    }
+
     Game* System::getGame()
     {
         LOG_WARN("Trying to access non-existing Game object");

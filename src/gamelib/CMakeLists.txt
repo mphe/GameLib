@@ -23,8 +23,10 @@ set(GAMELIB_SOURCES
     rendering/Layer.cpp
     FreeCam.cpp
     ecs/Entity.cpp
-    ecs/Component.cpp
     ecs/EntityManager.cpp
+    ecs/Component.cpp
+    ecs/RenderComponent.cpp
+    ecs/CollisionComponent.cpp
     # legacy/Scene/Scene.cpp
     # legacy/Scene/TilemapAdapter.cpp
     # legacy/Scene/VimCam.cpp

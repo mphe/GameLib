@@ -8,6 +8,10 @@
 #include "gamelib/Identifier.hpp"
 #include "Component.hpp"
 
+// TODO: Cache the current System or take it as parameter, so that entities
+//       can be created in a specific System.
+//       Also pass the System pointer to components.
+
 namespace gamelib
 {
     class EntityManager;
