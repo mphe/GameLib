@@ -58,7 +58,7 @@ namespace gamelib
             for (size_t i = 0; i < _cams.size(); ++i)
             {
                 _currentcam = i;
-                // target.setView(_cams[i].getView());
+                target.setView(_cams[i].getView());
                 _render(target, _cams[i].getView());
             }
 

@@ -17,6 +17,11 @@ namespace gamelib
             auto setLayer(Layer::Handle layer) -> void;
             auto getLayer() const              -> Layer::Handle;
 
+            // Returns the flags merged with the layer's and scene's flags
+            auto getAllFlags() const -> unsigned int;
+
+            auto isVisible() const -> bool;
+
             auto unregister() -> void;
 
         protected:
