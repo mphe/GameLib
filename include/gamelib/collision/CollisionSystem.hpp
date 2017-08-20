@@ -30,17 +30,32 @@ namespace gamelib
     class CollisionSystem
     {
         public:
-            auto add(Collidable* col)       -> void;
-            auto remove(Collidable* col)    -> void;
-            auto destroy()                  -> void;
-            auto size() const               -> size_t;
+            auto add(Collidable* col)    -> void;
+            auto remove(Collidable* col) -> void;
+            auto destroy()               -> void;
+            auto size() const            -> size_t;
+
+            auto trace(const math::Line2f& line, unsigned int flags = 0) const   -> TraceResult;
 
             // Returns the colliding object if there is a collison at the
-            // given point/rect, otherwise NULL.
-            auto trace(const math::Point2f& point, unsigned int flags = 0) const
-                -> Collidable*;
-            auto trace(const math::Line2f& line, unsigned int flags = 0) const
-                -> TraceResult;
+            // given point/rect, otherwise nullptr.
+            auto find(const math::Point2f& point, unsigned int flags = 0) const -> Collidable*;
+
+            // Calls a function for each colliding object at the given point.
+            // Signature: bool(Collidable*)
+            // If the function returns true, the loop will break.
+            template <typename F>
+            auto findAll(const math::Point2f& point, unsigned int flags, F f) const -> void
+            {
+                // Use rbegin so it conforms with find().
+                for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
+                {
+                    Collidable* i = (*it);
+                    if ((!flags || i->flags & flags) && i->intersect(point))
+                        if (f(i))
+                            return;
+                }
+            }
 
         private:
             std::vector<Collidable*> _objs;

@@ -25,7 +25,7 @@ namespace gamelib
         return _objs.size();
     }
 
-    Collidable* CollisionSystem::trace(const math::Point2f& point, unsigned int flags) const
+    Collidable* CollisionSystem::find(const math::Point2f& point, unsigned int flags) const
     {
         for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
         {
