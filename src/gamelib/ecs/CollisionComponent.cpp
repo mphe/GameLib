@@ -10,12 +10,13 @@ namespace gamelib
         if (!sys)
             return false;
 
-        sys->add(this);
+        get()->owner = this;   // TODO: Maybe move this to constructor
+        sys->add(get());
         return true;
     }
 
     void CollisionComponent::_quit()
     {
-        System::getActive()->getCollisionSystem()->remove(this);
+        System::getActive()->getCollisionSystem()->remove(get());
     }
 }
