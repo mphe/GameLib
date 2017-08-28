@@ -3,10 +3,11 @@
 
 namespace gamelib
 {
-    Entity& EntityManager::add()
+    Entity& EntityManager::add(const std::string& name)
     {
         auto h = _entities.acquire();
         Entity& ent = _entities[h];
+        ent._name = name;
         ent._handle = h;
         ent._entmgr = this;
         return ent;
@@ -22,11 +23,6 @@ namespace gamelib
     const Entity* EntityManager::get(Handle handle) const
     {
         return const_cast<EntityManager*>(this)->get(handle);
-        // if (_entities.isValid(handle))
-        //     return &_entities[handle];
-        //
-        // LOG_WARN("Trying to use invalid entity handle");
-        // return nullptr;
     }
 
     Entity* EntityManager::get(Handle handle)
@@ -49,10 +45,6 @@ namespace gamelib
     Entity* EntityManager::find(const std::string& name)
     {
         return const_cast<EntityManager*>(this)->find(name);
-        // for (auto& i : _entities)
-        //     if (i.getName() == name)
-        //         return &i;
-        // return nullptr;
     }
 
     void EntityManager::destroy(Handle handle)
