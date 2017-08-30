@@ -67,6 +67,7 @@ namespace gamelib
             EntityManager* _entmgr; // Set by EntityManager
             Handle _handle;         // Set by EntityManager
             std::string _name;
+            bool _quitting;
             ComponentList _components;
     };
 

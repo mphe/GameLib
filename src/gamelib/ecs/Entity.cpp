@@ -12,12 +12,14 @@ namespace gamelib
 
 
     Entity::Entity() :
-        _entmgr(nullptr)
+        _entmgr(nullptr),
+        _quitting(false)
     { }
 
     Entity::Entity(const std::string& name) :
         _entmgr(nullptr),
-        _name(name)
+        _name(name),
+        _quitting(false)
     { }
 
     Entity::~Entity()
@@ -67,7 +69,10 @@ namespace gamelib
             if (it->get() == comp)
             {
                 (*it)->_quit();
-                _components.erase(it);
+                if (!_quitting)
+                    _components.erase(it);
+                else
+                    it->reset();
                 _refresh();
                 break;
             }
@@ -88,9 +93,16 @@ namespace gamelib
 
     void Entity::_quit()
     {
+        // Set _quitting to true to prevent possible segfaults when a
+        // component removes another component during his _quit().
+        // remove() will not remove components from the list, when
+        // _quitting is set, but reset the pointer instead.
+        _quitting = true;
         for (auto& i : _components)
-            i->_quit();
+            if (i)
+                i->_quit();
         _components.clear();
+        _quitting = false;
 
         LOG_DEBUG("Entity destroyed");
     }
@@ -98,7 +110,8 @@ namespace gamelib
     void Entity::_refresh()
     {
         for (auto& i : _components)
-            i->_refresh();
+            if (i)
+                i->_refresh();
     }
 
 
