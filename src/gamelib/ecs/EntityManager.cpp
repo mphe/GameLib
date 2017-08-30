@@ -30,7 +30,7 @@ namespace gamelib
         if (_entities.isValid(handle))
             return &_entities[handle];
 
-        LOG_WARN("Trying to use invalid entity handle");
+        // LOG_DEBUG_WARN("Trying to use invalid entity handle");
         return nullptr;
     }
 

@@ -4,10 +4,6 @@
 #include "SlotMap.hpp"
 #include <cassert>
 
-// TODO: Consider reverting back to the implementation where empty slots are
-//       stored in a separate vector and use the version tag to mark a slot
-//       as unused (-1).
-
 namespace gamelib
 {
     template <typename T, typename IT, typename VT>
