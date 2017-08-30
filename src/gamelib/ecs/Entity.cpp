@@ -1,9 +1,16 @@
 #include "gamelib/ecs/Entity.hpp"
 #include "gamelib/ecs/EntityManager.hpp"
+#include "gamelib/System.hpp"
 #include "gamelib/utils/log.hpp"
 
 namespace gamelib
 {
+    Entity* getEntity(Entity::Handle handle)
+    {
+        return System::getActive()->getEntityManager()->get(handle);
+    }
+
+
     Entity::Entity() :
         _entmgr(nullptr)
     { }
@@ -42,10 +49,10 @@ namespace gamelib
     {
         assert(comp && "Component is nullptr");
 
-        comp->_ent = this;
+        comp->_ent = _handle;
         if (!comp->_init())
         {
-            comp->_ent = nullptr;
+            comp->_ent = Handle();
             return nullptr;
         }
 

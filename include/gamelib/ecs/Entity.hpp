@@ -69,6 +69,8 @@ namespace gamelib
             std::string _name;
             ComponentList _components;
     };
+
+    auto getEntity(Entity::Handle handle) -> Entity*;
 }
 
 #endif

@@ -2,6 +2,7 @@
 #define GAMELIB_COMPONENT_HPP
 
 #include "gamelib/Identifiable.hpp"
+#include "gamelib/utils/SlotMap.hpp"
 
 // TODO: Get the System from Entity
 
@@ -12,12 +13,14 @@ namespace gamelib
     class Component : public Identifiable
     {
         friend class Entity;
+        typedef SlotKeyShort Handle;
 
         public:
             Component();
             virtual ~Component() {};
 
-            auto getEntity() const -> Entity*;
+            auto getEntity() const       -> Entity*;
+            auto getEntityHandle() const -> Handle;
 
         protected:
             // Those are called by Entity
@@ -26,7 +29,7 @@ namespace gamelib
             virtual auto _refresh() -> void;
 
         private:
-            Entity* _ent;   // Set by Entity
+            Handle _ent;   // Set by Entity
     };
 }
 
