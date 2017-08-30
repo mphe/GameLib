@@ -52,11 +52,42 @@ namespace gamelib
             // auto operator=(const Entity& rhs) -> Entity&;   // TODO or maybe not
             auto operator=(Entity&& rhs) -> Entity& = default;
 
+            template <typename T, typename... Args>
+            auto add(Args&&... args) -> T*
+            {
+                auto comp = add(ComponentPtr(new T(std::forward<Args>(args)...)));
+                return static_cast<T*>(comp);
+            }
+
             template <typename T>
             auto find() const -> T*
             {
                 static_assert(isIdentifiable<T>::value, "Only works for types derived from gamelib::Identifier");
                 return static_cast<T*>(find(T::id));
+            }
+
+            // Calls a callback for each found component.
+            // Signature: bool(Component*)
+            // If the lambda returns true, the loop breaks. To continue return false.
+            template <typename F>
+            auto findAll(ID type, F callback) const -> void
+            {
+                for (auto it = _components.begin(), end = _components.end(); it != end; ++it)
+                    if ((*it)->getID() == type)
+                        if (callback(it->get()))
+                            break;
+            }
+
+            // Calls a callback for each found T component.
+            // Signature: bool(T*)
+            // If the lambda returns true, the loop breaks. To continue return false.
+            template <typename T, typename F>
+            auto findAll(F callback) const -> void
+            {
+                static_assert(isIdentifiable<T>::value, "Only works for types derived from gamelib::Identifier");
+                findAll(T::id, [&](Component* comp) {
+                        return callback(static_cast<T*>(comp));
+                    });
             }
 
         private:
