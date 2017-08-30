@@ -13,8 +13,8 @@ set(GAMELIB_SOURCES
     sprite/SpriteData.cpp
     collision/CollisionSystem.cpp
     collision/AABBCollision.cpp
+    collision/Transformable.cpp
     movement/Acceleration.cpp
-    movement/TileWalker.cpp
     res/JsonSerializer.cpp
     res/ResourceManager.cpp
     res/predefs.cpp
@@ -33,6 +33,7 @@ set(GAMELIB_SOURCES
     # legacy/component/Entity.cpp
     # legacy/component/subsystem/UpdateSystem.cpp
     # legacy/component/UpdateComponent.cpp
+    # legacy/TileWalker.cpp
 )
 
 set(EXT_LIBRARIES

@@ -23,7 +23,7 @@ namespace gamelib
             operator bool() const;
 
         public:
-            Collidable* obj;
+            Collidable* obj;    // TODO: maybe make this a CollisionComponent
             Intersection isec;
     };
 

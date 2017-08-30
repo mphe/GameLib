@@ -1,45 +1,35 @@
-#ifndef GAMELIB_COLLISION_COLLIDABLE
-#define GAMELIB_COLLISION_COLLIDABLE
+#ifndef GAMELIB_COLLISION_COLLIDABLE_HPP
+#define GAMELIB_COLLISION_COLLIDABLE_HPP
 
-#include "math/geometry/Vector.hpp"
+#include "Transformable.hpp"
 #include "math/geometry/Line2.hpp"
-#include "math/geometry/AABB.hpp"
 
 /*
+ * TODO: Consider removing this abstraction and put it directly inside
+ *       CollisionComponent.
+ *
  * Base class for objects that have a "body" and can collide with others.
  * A collidable object can be moved to a different position, has a
  * bounding box and can intersect at least with points and lines.
- * Additionally, there are 2 fields "flags" and "owner".
- * "flags" can be used for various collision related flags,
- * e.g. solid, kill, hurt, ... .
- * "owner" is useful in entity-component like systems.
  */
 
 namespace gamelib
 {
     typedef math::Intersection<float> Intersection;
 
-    class Collidable
+    class Collidable : public Transformable
     {
         public:
-            Collidable() : flags(0), owner(nullptr) {};
-            Collidable(unsigned int flags_, void* owner_) :
-                flags(flags_), owner(owner_) {};
+            Collidable() : flags(0) {};
+            Collidable(unsigned int flags_) : flags(flags_) {};
             virtual ~Collidable() {};
 
             virtual auto intersect(const math::Point2f& point) const -> bool = 0;
             virtual auto intersect(const math::Line2f& line) const   -> Intersection = 0;
             virtual auto intersect(const math::AABBf& rect) const    -> Intersection = 0;
 
-            virtual auto move(float x, float y)         -> void = 0;
-            virtual auto setPosition(float x, float y)  -> void = 0;
-
-            virtual auto getPosition() const    -> const math::Vec2f& = 0;
-            virtual auto getBBox() const        -> const math::AABBf = 0;
-
         public:
             unsigned int flags;
-            void* owner;
     };
 }
 
