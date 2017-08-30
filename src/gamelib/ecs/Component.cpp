@@ -4,11 +4,14 @@
 
 namespace gamelib
 {
-    Component::Component()
+    Component::Component() :
+        _entptr(nullptr)
     { }
 
     Entity* Component::getEntity() const
     {
+        if (_entptr)
+            return _entptr;
         return System::getActive()->getEntityManager()->get(_ent);
     }
 

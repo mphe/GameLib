@@ -13,12 +13,13 @@ namespace gamelib
         return ent;
     }
 
-    Entity& EntityManager::add(Entity&& entity)
-    {
-        Entity& ent = add();
-        ent = std::move(entity);
-        return ent;
-    }
+    // Entity& EntityManager::add(Entity&& entity)
+    // {
+    //     Entity& ent = add();
+    //     ent = std::move(entity);
+    //     ent._init();
+    //     return ent;
+    // }
 
     const Entity* EntityManager::get(Handle handle) const
     {

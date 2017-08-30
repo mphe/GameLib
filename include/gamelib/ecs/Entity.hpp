@@ -91,6 +91,7 @@ namespace gamelib
             }
 
         private:
+            auto _init() -> void;   // Called by EntityManager when entity was added
             auto _quit() -> void;   // Called by EntityManager when entity was removed
             auto _refresh() -> void;
 

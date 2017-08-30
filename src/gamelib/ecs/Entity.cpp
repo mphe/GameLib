@@ -51,10 +51,15 @@ namespace gamelib
     {
         assert(comp && "Component is nullptr");
 
-        comp->_ent = _handle;
+        if (_entmgr)
+            comp->_ent = _handle;
+        else
+            comp->_entptr = this;
+
         if (!comp->_init())
         {
             comp->_ent = Handle();
+            comp->_entptr = nullptr;
             return nullptr;
         }
 

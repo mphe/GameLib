@@ -13,6 +13,7 @@ namespace gamelib
     class Component : public Identifiable
     {
         friend class Entity;
+
         typedef SlotKeyShort Handle;
 
         public:
@@ -30,6 +31,9 @@ namespace gamelib
 
         private:
             Handle _ent;   // Set by Entity
+
+            // Only used when the entity was created outside an EntityManager
+            Entity* _entptr; // Set by Entity
     };
 }
 

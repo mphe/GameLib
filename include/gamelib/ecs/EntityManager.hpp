@@ -14,7 +14,7 @@ namespace gamelib
 
         public:
             auto add(const std::string& name = "unknown") -> Entity&;
-            auto add(Entity&& ent)                        -> Entity&;
+            // auto add(Entity&& ent)                        -> Entity&;
             auto destroy(Handle handle)                   -> void;
             auto get(Handle handle) const                 -> const Entity*;
             auto get(Handle handle)                       -> Entity*;
