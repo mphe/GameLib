@@ -47,6 +47,16 @@ namespace gamelib
         return _name;
     }
 
+    const GroupTransform& Entity::getTransform() const
+    {
+        return _transform;
+    }
+
+    GroupTransform& Entity::getTransform()
+    {
+        return _transform;
+    }
+
     Component* Entity::add(ComponentPtr comp)
     {
         assert(comp && "Component is nullptr");

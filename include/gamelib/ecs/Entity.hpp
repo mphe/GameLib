@@ -6,6 +6,7 @@
 #include <memory>
 #include "gamelib/utils/SlotMap.hpp"
 #include "gamelib/Identifier.hpp"
+#include "gamelib/geometry/GroupTransform.hpp"
 #include "Component.hpp"
 
 // TODO: Cache the current System or take it as parameter, so that entities
@@ -36,8 +37,11 @@ namespace gamelib
             auto clone()   -> Entity; // TODO Explicit copy might be better here than copy constructor
             auto destroy() -> void;
 
-            auto getHandle() const -> Handle;
-            auto getName() const   -> const std::string&;
+            auto getHandle() const    -> Handle;
+            auto getName() const      -> const std::string&;
+
+            auto getTransform() const -> const GroupTransform&;
+            auto getTransform()       -> GroupTransform&;
 
             auto add(ComponentPtr comp)  -> Component*;
             auto remove(Component* comp) -> void;
@@ -99,6 +103,7 @@ namespace gamelib
             EntityManager* _entmgr; // Set by EntityManager
             Handle _handle;         // Set by EntityManager
             std::string _name;
+            GroupTransform _transform;
             bool _quitting;
             ComponentList _components;
     };

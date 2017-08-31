@@ -1,4 +1,5 @@
 #include "gamelib/ecs/CollisionComponent.hpp"
+#include "gamelib/ecs/Entity.hpp"
 #include "gamelib/System.hpp"
 #include "gamelib/geometry/CollisionSystem.hpp"
 
@@ -11,11 +12,13 @@ namespace gamelib
             return false;
 
         sys->add(this);
+        getEntity()->getTransform().add(this);
         return true;
     }
 
     void CollisionComponent::_quit()
     {
+        getEntity()->getTransform().remove(this);
         System::getActive()->getCollisionSystem()->remove(this);
     }
 }
