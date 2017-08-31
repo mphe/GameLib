@@ -1,4 +1,4 @@
-#include "gamelib/collision/Transformable.hpp"
+#include "gamelib/geometry/Transformable.hpp"
 #include "gamelib/utils/log.hpp"
 
 namespace gamelib

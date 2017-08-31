@@ -1,4 +1,4 @@
-#include "gamelib/collision/GroupTransform.hpp"
+#include "gamelib/geometry/GroupTransform.hpp"
 
 // TODO: adapt position for individual elements, when scaling/rotating
 

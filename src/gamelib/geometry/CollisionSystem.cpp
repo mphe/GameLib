@@ -1,4 +1,4 @@
-#include "gamelib/collision/CollisionSystem.hpp"
+#include "gamelib/geometry/CollisionSystem.hpp"
 #include <algorithm>
 
 namespace gamelib

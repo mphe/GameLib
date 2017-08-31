@@ -11,10 +11,10 @@ set(GAMELIB_SOURCES
     sprite/AnimatedSprite.cpp
     sprite/SpriteSet.cpp
     sprite/SpriteData.cpp
-    collision/CollisionSystem.cpp
-    collision/AABBCollision.cpp
-    collision/Transformable.cpp
-    collision/GroupTransform.cpp
+    geometry/CollisionSystem.cpp
+    geometry/AABB.cpp
+    geometry/Transformable.cpp
+    geometry/GroupTransform.cpp
     movement/Acceleration.cpp
     res/JsonSerializer.cpp
     res/ResourceManager.cpp

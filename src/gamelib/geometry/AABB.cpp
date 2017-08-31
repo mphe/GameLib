@@ -1,4 +1,4 @@
-#include "gamelib/collision/AABBCollision.hpp"
+#include "gamelib/geometry/AABB.hpp"
 
 namespace gamelib
 {

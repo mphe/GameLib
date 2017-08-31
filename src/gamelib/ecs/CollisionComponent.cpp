@@ -1,6 +1,6 @@
 #include "gamelib/ecs/CollisionComponent.hpp"
 #include "gamelib/System.hpp"
-#include "gamelib/collision/CollisionSystem.hpp"
+#include "gamelib/geometry/CollisionSystem.hpp"
 
 namespace gamelib
 {

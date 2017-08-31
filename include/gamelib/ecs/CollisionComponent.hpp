@@ -3,7 +3,7 @@
 
 #include "gamelib/Identifier.hpp"
 #include "Component.hpp"
-#include "gamelib/collision/Collidable.hpp"
+#include "gamelib/geometry/Collidable.hpp"
 
 namespace gamelib
 {

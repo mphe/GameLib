@@ -2,8 +2,8 @@
 #define GAMELIB_TILE_WALKER_HPP
 
 #include "Physical.hpp"
-#include "gamelib/collision/TilemapCollider.hpp"
-#include "gamelib/collision/AABBCollision.hpp"
+#include "gamelib/geometry/TilemapCollider.hpp"
+#include "gamelib/geometry/AABBCollision.hpp"
 
 /*
  * A Physical based on TilemapCollider.
