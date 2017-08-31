@@ -14,6 +14,7 @@ set(GAMELIB_SOURCES
     collision/CollisionSystem.cpp
     collision/AABBCollision.cpp
     collision/Transformable.cpp
+    collision/GroupTransform.cpp
     movement/Acceleration.cpp
     res/JsonSerializer.cpp
     res/ResourceManager.cpp
