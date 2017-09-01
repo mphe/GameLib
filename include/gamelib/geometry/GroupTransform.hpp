@@ -16,6 +16,10 @@ namespace gamelib
             auto add(Transformable* trans)    -> void;
             auto remove(Transformable* trans) -> void;
 
+            // Refreshes the bounding box, in case a transformable changed
+            // its size independently.
+            auto refreshBBox() -> void;
+
             auto move(const math::Vec2f& rel)    -> void;
             auto scale(const math::Vec2f& scale) -> void;
             auto rotate(float angle)             -> void;

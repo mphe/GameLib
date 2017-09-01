@@ -21,6 +21,7 @@ namespace gamelib
     void GroupTransform::add(Transformable* trans)
     {
         _objs.push_back(trans);
+        refreshBBox();
     }
 
     void GroupTransform::remove(Transformable* trans)
@@ -32,6 +33,15 @@ namespace gamelib
                 std::swap(*it, _objs.back());
             _objs.pop_back();
         }
+        refreshBBox();
+    }
+
+    void GroupTransform::refreshBBox()
+    {
+        math::AABBf bbox;
+        for (auto& i : _objs)
+            bbox.combine(i->getBBox());
+        _bbox = bbox;
     }
 
     void GroupTransform::move(const math::Vec2f& rel)
@@ -39,6 +49,7 @@ namespace gamelib
         for (auto& i : _objs)
             i->move(rel);
         _pos += rel;
+        _bbox.pos -= rel;
     }
 
     void GroupTransform::scale(const math::Vec2f& scale_)
@@ -46,6 +57,7 @@ namespace gamelib
         for (auto& i : _objs)
             i->scale(scale_);
         _scale *= scale_;
+        _bbox.size *= scale_;
     }
 
     void GroupTransform::rotate(float angle)
@@ -53,6 +65,7 @@ namespace gamelib
         for (auto& i : _objs)
             i->rotate(angle);
         _rotation += angle;
+        refreshBBox();
     }
 
 
