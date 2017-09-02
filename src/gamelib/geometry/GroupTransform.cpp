@@ -49,7 +49,7 @@ namespace gamelib
         for (auto& i : _objs)
             i->move(rel);
         _pos += rel;
-        _bbox.pos -= rel;
+        _bbox.pos += rel;
     }
 
     void GroupTransform::scale(const math::Vec2f& scale_)

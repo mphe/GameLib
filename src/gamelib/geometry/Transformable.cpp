@@ -34,7 +34,12 @@ namespace gamelib
 
     void Transformable::setScale(const math::Vec2f& scale_)
     {
-        scale(scale_ / getScale());
+        math::Vec2f fixed(scale_);
+        if (fixed.x == 0)
+            fixed.x = 0.00001;
+        if (fixed.x == 0)
+            fixed.y = 0.00001;
+        scale(fixed / getScale());
     }
 
     void Transformable::setRotation(float angle)
