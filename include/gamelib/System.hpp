@@ -23,12 +23,14 @@ namespace gamelib
     class ResourceManager;
     class EntityManager;
     class Scene;
+    class UpdateSystem;
 
     class System
     {
         public:
             virtual ~System() {}
             virtual auto getScene()           -> Scene*;
+            virtual auto getUpdateSystem()    -> UpdateSystem*;
             virtual auto getCollisionSystem() -> CollisionSystem*;
             virtual auto getEventManager()    -> EventManager*;
             virtual auto getResourceManager() -> ResourceManager*;

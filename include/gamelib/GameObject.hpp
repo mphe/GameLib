@@ -1,7 +1,7 @@
 #ifndef GAMELIB_GAME_OBJECT_HPP
 #define GAMELIB_GAME_OBJECT_HPP
 
-#include "Updatable.hpp"
+#include "update/Updatable.hpp"
 #include "Renderable.hpp"
 
 namespace gamelib

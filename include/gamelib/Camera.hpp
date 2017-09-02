@@ -4,7 +4,7 @@
 #include "math/geometry/Vector.hpp"
 #include "math/geometry/AABB.hpp"
 #include "gamelib/res/JsonSerializer.hpp"
-#include "gamelib/Updatable.hpp"
+#include "gamelib/update/Updatable.hpp"
 
 namespace sf
 {

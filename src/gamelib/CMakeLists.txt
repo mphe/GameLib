@@ -28,6 +28,8 @@ set(GAMELIB_SOURCES
     ecs/Component.cpp
     ecs/RenderComponent.cpp
     ecs/CollisionComponent.cpp
+    ecs/UpdateComponent.cpp
+    update/UpdateSystem.cpp
     # legacy/Scene/Scene.cpp
     # legacy/Scene/TilemapAdapter.cpp
     # legacy/Scene/VimCam.cpp

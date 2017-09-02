@@ -5,7 +5,7 @@
 #include <string>
 #include "math/geometry/AABB.hpp"
 #include "gamelib/sprite/SpriteSet.hpp"
-#include "gamelib/Updatable.hpp"
+#include "gamelib/update/Updatable.hpp"
 #include "StaticDataSetTilemap.hpp"
 
 namespace sf

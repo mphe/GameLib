@@ -11,21 +11,24 @@ namespace gamelib
 
     CollisionSystem* System::getCollisionSystem()
     {
-
         LOG_WARN("Trying to access non-existing CollisionSystem object");
+        return nullptr;
+    }
+
+    UpdateSystem* System::getUpdateSystem()
+    {
+        LOG_WARN("Trying to access non-existing UpdateSystem object");
         return nullptr;
     }
 
     EventManager* System::getEventManager()
     {
-
         LOG_WARN("Trying to access non-existing EventManager object");
         return nullptr;
     }
 
     ResourceManager* System::getResourceManager()
     {
-
         LOG_WARN("Trying to access non-existing ResourceManager object");
         return nullptr;
     }

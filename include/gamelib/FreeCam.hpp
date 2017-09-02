@@ -1,7 +1,7 @@
 #ifndef GAMELIB_FREE_CAM_HPP
 #define GAMELIB_FREE_CAM_HPP
 
-#include "Updatable.hpp"
+#include "update/Updatable.hpp"
 
 /*
  * Allows moving and zooming the camera around.
