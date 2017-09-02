@@ -21,6 +21,9 @@ namespace gamelib
     void GroupTransform::add(Transformable* trans)
     {
         _objs.push_back(trans);
+        _objs.back()->setPosition(_pos);
+        _objs.back()->setScale(_scale);
+        _objs.back()->setRotation(_rotation);
         refreshBBox();
     }
 
