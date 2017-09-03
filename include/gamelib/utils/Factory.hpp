@@ -1,66 +1,69 @@
-#ifndef UTILS_FACTORY_HPP
-#define UTILS_FACTORY_HPP
+#ifndef GAMELIB_FACTORY_HPP
+#define GAMELIB_FACTORY_HPP
 
 #include <cassert>
-#include <map>
+#include <memory>
+#include <unordered_map>
 
 namespace gamelib
 {
-    template <class Base, class ID, class... Args>
-        class Factory
-        {
-            public:
-                typedef Base*(*CreatorFunction)(Args...);
+    template <typename Base, typename Key, typename... Args>
+    class Factory
+    {
+        public:
+            typedef std::unique_ptr<Base> BasePtr;
 
-            public:
-                template <class Derive>
-                    static Base* defaultCreator(Args... args)
-                    {
-                        return new Derive(args...);
-                    }
+        public:
+            typedef BasePtr(*CreatorFunction)(Args...);
 
-            public:
-                // TODO: consider using rvalue references and std::forward
-                Base* create(const ID& id, Args&... args) const
-                {
-                    assert(_makers.find(id) != _makers.end());
-                    return _makers.find(id)->second(args...);
-                }
+        public:
+            template <typename Derive>
+            static BasePtr defaultCreator(Args&&... args)
+            {
+                return BasePtr(new Derive(std::forward<Args>(args)...));
+            }
 
-                void add(const ID& id, CreatorFunction callback)
-                {
-                    _makers[id] = callback;
-                }
+        public:
+            BasePtr create(const Key& id, Args&&... args) const
+            {
+                assert(_makers.find(id) != _makers.end());
+                return _makers.find(id)->second(std::forward<Args>(args)...);
+            }
 
-                template <class Derive>
-                    void add(const ID& id)
-                    {
-                        add(id, defaultCreator<Derive>);
-                    }
+            void add(const Key& id, CreatorFunction callback)
+            {
+                _makers[id] = callback;
+            }
 
-                void del(const ID& id)
-                {
-                    _makers.erase(id);
-                }
+            template <typename Derive>
+            void add(const Key& id)
+            {
+                add(id, defaultCreator<Derive>);
+            }
 
-                bool haskey(const ID& id) const
-                {
-                    return _makers.find(id) != _makers.end();
-                }
+            void remove(const Key& id)
+            {
+                _makers.erase(id);
+            }
 
-                void clear()
-                {
-                    _makers.clear();
-                }
+            bool hasKey(const Key& id) const
+            {
+                return _makers.find(id) != _makers.end();
+            }
 
-                size_t size() const
-                {
-                    return _makers.size();
-                }
+            void clear()
+            {
+                _makers.clear();
+            }
 
-            private:
-                std::map<ID, CreatorFunction> _makers;
-        };
+            size_t size() const
+            {
+                return _makers.size();
+            }
+
+        private:
+            std::unordered_map<Key, CreatorFunction> _makers;
+    };
 }
 
 #endif

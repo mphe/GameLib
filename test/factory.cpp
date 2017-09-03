@@ -20,8 +20,15 @@ class Bar : public Foo
 
         const string& getName() const { return name; }
 
-        static Foo* create(const string& name) { return new Bar(name); }
-        static Foo* create() { return new Bar(); }
+        static std::unique_ptr<Foo> create(const string& name)
+        {
+            return std::unique_ptr<Foo>(new Bar(name));
+        }
+
+        static std::unique_ptr<Foo> create()
+        {
+            return std::unique_ptr<Foo>(new Bar());
+        }
 
     private:
         string name;
@@ -41,17 +48,13 @@ int main()
     fac.add<Bla>(75);
     assert(fac.size() == 2);
 
-    Foo *ptr1, *ptr2;
-    ptr1 = fac.create(42);
-    ptr2 = fac.create(75);
+    auto ptr1 = fac.create(42);
+    auto ptr2 = fac.create(75);
 
     assert(ptr1->getName() == "unnamed Bar");
     assert(ptr2->getName() == "unnamed Bla");
 
-    delete ptr1;
-    delete ptr2;
-
-    fac.del(42);
+    fac.remove(42);
     assert(fac.size() == 1);
 
     fac.clear();
@@ -61,14 +64,11 @@ int main()
     argfac.add(42, Bar::create);
     argfac.add<Bla>(75);
 
-    ptr1 = argfac.create(42, "argfac Bar");
-    ptr2 = argfac.create(75, "argfac Bla");
+    auto ptr3 = argfac.create(42, "argfac Bar");
+    auto ptr4 = argfac.create(75, "argfac Bla");
 
-    assert(ptr1->getName() == "argfac Bar");
-    assert(ptr2->getName() == "argfac Bla");
-
-    delete ptr1;
-    delete ptr2;
+    assert(ptr3->getName() == "argfac Bar");
+    assert(ptr4->getName() == "argfac Bla");
 
     return 0;
 }
