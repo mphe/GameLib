@@ -24,4 +24,17 @@ namespace gamelib
         if (sys)
             sys->remove(_handle);
     }
+
+    bool UpdateComponent::loadFromJson(const Json::Value& node)
+    {
+        Component::loadFromJson(node);
+        interval = node.get("interval", 1).asInt();
+        return true;
+    }
+
+    void UpdateComponent::writeToJson(Json::Value& node)
+    {
+        Component::writeToJson(node);
+        node["interval"] = interval;
+    }
 }

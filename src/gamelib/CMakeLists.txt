@@ -39,18 +39,18 @@ set(GAMELIB_SOURCES
     # legacy/TileWalker.cpp
 )
 
+set(UTILS_SOURCES
+    utils/SpriteBatch.cpp
+    utils/DebugGui.cpp
+    utils/string.cpp
+    utils/json.cpp
+)
+
 set(EXT_LIBRARIES
     ${SFML_LIBRARIES}
     cppmath
     jsoncpp
 )
-
-set(UTILS_SOURCES
-    utils/SpriteBatch.cpp
-    utils/DebugGui.cpp
-    utils/string.cpp
-)
-
 
 source_group(gamelib FILES ${GAMELIB_SOURCES})
 

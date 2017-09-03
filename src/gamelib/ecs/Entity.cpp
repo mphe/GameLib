@@ -2,6 +2,7 @@
 #include "gamelib/ecs/EntityManager.hpp"
 #include "gamelib/System.hpp"
 #include "gamelib/utils/log.hpp"
+#include "gamelib/utils/json.hpp"
 
 namespace gamelib
 {
@@ -36,6 +37,29 @@ namespace gamelib
             _quit();
     }
 
+    bool Entity::loadFromJson(const Json::Value& node)
+    {
+        _name = node.get("name", "").asString();
+        gamelib::loadFromJson(node["transform"], _transform);
+
+        // NOTE: Components aren't loaded this way
+        // TODO: maybe load existing components this way
+
+        return true;
+    }
+
+    void Entity::writeToJson(Json::Value& node)
+    {
+        node["name"] = _name;
+        gamelib::writeToJson(node["transform"], _transform);
+
+        auto& comps = node["components"];
+        comps = Json::Value(Json::arrayValue);
+
+        for (auto& i : _components)
+            if (i)
+                i->writeToJson(comps.append(Json::Value()));
+    }
 
     Entity::Handle Entity::getHandle() const
     {

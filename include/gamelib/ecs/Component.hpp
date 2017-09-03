@@ -3,6 +3,7 @@
 
 #include "gamelib/Identifiable.hpp"
 #include "gamelib/utils/SlotMap.hpp"
+#include "gamelib/res/JsonSerializer.hpp"
 
 // TODO: Get the System from Entity
 
@@ -10,7 +11,7 @@ namespace gamelib
 {
     class Entity;
 
-    class Component : public Identifiable
+    class Component : public Identifiable, public JsonSerializer
     {
         friend class Entity;
 
@@ -18,10 +19,15 @@ namespace gamelib
 
         public:
             Component();
+            Component(const std::string& name);
             virtual ~Component() {};
 
+            auto getName() const         -> const std::string&;
             auto getEntity() const       -> Entity*;
             auto getEntityHandle() const -> Handle;
+
+            auto loadFromJson(const Json::Value& node) -> bool;
+            auto writeToJson(Json::Value& node)        -> void;
 
         protected:
             // Those are called by Entity
@@ -31,6 +37,7 @@ namespace gamelib
 
         private:
             Handle _ent;   // Set by Entity
+            std::string _name;
 
             // Only used when the entity was created outside an EntityManager
             Entity* _entptr; // Set by Entity

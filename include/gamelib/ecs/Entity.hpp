@@ -13,13 +13,34 @@
 //       can be created in a specific System.
 //       Also pass the System pointer to components.
 
+/*
+ * Config file structure:
+ * {
+ *     "name": <str>,
+ *     "transform": {
+ *         "x": <float>,
+ *         "y": <float>,
+ *         "scalex": <float>,
+ *         "scalex": <float>,
+ *         "angle": <float>,
+ *     },
+ *     "components": [
+ *         {
+ *             "name": <str>
+ *             ...
+ *         },
+ *         ...
+ *     ]
+ * }
+ */
+
 namespace gamelib
 {
     class EntityManager;
 
     typedef std::unique_ptr<Component> ComponentPtr;
 
-    class Entity
+    class Entity : public JsonSerializer
     {
         friend class EntityManager;
 
@@ -36,6 +57,9 @@ namespace gamelib
 
             auto clone()   -> Entity; // TODO Explicit copy might be better here than copy constructor
             auto destroy() -> void;
+
+            auto loadFromJson(const Json::Value& node) -> bool;
+            auto writeToJson(Json::Value& node)        -> void;
 
             auto getHandle() const    -> Handle;
             auto getName() const      -> const std::string&;
