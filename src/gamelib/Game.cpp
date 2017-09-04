@@ -3,7 +3,7 @@
 #include <iostream>
 #include "gamelib/GameState.hpp"
 #include "gamelib/utils/log.hpp"
-#include "gamelib/event/SFMLEvent.hpp"
+#include "gamelib/events/SFMLEvent.hpp"
 
 #define GAME_WIDTH 640
 #define GAME_HEIGHT 480
@@ -43,7 +43,7 @@ namespace gamelib
     {
         float elapsed = 0; // TODO: Consider switching to double
         sf::Clock clock;
-        std::shared_ptr<SFMLEvent> ev(new SFMLEvent());
+        SFMLEvent::Pointer ev(new SFMLEvent());
 
         while (_window.isOpen())
         {
@@ -77,6 +77,7 @@ namespace gamelib
                         _active = false;
                         break;
                 }
+
                 _evmgr.triggerEvent(ev);
                 ev.reset(new SFMLEvent());
             }

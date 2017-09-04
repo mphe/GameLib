@@ -51,8 +51,8 @@ namespace gamelib
             typedef BaseResourceHandle(*LoaderCallback)(const std::string&, ResourceManager* resmgr);
 
         public:
-            ResourceManager(EventManager* evmgr = nullptr);
-            ResourceManager(EventManager* evmgr, const std::string& searchpath);
+            ResourceManager() {};
+            ResourceManager(const std::string& searchpath);
 
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
@@ -91,22 +91,9 @@ namespace gamelib
             }
 
         private:
-            EventManager* _evmgr;
             std::unordered_map<std::string, BaseResourceHandle> _res;
             std::unordered_map<std::string, LoaderCallback> _typemap;
             std::string _searchpath;
-    };
-
-    class ResourceReloadEvent : public Event<0x05eb2119, ResourceReloadEvent>
-    {
-        public:
-            ResourceReloadEvent(const std::string& fname, BaseResourceHandle ptr);
-
-            // The new resource's filename (relative to search path)
-            std::string fname;
-
-            // The new resource
-            BaseResourceHandle res;
     };
 }
 

@@ -1,15 +1,11 @@
 #include "gamelib/res/ResourceManager.hpp"
+#include "gamelib/events/ResourceReloadEvent.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/string.hpp"
 
 namespace gamelib
 {
-    ResourceManager::ResourceManager(EventManager* evmgr) :
-        _evmgr(evmgr)
-    { }
-
-    ResourceManager::ResourceManager(EventManager* evmgr, const std::string& searchpath) :
-        _evmgr(evmgr)
+    ResourceManager::ResourceManager(const std::string& searchpath)
     {
         setSearchpath(searchpath);
     }
@@ -101,12 +97,12 @@ namespace gamelib
         }
 
         // Fire a reload event if the resource was reloaded
-        if (_evmgr)
+        auto evmgr = getSubsystem<EventManager>();
+        if (evmgr)
         {
             auto oldres = find(fname);
             if (oldres && oldres.use_count() > 1)
-                if (_evmgr)
-                    _evmgr->queueEvent(ResourceReloadEvent::create(fname, res));
+                evmgr->queueEvent(ResourceReloadEvent::create(fname, res));
         }
 
         _res[fname] = res;
@@ -170,11 +166,4 @@ namespace gamelib
         _searchpath.clear();
         LOG_DEBUG_WARN("ResourceManager destroyed");
     }
-
-
-
-    ResourceReloadEvent::ResourceReloadEvent(const std::string& fname_, BaseResourceHandle ptr) :
-        fname(fname_),
-        res(ptr)
-    { }
 }

@@ -41,6 +41,9 @@ namespace gamelib
     class Event : public Identifier<id, BaseEvent>
     {
         public:
+            typedef std::shared_ptr<T> Pointer;
+
+        public:
             template <typename... Args, typename TT = T, typename = typename std::enable_if<!std::is_void<TT>::value>::type>
             static EventPtr create(Args&&... args)
             {

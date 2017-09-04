@@ -2,7 +2,7 @@
 #define GAMELIB_SFML_EVENT_HPP
 
 #include <SFML/Window/Event.hpp>
-#include "Event.hpp"
+#include "gamelib/event/Event.hpp"
 
 namespace gamelib
 {

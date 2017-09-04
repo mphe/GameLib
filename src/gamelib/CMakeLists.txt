@@ -5,6 +5,7 @@ find_package(SFML 2.4 COMPONENTS system window graphics REQUIRED)
 set(GAMELIB_SOURCES
     Game.cpp
     event/EventManager.cpp
+    events/ResourceReloadEvent.cpp
     tile/StaticRenderTilemap.cpp
     Camera.cpp
     sprite/AnimatedSprite.cpp

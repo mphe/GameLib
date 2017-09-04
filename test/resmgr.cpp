@@ -11,7 +11,7 @@ typedef Resource<int, 0x312601c1> TestResource;
 
 int main(int argc, char *argv[])
 {
-    ResourceManager mgr(nullptr, "assets");
+    ResourceManager mgr("assets");
     mgr.registerFileType("test", testLoader);
     mgr.registerFileType("bar", barLoader);
 
