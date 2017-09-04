@@ -18,7 +18,10 @@ set(GAMELIB_SOURCES
     movement/Acceleration.cpp
     res/JsonSerializer.cpp
     res/ResourceManager.cpp
-    res/predefs.cpp
+    res/resources.cpp
+    res/TextureResource.cpp
+    res/JsonResource.cpp
+    res/EntityConfigResource.cpp
     rendering/Scene.cpp
     rendering/SceneObject.cpp
     rendering/Layer.cpp

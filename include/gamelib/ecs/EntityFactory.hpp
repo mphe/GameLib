@@ -2,7 +2,7 @@
 #define GAMELIB_ENTITYFACTORY_HPP
 
 #include "gamelib/utils/Factory.hpp"
-#include "gamelib/res/predefs.hpp"
+#include "gamelib/res/JsonResource.hpp"
 #include "Component.hpp"
 #include "Entity.hpp"
 #include "json/json.h"
