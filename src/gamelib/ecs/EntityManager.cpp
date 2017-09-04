@@ -3,14 +3,14 @@
 
 namespace gamelib
 {
-    Entity& EntityManager::add(const std::string& name)
+    Entity::Handle EntityManager::add(const std::string& name)
     {
         auto h = _entities.acquire();
         Entity& ent = _entities[h];
         ent._name = name;
         ent._handle = h;
         ent._entmgr = this;
-        return ent;
+        return h;
     }
 
     // Entity& EntityManager::add(Entity&& entity)
