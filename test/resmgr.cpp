@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 BaseResourceHandle testLoader(const std::string& fname, ResourceManager* resmgr)
 {
     std::string testpath = "assets/foo.test";
-    adaptPath(testpath);
+    adaptPath(&testpath);
 
     assert(fname == testpath && "Wrong path");
     return TestResource::create(42).as<BaseResource>();
@@ -56,7 +56,7 @@ BaseResourceHandle testLoader(const std::string& fname, ResourceManager* resmgr)
 BaseResourceHandle barLoader(const std::string& fname, ResourceManager* resmgr)
 {
     std::string testpath = "assets/foo.bar";
-    adaptPath(testpath);
+    adaptPath(&testpath);
 
     assert(fname == testpath && "Wrong path");
         return TestResource::create(13).as<BaseResource>();

@@ -8,7 +8,7 @@
 #include "JsonSerializer.hpp"
 
 // To prevent possible segfaults after calling clean(), objects should store
-// the corresponding BaseResourceHandle to keep up the reference count.
+// the corresponding resource handle to keep up the reference count.
 
 // Config file structure:
 // (Lines starting with # are comments and are not valid json.)
@@ -22,11 +22,21 @@
 //     "forcereload": <true/false>,
 //
 //     # Files to load
-//     "preload": [
-//         "file1",
-//         "file2",
+//     "preload": {
+//         # files in the searchpath directory
+//         "": [
+//             "dira/dirb/file1",
+//             "file2",
+//             ...
+//         ],
+//         # files in the subfolder "directory"
+//         "<directory>": [
+//             "file1",
+//             "dirc/file2",
+//             ...
+//         ],
 //         ...
-//     ]
+//     }
 // }
 
 

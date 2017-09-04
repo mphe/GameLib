@@ -33,7 +33,10 @@ namespace gamelib
     // Replace '/' or '\' with each other, depending on which platform the
     // code is compiled. The algorithm works in-place and returns a reference
     // to the string.
-    std::string& adaptPath(std::string& path);
+    std::string& adaptPath(std::string* path);
+
+    // Makes sure a the string ends with a '/' or '\' (depending on platform).
+    std::string& assureDelimiter(std::string* path);
 }
 
 #endif

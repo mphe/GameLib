@@ -21,24 +21,35 @@ namespace gamelib
 
         bool reload = node.get("forcereload", false).asBool();
 
-        if (node.isMember("preload"))
+        if (!node.isMember("preload"))
+            clean();
+        else
         {
-            auto& flist = node["preload"];
+            auto& preload = node["preload"];
+            for (Json::Value::const_iterator it = preload.begin(); it != preload.end(); ++it)
+            {
+                if (it->empty())
+                    continue;
 
-            if (reload)
-            {
-                clean();
-                for (auto& fname : flist)
-                    load(fname.asString());
-            }
-            else
-            {
-                // Store references to prevent cleanup of loaded resources
-                std::vector<BaseResourceHandle> res;
-                res.reserve(flist.size());
-                for (auto& fname : flist)
-                    res.push_back(get(fname.asString()));
-                clean();
+                std::string subfolder = it.key().asString();
+                if (!subfolder.empty())
+                    assureDelimiter(&subfolder);
+
+                if (reload)
+                {
+                    clean();
+                    for (auto& fname : *it)
+                        load(subfolder + fname.asString());
+                }
+                else
+                {
+                    // Store references to prevent cleanup of loaded resources
+                    std::vector<BaseResourceHandle> res;
+                    res.reserve(it->size());
+                    for (auto& fname : *it)
+                        res.push_back(get(subfolder + fname.asString()));
+                    clean();
+                }
             }
         }
 
@@ -50,7 +61,8 @@ namespace gamelib
         node["searchpath"] = _searchpath;
         node["forcereload"] = false;
 
-        auto& files = node["preload"];
+        // TODO: group files by subfolders
+        auto& files = node["preload"][""];
         files.resize(_res.size());
 
         Json::ArrayIndex i = 0;
@@ -78,7 +90,7 @@ namespace gamelib
         }
 
         auto path = _searchpath + fname;
-        adaptPath(path);
+        adaptPath(&path);
 
         // Call the associated loader
         auto res = it->second(path, this);
@@ -126,9 +138,8 @@ namespace gamelib
     void ResourceManager::setSearchpath(const std::string& path)
     {
         _searchpath = path;
-        if (_searchpath.back() != '/' && _searchpath.back() != '\\')
-            _searchpath.push_back('/');
-        adaptPath(_searchpath);
+        adaptPath(&_searchpath);
+        assureDelimiter(&_searchpath);
     }
 
     void ResourceManager::clean()
