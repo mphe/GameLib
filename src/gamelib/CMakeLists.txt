@@ -25,6 +25,7 @@ set(GAMELIB_SOURCES
     FreeCam.cpp
     ecs/Entity.cpp
     ecs/EntityManager.cpp
+    ecs/EntityFactory.cpp
     ecs/Component.cpp
     ecs/RenderComponent.cpp
     ecs/CollisionComponent.cpp

@@ -22,6 +22,7 @@ namespace gamelib
     class CollisionSystem;
     class ResourceManager;
     class EntityManager;
+    class EntityFactory;
     class Scene;
     class UpdateSystem;
 
@@ -35,6 +36,7 @@ namespace gamelib
             virtual auto getEventManager()    -> EventManager*;
             virtual auto getResourceManager() -> ResourceManager*;
             virtual auto getEntityManager()   -> EntityManager*;
+            virtual auto getEntityFactory()   -> EntityFactory*;
             virtual auto getGame()            -> Game*;
 
             auto setActive()        -> void;

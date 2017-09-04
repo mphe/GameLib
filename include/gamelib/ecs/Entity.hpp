@@ -18,10 +18,14 @@
  * {
  *     "name": <str>,
  *     "transform": {
- *         "x": <float>,
- *         "y": <float>,
- *         "scalex": <float>,
- *         "scalex": <float>,
+ *         "pos": {
+ *             "x": <float>,
+ *             "y": <float>,
+ *         },
+ *         "scale": {
+ *             "x": <float>,
+ *             "y": <float>,
+ *         }
  *         "angle": <float>,
  *     },
  *     "components": [

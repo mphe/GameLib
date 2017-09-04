@@ -94,6 +94,7 @@ namespace gamelib
         {
             comp->_ent = Handle();
             comp->_entptr = nullptr;
+            LOG_ERROR("Failed to add component ", comp->getName(), " to entity ", _name);
             return nullptr;
         }
 

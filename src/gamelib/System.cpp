@@ -39,6 +39,12 @@ namespace gamelib
         return nullptr;
     }
 
+    EntityFactory* System::getEntityFactory()
+    {
+        LOG_WARN("Trying to access non-existing EntityFactory object");
+        return nullptr;
+    }
+
     Game* System::getGame()
     {
         LOG_WARN("Trying to access non-existing Game object");
