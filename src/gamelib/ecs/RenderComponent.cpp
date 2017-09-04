@@ -4,6 +4,10 @@
 
 namespace gamelib
 {
+    RenderComponent::RenderComponent(const std::string& name) :
+        Identifier(name)
+    { }
+
     bool RenderComponent::_init()
     {
         auto scene = System::getActive()->getScene();

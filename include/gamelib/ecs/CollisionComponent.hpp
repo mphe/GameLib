@@ -11,6 +11,8 @@ namespace gamelib
                                public Collidable
     {
         public:
+            CollisionComponent() {};
+            CollisionComponent(const std::string& name);
             virtual ~CollisionComponent() {}
 
             auto loadFromJson(const Json::Value& node) -> bool;

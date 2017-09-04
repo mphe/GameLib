@@ -2,6 +2,7 @@
 #define GAMELIB_IDENTIFIER_HPP
 
 #include <type_traits>
+#include <functional>
 #include "Identifiable.hpp"
 
 // A wrapper around Identifiable, used to avoid implementing the same code everytime again by hand.
@@ -29,6 +30,9 @@ namespace gamelib
             static constexpr ID id = idval;
 
         public:
+            template <typename... Args>
+            Identifier(Args&&... args) : T(std::forward<Args>(args)...) {}
+
             virtual ~Identifier() {}
 
             inline ID getID() const

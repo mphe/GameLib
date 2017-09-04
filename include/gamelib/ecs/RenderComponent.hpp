@@ -11,6 +11,8 @@ namespace gamelib
                             public SceneObject
     {
         public:
+            RenderComponent() {}
+            RenderComponent(const std::string& name);
             virtual ~RenderComponent() {}
 
             auto loadFromJson(const Json::Value& node) -> bool;

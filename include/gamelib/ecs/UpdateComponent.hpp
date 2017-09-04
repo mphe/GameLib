@@ -16,6 +16,7 @@ namespace gamelib
 
         public:
             UpdateComponent(int interval = 0);
+            UpdateComponent(const std::string& name, int interval = 0);
             virtual ~UpdateComponent() {}
 
             auto loadFromJson(const Json::Value& node) -> bool;

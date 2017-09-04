@@ -8,6 +8,11 @@ namespace gamelib
         Updatable(interval)
     { }
 
+    UpdateComponent::UpdateComponent(const std::string& name, int interval) :
+        Identifier(name),
+        Updatable(interval)
+    { }
+
     bool UpdateComponent::_init()
     {
         auto sys = System::getActive()->getUpdateSystem();

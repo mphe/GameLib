@@ -6,6 +6,10 @@
 
 namespace gamelib
 {
+    CollisionComponent::CollisionComponent(const std::string& name) :
+        Identifier(name)
+    { }
+
     bool CollisionComponent::_init()
     {
         auto sys = System::getActive()->getCollisionSystem();
