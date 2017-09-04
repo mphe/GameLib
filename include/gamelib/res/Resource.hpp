@@ -51,6 +51,9 @@ namespace gamelib
             explicit operator bool() const;
 
         private:
+            // This is only called in dereference functions, because
+            // BaseResource handles cannot be dereferenced, but it's fine to
+            // have a BaseResource handle.
             constexpr bool _assertBase() const
             {
                 static_assert(!std::is_same<T, BaseResource>::value, "Can't dereference BaseResource handles.");

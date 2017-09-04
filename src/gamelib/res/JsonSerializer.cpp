@@ -1,5 +1,6 @@
 #include "gamelib/res/JsonSerializer.hpp"
 #include "gamelib/utils/log.hpp"
+#include "gamelib/utils/json.hpp"
 #include <fstream>
 
 namespace gamelib
@@ -8,15 +9,9 @@ namespace gamelib
     {
         LOG("(Re)Loading ", fname, "...");
         _fname = fname;
-        std::ifstream f;
-        f.open(fname.c_str());
-        if (f.is_open())
-        {
-            Json::Value doc;
-            f >> doc;
-            f.close();
-            return loadFromJson(doc);
-        }
+        Json::Value node;
+        if (loadJsonFromFile(fname, node))
+            return loadFromJson(node);
         LOG_ERROR("Failed to open ", fname);
         return false;
     }

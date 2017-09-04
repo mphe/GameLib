@@ -1,8 +1,22 @@
 #include "gamelib/utils/json.hpp"
 #include "gamelib/geometry/Transformable.hpp"
+#include <fstream>
 
 namespace gamelib
 {
+    bool loadJsonFromFile(const std::string& fname, Json::Value& node)
+    {
+        std::ifstream f;
+        f.open(fname.c_str());
+        if (f.is_open())
+        {
+            f >> node;
+            f.close();
+            return true;
+        }
+        return false;
+    }
+
     bool loadFromJson(const Json::Value& node, Transformable& transform)
     {
         math::Point2f pos;
