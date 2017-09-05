@@ -74,20 +74,17 @@ namespace gamelib
     const math::Point2f& Transformable::getPosition() const
     {
         static const math::Point2f def;
-        LOG_DEBUG_WARN("Setting position is not supported by this object");
         return def;
     }
 
     const math::Vec2f& Transformable::getScale() const
     {
         static const math::Vec2f def(1, 1);
-        LOG_DEBUG_WARN("Scaling is not supported by this object");
         return def;
     }
 
     float Transformable::getRotation() const
     {
-        LOG_DEBUG_WARN("Rotating is not supported by this object");
         return 0;
     }
 
