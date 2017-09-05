@@ -43,14 +43,8 @@ int main(int argc, char *argv[])
     Json::Reader().parse("{\n\
             \"name\": \"testentity\",\n\
             \"transform\": {\n\
-                \"pos\": {\n\
-                    \"x\": 5,\n\
-                    \"y\": 5\n\
-                },\n\
-                \"scale\": {\n\
-                    \"x\": -1.5,\n\
-                    \"y\": -1.5\n\
-                },\n\
+                \"pos\": [ 5, 5 ],\n\
+                \"scale\": [ -1.5, -1.5 ],\n\
                 \"angle\": 90\n\
             },\n\
             \"components\": [\n\
@@ -63,6 +57,38 @@ int main(int argc, char *argv[])
                 }\n\
             ]\n\
         }", *res);
+
+    auto shortenedres = JsonResource::create();
+    Json::Reader().parse("{\n\
+            \"name\": \"testentity\",\n\
+            \"components\": [\n\
+                {\n\
+                    \"name\": \"ComponentA\"\n\
+                },\n\
+                {\n\
+                    \"name\": \"ComponentB\",\n\
+                    \"x\": 42\n\
+                }\n\
+            ]\n\
+        }", *shortenedres);
+
+    auto shortenedres2 = JsonResource::create();
+    Json::Reader().parse("{\n\
+            \"name\": \"testentity\",\n\
+            \"transform\": {\n\
+                \"scale\": [ -1.5 ]\n\
+            },\n\
+            \"components\": [\n\
+                {\n\
+                    \"name\": \"ComponentA\"\n\
+                },\n\
+                {\n\
+                    \"name\": \"ComponentB\",\n\
+                    \"x\": 42\n\
+                }\n\
+            ]\n\
+        }", *shortenedres2);
+
 
     EntityFactory factory;
     factory.addComponent<ComponentA>("ComponentA");
@@ -78,6 +104,14 @@ int main(int argc, char *argv[])
     entity.destroy();
     factory.createFromJson(*res, &entity);
     testEntity(entity);
+
+    entity.destroy();
+    factory.createFromJson(*shortenedres, &entity);
+    // no special tests, just to see if it handles incomplete configs correctly
+
+    entity.destroy();
+    factory.createFromJson(*shortenedres2, &entity);
+    // no special tests, just to see if it handles incomplete configs correctly
 
     return 0;
 }

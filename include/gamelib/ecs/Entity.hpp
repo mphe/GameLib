@@ -14,14 +14,8 @@
  * {
  *     "name": <str>,
  *     "transform": {
- *         "pos": {
- *             "x": <float>,
- *             "y": <float>,
- *         },
- *         "scale": {
- *             "x": <float>,
- *             "y": <float>,
- *         }
+ *         "pos": [ <float>, <float> ],
+ *         "scale": [ <float>, <float> ],
  *         "angle": <float>,
  *     },
  *     "components": [
