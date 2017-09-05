@@ -4,6 +4,18 @@
 
 namespace gamelib
 {
+    Entity::Handle createEntity(const std::string& name)
+    {
+        return getSubsystem<EntityFactory>()->create(name);
+    }
+
+    Entity::Handle createEntity(const std::string& name, float x, float y)
+    {
+        auto h = createEntity(name);
+        getEntity(h)->getTransform().setPosition(x, y);
+        return h;
+    }
+
     EntityFactory::EntityFactory()
     { }
 

@@ -13,6 +13,10 @@
 
 namespace gamelib
 {
+    auto createEntity(const std::string& name)                   -> Entity::Handle;
+    auto createEntity(const std::string& name, float x, float y) -> Entity::Handle;
+
+
     class EntityFactory : public Subsystem<EntityFactory> //: public JsonSerializer
     {
         typedef Factory<Component, std::string> ComponentFactory;

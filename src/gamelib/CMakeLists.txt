@@ -34,6 +34,7 @@ set(GAMELIB_SOURCES
     ecs/CollisionComponent.cpp
     ecs/UpdateComponent.cpp
     update/UpdateSystem.cpp
+    update/Updatable.cpp
     # legacy/Scene/Scene.cpp
     # legacy/Scene/TilemapAdapter.cpp
     # legacy/Scene/VimCam.cpp
