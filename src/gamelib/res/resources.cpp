@@ -1,12 +1,13 @@
 #include "gamelib/res/resources.hpp"
-#include "gamelib/System.hpp"
+#include "gamelib/Subsystem.hpp"
 
 namespace gamelib
 {
     void registerPredefLoaders()
     {
-        if (System::getActive()->getResourceManager())
-            registerPredefLoaders(*System::getActive()->getResourceManager());
+        auto sys = getSubsystem<ResourceManager>();
+        if (sys)
+            registerPredefLoaders(*sys);
     }
 
     void registerPredefLoaders(ResourceManager& resmgr)

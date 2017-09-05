@@ -1,5 +1,4 @@
 #include "gamelib/ecs/RenderComponent.hpp"
-#include "gamelib/System.hpp"
 #include "gamelib/rendering/Scene.hpp"
 
 namespace gamelib
@@ -10,7 +9,7 @@ namespace gamelib
 
     bool RenderComponent::_init()
     {
-        auto scene = System::getActive()->getScene();
+        auto scene = getSubsystem<Scene>();
         if (!scene)
             return false;
 

@@ -1,6 +1,5 @@
 #include "gamelib/ecs/EntityFactory.hpp"
 #include "gamelib/ecs/EntityManager.hpp"
-#include "gamelib/System.hpp"
 #include "gamelib/utils/log.hpp"
 
 namespace gamelib
@@ -21,7 +20,7 @@ namespace gamelib
         //       creates new entities.
         //       In that case, creating entities during component initialization
         //       is not supported.
-        auto handle = System::getActive()->getEntityManager()->add();
+        auto handle = getSubsystem<EntityManager>()->add();
         createFromJson(node, getEntity(handle));
         return handle;
     }

@@ -3,6 +3,7 @@
 
 #include "gamelib/utils/Factory.hpp"
 #include "gamelib/res/JsonResource.hpp"
+#include "gamelib/Subsystem.hpp"
 #include "Component.hpp"
 #include "Entity.hpp"
 #include "json/json.h"
@@ -12,7 +13,7 @@
 
 namespace gamelib
 {
-    class EntityFactory //: public JsonSerializer
+    class EntityFactory : public Subsystem<EntityFactory> //: public JsonSerializer
     {
         typedef Factory<Component, std::string> ComponentFactory;
 

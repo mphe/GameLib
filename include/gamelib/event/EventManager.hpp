@@ -5,12 +5,13 @@
 #include <map>
 #include "Event.hpp"
 #include "CallbackHandler.hpp"
+#include "gamelib/Subsystem.hpp"
 
 namespace gamelib
 {
     typedef void (*EventCallback)(void*, EventPtr);
 
-    class EventManager
+    class EventManager : public Subsystem<EventManager>
     {
         public:
             template <class T>

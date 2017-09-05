@@ -6,6 +6,7 @@
 #include "Layer.hpp"
 #include "gamelib/Camera.hpp"
 #include "gamelib/utils/SlotMap.hpp"
+#include "gamelib/Subsystem.hpp"
 
 /*
  * Scenes are responsible for rendering SceneObjects and keeping track of
@@ -42,7 +43,7 @@
 
 namespace gamelib
 {
-    class Scene : public SceneObject
+    class Scene : public SceneObject, public Subsystem<Scene>
     {
         friend class SceneObject;
         friend class Layer;

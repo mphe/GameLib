@@ -1,6 +1,5 @@
 #include "gamelib/ecs/CollisionComponent.hpp"
 #include "gamelib/ecs/Entity.hpp"
-#include "gamelib/System.hpp"
 #include "gamelib/geometry/CollisionSystem.hpp"
 #include "gamelib/utils/json.hpp"
 
@@ -12,7 +11,7 @@ namespace gamelib
 
     bool CollisionComponent::_init()
     {
-        auto sys = System::getActive()->getCollisionSystem();
+        auto sys = getSubsystem<CollisionSystem>();
         if (!sys)
             return false;
 
@@ -24,7 +23,7 @@ namespace gamelib
     void CollisionComponent::_quit()
     {
         getEntity()->getTransform().remove(this);
-        System::getActive()->getCollisionSystem()->remove(this);
+        getSubsystem<CollisionSystem>()->remove(this);
     }
 
     bool CollisionComponent::loadFromJson(const Json::Value& node)

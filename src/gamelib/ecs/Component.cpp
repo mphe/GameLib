@@ -1,6 +1,5 @@
 #include "gamelib/ecs/Component.hpp"
 #include "gamelib/ecs/EntityManager.hpp"
-#include "gamelib/System.hpp"
 
 namespace gamelib
 {
@@ -22,7 +21,7 @@ namespace gamelib
     {
         if (_entptr || _ent.isNull())
             return _entptr;
-        return System::getActive()->getEntityManager()->get(_ent);
+        return getSubsystem<EntityManager>()->get(_ent);
     }
 
     Component::Handle Component::getEntityHandle() const

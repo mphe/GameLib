@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "Resource.hpp"
 #include "gamelib/event/EventManager.hpp"
+#include "gamelib/Subsystem.hpp"
 #include "JsonSerializer.hpp"
 
 // To prevent possible segfaults after calling clean(), objects should store
@@ -44,7 +45,7 @@
 
 namespace gamelib
 {
-    class ResourceManager : public JsonSerializer
+    class ResourceManager : public JsonSerializer, public Subsystem<ResourceManager>
     {
         public:
             typedef BaseResourceHandle(*LoaderCallback)(const std::string&, ResourceManager* resmgr);

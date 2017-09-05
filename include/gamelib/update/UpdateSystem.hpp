@@ -2,6 +2,7 @@
 #define GAMELIB_UPDATE_SYSTEM_HPP
 
 #include "gamelib/utils/SlotMap.hpp"
+#include "gamelib/Subsystem.hpp"
 #include "Updatable.hpp"
 
 /*

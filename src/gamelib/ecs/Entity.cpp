@@ -1,6 +1,5 @@
 #include "gamelib/ecs/Entity.hpp"
 #include "gamelib/ecs/EntityManager.hpp"
-#include "gamelib/System.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/json.hpp"
 
@@ -8,7 +7,7 @@ namespace gamelib
 {
     Entity* getEntity(Entity::Handle handle)
     {
-        return System::getActive()->getEntityManager()->get(handle);
+        return getSubsystem<EntityManager>()->get(handle);
     }
 
 

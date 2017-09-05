@@ -4,10 +4,11 @@
 #include <memory>
 #include "gamelib/utils/SlotMap.hpp"
 #include "gamelib/ecs/Entity.hpp"
+#include "gamelib/Subsystem.hpp"
 
 namespace gamelib
 {
-    class EntityManager
+    class EntityManager : public Subsystem<EntityManager>
     {
         public:
             typedef SlotMapShort<Entity>::Handle Handle;

@@ -7,13 +7,14 @@
 #include <SFML/Window/Keyboard.hpp>
 #include "gamelib/res/JsonSerializer.hpp"
 #include "event/EventManager.hpp"
+#include "gamelib/Subsystem.hpp"
 
 namespace gamelib
 {
     class GameState;
     typedef std::unique_ptr<GameState> GameStatePtr;
 
-    class Game : public gamelib::JsonSerializer
+    class Game : public gamelib::JsonSerializer, public Subsystem<Game>
     {
         public:
             Game();

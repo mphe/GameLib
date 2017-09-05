@@ -1,5 +1,4 @@
 #include "gamelib/ecs/UpdateComponent.hpp"
-#include "gamelib/System.hpp"
 #include "gamelib/update/UpdateSystem.hpp"
 
 namespace gamelib
@@ -15,7 +14,7 @@ namespace gamelib
 
     bool UpdateComponent::_init()
     {
-        auto sys = System::getActive()->getUpdateSystem();
+        auto sys = getSubsystem<UpdateSystem>();
         if (!sys)
             return false;
 
@@ -25,7 +24,7 @@ namespace gamelib
 
     void UpdateComponent::_quit()
     {
-        auto sys = System::getActive()->getUpdateSystem();
+        auto sys = getSubsystem<UpdateSystem>();
         if (sys)
             sys->remove(_handle);
     }

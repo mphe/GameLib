@@ -1,5 +1,4 @@
 #include "gamelib/res/EntityConfigResource.hpp"
-#include "gamelib/System.hpp"
 #include "gamelib/ecs/EntityFactory.hpp"
 #include "gamelib/res/ResourceManager.hpp"
 
@@ -15,7 +14,7 @@ namespace gamelib
     {
         auto res = jsonLoader(fname, resmgr);
 
-        auto factory = System::getActive()->getEntityFactory();
+        auto factory = getSubsystem<EntityFactory>();
         if (factory)
             factory->add(res.as<JsonResource>());
 

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "math/geometry/Line2.hpp"
+#include "gamelib/Subsystem.hpp"
 #include "Collidable.hpp"
 
 // TODO: Use quadtrees
@@ -27,7 +28,7 @@ namespace gamelib
             Intersection isec;
     };
 
-    class CollisionSystem
+    class CollisionSystem : public Subsystem<CollisionSystem>
     {
         public:
             auto add(Collidable* col)    -> void;
