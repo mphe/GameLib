@@ -34,6 +34,7 @@ namespace gamelib
             _entmgr->destroy(_handle);
         else
             _quit();
+        _transform.reset();
     }
 
     bool Entity::loadFromJson(const Json::Value& node)
@@ -42,7 +43,7 @@ namespace gamelib
         gamelib::loadFromJson(node["transform"], _transform);
 
         // NOTE: Components aren't loaded this way
-        // TODO: maybe load existing components this way
+        // TODO: maybe reload existing components this way
 
         return true;
     }

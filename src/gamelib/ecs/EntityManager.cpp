@@ -55,6 +55,7 @@ namespace gamelib
             // No need to reset _entmgr field, because the object is deleted
             // anyway
             _entities[handle]._quit();
+            _entities[handle]._entmgr = nullptr;
             _entities.destroy(handle);
         }
     }

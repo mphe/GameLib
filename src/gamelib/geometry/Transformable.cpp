@@ -37,7 +37,7 @@ namespace gamelib
         math::Vec2f fixed(scale_);
         if (fixed.x == 0)
             fixed.x = 0.00001;
-        if (fixed.x == 0)
+        if (fixed.y == 0)
             fixed.y = 0.00001;
         scale(fixed / getScale());
     }
@@ -94,5 +94,12 @@ namespace gamelib
     unsigned int Transformable::getSupportedOps() const
     {
         return _supported;
+    }
+
+    void Transformable::reset()
+    {
+        setPosition(0, 0);
+        setScale(0, 0);
+        setRotation(0);
     }
 }

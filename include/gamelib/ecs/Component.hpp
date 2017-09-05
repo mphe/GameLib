@@ -5,8 +5,6 @@
 #include "gamelib/utils/SlotMap.hpp"
 #include "gamelib/res/JsonSerializer.hpp"
 
-// TODO: Get the System from Entity
-
 namespace gamelib
 {
     class Entity;

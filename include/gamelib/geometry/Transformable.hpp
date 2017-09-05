@@ -37,6 +37,8 @@ namespace gamelib
             auto scale(float x, float y)               -> void;
             auto setRotation(float angle)              -> void;
 
+            auto reset() -> void;
+
         protected:
             unsigned int _supported;
     };
