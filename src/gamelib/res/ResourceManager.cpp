@@ -96,6 +96,8 @@ namespace gamelib
             return nullptr;
         }
 
+        res.getResource()->_path = path.data() + _searchpath.size();
+
         // Fire a reload event if the resource was reloaded
         auto evmgr = getSubsystem<EventManager>();
         if (evmgr)

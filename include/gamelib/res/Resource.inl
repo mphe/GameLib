@@ -79,6 +79,13 @@ namespace gamelib
     {
         return (bool)_res;
     }
+
+    template <typename T>
+    template <typename T2>
+    ResourceHandle<T>::operator ResourceHandle<T2>() const
+    {
+        return as<T2>();
+    }
 }
 
 #endif

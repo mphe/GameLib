@@ -2,6 +2,7 @@
 #define GAMELIB_RESOURCE_HPP
 
 #include <memory>
+#include <string>
 #include "../Identifier.hpp"
 
 namespace gamelib
@@ -48,7 +49,11 @@ namespace gamelib
             auto operator*()        -> WrappedType&;
             auto operator*() const  -> const WrappedType&;
             auto operator->() const -> WrappedType*;
+
             explicit operator bool() const;
+
+            template <typename T2>
+            operator ResourceHandle<T2>() const;
 
         private:
             // This is only called in dereference functions, because
@@ -72,13 +77,25 @@ namespace gamelib
      */
     class BaseResource : public Identifiable
     {
+        friend class ResourceManager;
+
         public:
             // Will never actually be used, it's just there to keep the
             // compiler happy.
             typedef BaseResource WrappedType;
             typedef ResourceHandle<BaseResource> Handle;
 
+            BaseResource() {};
+            BaseResource(const std::string& path) : _path(path) {}
             virtual ~BaseResource() {}
+
+            inline const std::string& getPath() const
+            {
+                return _path;
+            }
+
+        private:
+            std::string _path;
     };
 
     typedef BaseResource::Handle BaseResourceHandle;
@@ -96,10 +113,10 @@ namespace gamelib
             typedef T WrappedType;
 
         public:
-            Resource() {}
-
             template <typename... Args, typename = typename std::enable_if<std::is_constructible<T, Args...>::value>::type>
-            Resource(Args&&... args) : res(std::forward<Args>(args)...) {}
+            Resource(Args&&... args) :
+                res(std::forward<Args>(args)...)
+            {}
 
             virtual ~Resource() {}
 
