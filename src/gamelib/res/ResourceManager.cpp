@@ -21,6 +21,10 @@ namespace gamelib
             clean();
         else
         {
+            // Store references to prevent cleanup of loaded resources
+            // Only used when forcereload is false
+            std::vector<BaseResourceHandle> res;
+
             auto& preload = node["preload"];
             for (Json::Value::const_iterator it = preload.begin(); it != preload.end(); ++it)
             {
@@ -39,9 +43,6 @@ namespace gamelib
                 }
                 else
                 {
-                    // Store references to prevent cleanup of loaded resources
-                    std::vector<BaseResourceHandle> res;
-                    res.reserve(it->size());
                     for (auto& fname : *it)
                         res.push_back(get(subfolder + fname.asString()));
                     clean();
