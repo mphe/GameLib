@@ -13,6 +13,7 @@ set(GAMELIB_SOURCES
     sprite/SpriteData.cpp
     geometry/CollisionSystem.cpp
     geometry/AABB.cpp
+    geometry/Polygon.cpp
     geometry/Transformable.cpp
     geometry/GroupTransform.cpp
     movement/Acceleration.cpp
