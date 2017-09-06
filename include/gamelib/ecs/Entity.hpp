@@ -61,10 +61,11 @@ namespace gamelib
             auto getTransform() const -> const GroupTransform&;
             auto getTransform()       -> GroupTransform&;
 
-            auto add(ComponentPtr comp)  -> Component*;
-            auto remove(Component* comp) -> void;
-            auto find(ID type) const     -> Component*;
-            auto size() const            -> size_t;
+            auto add(ComponentPtr comp)              -> Component*;
+            auto remove(Component* comp)             -> void;
+            auto find(ID type) const                 -> Component*;
+            auto find(const std::string& name) const -> Component*;
+            auto size() const                        -> size_t;
 
             auto begin() const -> ComponentList::const_iterator;
             auto begin()       -> ComponentList::iterator;

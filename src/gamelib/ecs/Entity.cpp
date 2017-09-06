@@ -126,6 +126,14 @@ namespace gamelib
         return nullptr;
     }
 
+    Component* Entity::find(const std::string& name) const
+    {
+        for (auto it = _components.begin(), end = _components.end(); it != end; ++it)
+            if ((*it)->getName() == name)
+                return it->get();
+        return nullptr;
+    }
+
     size_t Entity::size() const
     {
         return _components.size();
