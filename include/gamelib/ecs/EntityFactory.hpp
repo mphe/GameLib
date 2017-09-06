@@ -46,6 +46,7 @@ namespace gamelib
             void addComponent(const std::string& name)
             {
                 _compfactory.add<T>(name);
+                LOG_DEBUG("Registered component ", name);
             }
 
         private:

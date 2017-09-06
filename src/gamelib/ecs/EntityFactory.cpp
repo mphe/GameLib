@@ -83,17 +83,19 @@ namespace gamelib
 
     void EntityFactory::add(JsonResource::Handle res)
     {
-        _entdata[(*res.get())["name"].asString()] = res;
+        add((*res)["name"].asString(), res);
     }
 
     void EntityFactory::add(const std::string& name, JsonResource::Handle res)
     {
         _entdata[name] = res;
+        LOG_DEBUG("Registered entity ", name);
     }
 
     void EntityFactory::addComponent(const std::string& name, ComponentFactory::CreatorFunction callback)
     {
         _compfactory.add(name, callback);
+        LOG_DEBUG("Registered component ", name);
     }
 
     void EntityFactory::removeEntity(const std::string& name)
