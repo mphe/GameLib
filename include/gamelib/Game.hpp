@@ -20,34 +20,36 @@ namespace gamelib
             Game();
             ~Game();
 
-            bool init();
-            void run();
+            auto init() -> bool;
+            auto run()  -> void;
 
             // Closes the windows -> stops the game loop.
             // Use this inside the game loop to quit the game.
-            void close();
+            auto close() -> void;
 
             // Cleans up resources (and closes the window).
             // Use this outside the game loop.
-            void destroy();
+            auto destroy() -> void;
 
-            bool loadFromJson(const Json::Value& node);
+            auto loadFromJson(const Json::Value& node) -> bool;
 
-            void pushState(std::unique_ptr<GameState> state);
-            void popState();
-            GameState& pullState() const;
+            auto pushState(std::unique_ptr<GameState> state) -> void;
+            auto popState()                                  -> void;
+            auto pullState() const                           -> GameState&;
 
-            sf::RenderWindow& getWindow();
-            EventManager& getEventManager();
+            auto getWindow()          -> sf::RenderWindow&;
+            auto getEventManager()    -> EventManager&;
+            auto getFrametime() const -> float;
 
-            bool isActive() const;
-            bool isKeyPressed(sf::Keyboard::Key key) const;
+            auto isFocused() const                         -> bool;
+            auto isKeyPressed(sf::Keyboard::Key key) const -> bool;
 
         private:
+            float _frametime; // TODO: Consider switching to double
             sf::Color _bgcolor;
             sf::RenderWindow _window;
             std::vector<GameStatePtr> _states;
-            bool _active;
+            bool _focused;
             bool _handleclose;
             bool _escclose;
             EventManager _evmgr;

@@ -1,25 +1,26 @@
 #include "gamelib/Game.hpp"
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include "gamelib/GameState.hpp"
 #include "gamelib/utils/log.hpp"
+#include "gamelib/utils/json.hpp"
 #include "gamelib/events/SFMLEvent.hpp"
 
-#define GAME_WIDTH 640
-#define GAME_HEIGHT 480
-#define GAME_TITLE "Unnamed game"
-#define GAME_MAX_FPS 0
-#define GAME_VSYNC false
-#define GAME_ESCCLOSE true
-#define GAME_CLOSEBUTTON true
-#define GAME_REPEATKEYS false
+constexpr int game_width         = 640;
+constexpr int game_height        = 480;
+constexpr const char* game_title = "Unnamed game";
+constexpr int game_max_fps       = 0;
+constexpr bool game_vsync        = true;
+constexpr bool game_escclose     = true;
+constexpr bool game_closebutton  = true;
+constexpr bool game_repeatkeys   = false;
 
 namespace gamelib
 {
     Game::Game() :
-        _active(true),
-        _handleclose(GAME_CLOSEBUTTON),
-        _escclose(GAME_ESCCLOSE)
+        _frametime(0),
+        _focused(true),
+        _handleclose(game_closebutton),
+        _escclose(game_escclose)
     { }
 
     Game::~Game()
@@ -31,17 +32,15 @@ namespace gamelib
     bool Game::init()
     {
         LOG("Initializing game...");
-        _window.create(sf::VideoMode(GAME_WIDTH, GAME_HEIGHT), GAME_TITLE, sf::Style::Close);
-        _window.setFramerateLimit(GAME_MAX_FPS);
-        _window.setVerticalSyncEnabled(GAME_VSYNC);
-        _window.setKeyRepeatEnabled(GAME_REPEATKEYS);
-
+        _window.create(sf::VideoMode(game_width, game_height), game_title, sf::Style::Close);
+        _window.setFramerateLimit(game_max_fps);
+        _window.setVerticalSyncEnabled(game_vsync);
+        _window.setKeyRepeatEnabled(game_repeatkeys);
         return true;
     }
 
     void Game::run()
     {
-        float elapsed = 0; // TODO: Consider switching to double
         sf::Clock clock;
         SFMLEvent::Pointer ev(new SFMLEvent());
 
@@ -70,11 +69,11 @@ namespace gamelib
                         break;
 
                     case sf::Event::GainedFocus:
-                        _active = true;
+                        _focused = true;
                         break;
 
                     case sf::Event::LostFocus:
-                        _active = false;
+                        _focused = false;
                         break;
                 }
 
@@ -83,7 +82,7 @@ namespace gamelib
             }
 
             for (auto& i : _states)
-                i->update(elapsed);
+                i->update(_frametime);
 
             _evmgr.update();
 
@@ -93,8 +92,7 @@ namespace gamelib
             _window.display();
 
             // Get elapsed time
-            elapsed = clock.getElapsedTime().asMilliseconds() / 1000.0f;
-            // float fps = 1.0f / elapsed;
+            _frametime = clock.getElapsedTime().asMilliseconds() / 1000.0f;
             // LOG_DEBUG_RAW("\r", LOG_DUMP(elapsed), "ms, ", LOG_DUMP(fps), "              \r"); // write some spaces to overwrite existing characters
         }
     }
@@ -115,9 +113,7 @@ namespace gamelib
         {
             LOG_DEBUG("Closing game states...");
             for (auto& i : _states)
-            {
                 i->quit();
-            }
             _states.clear();
         }
     }
@@ -142,7 +138,7 @@ namespace gamelib
         // if (size != _window.getSize())
         // {
         //     _window.close();
-        //     _window.create(sf::VideoMode(size.x, size.y), GAME_TITLE, sf::Style::Close);
+        //     _window.create(sf::VideoMode(size.x, size.y), game_title, sf::Style::Close);
         // }
 
         if (node.isMember("title"))
@@ -194,6 +190,11 @@ namespace gamelib
         return *_states.back().get();
     }
 
+    float Game::getFrametime() const
+    {
+        return _frametime;
+    }
+
     sf::RenderWindow& Game::getWindow()
     {
         return _window;
@@ -204,14 +205,14 @@ namespace gamelib
         return _evmgr;
     }
 
-    bool Game::isActive() const
+    bool Game::isFocused() const
     {
-        return _active;
+        return _focused;
     }
 
     bool Game::isKeyPressed(sf::Keyboard::Key key) const
     {
-        return _active && sf::Keyboard::isKeyPressed(key);
+        return _focused && sf::Keyboard::isKeyPressed(key);
     }
 }
 
