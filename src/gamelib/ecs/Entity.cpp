@@ -33,8 +33,7 @@ namespace gamelib
         if (_entmgr)
             _entmgr->destroy(_handle);
         else
-            _quit();
-        _transform.reset();
+            clear();
     }
 
     bool Entity::loadFromJson(const Json::Value& node)
@@ -137,6 +136,12 @@ namespace gamelib
     size_t Entity::size() const
     {
         return _components.size();
+    }
+
+    void Entity::clear()
+    {
+        _quit();
+        _transform.reset();
     }
 
     void Entity::_quit()

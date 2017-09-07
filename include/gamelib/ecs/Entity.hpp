@@ -49,7 +49,7 @@ namespace gamelib
             Entity(Entity&& ent) = default;
             ~Entity();
 
-            auto clone()   -> Entity; // TODO Explicit copy might be better here than copy constructor
+            // auto clone()   -> Entity; // TODO Explicit copy might be better here than copy constructor
             auto destroy() -> void;
 
             auto loadFromJson(const Json::Value& node) -> bool;
@@ -66,6 +66,7 @@ namespace gamelib
             auto find(ID type) const                 -> Component*;
             auto find(const std::string& name) const -> Component*;
             auto size() const                        -> size_t;
+            auto clear()                             -> void;
 
             auto begin() const -> ComponentList::const_iterator;
             auto begin()       -> ComponentList::iterator;

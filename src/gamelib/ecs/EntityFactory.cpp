@@ -47,7 +47,7 @@ namespace gamelib
     void EntityFactory::createFromJson(const Json::Value& node, Entity* ent)
     {
         assert(ent);
-        ent->destroy();
+        ent->clear();
         ent->loadFromJson(node);
 
         if (node.isMember("components"))
