@@ -76,8 +76,6 @@ namespace gamelib
                     LOG_WARN("Incorrect vertex format: ", node.toStyledString());
             }
         }
-        else
-            LOG_WARN("No vertices defined in PolygonComponent config");
         return true;
     }
 

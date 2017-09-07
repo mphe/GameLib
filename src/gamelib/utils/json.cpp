@@ -42,11 +42,15 @@ namespace gamelib
 
     bool loadFromJson(const Json::Value& node, math::Point2f& p)
     {
-        if (!node.isArray())
-            return false;
-        p.x = node.get((Json::ArrayIndex)0, p.x).asFloat();
-        p.y = node.get(1, p.y).asFloat();
-        return true;
+        return loadFromJson(node, p.asVector());
+    }
+
+    bool loadFromJson(const Json::Value& node, sf::Vector2f& p)
+    {
+        math::Vec2f vec(p.x, p.y);
+        bool res = loadFromJson(node, vec);
+        p = sf::Vector2f(vec.x, vec.y);
+        return res;
     }
 
 
@@ -66,8 +70,11 @@ namespace gamelib
 
     void writeToJson(Json::Value& node, const math::Point2f& p)
     {
-        node.resize(2);
-        node[0] = p.x;
-        node[1] = p.y;
+        writeToJson(node, p.asVector());
+    }
+
+    void writeToJson(Json::Value& node, const sf::Vector2f& vec)
+    {
+        writeToJson(node, math::Vec2f(vec.x, vec.y));
     }
 }
