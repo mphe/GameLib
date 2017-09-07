@@ -96,7 +96,7 @@ namespace gamelib
     void Transformable::reset()
     {
         setPosition(0, 0);
-        setScale(0, 0);
+        setScale(1, 1);
         setRotation(0);
     }
 }

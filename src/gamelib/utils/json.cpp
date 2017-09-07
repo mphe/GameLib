@@ -22,7 +22,7 @@ namespace gamelib
         if (!node.isObject())
             return false;
         math::Point2f pos;
-        math::Vec2f scale;
+        math::Vec2f scale(1, 1);
         loadFromJson(node["pos"], pos);
         loadFromJson(node["scale"], scale);
         transform.setPosition(pos);
@@ -35,8 +35,8 @@ namespace gamelib
     {
         if (!node.isArray())
             return false;
-        vec.x = node.get((Json::ArrayIndex)0, 0).asFloat();
-        vec.y = node.get(1, 0).asFloat();
+        vec.x = node.get((Json::ArrayIndex)0, vec.x).asFloat();
+        vec.y = node.get(1, vec.y).asFloat();
         return true;
     }
 
@@ -44,8 +44,8 @@ namespace gamelib
     {
         if (!node.isArray())
             return false;
-        p.x = node.get((Json::ArrayIndex)0, 0).asFloat();
-        p.y = node.get(1, 0).asFloat();
+        p.x = node.get((Json::ArrayIndex)0, p.x).asFloat();
+        p.y = node.get(1, p.y).asFloat();
         return true;
     }
 
@@ -62,8 +62,6 @@ namespace gamelib
         node.resize(2);
         node[0] = vec.x;
         node[1] = vec.y;
-        // node["x"] = vec.x;
-        // node["y"] = vec.y;
     }
 
     void writeToJson(Json::Value& node, const math::Point2f& p)
@@ -71,7 +69,5 @@ namespace gamelib
         node.resize(2);
         node[0] = p.x;
         node[1] = p.y;
-        // node["x"] = p.x;
-        // node["y"] = p.y;
     }
 }
