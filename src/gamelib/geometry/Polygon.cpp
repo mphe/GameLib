@@ -9,7 +9,7 @@ namespace gamelib
     { }
 
     Polygon::Polygon(math::PolygonType type, unsigned int flags_) :
-        CollisionComponent("PolygonComponent"),
+        CollisionComponent(name),
         polygon(type)
     {
         flags = flags_;

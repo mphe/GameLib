@@ -9,6 +9,9 @@ namespace gamelib
     class Polygon : public CollisionComponent
     {
         public:
+            constexpr static const char* name = "PolygonCollision";
+
+        public:
             Polygon(unsigned int flags = 0);
             Polygon(math::PolygonType type, unsigned int flags = 0);
 

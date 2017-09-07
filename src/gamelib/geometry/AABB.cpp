@@ -2,11 +2,12 @@
 
 namespace gamelib
 {
-    AABBCollision::AABBCollision(float x, float y, float w, float h, unsigned int flags) :
-        AABBCollision(math::AABBf(x, y, w, h), flags)
+    AABB::AABB(float x, float y, float w, float h, unsigned int flags) :
+        AABB(math::AABBf(x, y, w, h), flags)
     { }
 
-    AABBCollision::AABBCollision(const math::AABBf& aabb, unsigned int flags_) :
+    AABB::AABB(const math::AABBf& aabb, unsigned int flags_) :
+        CollisionComponent(name),
         _scale(1, 1),
         _rect(aabb)
     {
@@ -15,44 +16,44 @@ namespace gamelib
     }
 
 
-    bool AABBCollision::intersect(const math::Point2f& point) const
+    bool AABB::intersect(const math::Point2f& point) const
     {
         return _rect.contains(point);
     }
 
-    Intersection AABBCollision::intersect(const math::Line2f& line) const
+    Intersection AABB::intersect(const math::Line2f& line) const
     {
         return line.intersect(_rect);
     }
 
-    Intersection AABBCollision::intersect(const math::AABBf& rect) const
+    Intersection AABB::intersect(const math::AABBf& rect) const
     {
         return rect.intersect(_rect);
     }
 
 
-    void AABBCollision::move(const math::Vec2f& rel)
+    void AABB::move(const math::Vec2f& rel)
     {
         _rect.pos += rel;
     }
 
-    void AABBCollision::scale(const math::Vec2f& scale)
+    void AABB::scale(const math::Vec2f& scale)
     {
         _rect.size *= scale;
         _scale *= scale;
     }
 
-    const math::Point2f& AABBCollision::getPosition() const
+    const math::Point2f& AABB::getPosition() const
     {
         return _rect.pos.asPoint();
     }
 
-    const math::Vec2f& AABBCollision::getScale() const
+    const math::Vec2f& AABB::getScale() const
     {
         return _scale;
     }
 
-    const math::AABBf& AABBCollision::getBBox() const
+    const math::AABBf& AABB::getBBox() const
     {
         return _rect;
     }

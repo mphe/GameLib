@@ -5,12 +5,15 @@
 
 namespace gamelib
 {
-    class AABBCollision : public CollisionComponent
+    class AABB : public CollisionComponent
     {
         public:
-            AABBCollision(float x, float y, float w, float h, unsigned int flags = 0);
-            AABBCollision(const math::AABBf& aabb, unsigned int flags = 0);
-            virtual ~AABBCollision() {}
+            constexpr static const char* name = "AABBComponent";
+
+        public:
+            AABB(float x, float y, float w, float h, unsigned int flags = 0);
+            AABB(const math::AABBf& aabb, unsigned int flags = 0);
+            virtual ~AABB() {}
 
             auto intersect(const math::Point2f& point) const -> bool;
             auto intersect(const math::Line2f& line) const   -> Intersection;
