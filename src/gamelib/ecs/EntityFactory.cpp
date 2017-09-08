@@ -115,4 +115,9 @@ namespace gamelib
         _compfactory.clear();
         _entdata.clear();
     }
+
+    size_t EntityFactory::size()
+    {
+        return _entdata.size();
+    }
 }

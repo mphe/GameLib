@@ -38,15 +38,23 @@ namespace gamelib
             auto removeEntity(const std::string& name)    -> void;
             auto removeComponent(const std::string& name) -> void;
             auto clear() -> void;
-
-            // auto loadFromJson(const Json::Value& node) -> bool;
-            // auto writeToJson(Json::Value& node)        -> void;
+            auto size()  -> size_t;
 
             template <typename T>
             void addComponent(const std::string& name)
             {
                 _compfactory.add<T>(name);
                 LOG_DEBUG("Registered component ", name);
+            }
+
+            // Signature: bool(const std::string&)
+            // When true is returned, the loop breaks.
+            template <typename F>
+            void iterkeys(F callback)
+            {
+                for (auto& i : _entdata)
+                    if (callback(i.first))
+                        break;
             }
 
         private:
