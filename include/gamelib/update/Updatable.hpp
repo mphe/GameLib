@@ -8,7 +8,7 @@ namespace gamelib
     class Updatable
     {
         public:
-            Updatable(int interval = 0);
+            Updatable(int interval = 1);
             virtual ~Updatable() {}
 
             virtual void update(float elapsed) = 0;

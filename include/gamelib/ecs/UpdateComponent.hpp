@@ -1,10 +1,8 @@
 #ifndef GAMELIB_UPDATE_COMPONENT_HPP
 #define GAMELIB_UPDATE_COMPONENT_HPP
 
-#include "gamelib/Identifier.hpp"
-#include "gamelib/update/Updatable.hpp"
+#include "gamelib/update/UpdateSystem.hpp"
 #include "Component.hpp"
-#include "gamelib/utils/SlotMap.hpp"
 
 namespace gamelib
 {
@@ -15,8 +13,8 @@ namespace gamelib
             typedef SlotKeyShort Handle;
 
         public:
-            UpdateComponent(int interval = 0);
-            UpdateComponent(const std::string& name, int interval = 0);
+            UpdateComponent(int interval = 1, UpdateSystem::HookType hook = UpdateSystem::Frame);
+            UpdateComponent(const std::string& name, int interval = 1, UpdateSystem::HookType hook = UpdateSystem::Frame);
             virtual ~UpdateComponent() {}
 
             auto loadFromJson(const Json::Value& node) -> bool;
@@ -28,6 +26,7 @@ namespace gamelib
 
         private:
             Handle _handle;
+            UpdateSystem::HookType _hook;
     };
 }
 

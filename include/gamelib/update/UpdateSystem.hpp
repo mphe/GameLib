@@ -16,12 +16,23 @@ namespace gamelib
     class UpdateSystem : public Updatable
     {
         public:
+            enum HookType
+            {
+                PrePreFrame,
+                PreFrame,
+                Frame,
+                PostFrame,
+                PostPostFrame,
+                NumFrameHooks
+            };
+
+        public:
             typedef SlotKeyShort Handle;
 
         public:
-            auto add(Updatable* obj)   -> Handle;
-            auto remove(Handle handle) -> void;
-            auto destroy()             -> void;
+            auto add(Updatable* obj, HookType hook)   -> Handle;
+            auto remove(Handle handle, HookType hook) -> void;
+            auto destroy()                            -> void;
 
             auto update(float elapsed) -> void;
 
@@ -34,7 +45,7 @@ namespace gamelib
             };
 
         private:
-            SlotMapShort<Data> _objs;
+            SlotMapShort<Data> _objs[NumFrameHooks];
     };
 }
 
