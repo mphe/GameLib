@@ -1,4 +1,5 @@
 #include "gamelib/geometry/AABB.hpp"
+#include "gamelib/utils/json.hpp"
 
 namespace gamelib
 {
@@ -61,5 +62,20 @@ namespace gamelib
     const math::AABBf& AABB::getBBox() const
     {
         return _rect;
+    }
+
+    bool AABB::loadFromJson(const Json::Value& node)
+    {
+        CollisionComponent::loadFromJson(node);
+        gamelib::loadFromJson(node["pos"], _rect.pos);
+        gamelib::loadFromJson(node["size"], _rect.size);
+        return true;
+    }
+
+    void AABB::writeToJson(Json::Value& node)
+    {
+        CollisionComponent::writeToJson(node);
+        gamelib::writeToJson(node["pos"], _rect.pos);
+        gamelib::writeToJson(node["size"], _rect.size);
     }
 }

@@ -8,7 +8,7 @@ namespace gamelib
     class AABB : public CollisionComponent
     {
         public:
-            constexpr static const char* name = "AABBComponent";
+            constexpr static const char* name = "AABBCollision";
 
         public:
             AABB(float x, float y, float w, float h, unsigned int flags = 0);
@@ -27,6 +27,9 @@ namespace gamelib
             auto getScale() const                -> const math::Vec2f&;
 
             auto getBBox() const -> const math::AABBf&;
+
+            auto loadFromJson(const Json::Value& node) -> bool;
+            auto writeToJson(Json::Value& node)        -> void;
 
         protected:
             math::Vec2f _scale;

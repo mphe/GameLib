@@ -63,6 +63,10 @@ namespace gamelib
         return polygon.getBBox();
     }
 
+    const math::Polygon<float>& Polygon::getPolygon() const
+    {
+        return polygon;
+    }
 
     bool Polygon::loadFromJson(const Json::Value& node)
     {
@@ -93,5 +97,4 @@ namespace gamelib
         for (int i = 0; i < polygon.size(); ++i)
             gamelib::writeToJson(vertices[i], polygon.getRaw(i));
     }
-
 }

@@ -30,10 +30,13 @@ namespace gamelib
             auto getScale() const    -> const math::Vec2f&;
             auto getBBox() const     -> const math::AABBf&;
 
+            auto getPolygon() const  -> const math::Polygon<float>&;
+
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
 
         public:
+            // TODO: make this private
             math::Polygon<float> polygon;
     };
 }
