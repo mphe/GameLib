@@ -22,6 +22,18 @@ namespace gamelib
         _quitting(false)
     { }
 
+    Entity::Entity(Entity&& other) :
+        _entmgr(std::move(other._entmgr)),
+        _handle(std::move(other._handle)),
+        _name(std::move(other._name)),
+        _transform(std::move(other._transform)),
+        _quitting(std::move(other._quitting)),
+        _components(std::move(other._components))
+    {
+        other._entmgr = nullptr;
+        other._handle = Handle();
+    }
+
     Entity::~Entity()
     {
         destroy();
@@ -156,8 +168,6 @@ namespace gamelib
                 i->_quit();
         _components.clear();
         _quitting = false;
-
-        LOG_DEBUG("Entity destroyed");
     }
 
     void Entity::_refresh()
@@ -186,5 +196,18 @@ namespace gamelib
     Entity::ComponentList::iterator Entity::end()
     {
         return _components.end();
+    }
+
+    Entity& Entity::operator=(Entity&& other)
+    {
+        _entmgr = std::move(other._entmgr);
+        _name = std::move(other._name);
+        _quitting = std::move(other._quitting);
+        _handle = std::move(other._handle);
+        _transform = std::move(other._transform);
+        _components = std::move(other._components);
+        other._entmgr = nullptr;
+        other._handle = Handle();
+        return *this;
     }
 }

@@ -45,9 +45,10 @@ namespace gamelib
         public:
             Entity();
             Entity(const std::string& name);
-            // Entity(const Entity& ent);  // TODO or maybe not
-            Entity(Entity&& ent) = default;
+            Entity(Entity&& ent);
             ~Entity();
+
+            auto operator=(Entity&& rhs) -> Entity&;
 
             // auto clone()   -> Entity; // TODO Explicit copy might be better here than copy constructor
             auto destroy() -> void;
@@ -72,9 +73,6 @@ namespace gamelib
             auto begin()       -> ComponentList::iterator;
             auto end() const   -> ComponentList::const_iterator;
             auto end()         -> ComponentList::iterator;
-
-            // auto operator=(const Entity& rhs) -> Entity&;   // TODO or maybe not
-            auto operator=(Entity&& rhs) -> Entity& = default;
 
             template <typename T, typename... Args>
             auto add(Args&&... args) -> T*
