@@ -14,6 +14,9 @@ namespace gamelib
     class EventManager : public Subsystem<EventManager>
     {
         public:
+            constexpr static const char* name = "EventManager";
+
+        public:
             template <class T>
             void regCallback(EventID id, void (*callback)(T*, EventPtr), T* me)
             {

@@ -4,6 +4,8 @@
 
 namespace gamelib
 {
+    constexpr const char* EntityFactory::name;
+
     Entity::Handle createEntity(const std::string& name)
     {
         return getSubsystem<EntityFactory>()->create(name);
@@ -116,7 +118,7 @@ namespace gamelib
         _entdata.clear();
     }
 
-    size_t EntityFactory::size()
+    size_t EntityFactory::size() const
     {
         return _entdata.size();
     }

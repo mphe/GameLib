@@ -13,7 +13,7 @@
 
 namespace gamelib
 {
-    class UpdateSystem : public Updatable
+    class UpdateSystem : public Updatable, public Subsystem<UpdateSystem>
     {
         public:
             enum HookType
@@ -26,8 +26,9 @@ namespace gamelib
                 NumFrameHooks
             };
 
-        public:
             typedef SlotKeyShort Handle;
+
+            constexpr static const char* name = "UpdateSystem";
 
         public:
             auto add(Updatable* obj, HookType hook)   -> Handle;

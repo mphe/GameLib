@@ -39,14 +39,15 @@
  * TODO: document layers
  */
 
-// TODO: render flags
-
 namespace gamelib
 {
     class Scene : public SceneObject, public Subsystem<Scene>
     {
         friend class SceneObject;
         friend class Layer;
+
+        public:
+            constexpr static const char* name = "Scene";
 
         public:
             Scene();

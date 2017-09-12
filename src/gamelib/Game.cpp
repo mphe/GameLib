@@ -16,6 +16,8 @@ constexpr bool game_repeatkeys   = false;
 
 namespace gamelib
 {
+    constexpr const char* Game::name;
+
     Game::Game() :
         _frametime(0),
         _focused(true),

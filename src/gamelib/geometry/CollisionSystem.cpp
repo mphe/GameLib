@@ -3,6 +3,8 @@
 
 namespace gamelib
 {
+    constexpr const char* CollisionSystem::name;
+
     void CollisionSystem::add(Collidable* col)
     {
         _objs.push_back(col);
@@ -48,7 +50,7 @@ namespace gamelib
                 if (isec.type == math::LinexLine)
                     std::swap(isec.near, isec.far);
 
-                if (!nearest || isec.near < nearest.isec.near)
+                if (isec && (!nearest || isec.near < nearest.isec.near))
                 {
                     nearest.obj = i;
                     nearest.isec = isec;

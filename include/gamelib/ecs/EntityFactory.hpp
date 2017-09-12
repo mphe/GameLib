@@ -22,6 +22,9 @@ namespace gamelib
         typedef Factory<Component, std::string> ComponentFactory;
 
         public:
+            constexpr static const char* name = "EntityFactory";
+
+        public:
             EntityFactory();
 
             auto createFromJson(const Json::Value& node)              -> Entity::Handle;
@@ -37,8 +40,8 @@ namespace gamelib
 
             auto removeEntity(const std::string& name)    -> void;
             auto removeComponent(const std::string& name) -> void;
-            auto clear() -> void;
-            auto size()  -> size_t;
+            auto clear()       -> void;
+            auto size() const  -> size_t;
 
             template <typename T>
             void addComponent(const std::string& name)
@@ -50,7 +53,7 @@ namespace gamelib
             // Signature: bool(const std::string&)
             // When true is returned, the loop breaks.
             template <typename F>
-            void iterkeys(F callback)
+            void iterkeys(F callback) const
             {
                 for (auto& i : _entdata)
                     if (callback(i.first))

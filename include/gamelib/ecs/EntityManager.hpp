@@ -13,6 +13,8 @@ namespace gamelib
         public:
             typedef SlotMapShort<Entity>::Handle Handle;
 
+            constexpr static const char* name = "EntityManager";
+
         public:
             auto add(const std::string& name = "unknown") -> Entity::Handle;
             // auto add(Entity&& ent)                        -> Entity&;

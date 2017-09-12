@@ -31,6 +31,9 @@ namespace gamelib
     class CollisionSystem : public Subsystem<CollisionSystem>
     {
         public:
+            constexpr static const char* name = "CollisionSystem";
+
+        public:
             auto add(Collidable* col)    -> void;
             auto remove(Collidable* col) -> void;
             auto destroy()               -> void;

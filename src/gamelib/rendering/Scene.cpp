@@ -6,6 +6,8 @@
 
 namespace gamelib
 {
+    constexpr const char* Scene::name;
+
     Scene::Scene() :
         _currentcam(-1),
         _default(-1),

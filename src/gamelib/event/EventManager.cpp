@@ -2,6 +2,8 @@
 
 namespace gamelib
 {
+    constexpr const char* EventManager::name;
+
     void EventManager::triggerEvent(EventPtr event)
     {
         auto it = _callbacks.find(event->getID());

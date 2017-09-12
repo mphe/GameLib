@@ -50,6 +50,8 @@ namespace gamelib
         public:
             typedef BaseResourceHandle(*LoaderCallback)(const std::string&, ResourceManager* resmgr);
 
+            constexpr static const char* name = "ResourceManager";
+
         public:
             ResourceManager() {};
             ResourceManager(const std::string& searchpath);

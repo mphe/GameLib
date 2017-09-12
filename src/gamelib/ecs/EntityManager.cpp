@@ -3,6 +3,8 @@
 
 namespace gamelib
 {
+    constexpr const char* EntityManager::name;
+
     Entity::Handle EntityManager::add(const std::string& name)
     {
         auto h = _entities.acquire();
@@ -52,10 +54,9 @@ namespace gamelib
     {
         if (_entities.isValid(handle))
         {
-            // No need to reset _entmgr field, because the object is deleted
-            // anyway
             _entities[handle]._quit();
             _entities[handle]._entmgr = nullptr;
+            LOG_DEBUG("Entity destroyed: ", _entities[handle].getName());
             _entities.destroy(handle);
         }
     }
