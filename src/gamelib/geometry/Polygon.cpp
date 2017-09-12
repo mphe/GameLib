@@ -31,6 +31,11 @@ namespace gamelib
         throw "Not implemented";
     }
 
+    Intersection Polygon::sweep(const math::AABBf& rect, const math::Vec2f& vel) const
+    {
+        return rect.sweep(vel, polygon);
+    }
+
 
     void Polygon::move(const math::Vec2f& rel)
     {

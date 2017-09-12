@@ -28,7 +28,12 @@ namespace gamelib
 
     Intersection AABB::intersect(const math::AABBf& rect) const
     {
-        return rect.intersect(_rect);
+        return _rect.intersect(rect);
+    }
+
+    Intersection AABB::sweep(const math::AABBf& rect, const math::Vec2f& vel) const
+    {
+        return _rect.sweep(vel, rect);
     }
 
 

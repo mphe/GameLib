@@ -38,18 +38,37 @@ namespace gamelib
         return nullptr;
     }
 
-    TraceResult CollisionSystem::trace(const math::Line2f& line, unsigned int flags) const
+    TraceResult CollisionSystem::trace(const math::Line2f& line, const Collidable* self, unsigned int flags) const
     {
         TraceResult nearest;
         for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
         {
             Collidable* i = (*it);
-            if ((!flags || i->flags & flags))
+            if (i != self && (!flags || i->flags & flags))
             {
                 auto isec = i->intersect(line);
                 if (isec.type == math::LinexLine)
                     std::swap(isec.near, isec.far);
 
+                if (isec && (!nearest || isec.near < nearest.isec.near))
+                {
+                    nearest.obj = i;
+                    nearest.isec = isec;
+                }
+            }
+        }
+        return nearest;
+    }
+
+    TraceResult CollisionSystem::trace(const math::AABBf& rect, const math::Vec2f& vel, const Collidable* self, unsigned int flags) const
+    {
+        TraceResult nearest;
+        for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
+        {
+            Collidable* i = (*it);
+            if (i != self && (!flags || i->flags & flags))
+            {
+                auto isec = i->sweep(rect, vel);
                 if (isec && (!nearest || isec.near < nearest.isec.near))
                 {
                     nearest.obj = i;

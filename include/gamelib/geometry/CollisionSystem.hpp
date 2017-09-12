@@ -39,7 +39,11 @@ namespace gamelib
             auto destroy()               -> void;
             auto size() const            -> size_t;
 
-            auto trace(const math::Line2f& line, unsigned int flags = 0) const   -> TraceResult;
+            auto trace(const math::Line2f& line,
+                    const Collidable* self = nullptr, unsigned int flags = 0) const -> TraceResult;
+
+            auto trace(const math::AABBf& rect, const math::Vec2f& vel,
+                    const Collidable* self = nullptr, unsigned int flags = 0) const -> TraceResult;
 
             // Returns the colliding object if there is a collison at the
             // given point/rect, otherwise nullptr.

@@ -28,6 +28,8 @@ namespace gamelib
             virtual auto intersect(const math::Line2f& line) const   -> Intersection = 0;
             virtual auto intersect(const math::AABBf& rect) const    -> Intersection = 0;
 
+            virtual auto sweep(const math::AABBf& rect, const math::Vec2f& vel) const -> Intersection = 0;
+
         public:
             unsigned int flags;
     };

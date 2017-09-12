@@ -19,6 +19,8 @@ namespace gamelib
             auto intersect(const math::Line2f& line) const   -> Intersection;
             auto intersect(const math::AABBf& rect) const    -> Intersection;
 
+            auto sweep(const math::AABBf& rect, const math::Vec2f& vel) const -> Intersection;
+
             auto move(const math::Vec2f& rel)    -> void;
             auto scale(const math::Vec2f& scale) -> void;
             auto getPosition() const             -> const math::Point2f&;
