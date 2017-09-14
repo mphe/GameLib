@@ -44,7 +44,7 @@ namespace gamelib
     class Scene : public SceneObject, public Subsystem<Scene>
     {
         friend class SceneObject;
-        friend class Layer;
+        friend class SceneData;
 
         public:
             constexpr static const char* name = "Scene";
@@ -81,10 +81,14 @@ namespace gamelib
 
             auto getCameraCount() const -> size_t;
 
+            auto loadFromJson(const Json::Value& node) -> bool;
+            auto writeToJson(Json::Value& node)        -> void;
+
             auto createLayer()                        -> Layer::Handle;
             auto deleteLayer(Layer::Handle handle)    -> void;
             auto getLayer(Layer::Handle handle) const -> const Layer*;
             auto getLayer(Layer::Handle handle)       -> Layer*;
+            auto getLayer(size_t layerid) const       -> Layer::Handle;
 
             // Calls a function for each layer.
             // Signature: void (Handle, Layer&)
@@ -97,8 +101,10 @@ namespace gamelib
 
         private:
             auto _render(sf::RenderTarget& surface, const sf::View& view) -> void;
+            auto _updateQueue() -> void;
 
         private:
+            size_t _layerIDcounter;
             size_t _currentcam;
             size_t _default;
             SlotMapShort<Layer> _layers;
@@ -107,5 +113,25 @@ namespace gamelib
             bool _dirty;
     };
 }
+
+/*
+ * Config file format
+ * {
+ *     "layers": [
+ *         {
+ *             <scenedata>
+ *             "id": <uint>
+ *         },
+ *         ...
+ *     ],
+ *     "cameras": [
+ *         "path/to/camera.json",
+ *         {
+ *             <cameraconfig>
+ *         },
+ *         ...
+ *     ]
+ * }
+ */
 
 #endif

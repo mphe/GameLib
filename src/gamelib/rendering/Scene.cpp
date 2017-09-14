@@ -1,14 +1,17 @@
 #include "gamelib/rendering/Scene.hpp"
+#include "gamelib/rendering/flags.hpp"
+#include "gamelib/utils/log.hpp"
+#include "gamelib/res/ResourceManager.hpp"
+#include "gamelib/res/JsonResource.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <cassert>
-#include "gamelib/utils/log.hpp"
-#include "gamelib/rendering/flags.hpp"
 
 namespace gamelib
 {
     constexpr const char* Scene::name;
 
     Scene::Scene() :
+        _layerIDcounter(0),
         _currentcam(-1),
         _default(-1),
         _dirty(false)
@@ -21,6 +24,8 @@ namespace gamelib
         _currentcam = -1;
         _default = -1;
         _dirty = false;
+        _layers.clear();
+        _layerIDcounter = 0;
         LOG_DEBUG_WARN("Scene destroyed");
     }
 
@@ -29,16 +34,7 @@ namespace gamelib
         for (auto& i : _cams)
             i.update(elapsed);
 
-        if (_dirty)
-        {
-            LOG_DEBUG("Scene content changed -> sorting");
-            std::sort(_renderQueue.begin(), _renderQueue.end(), [this](SceneObject* a, SceneObject* b) {
-                    const int da = _layers.isValid(a->_layer) ? _layers[a->_layer]._depth : 0,
-                              db = _layers.isValid(b->_layer) ? _layers[b->_layer]._depth : 0;
-                    return (da != db) ? da > db : a->_depth > b->_depth;
-                });
-            _dirty = false;
-        }
+        _updateQueue();
     }
 
     void Scene::render(sf::RenderTarget& target)
@@ -182,6 +178,7 @@ namespace gamelib
     {
         auto hnd = _layers.acquire();
         _layers[hnd]._scene = this;
+        _layers[hnd]._id = _layerIDcounter++;
         return hnd;
     }
 
@@ -198,5 +195,111 @@ namespace gamelib
     Layer* Scene::getLayer(Layer::Handle handle)
     {
         return (_layers.isValid(handle)) ? &_layers[handle] : nullptr;
+    }
+
+    Layer::Handle Scene::getLayer(size_t layerid) const
+    {
+        for (auto it = _layers.begin(), end = _layers.end(); it != end; ++it)
+            if ((*it).getUniqueID() == layerid)
+                return it.handle();
+        return Layer::Handle();
+    }
+
+    bool Scene::loadFromJson(const Json::Value& node)
+    {
+        destroy();
+
+        SceneObject::loadFromJson(node);
+
+        if (node.isMember("layers"))
+        {
+            const auto& layers = node["layers"];
+            for (const auto& i : layers)
+            {
+                auto h = createLayer();
+                auto layer = getLayer(h);
+                if (layer->loadFromJson(i))
+                {
+                    layer->_id = i.get("id", (Json::UInt)layer->_id).asUInt();
+                    if (layer->_id > _layerIDcounter)
+                        _layerIDcounter = layer->_id + 1;
+                }
+                else
+                    deleteLayer(h);
+            }
+        }
+
+        if (node.isMember("cameras"))
+        {
+            auto& cams = node["cameras"];
+            for (const auto& i : cams)
+            {
+                auto& cam = addCamera();
+                const Json::Value* cfg = &i;
+                JsonResource::Handle res;
+
+                if (i.isString())
+                {
+                    auto resmgr = getSubsystem<ResourceManager>();
+                    if (resmgr)
+                    {
+                        res = resmgr->getOnce(i.asString());
+                        cfg = &*res;
+                    }
+                }
+
+                if (!cam.loadFromJson(*cfg))
+                    // Don't remove it, because code might rely on the camera count
+                    LOG_WARN("Invalid config for camera ", getCameraCount() - 1);
+            }
+        }
+
+        _default = node.get("defaultcam", 0).asUInt();
+        if (_default >= _cams.size())
+            _default = _cams.size() - 1;
+
+        _updateQueue();
+        return true;
+    }
+
+    void Scene::writeToJson(Json::Value& node)
+    {
+        SceneObject::writeToJson(node);
+
+        if (_layers.begin() != _layers.end())
+        {
+            auto& layers = node["layers"];
+            for (auto& i : _layers)
+            {
+                auto& data = layers.append(Json::Value());
+                i.writeToJson(data);
+                data["id"] = (Json::UInt)i._id;
+            }
+        }
+
+        auto& cams = node["cameras"];
+        for (auto& i : _cams)
+        {
+            auto& data = cams.append(Json::Value());
+            i.writeToJson(data);
+        }
+
+        node["defaultcam"] = (Json::UInt)_default;
+    }
+
+    void Scene::_updateQueue()
+    {
+        if (_dirty)
+        {
+            LOG_DEBUG("Scene content changed -> sorting");
+            std::sort(_renderQueue.begin(), _renderQueue.end(), [this](SceneObject* a, SceneObject* b) {
+                    auto la = a->getLayer(),
+                         lb = b->getLayer();
+                    const int da = _layers.isValid(la) ? _layers[la]._depth : 0,
+                              db = _layers.isValid(lb) ? _layers[lb]._depth : 0;
+                    return (da != db) ? da > db : a->_depth > b->_depth;
+                });
+            _dirty = false;
+        }
     }
 }

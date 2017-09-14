@@ -24,6 +24,7 @@ set(GAMELIB_SOURCES
     res/JsonResource.cpp
     res/EntityConfigResource.cpp
     rendering/Scene.cpp
+    rendering/SceneData.cpp
     rendering/SceneObject.cpp
     rendering/Layer.cpp
     FreeCam.cpp

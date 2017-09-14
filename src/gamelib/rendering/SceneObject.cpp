@@ -5,8 +5,8 @@
 
 namespace gamelib
 {
-    SceneObject::SceneObject(int depth, unsigned int flags) :
-        Layer(depth, 1, flags)
+    SceneObject::SceneObject(int depth, float parallax, unsigned int flags) :
+        SceneData(depth, parallax, flags)
     { };
 
     void SceneObject::setLayer(Layer::Handle layer)
@@ -43,5 +43,27 @@ namespace gamelib
     {
         if (_scene)
             _scene->remove(this);
+    }
+
+    bool SceneObject::loadFromJson(const Json::Value& node)
+    {
+        SceneData::loadFromJson(node);
+
+        auto scene = _scene ? _scene : getSubsystem<Scene>();
+        auto layer = scene->getLayer(node.get("layer", (Json::UInt)-1).asUInt());
+        if (!layer.isNull())
+            setLayer(layer);
+
+        return true;
+    }
+
+    void SceneObject::writeToJson(Json::Value& node)
+    {
+        SceneData::writeToJson(node);
+
+        auto scene = _scene ? _scene : getSubsystem<Scene>();
+        auto layer = scene->getLayer(getLayer());
+        if (layer)
+            node["layer"] = (Json::UInt)layer->getUniqueID();
     }
 }
