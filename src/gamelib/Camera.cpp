@@ -1,7 +1,7 @@
-#include <SFML/Graphics.hpp>
 #include "gamelib/Camera.hpp"
 #include "math/math.hpp"
 #include "gamelib/utils/log.hpp"
+#include "gamelib/utils/json.hpp"
 
 using namespace math;
 
@@ -20,20 +20,20 @@ namespace gamelib
 
     bool Camera::loadFromJson(const Json::Value& node)
     {
-        pos.x = node.get("x", 0).asFloat();
-        pos.y = node.get("y", 0).asFloat();
-        size.x = node.get("w", 0).asInt();
-        size.y = node.get("h", 0).asInt();
-        zoom = node.get("zoom", 1).asFloat();
+        gamelib::loadFromJson(node["pos"], pos);
+        gamelib::loadFromJson(node["size"], size);
+        gamelib::loadFromJson(node["velocity"], vel);
+        zoom = node.get("zoom", zoom).asFloat();
 
         if (size.x == 0 || size.y == 0)
             LOG_WARN("Camera size is 0");
 
-        const auto& vp = node["viewport"];
-        viewport.pos.x = vp.get("x", 0).asFloat();
-        viewport.pos.y = vp.get("y", 0).asFloat();
-        viewport.size.x = vp.get("w", 1).asFloat();
-        viewport.size.y = vp.get("h", 1).asFloat();
+        if (node.isMember("viewport"))
+        {
+            const auto& vp = node["viewport"];
+            gamelib::loadFromJson(vp["pos"], viewport.pos);
+            gamelib::loadFromJson(vp["size"], viewport.size);
+        }
 
         if (viewport.size.x == 0 || viewport.size.y == 0)
             LOG_WARN("Camera viewport size is 0");
@@ -41,23 +41,35 @@ namespace gamelib
         return true;
     }
 
+    void Camera::writeToJson(Json::Value& node)
+    {
+        gamelib::writeToJson(node["pos"], pos);
+        gamelib::writeToJson(node["size"], size);
+        gamelib::writeToJson(node["velocity"], vel);
+        node["zoom"] = zoom;
+
+        auto& vp = node["viewport"];
+        gamelib::writeToJson(vp["pos"], viewport.pos);
+        gamelib::writeToJson(vp["size"], viewport.size);
+    }
+
 
     void Camera::update(float elapsed)
     {
-        pos += _speed * elapsed;
+        pos += vel * elapsed;
     }
 
 
     void Camera::setMotion(float speed, float dir)
     {
-        _speed.x = math::lengthdirX(speed, dir);
-        _speed.y = math::lengthdirY(speed, dir);
+        vel.x = math::lengthdirX(speed, dir);
+        vel.y = math::lengthdirY(speed, dir);
     }
 
     void Camera::addMotion(float speed, float dir)
     {
-        _speed.x += math::lengthdirX(speed, dir);
-        _speed.y += math::lengthdirY(speed, dir);
+        vel.x += math::lengthdirX(speed, dir);
+        vel.y += math::lengthdirY(speed, dir);
     }
 
     void Camera::center(const math::Vec2f& pos)

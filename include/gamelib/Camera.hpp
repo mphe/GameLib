@@ -5,13 +5,7 @@
 #include "math/geometry/AABB.hpp"
 #include "gamelib/res/JsonSerializer.hpp"
 #include "gamelib/update/Updatable.hpp"
-
-namespace sf
-{
-    class View;
-    class RenderTarget;
-    class Transform;
-}
+#include <SFML/Graphics.hpp>
 
 // TODO: Consider using a sf::View internally
 
@@ -24,6 +18,7 @@ namespace gamelib
             Camera(const math::Vec2f& pos, const math::Vec2f& size);
 
             bool loadFromJson(const Json::Value& node);
+            void writeToJson(Json::Value& node);
 
             void update(float elapsed);
 
@@ -45,9 +40,7 @@ namespace gamelib
             math::Vec2f pos;
             math::Vec2f size;
             math::AABBf viewport;
-
-        private:
-            math::Vec2f _speed;
+            math::Vec2f vel;
     };
 }
 
