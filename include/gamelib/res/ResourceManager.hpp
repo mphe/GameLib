@@ -62,8 +62,17 @@ namespace gamelib
             // (Re-)Load a resource.
             auto load(const std::string& fname) -> BaseResourceHandle;
 
+            // Same as load, but don't cache the resource
+            auto loadOnce(const std::string& fname) -> BaseResourceHandle;
+
+            // Free a resource (if it's not referenced anymore)
+            auto free(const std::string& fname) -> void;
+
             // Return the resource and load it if it doesn't exist.
             auto get(const std::string& fname) -> BaseResourceHandle;
+
+            // Same as get, but don't cache the resource
+            auto getOnce(const std::string& fname) -> BaseResourceHandle;
 
             // Check if the resource exists and return a (null)pointer to it.
             auto find(const std::string& fname) -> BaseResourceHandle;

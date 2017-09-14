@@ -71,6 +71,23 @@ namespace gamelib
 
     BaseResourceHandle ResourceManager::load(const std::string& fname)
     {
+        auto res = loadOnce(fname);
+
+        // Fire a reload event if the resource was reloaded
+        auto evmgr = getSubsystem<EventManager>();
+        if (evmgr)
+        {
+            auto oldres = find(fname);
+            if (oldres && oldres.use_count() > 1)
+                evmgr->queueEvent(ResourceReloadEvent::create(fname, res));
+        }
+
+        _res[fname] = res;
+        return res;
+    }
+
+    BaseResourceHandle ResourceManager::loadOnce(const std::string& fname)
+    {
         LOG_DEBUG("Loading file ", fname, "...");
 
         auto pos = fname.find_last_of('.');
@@ -100,18 +117,18 @@ namespace gamelib
         }
 
         res.getResource()->_path = path.data() + _searchpath.size();
-
-        // Fire a reload event if the resource was reloaded
-        auto evmgr = getSubsystem<EventManager>();
-        if (evmgr)
-        {
-            auto oldres = find(fname);
-            if (oldres && oldres.use_count() > 1)
-                evmgr->queueEvent(ResourceReloadEvent::create(fname, res));
-        }
-
-        _res[fname] = res;
         return res;
+    }
+
+    void ResourceManager::free(const std::string& fname)
+    {
+        auto it = _res.find(fname);
+        if (it != _res.end())
+            if (it->second.use_count() == 1)
+            {
+                LOG_DEBUG_WARN("Freeing resource ", it->first);
+                _res.erase(it);
+            }
     }
 
     BaseResourceHandle ResourceManager::get(const std::string& fname)
@@ -120,6 +137,14 @@ namespace gamelib
         if (ptr)
             return ptr;
         return load(fname);
+    }
+
+    BaseResourceHandle ResourceManager::getOnce(const std::string& fname)
+    {
+        auto ptr = find(fname);
+        if (ptr)
+            return ptr;
+        return loadOnce(fname);
     }
 
     BaseResourceHandle ResourceManager::find(const std::string& fname)
