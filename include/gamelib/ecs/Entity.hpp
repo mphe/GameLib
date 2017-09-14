@@ -88,6 +88,12 @@ namespace gamelib
                 return static_cast<T*>(find(T::id));
             }
 
+            template <typename T>
+            auto findByName() const -> T*
+            {
+                return static_cast<T*>(find(T::name));
+            }
+
             // Calls a callback for each found component.
             // Signature: bool(Component*)
             // If the lambda returns true, the loop breaks. To continue return false.
