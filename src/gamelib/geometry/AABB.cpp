@@ -3,6 +3,10 @@
 
 namespace gamelib
 {
+    AABB::AABB() :
+        AABB(0, 0, 0, 0, 0)
+    { }
+
     AABB::AABB(float x, float y, float w, float h, unsigned int flags) :
         AABB(math::AABBf(x, y, w, h), flags)
     { }

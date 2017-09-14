@@ -11,6 +11,7 @@ namespace gamelib
             constexpr static const char* name = "AABBCollision";
 
         public:
+            AABB();
             AABB(float x, float y, float w, float h, unsigned int flags = 0);
             AABB(const math::AABBf& aabb, unsigned int flags = 0);
             virtual ~AABB() {}
