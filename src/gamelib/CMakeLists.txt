@@ -17,6 +17,8 @@ set(GAMELIB_SOURCES
     geometry/Transformable.cpp
     geometry/GroupTransform.cpp
     movement/Acceleration.cpp
+    movement/QPhysics.cpp
+    movement/QController.cpp
     res/JsonSerializer.cpp
     res/ResourceManager.cpp
     res/resources.cpp
