@@ -9,6 +9,7 @@ set(GAMELIB_SOURCES
     components/update/QController.cpp
     components/geometry/AABB.cpp
     components/geometry/Polygon.cpp
+    components/geometry/PixelCollision.cpp
 
     utils/SpriteBatch.cpp
     utils/DebugGui.cpp
