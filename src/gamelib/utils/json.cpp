@@ -1,5 +1,5 @@
 #include "gamelib/utils/json.hpp"
-#include "gamelib/geometry/Transformable.hpp"
+#include "gamelib/core/geometry/Transformable.hpp"
 #include <fstream>
 
 namespace gamelib

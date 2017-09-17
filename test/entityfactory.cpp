@@ -1,5 +1,5 @@
-#include "gamelib/ecs/Entity.hpp"
-#include "gamelib/ecs/EntityFactory.hpp"
+#include "gamelib/core/ecs/Entity.hpp"
+#include "gamelib/core/ecs/EntityFactory.hpp"
 #include <cassert>
 
 using namespace gamelib;

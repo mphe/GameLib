@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "gamelib/Renderable.hpp"
+#include "gamelib/core/Renderable.hpp"
 #include "string.hpp"
 
 namespace gamelib

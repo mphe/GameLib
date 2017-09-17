@@ -1,8 +1,8 @@
 #ifndef GAMELIB_RESOURCE_RELOAD_EVENT_HPP
 #define GAMELIB_RESOURCE_RELOAD_EVENT_HPP
 
-#include "gamelib/event/Event.hpp"
-#include "gamelib/res/Resource.hpp"
+#include "gamelib/core/event/Event.hpp"
+#include "gamelib/core/res/Resource.hpp"
 
 namespace gamelib
 {

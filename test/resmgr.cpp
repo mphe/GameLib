@@ -1,5 +1,5 @@
 #include <cassert>
-#include "gamelib/res/ResourceManager.hpp"
+#include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/utils/string.hpp"
 
 using namespace gamelib;

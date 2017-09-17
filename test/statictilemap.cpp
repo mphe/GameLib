@@ -1,4 +1,4 @@
-#include "gamelib/tile/StaticTilemap.hpp"
+#include "gamelib/core/tile/StaticTilemap.hpp"
 #include <cassert>
 
 using namespace gamelib;

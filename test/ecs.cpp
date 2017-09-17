@@ -1,4 +1,4 @@
-#include "gamelib/ecs/Entity.hpp"
+#include "gamelib/core/ecs/Entity.hpp"
 #include <cassert>
 
 using namespace gamelib;
