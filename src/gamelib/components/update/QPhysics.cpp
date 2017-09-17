@@ -168,14 +168,7 @@ namespace gamelib
         overbounce = node.get("overbounce", overbounce).asFloat();
 
         if (node.isMember("global"))
-        {
-            auto& global = node["global"];
-            gamelib::loadFromJson(global["gravityDirection"], gravityDirection);
-            gravity = global.get("gravity", gravity).asFloat();
-            friction = global.get("friction", friction).asFloat();
-            stopFriction = global.get("stopFriction", stopFriction).asFloat();
-            stopSpeed = global.get("stopSpeed", stopSpeed).asFloat();
-        }
+            loadGlobalsFromJson(node["global"]);
 
         return true;
     }
@@ -186,6 +179,25 @@ namespace gamelib
         // gamelib::writeToJson(node["transform"], *static_cast<Transformable*>(this));
         gamelib::writeToJson(node["vel"], vel);
         node["overbounce"] = overbounce;
+    }
+
+    bool QPhysics::loadGlobalsFromJson(const Json::Value& node)
+    {
+        gamelib::loadFromJson(node["gravityDirection"], gravityDirection);
+        gravity = node.get("gravity", gravity).asFloat();
+        friction = node.get("friction", friction).asFloat();
+        stopFriction = node.get("stopFriction", stopFriction).asFloat();
+        stopSpeed = node.get("stopSpeed", stopSpeed).asFloat();
+        return true;
+    }
+
+    void QPhysics::writeGlobalsToJson(Json::Value& node)
+    {
+        gamelib::writeToJson(node["gravityDirection"], gravityDirection);
+        node["gravity"] = gravity;
+        node["friction"] = friction;
+        node["stopFriction"] = stopFriction;
+        node["stopSpeed"] = stopSpeed;
     }
 
     // void QPhysics::move(const math::Vec2f& rel)

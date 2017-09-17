@@ -31,8 +31,11 @@ namespace gamelib
             // Expects wishdir to be a normalized vector.
             auto accelerate(const math::Vec2f& wishdir, float wishspeed, float accel) -> void;
 
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node)        -> void;
+            auto loadFromJson(const Json::Value& node)        -> bool;
+            auto writeToJson(Json::Value& node)               -> void;
+
+            static auto writeGlobalsToJson(Json::Value& node)        -> void;
+            static auto loadGlobalsFromJson(const Json::Value& node) -> bool;
 
         protected:
             virtual auto _init() -> bool;
