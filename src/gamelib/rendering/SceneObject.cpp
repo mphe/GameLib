@@ -11,9 +11,9 @@ namespace gamelib
 
     void SceneObject::setLayer(Layer::Handle layer)
     {
-        assert(_scene && "Scene is null");
-
-        if (layer != _layer)
+        if (!_scene)
+            _layer = layer;
+        else if (layer != _layer)
         {
             _layer = layer;
             _scene->_dirty = true;
