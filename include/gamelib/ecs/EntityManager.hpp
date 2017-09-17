@@ -8,7 +8,7 @@
 
 namespace gamelib
 {
-    class EntityManager : public Subsystem<EntityManager>
+    class EntityManager : public Subsystem<EntityManager>, public JsonSerializer
     {
         public:
             typedef SlotMapShort<Entity>::Handle Handle;
@@ -27,6 +27,9 @@ namespace gamelib
             // Returns the first entity with the given name
             auto find(const std::string& name) const -> const Entity*;
             auto find(const std::string& name)       -> Entity*;
+
+            auto loadFromJson(const Json::Value& node) -> bool;
+            auto writeToJson(Json::Value& node)        -> void;
 
         private:
             gamelib::SlotMapShort<Entity> _entities;

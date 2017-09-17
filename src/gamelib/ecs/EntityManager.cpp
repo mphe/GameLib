@@ -1,5 +1,7 @@
 #include "gamelib/ecs/EntityManager.hpp"
+#include "gamelib/ecs/EntityFactory.hpp"
 #include "gamelib/utils/log.hpp"
+#include <cassert>
 
 namespace gamelib
 {
@@ -66,5 +68,28 @@ namespace gamelib
         for (auto& i : _entities)
             i._quit();
         _entities.clear();
+    }
+
+    bool EntityManager::loadFromJson(const Json::Value& node)
+    {
+        auto factory = getSubsystem<EntityFactory>();
+        assert(factory != nullptr && "Requires EntityFactory");
+
+        if (node.get("clear", true).asBool())
+            clear();
+
+        auto& ents = node["entities"];
+        if (!ents.isNull())
+            for (auto& i : ents)
+                factory->createFromJson(i);
+        return true;
+    }
+
+    void EntityManager::writeToJson(Json::Value& node)
+    {
+        node["clear"] = true;
+        auto& entities = node["entities"];
+        for (auto& i : _entities)
+            i.writeToJson(entities.append(Json::Value()));
     }
 }
