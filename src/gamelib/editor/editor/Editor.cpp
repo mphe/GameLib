@@ -332,23 +332,23 @@ namespace gamelib
             writeToFile(currentFilePath);
         }
 
-        ImGui::Begin("Toolbox");
+        ImGui::Begin("Toolbox", nullptr, ImVec2(250, 125));
         for (size_t i = 0; i < NumTools; ++i)
             if (ImGui::Button(buttonStrings[i]))
                 setTool(static_cast<Tools>(i));
         ImGui::End();
 
-        ImGui::Begin("Tool properties");
+        ImGui::Begin("Tool properties", nullptr, ImVec2(250, 275));
         _currenttool->drawGui();
         ImGui::End();
 
-        ImGui::Begin("Layer Properties");
+        ImGui::Begin("Layer Properties", nullptr, ImVec2(250, 285));
         _layerui.drawLayerUI();
         ImGui::End();
 
         if (getSelectTool().getSelected())
         {
-            ImGui::Begin("Entity properties");
+            ImGui::Begin("Entity properties", nullptr, ImVec2(256, 690));
             drawEntityProps(*getSelectTool().getSelected());
             ImGui::End();
         }
