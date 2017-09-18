@@ -1,0 +1,39 @@
+{
+    "name": "player",
+    "components": [
+        {
+            "name": "PolygonShape",
+            "mapping": 0,
+            "texture": "tex/bg.png",
+            "vertices": [
+                [ [0, 0], [0, 0] ],
+                [ [0, 20], [0, 32] ],
+                [ [20, 0], [32, 0] ],
+                [ [20, 20], [32, 32] ]
+            ]
+        },
+        {
+            "name": "QPhysicsComponent",
+            "overbounce": 1,
+            "global": {
+                "gravity": 700,
+                "friction": 10,
+                "stopFriction": 10,
+                "stopSpeed": 70
+            }
+        },
+        {
+            "name": "QController",
+            "maxspeed": 140,
+            "jumpspeed": 300,
+            "accelerate": 25,
+            "airAccelerate": 10
+        },
+        {
+            "name": "AABBCollision",
+            "flags": 2,
+            "pos": [0, 0],
+            "size": [20, 20]
+        }
+    ]
+}

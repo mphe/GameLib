@@ -1,0 +1,18 @@
+{
+    "searchpath": "assets",
+    "forcereload": false,
+    "preload": {
+        "tex" : [
+            "dirt.png",
+            "bg.png",
+            "block.png",
+            "sand.png",
+            "sand2.png"
+        ],
+        "entities": [
+            "linebrush.ent",
+            "polygonbrush.ent",
+            "player.ent"
+        ]
+    }
+}

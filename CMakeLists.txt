@@ -9,6 +9,7 @@ option(GAMELIB_DEBUG_LOG_RELEASE "Show debug log entries in release build" OFF)
 option(GAMELIB_DEBUG_LOG_DEBUG "Show debug log entries in debug build" ON)
 option(GAMELIB_BUILD_TESTS "Build tests" OFF)
 option(GAMELIB_BUILD_EXAMPLES "Build examples" OFF)
+option(GAMELIB_BUILD_EDITOR "Build the level editor" ON)
 option(GAMELIB_USE_CCACHE "Use ccache if available" ON)
 set(SFML_ROOT "" CACHE PATH "SFML library directory (optional)")
 

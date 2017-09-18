@@ -1,3 +1,9 @@
 [submodule "extlib/cppmath"]
 	path = extlib/cppmath
 	url = https://github.com/mphe/cppmath.git
+[submodule "extlib/imgui"]
+	path = extlib/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "extlib/imgui-sfml"]
+	path = extlib/imgui-sfml
+	url = https://github.com/eliasdaler/imgui-sfml.git

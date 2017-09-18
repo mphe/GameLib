@@ -74,3 +74,7 @@ include_directories(
 add_library(${PROJECT_NAME} ${GAMELIB_SOURCES})
 target_link_libraries(${PROJECT_NAME} ${EXT_LIBRARIES})
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
+
+if(GAMELIB_BUILD_EDITOR)
+    add_subdirectory(editor)
+endif()

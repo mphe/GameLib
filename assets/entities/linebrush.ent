@@ -1,0 +1,22 @@
+{
+    "name": "linebrush",
+    "components": [
+        {
+            "name": "PolygonShape",
+            "mapping": 1
+        },
+        {
+            "name": "PolygonCollision",
+            "type": 0
+        },
+        {
+            "name": "PolygonCollision",
+            "type": 1,
+            "flags": 2
+        },
+        {
+            "name": "BrushComponent",
+            "linewidth": 32
+        }
+    ]
+}
