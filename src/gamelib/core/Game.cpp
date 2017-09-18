@@ -5,9 +5,9 @@
 #include "gamelib/utils/json.hpp"
 #include "gamelib/events/SFMLEvent.hpp"
 
+constexpr const char* game_title = "Unnamed game";
 constexpr int game_width         = 640;
 constexpr int game_height        = 480;
-constexpr const char* game_title = "Unnamed game";
 constexpr int game_max_fps       = 0;
 constexpr bool game_vsync        = true;
 constexpr bool game_escclose     = true;
@@ -85,16 +85,27 @@ namespace gamelib
 
             if (_focused)
             {
-                for (auto& i : _states)
-                    i->update(_frametime);
+                bool frozen = false;
+                for (auto it = _states.rbegin(), end = _states.rend(); it != end; ++it)
+                {
+                    auto state = (*it).get();
+                    if (state->flags & gamestate_paused)
+                        continue;
+
+                    if (!frozen || state->flags & gamestate_forceupdate)
+                        state->update(_frametime);
+
+                    if (state->flags & gamestate_freeze)
+                        frozen = true;
+                }
 
                 _evmgr.update();
-
-                _window.clear(_bgcolor);
-                for (auto& i : _states)
-                    i->render(_window);
-                _window.display();
             }
+
+            _window.clear(_bgcolor);
+            for (auto& i : _states)
+                i->render(_window);
+            _window.display();
 
             // Get elapsed time
             _frametime = clock.getElapsedTime().asMilliseconds() / 1000.0f;

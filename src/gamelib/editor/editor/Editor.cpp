@@ -30,6 +30,7 @@ namespace gamelib
     };
 
     Editor::Editor() :
+        GameState(gamestate_freeze),
         _currenttool(nullptr),
         _camctrl(getSubsystem<Scene>()),
         _grid(32, 32),
@@ -149,11 +150,22 @@ namespace gamelib
 
     void Editor::_updateRunFlags()
     {
+        static bool lastsnap = true;
+
         auto scene = getSubsystem<Scene>();
         if (_run)
+        {
             RMFLAG(scene->flags, render_noparallax | render_drawhidden);
+            RMFLAG(flags, gamestate_freeze);
+            lastsnap = _snap;
+            _snap = false;
+        }
         else
+        {
             scene->flags |= render_noparallax | render_drawhidden;
+            flags |= gamestate_freeze;
+            _snap = lastsnap;
+        }
     }
 
     void Editor::_eventCallback(Editor* me, EventPtr ev)
@@ -209,6 +221,7 @@ namespace gamelib
 
                     case sf::Keyboard::F5:
                         me->_run = !me->_run;
+                        me->_updateRunFlags();
                         break;
                 }
                 break;
