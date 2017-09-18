@@ -2,27 +2,21 @@
 #include "gamelib/core/Game.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/core/rendering/flags.hpp"
-#include "gamelib/core/res/resources.hpp"
+#include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
+#include "gamelib/core/ecs/EntityManager.hpp"
+#include "gamelib/components/update/QPhysics.hpp"
 #include "gamelib/events/SFMLEvent.hpp"
+#include "editor/editor/tools/BrushTool.hpp"
+#include "editor/editor/tools/VertexTool.hpp"
+#include "editor/editor/tools/SelectTool.hpp"
+#include "editor/editor/tools/EntityTool.hpp"
+#include "editor/editor/ui/JsonView.hpp"
+#include "editor/editor/ui/props.hpp"
+#include "editor/editor/EditorShared.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "imguifilesystem.h"
-#include "gamelib/editor/editor/tools/BrushTool.hpp"
-#include "gamelib/editor/editor/tools/VertexTool.hpp"
-#include "gamelib/editor/editor/tools/SelectTool.hpp"
-#include "gamelib/editor/editor/tools/EntityTool.hpp"
-#include "gamelib/editor/editor/ui/JsonView.hpp"
-#include "gamelib/editor/editor/ui/props.hpp"
-#include "gamelib/editor/editor/EditorShared.hpp"
-
-// Components
-#include "gamelib/components/geometry/Polygon.hpp"
-#include "gamelib/components/geometry/AABB.hpp"
-#include "gamelib/components/update/QPhysics.hpp"
-#include "gamelib/components/update/QController.hpp"
-#include "gamelib/editor/components/BrushComponent.hpp"
-#include "gamelib/editor/components/PolygonShape.hpp"
 
 // TODO: block key pressed when they are consumed by imgui
 
@@ -36,41 +30,26 @@ namespace gamelib
     };
 
     Editor::Editor() :
-        _game(nullptr),
         _currenttool(nullptr),
-        _camctrl(&_scene),
+        _camctrl(getSubsystem<Scene>()),
         _grid(32, 32),
         _snap(true),
         _drag(false),
-        _gridOnTop(false),
+        _gridOnTop(true),
         _run(false)
     { }
 
     bool Editor::init(Game* game)
     {
         LOG_DEBUG("Init Editor...");
-        _game = game;
         EditorShared::_editor = this;
 
-        ImGui::SFML::Init(_game->getWindow());
+        ImGui::SFML::Init(game->getWindow());
 
         auto evmgr = getSubsystem<EventManager>();
         evmgr->regCallback(SFMLEvent::id, _eventCallback, this);
 
-        _entfactory.addComponent<Polygon>(Polygon::name);
-        _entfactory.addComponent<AABB>(AABB::name);
-        _entfactory.addComponent<QPhysics>(QPhysics::name);
-        _entfactory.addComponent<QController>(QController::name);
-        _entfactory.addComponent<PolygonShape>(PolygonShape::name);
-        _entfactory.addComponent<BrushComponent>(BrushComponent::name);
-
-        registerPredefLoaders(_resmgr);
-        _resmgr.loadFromFile("assets/res.json");
-
-        _scene.addCamera();
-        _scene.getCamera(0)->loadFromFile("assets/cam.json");
-        _scene.setDefaultCamera(0);
-        _scene.flags |= render_noparallax | render_drawhidden;
+        _updateRunFlags();
 
         _tools[ToolSelect].reset(new SelectTool());
         _tools[ToolBrush].reset(new BrushTool());
@@ -92,41 +71,28 @@ namespace gamelib
         for (auto& i : _tools)
             i.reset();
 
-        _entmgr.clear();
-        _scene.destroy();
-        _colsys.destroy();
-        _updatesystem.destroy();
-        _resmgr.clear();
-        _entfactory.clear();
         ImGui::SFML::Shutdown();
         LOG_DEBUG("Editor unloaded");
     }
 
     void Editor::update(float elapsed)
     {
-        if (_game->getWindow().hasFocus())
-        {
-            if (!_run)
-                _camctrl.update(elapsed);
-            else
-                _updatesystem.update(elapsed);
+        auto game = getSubsystem<Game>();
 
-            _scene.update(elapsed);
+        if (!_run)
+            _camctrl.update(elapsed);
 
-            ImGui::SFML::Update(_game->getWindow(), sf::seconds(elapsed));
-            _drawGui();
-        }
+        ImGui::SFML::Update(game->getWindow(), sf::seconds(elapsed));
+        _drawGui();
     }
 
     void Editor::render(sf::RenderTarget& target)
     {
         // necessary, otherwise things will disappear randomly
-        _game->getWindow().resetGLStates();
+        getSubsystem<Game>()->getWindow().resetGLStates();
 
-        if (!_gridOnTop && _snap)
-            _grid.render(target);
-
-        _scene.render(target);
+        // if (!_gridOnTop && _snap)
+        //     _grid.render(target);
 
         if (_gridOnTop && _snap)
             _grid.render(target);
@@ -153,11 +119,11 @@ namespace gamelib
 
     void Editor::writeToJson(Json::Value& node)
     {
-        auto scene = Scene::getActive();
+        auto scene = getSubsystem<Scene>();
         if (scene)
             scene->writeToJson(node["scene"]);
 
-        auto entmgr = EntityManager::getActive();
+        auto entmgr = getSubsystem<EntityManager>();
         if (entmgr)
             entmgr->writeToJson(node["entmgr"]);
 
@@ -181,14 +147,24 @@ namespace gamelib
         return true;
     }
 
+    void Editor::_updateRunFlags()
+    {
+        auto scene = getSubsystem<Scene>();
+        if (_run)
+            RMFLAG(scene->flags, render_noparallax | render_drawhidden);
+        else
+            scene->flags |= render_noparallax | render_drawhidden;
+    }
+
     void Editor::_eventCallback(Editor* me, EventPtr ev)
     {
         sf::Event& sfev = ev->get<SFMLEvent>()->ev;
         ImGui::SFML::ProcessEvent(sfev);
         bool consumed = ImGui::GetIO().WantCaptureMouse;
+        auto game = getSubsystem<Game>();
 
         Tool* realtool = me->_currenttool;  // backup
-        if (me->_game->isKeyPressed(sf::Keyboard::LControl))
+        if (game->isKeyPressed(sf::Keyboard::LControl))
             me->_currenttool = &me->getSelectTool();
 
         switch (sfev.type)
@@ -201,14 +177,14 @@ namespace gamelib
                 {
                     case sf::Keyboard::R:
                         LOG_WARN("---------------- Reloading...");
-                        me->_game->reload();
+                        game->reload();
                         me->quit();
-                        me->init(me->_game);
+                        me->init(game);
                         LOG("---------------- Reloading complete");
                         return; // early out, so that _currenttool doesn't get reset at the end of the function
 
                     // case sf::Keyboard::Q:
-                    //     me->_game->close();
+                    //     game->close();
                     //     break;
 
                     case sf::Keyboard::Delete:
@@ -240,7 +216,7 @@ namespace gamelib
             case sf::Event::MouseButtonPressed:
                 if (!consumed && sfev.mouseButton.button == sf::Mouse::Left)
                 {
-                    me->_updateShared(sfev.mouseButton.x, sfev.mouseButton.y);
+                    me->_updateMouse(sfev.mouseButton.x, sfev.mouseButton.y);
                     me->_currenttool->onMousePressed();
                     me->_drag = true;
                 }
@@ -248,7 +224,7 @@ namespace gamelib
 
             case sf::Event::MouseMoved:
                 {
-                    me->_updateShared(sfev.mouseMove.x, sfev.mouseMove.y);
+                    me->_updateMouse(sfev.mouseMove.x, sfev.mouseMove.y);
                     if (me->_drag)
                         me->_currenttool->onDrag();
                     else
@@ -258,7 +234,7 @@ namespace gamelib
 
             case sf::Event::MouseButtonReleased:
                 {
-                    me->_updateShared(sfev.mouseButton.x, sfev.mouseButton.y);
+                    me->_updateMouse(sfev.mouseButton.x, sfev.mouseButton.y);
                     me->_drag = false;
                     me->_currenttool->onMouseRelease();
                 }
@@ -268,8 +244,7 @@ namespace gamelib
                 if (!consumed)
                 {
                     auto p = me->_mapCoords(sfev.mouseWheel.x, sfev.mouseWheel.y);
-                    auto& cam = *me->_scene.getCamera(0);
-                    cam.zoomTowards(p.x, p.y, sfev.mouseWheel.delta / -10.0);
+                    getSubsystem<Scene>()->getCamera(0)->zoomTowards(p.x, p.y, sfev.mouseWheel.delta / -10.0);
                 }
                 break;
         }
@@ -308,19 +283,14 @@ namespace gamelib
                     chooseload = true;
 
                 if (ImGui::MenuItem("Quit"))
-                    _game->close();
+                    getSubsystem<Game>()->close();
 
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Edit"))
             {
                 if (ImGui::MenuItem("Run", "F5", &_run))
-                {
-                    if (_run)
-                        RMFLAG(_scene.flags, render_noparallax | render_drawhidden);
-                    else
-                        _scene.flags |= render_noparallax | render_drawhidden;
-                }
+                    _updateRunFlags();
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("View"))
@@ -332,7 +302,7 @@ namespace gamelib
             if (ImGui::BeginMenu("Grid"))
             {
                 ImGui::MenuItem("Snap to grid", nullptr, &_snap);
-                ImGui::MenuItem("Grid on top", nullptr, &_gridOnTop);
+                // ImGui::MenuItem("Grid on top", nullptr, &_gridOnTop);
                 if (ImGui::MenuItem("Increase"))
                     _grid.increase();
                 if (ImGui::MenuItem("Decrease"))
@@ -386,11 +356,11 @@ namespace gamelib
 
     math::Point2f Editor::_mapCoords(float x, float y)
     {
-        auto p = _game->getWindow().mapPixelToCoords(sf::Vector2i(x, y));
+        auto p = getSubsystem<Game>()->getWindow().mapPixelToCoords(sf::Vector2i(x, y));
         return math::Point2f(p.x, p.y);
     }
 
-    void Editor::_updateShared(float mx, float my)
+    void Editor::_updateMouse(float mx, float my)
     {
         _mouse = _mapCoords(mx, my);
         _mouseSnapped = EditorShared::snap(_mouse);

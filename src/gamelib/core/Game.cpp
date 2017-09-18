@@ -83,15 +83,18 @@ namespace gamelib
                 ev.reset(new SFMLEvent());
             }
 
-            for (auto& i : _states)
-                i->update(_frametime);
+            if (_focused)
+            {
+                for (auto& i : _states)
+                    i->update(_frametime);
 
-            _evmgr.update();
+                _evmgr.update();
 
-            _window.clear(_bgcolor);
-            for (auto& i : _states)
-                i->render(_window);
-            _window.display();
+                _window.clear(_bgcolor);
+                for (auto& i : _states)
+                    i->render(_window);
+                _window.display();
+            }
 
             // Get elapsed time
             _frametime = clock.getElapsedTime().asMilliseconds() / 1000.0f;

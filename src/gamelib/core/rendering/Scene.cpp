@@ -33,12 +33,12 @@ namespace gamelib
     {
         for (auto& i : _cams)
             i.update(elapsed);
-
-        _updateQueue();
     }
 
     void Scene::render(sf::RenderTarget& target)
     {
+        _updateQueue();
+
         if (_cams.empty())
         {
             _render(target, target.getView());

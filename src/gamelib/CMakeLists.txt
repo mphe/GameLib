@@ -47,6 +47,8 @@ set(GAMELIB_SOURCES
     core/update/UpdateSystem.cpp
     core/update/Updatable.cpp
 
+    Engine.cpp
+
     # legacy/Scene/Scene.cpp
     # legacy/Scene/TilemapAdapter.cpp
     # legacy/Scene/VimCam.cpp

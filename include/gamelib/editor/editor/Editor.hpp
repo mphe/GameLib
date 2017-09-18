@@ -6,20 +6,9 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "gamelib/core/GameState.hpp"
 #include "gamelib/core/FreeCam.hpp"
-#include "gamelib/core/rendering/Scene.hpp"
-#include "gamelib/core/geometry/CollisionSystem.hpp"
-#include "gamelib/core/res/ResourceManager.hpp"
-#include "gamelib/core/ecs/EntityManager.hpp"
-#include "gamelib/core/ecs/EntityFactory.hpp"
-#include "gamelib/core/update/UpdateSystem.hpp"
+#include "gamelib/core/event/Event.hpp"
 #include "ui/Grid.hpp"
 #include "ui/LayerUI.hpp"
-
-
-namespace gamelib
-{
-    class Game;
-}
 
 namespace gamelib
 {
@@ -58,18 +47,10 @@ namespace gamelib
             static auto _eventCallback(Editor* me, EventPtr ev) -> void;
             auto _drawGui() -> void;
             auto _mapCoords(float x, float y) -> math::Point2f;
-            auto _updateShared(float mx, float my) -> void;
+            auto _updateMouse(float mx, float my) -> void;
+            auto _updateRunFlags() -> void;
 
         private:
-            Game* _game;
-            Scene _scene;
-            CollisionSystem _colsys;
-            ResourceManager _resmgr;
-            EntityManager _entmgr;
-            EntityFactory _entfactory;
-            UpdateSystem _updatesystem;
-
-            // Editor
             std::unique_ptr<Tool> _tools[NumTools];
             Tool* _currenttool;
             FreeCam _camctrl;

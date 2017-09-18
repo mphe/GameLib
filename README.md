@@ -2,7 +2,7 @@
 ## Requirements
 - [cmake](https://cmake.org)
 - [git](https://git-scm.com/)
-- [SFML 2.3 libraries](http://www.sfml-dev.org/)
+- [SFML 2.4 libraries](http://www.sfml-dev.org/)
 - C++ environment with C++11 support (on Windows at least Visual Studio 2015)
 
 ## Building
@@ -26,6 +26,7 @@
     ----------------------------|-------------------------------------------------
     GAMELIB_BUILD_TESTS         |   Build unit tests
     GAMELIB_BUILD_EXAMPLES      |   Build examples
+    GAMELIB_BUILD_EDITOR        |   Build the level editor
     GAMELIB_DEBUG_LOG_DEBUG     |   Print debug log entries in a debug-build
     GAMELIB_DEBUG_LOG_RELEASE   |   Print debug log entries in a release-build
     GAMELIB_DISABLE_LOGGING     |   Completely disable logging **(currently required when compiling with Visual Studio 2015, because of a compiler bug)**.
