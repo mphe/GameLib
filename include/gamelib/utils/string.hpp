@@ -6,6 +6,12 @@
 
 namespace gamelib
 {
+#ifdef _WIN32
+    constexpr char separator = '\\';
+#else
+    constexpr char separator = '/';
+#endif
+
     namespace internal
     {
         template <class T>
@@ -37,6 +43,9 @@ namespace gamelib
 
     // Makes sure a the string ends with a '/' or '\' (depending on platform).
     std::string& assureDelimiter(std::string* path);
+
+    // Returns the directory component of the path
+    std::string getDirectory(const std::string& path);
 }
 
 #endif

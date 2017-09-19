@@ -4,9 +4,7 @@ namespace gamelib
 {
 #ifdef _WIN32
     constexpr char oldsep = '/';
-    constexpr char newsep = '\\';
 #else
-    constexpr char newsep = '/';
     constexpr char oldsep = '\\';
 #endif
 
@@ -14,15 +12,25 @@ namespace gamelib
     {
         for (size_t i = path->find_first_of(oldsep); i != std::string::npos;
                 i = path->find_first_of(oldsep, i + 1))
-            path[i] = newsep;
+            path[i] = separator;
 
         return *path;
     }
 
     std::string& assureDelimiter(std::string* path)
     {
-        if (path->back() != newsep)
-            path->push_back(newsep);
+        if (path->back() != separator)
+            path->push_back(separator);
         return *path;
+    }
+
+    std::string getDirectory(const std::string& path)
+    {
+        auto pos = path.rfind('/');
+        if (pos == std::string::npos)
+            return "";
+        if (pos == 0)
+            return "/";
+        return path.substr(0, pos);
     }
 }
