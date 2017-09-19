@@ -17,6 +17,20 @@ namespace gamelib
         return false;
     }
 
+    bool writeJsonToFile(const std::string& fname, const Json::Value& node)
+    {
+        std::ofstream f;
+        f.open(fname.c_str());
+        if (f.is_open())
+        {
+            f << node.toStyledString();
+            f.close();
+            return true;
+        }
+        return false;
+    }
+
+
     bool loadFromJson(const Json::Value& node, Transformable& transform)
     {
         if (!node.isObject())

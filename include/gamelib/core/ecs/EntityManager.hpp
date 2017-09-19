@@ -31,6 +31,27 @@ namespace gamelib
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
 
+            auto begin() const -> gamelib::SlotMapShort<Entity>::const_iterator;
+            auto begin()       -> gamelib::SlotMapShort<Entity>::iterator;
+            auto end() const   -> gamelib::SlotMapShort<Entity>::const_iterator;
+            auto end()         -> gamelib::SlotMapShort<Entity>::iterator;
+
+            // Calls a callback for each entity about to be serialized.
+            // Signature: void(Json::Value&, Entity&)
+            template <typename F>
+            auto writeToJson(Json::Value& node, F callback) -> void
+            {
+                node["clear"] = true;
+                auto& entities = node["entities"];
+                for (auto& i : _entities)
+                {
+                    Json::Value ent;
+                    callback(ent, i);
+                    if (!ent.isNull())
+                        entities.append(ent);
+                }
+            }
+
         private:
             gamelib::SlotMapShort<Entity> _entities;
     };

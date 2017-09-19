@@ -54,6 +54,7 @@ set(GAMELIB_SOURCES
     core/update/Updatable.cpp
 
     Engine.cpp
+    export.cpp
 
     # legacy/Scene/Scene.cpp
     # legacy/Scene/TilemapAdapter.cpp

@@ -1,11 +1,11 @@
 #include "gamelib/editor/editor/Editor.hpp"
 #include "gamelib/core/Game.hpp"
+#include "gamelib/export.hpp"
 #include "gamelib/utils/log.hpp"
+#include "gamelib/utils/string.hpp"
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
-#include "gamelib/core/ecs/EntityManager.hpp"
-#include "gamelib/components/update/QPhysics.hpp"
 #include "gamelib/events/SFMLEvent.hpp"
 #include "editor/editor/tools/BrushTool.hpp"
 #include "editor/editor/tools/VertexTool.hpp"
@@ -14,6 +14,7 @@
 #include "editor/editor/ui/JsonView.hpp"
 #include "editor/editor/ui/props.hpp"
 #include "editor/editor/EditorShared.hpp"
+#include "editor/components/BrushComponent.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "imguifilesystem.h"
@@ -29,8 +30,13 @@ namespace gamelib
         "Entity Tool"
     };
 
+    // Strips BrushComponents from output
+    void defaultExport(const std::string& fname);
+
+
     Editor::Editor() :
         GameState(gamestate_freeze),
+        _exportcallback(defaultExport),
         _currenttool(nullptr),
         _camctrl(getSubsystem<Scene>()),
         _grid(32, 32),
@@ -118,34 +124,12 @@ namespace gamelib
         return *(SelectTool*)_tools[ToolSelect].get();
     }
 
-    void Editor::writeToJson(Json::Value& node)
+    void Editor::registerExportCallback(ExportFunction callback)
     {
-        auto scene = getSubsystem<Scene>();
-        if (scene)
-            scene->writeToJson(node["scene"]);
-
-        auto entmgr = getSubsystem<EntityManager>();
-        if (entmgr)
-            entmgr->writeToJson(node["entmgr"]);
-
-        QPhysics::writeGlobalsToJson(node["physics"]);
-    }
-
-    bool Editor::loadFromJson(const Json::Value& node)
-    {
-        auto scene = Scene::getActive();
-        if (scene)
-            scene->loadFromJson(node["scene"]);
-
-        auto entmgr = EntityManager::getActive();
-        if (entmgr)
-            entmgr->loadFromJson(node["entmgr"]);
-
-        QPhysics::loadGlobalsFromJson(node["physics"]);
-
-        _layerui.refresh();
-
-        return true;
+        if (callback == nullptr)
+            _exportcallback = defaultExport;
+        else
+            _exportcallback = callback;
     }
 
     void Editor::_updateRunFlags()
@@ -271,10 +255,12 @@ namespace gamelib
         static bool jsonwindow = false;
         static ImGuiFs::Dialog loaddlg;
         static ImGuiFs::Dialog savedlg;
+        static ImGuiFs::Dialog exportdlg;
         static std::string currentFilePath;
 
         bool chooseload = false;
         bool choosesave = false;
+        bool chooseexport = false;
         const char* chosenPath;
 
         if (ImGui::BeginMainMenuBar())
@@ -286,7 +272,7 @@ namespace gamelib
                     if (currentFilePath.empty())
                         choosesave = true;
                     else
-                        writeToFile(currentFilePath);
+                        saveState(currentFilePath);
                 }
 
                 if (ImGui::MenuItem("Save as"))
@@ -294,6 +280,9 @@ namespace gamelib
 
                 if (ImGui::MenuItem("Load"))
                     chooseload = true;
+
+                if (ImGui::MenuItem("Export"))
+                    chooseexport = true;
 
                 if (ImGui::MenuItem("Quit"))
                     getSubsystem<Game>()->close();
@@ -335,15 +324,19 @@ namespace gamelib
         if (strlen(chosenPath) > 0)
         {
             currentFilePath = chosenPath;
-            loadFromFile(currentFilePath);
+            loadState(currentFilePath);
         }
 
         chosenPath = savedlg.saveFileDialog(choosesave);
         if (strlen(chosenPath) > 0)
         {
             currentFilePath = chosenPath;
-            writeToFile(currentFilePath);
+            saveState(currentFilePath);
         }
+
+        chosenPath = exportdlg.chooseFileDialog(chooseexport);
+        if (strlen(chosenPath) > 0)
+            _exportcallback(chosenPath);
 
         ImGui::Begin("Toolbox", nullptr, ImVec2(250, 125));
         for (size_t i = 0; i < NumTools; ++i)
@@ -377,5 +370,17 @@ namespace gamelib
     {
         _mouse = _mapCoords(mx, my);
         _mouseSnapped = EditorShared::snap(_mouse);
+    }
+
+
+
+    void defaultExport(const std::string& fname)
+    {
+        saveState(fname, [](Json::Value& node, Entity& ent) {
+                ent.writeToJson(node, [](Component* comp) {
+                        return comp->getID() != BrushComponent::id;
+                    });
+            });
+        LOG("Map saved to ", fname);
     }
 }

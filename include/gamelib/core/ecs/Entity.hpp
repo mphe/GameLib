@@ -7,6 +7,7 @@
 #include "gamelib/utils/SlotMap.hpp"
 #include "gamelib/core/Identifier.hpp"
 #include "gamelib/core/geometry/GroupTransform.hpp"
+#include "gamelib/utils/json.hpp"
 #include "Component.hpp"
 
 /*
@@ -116,6 +117,23 @@ namespace gamelib
                 findAll(T::id, [&](Component* comp) {
                         return callback(static_cast<T*>(comp));
                     });
+            }
+
+            // Calls a callback for each component about to be serialized.
+            // Signature: bool(Component*)
+            // If the lambda returns false, the component will be skipped.
+            template <typename F>
+            auto writeToJson(Json::Value& node, F callback) const -> void
+            {
+                node["name"] = _name;
+                gamelib::writeToJson(node["transform"], _transform);
+
+                auto& comps = node["components"];
+                comps = Json::Value(Json::arrayValue);
+
+                for (auto& i : _components)
+                    if (i && callback(i.get()))
+                        i->writeToJson(comps.append(Json::Value()));
             }
 
         private:

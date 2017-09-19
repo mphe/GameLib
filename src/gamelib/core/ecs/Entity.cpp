@@ -1,7 +1,6 @@
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/utils/log.hpp"
-#include "gamelib/utils/json.hpp"
 
 namespace gamelib
 {
@@ -61,15 +60,7 @@ namespace gamelib
 
     void Entity::writeToJson(Json::Value& node)
     {
-        node["name"] = _name;
-        gamelib::writeToJson(node["transform"], _transform);
-
-        auto& comps = node["components"];
-        comps = Json::Value(Json::arrayValue);
-
-        for (auto& i : _components)
-            if (i)
-                i->writeToJson(comps.append(Json::Value()));
+        writeToJson(node, [](Component*) { return true; });
     }
 
     Entity::Handle Entity::getHandle() const

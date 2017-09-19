@@ -25,16 +25,12 @@ namespace gamelib
         // writeToJson(). A reload() would then try to load an empty file.
         // _fname = fname;
 
-        std::ofstream f;
-        f.open(fname.c_str());
-        if (f.is_open())
-        {
-            Json::Value doc;
-            writeToJson(doc);
-            f << doc.toStyledString();
-            f.close();
+        Json::Value doc;
+        writeToJson(doc);
+
+        if (writeJsonToFile(fname, doc))
             return true;
-        }
+
         LOG_ERROR("Failed to open ", fname);
         return false;
     }

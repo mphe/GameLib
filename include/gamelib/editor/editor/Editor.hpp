@@ -15,7 +15,7 @@ namespace gamelib
     class SelectTool;
     class Tool;
 
-    class Editor : public GameState, public JsonSerializer
+    class Editor : public GameState
     {
         friend class EditorShared;
 
@@ -27,6 +27,8 @@ namespace gamelib
                 ToolEntity,
                 NumTools
             };
+
+            typedef void(*ExportFunction)(const std::string&);
 
         public:
             Editor();
@@ -40,8 +42,7 @@ namespace gamelib
             auto setTool(Tools tool) -> void;
             auto getSelectTool()     -> SelectTool&;
 
-            auto writeToJson(Json::Value& node)        -> void;
-            auto loadFromJson(const Json::Value& node) -> bool;
+            auto registerExportCallback(ExportFunction callback) -> void;
 
         private:
             static auto _eventCallback(Editor* me, EventPtr ev) -> void;
@@ -51,6 +52,7 @@ namespace gamelib
             auto _updateRunFlags() -> void;
 
         private:
+            ExportFunction _exportcallback;
             std::unique_ptr<Tool> _tools[NumTools];
             Tool* _currenttool;
             FreeCam _camctrl;

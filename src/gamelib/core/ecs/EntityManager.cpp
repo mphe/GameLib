@@ -87,9 +87,26 @@ namespace gamelib
 
     void EntityManager::writeToJson(Json::Value& node)
     {
-        node["clear"] = true;
-        auto& entities = node["entities"];
-        for (auto& i : _entities)
-            i.writeToJson(entities.append(Json::Value()));
+        writeToJson(node, [](Json::Value& node, Entity& ent) { ent.writeToJson(node); });
+    }
+
+    SlotMapShort<Entity>::const_iterator EntityManager::begin() const
+    {
+        return _entities.begin();
+    }
+
+    SlotMapShort<Entity>::iterator EntityManager::begin()
+    {
+        return _entities.begin();
+    }
+
+    SlotMapShort<Entity>::const_iterator EntityManager::end() const
+    {
+        return _entities.end();
+    }
+
+    SlotMapShort<Entity>::iterator EntityManager::end()
+    {
+        return _entities.end();
     }
 }

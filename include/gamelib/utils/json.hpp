@@ -10,6 +10,7 @@ namespace gamelib
     class Transformable;
 
     bool loadJsonFromFile(const std::string& fname, Json::Value& node);
+    bool writeJsonToFile(const std::string& fname, const Json::Value& node);
 
     bool loadFromJson(const Json::Value& node, Transformable& trans);
     bool loadFromJson(const Json::Value& node, math::Vec2f& vec);
