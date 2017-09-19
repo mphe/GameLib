@@ -1,5 +1,5 @@
 #include "gamelib/editor/components/BrushComponent.hpp"
-#include "gamelib/editor/components/PolygonShape.hpp"
+#include "gamelib/components/rendering/PolygonShape.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/CollisionComponent.hpp"
 #include "gamelib/core/geometry/flags.hpp"
@@ -22,14 +22,14 @@ namespace gamelib
         if (getBrushPolygon()->size() == 0)
             getBrushPolygon()->setOffset(p.asVector());
         getBrushPolygon()->add(p);
-        getEntity()->getTransform().refreshBBox();
+        // getEntity()->getTransform().refreshBBox();
         _regenerate();
     }
 
     void BrushComponent::edit(size_t i, const math::Point2f& p) const
     {
         getBrushPolygon()->edit(i, p);
-        getEntity()->getTransform().refreshBBox();
+        // getEntity()->getTransform().refreshBBox();
         _regenerate();
     }
 
@@ -104,6 +104,7 @@ namespace gamelib
         if (!_line)
         {
             _shape->fetch(*_pol);
+            getEntity()->getTransform().refreshBBox();
             return;
         }
 
@@ -169,7 +170,7 @@ namespace gamelib
         _pol->add(linepol.get(-1) - dir);
         _pol->add(linepol.get(-1) + dir);
 
+        _shape->fetch(*_pol, MapLine);
         getEntity()->getTransform().refreshBBox();
-        _shape->fetch(*_pol);
     }
 }

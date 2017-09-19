@@ -24,30 +24,28 @@ namespace gamelib
             constexpr static const char* name = "PolygonShape";
 
         public:
-            PolygonShape(size_t size = 10);
+            PolygonShape();
             virtual ~PolygonShape() {}
 
-            virtual auto fetch(const math::Polygon<float>& pol) -> void;
+            virtual auto fetch(const math::Polygon<float>& pol, MappingMethod mappingMethod = MapWorld) -> void;
 
             auto setTexOffset(float x, float y)       -> void;
             auto setTexOffset(const math::Vec2f& vec) -> void;
             auto getTexOffset()                       -> const math::Vec2f&;
 
-            auto render(sf::RenderTarget& target) -> void;
+            auto render(sf::RenderTarget& target, const sf::RenderStates& states) const -> void;
 
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
 
         protected:
-            virtual auto _mapTexture(const math::Polygon<float>& pol) -> void;
+            virtual auto _mapTexture(const math::Polygon<float>& pol, MappingMethod mappingMethod) -> void;
 
         public:
-            int mappingMethod;
             TextureResource::Handle texture;
 
         protected:
             math::Vec2f _texoffset;
-            sf::VertexArray _vertices;
     };
 }
 

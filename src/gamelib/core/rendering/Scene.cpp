@@ -209,7 +209,7 @@ namespace gamelib
     {
         destroy();
 
-        SceneObject::loadFromJson(node);
+        SceneData::loadFromJson(node);
 
         if (node.isMember("layers"))
         {
@@ -264,7 +264,7 @@ namespace gamelib
 
     void Scene::writeToJson(Json::Value& node)
     {
-        SceneObject::writeToJson(node);
+        SceneData::writeToJson(node);
 
         if (_layers.begin() != _layers.end())
         {

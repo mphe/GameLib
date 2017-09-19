@@ -3,7 +3,6 @@
 #include "gamelib/editor/editor/Editor.hpp"
 
 #include "gamelib/editor/components/BrushComponent.hpp"
-#include "gamelib/editor/components/PolygonShape.hpp"
 
 using namespace gamelib;
 
@@ -13,7 +12,6 @@ int main(int argc, char *argv[])
     GameStatePtr engineState(new Engine());
     auto engine = static_cast<Engine*>(engineState.get());
 
-    engine->entfactory.addComponent<PolygonShape>(PolygonShape::name);
     engine->entfactory.addComponent<BrushComponent>(BrushComponent::name);
 
     engine->resmgr.loadFromFile("assets/res.json");

@@ -33,7 +33,6 @@ namespace gamelib
         private:
             float _parallax;
             int _depth;
-            int _id;
     };
 }
 

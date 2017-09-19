@@ -15,6 +15,7 @@ set(GAMELIB_SOURCES
     components/update/QController.cpp
     components/geometry/AABB.cpp
     components/geometry/Polygon.cpp
+    components/rendering/PolygonShape.cpp
 
     utils/SpriteBatch.cpp
     utils/DebugGui.cpp
@@ -78,7 +79,6 @@ if(GAMELIB_BUILD_EDITOR)
     find_package(OpenGL)
 
     set(EDITOR_SOURCES
-        editor/components/PolygonShape.cpp
         editor/components/BrushComponent.cpp
         editor/editor/Editor.cpp
         editor/editor/EditorShared.cpp

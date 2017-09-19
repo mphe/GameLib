@@ -41,7 +41,7 @@
 
 namespace gamelib
 {
-    class Scene : public SceneObject, public Subsystem<Scene>
+    class Scene : public SceneData, public Subsystem<Scene>
     {
         friend class SceneObject;
         friend class SceneData;
@@ -56,7 +56,7 @@ namespace gamelib
             auto destroy() -> void;
 
             auto update(float elapsed) -> void;
-            auto render(sf::RenderTarget& surface) -> void;
+            auto render(sf::RenderTarget& target) -> void;
 
             auto add(SceneObject* obj)    -> SceneObject*;
             auto remove(SceneObject* obj) -> void;

@@ -1,4 +1,5 @@
 #include "gamelib/core/ecs/RenderComponent.hpp"
+#include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 
 namespace gamelib
@@ -14,11 +15,13 @@ namespace gamelib
             return false;
 
         scene->add(this);
+        getEntity()->getTransform().add(this);
         return true;
     }
 
     void RenderComponent::_quit()
     {
+        getEntity()->getTransform().remove(this);
         unregister();
     }
 

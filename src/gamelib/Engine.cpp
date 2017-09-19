@@ -4,6 +4,7 @@
 #include "gamelib/components/geometry/AABB.hpp"
 #include "gamelib/components/update/QPhysics.hpp"
 #include "gamelib/components/update/QController.hpp"
+#include "gamelib/components/rendering/PolygonShape.hpp"
 
 namespace gamelib
 {
@@ -13,6 +14,7 @@ namespace gamelib
         entfactory.addComponent<AABB>(AABB::name);
         entfactory.addComponent<QPhysics>(QPhysics::name);
         entfactory.addComponent<QController>(QController::name);
+        entfactory.addComponent<PolygonShape>(PolygonShape::name);
 
         registerPredefLoaders(resmgr);
     }

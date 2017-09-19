@@ -1,4 +1,4 @@
-#include "gamelib/editor/components/PolygonShape.hpp"
+#include "gamelib/components/rendering/PolygonShape.hpp"
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
@@ -6,13 +6,13 @@
 
 namespace gamelib
 {
-    PolygonShape::PolygonShape(size_t size) :
-        RenderComponent(name),
-        mappingMethod(MapWorld),
-        _vertices(sf::TrianglesStrip, size)
-    { }
+    PolygonShape::PolygonShape() :
+        RenderComponent(name)
+    {
+        _vertices.setPrimitiveType(sf::TriangleStrip);
+    }
 
-    void PolygonShape::fetch(const math::Polygon<float>& pol)
+    void PolygonShape::fetch(const math::Polygon<float>& pol, MappingMethod mappingMethod)
     {
         _vertices.clear();
         // TODO: reserve
@@ -23,10 +23,11 @@ namespace gamelib
             _vertices.append(sf::Vertex(sf::Vector2f(p.x, p.y), sf::Vector2f()));
         }
 
-        _mapTexture(pol);
+        _mapTexture(pol, mappingMethod);
+        _updateBBox();
     }
 
-    void PolygonShape::_mapTexture(const math::Polygon<float>& pol)
+    void PolygonShape::_mapTexture(const math::Polygon<float>& pol, MappingMethod mappingMethod)
     {
         switch (mappingMethod)
         {
@@ -91,17 +92,16 @@ namespace gamelib
         return _texoffset;
     }
 
-    void PolygonShape::render(sf::RenderTarget& target)
+    void PolygonShape::render(sf::RenderTarget& target, const sf::RenderStates& states_) const
     {
-        auto& pos = getEntity()->getTransform().getPosition();
-        auto& scale = getEntity()->getTransform().getScale();
-
-        sf::RenderStates states(texture.get());
-        states.transform.translate(pos.x, pos.y);
-        states.transform.scale(scale.x, scale.y);
-        states.transform.rotate(getEntity()->getTransform().getRotation());
-
-        target.draw(_vertices, states);
+        if (!states_.texture)
+        {
+            sf::RenderStates states(states_);
+            states.texture = texture.get();
+            SceneObject::render(target, states);
+        }
+        else
+            SceneObject::render(target, states_);
 
         // TODO: could be done more efficient, but this is just for testing anyways
         if (flags & render_wireframe && _vertices.getVertexCount() > 2)
@@ -109,14 +109,14 @@ namespace gamelib
             sf::Vertex line[3];
             line[0] = sf::Vertex(_vertices[0].position);
             line[1] = sf::Vertex(_vertices[1].position);
-            target.draw(line, 2, sf::LineStrip, states);
+            target.draw(line, 2, sf::LineStrip);
 
             for (size_t i = 2; i < _vertices.getVertexCount(); ++i)
             {
                 line[0] = sf::Vertex(_vertices[i - 2].position);
                 line[1] = sf::Vertex(_vertices[i].position);
                 line[2] = sf::Vertex(_vertices[i - 1].position);
-                target.draw(line, 3, sf::LineStrip, states);
+                target.draw(line, 3, sf::LineStrip);
             }
         }
     }
@@ -124,40 +124,22 @@ namespace gamelib
     bool PolygonShape::loadFromJson(const Json::Value& node)
     {
         RenderComponent::loadFromJson(node);
+
         if (node.isMember("texture"))
             texture = ResourceManager::getActive()->get(node["texture"].asString());
-        mappingMethod = node.get("mapping", MapWorld).asInt();
+
         gamelib::loadFromJson(node["texoffset"], _texoffset);
 
-        if (node.isMember("vertices"))
-        {
-            auto& vertices = node["vertices"];
-            _vertices.resize(vertices.size());
-            for(Json::ArrayIndex i = 0; i < vertices.size(); ++i)
-            {
-                gamelib::loadFromJson(vertices[i][0], _vertices[i].position);
-                gamelib::loadFromJson(vertices[i][1], _vertices[i].texCoords);
-            }
-        }
         return true;
     }
 
     void PolygonShape::writeToJson(Json::Value& node)
     {
+        RenderComponent::writeToJson(node);
+
         if (texture)
             node["texture"] = texture.getResource()->getPath();
-        node["mapping"] = mappingMethod;
-        gamelib::writeToJson(node["texoffset"], _texoffset);
-        auto& vertices = node["vertices"];
-        vertices.resize(_vertices.getVertexCount());
-        for (Json::ArrayIndex i = 0; i < _vertices.getVertexCount(); ++i)
-        {
-            auto& vertex = vertices[i];
-            vertex.resize(2);
-            gamelib::writeToJson(vertex[0], _vertices[i].position);
-            gamelib::writeToJson(vertex[1], _vertices[i].texCoords);
-        }
 
-        RenderComponent::writeToJson(node);
+        gamelib::writeToJson(node["texoffset"], _texoffset);
     }
 }

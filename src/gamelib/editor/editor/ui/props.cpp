@@ -6,7 +6,7 @@
 #include "gamelib/components/update/QPhysics.hpp"
 #include "gamelib/components/update/QController.hpp"
 #include "editor/components/BrushComponent.hpp"
-#include "editor/components/PolygonShape.hpp"
+#include "gamelib/components/rendering/PolygonShape.hpp"
 #include "editor/editor/EditorShared.hpp"
 #include "editor/editor/ui/LayerUI.hpp"
 #include "editor/editor/ui/resources.hpp"

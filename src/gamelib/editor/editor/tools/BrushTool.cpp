@@ -4,7 +4,7 @@
 #include "gamelib/utils/log.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
 #include "editor/components/BrushComponent.hpp"
-#include "editor/components/PolygonShape.hpp"
+#include "gamelib/components/rendering/PolygonShape.hpp"
 #include "gamelib/editor/editor/tools/SelectTool.hpp"
 #include "gamelib/editor/editor/tools/ToolUtils.hpp"
 #include "gamelib/editor/editor/ui/resources.hpp"
