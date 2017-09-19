@@ -60,7 +60,9 @@ namespace gamelib
 
     void Entity::writeToJson(Json::Value& node)
     {
-        writeToJson(node, [](Component*) { return true; });
+        writeToJson(node, [](Json::Value& compnode, Component& comp) {
+                comp.writeToJson(compnode);
+            });
     }
 
     Entity::Handle Entity::getHandle() const

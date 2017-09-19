@@ -120,8 +120,8 @@ namespace gamelib
             }
 
             // Calls a callback for each component about to be serialized.
-            // Signature: bool(Component*)
-            // If the lambda returns false, the component will be skipped.
+            // The callback handles the serialization (or not).
+            // Signature: bool(Json::Value&, Component&)
             template <typename F>
             auto writeToJson(Json::Value& node, F callback) const -> void
             {
@@ -132,8 +132,13 @@ namespace gamelib
                 comps = Json::Value(Json::arrayValue);
 
                 for (auto& i : _components)
-                    if (i && callback(i.get()))
-                        i->writeToJson(comps.append(Json::Value()));
+                    if (i)
+                    {
+                        Json::Value comp;
+                        callback(comp, *i);
+                        if (!comp.isNull())
+                            comps.append(comp);
+                    }
             }
 
         private:

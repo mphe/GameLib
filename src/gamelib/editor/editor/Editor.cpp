@@ -377,8 +377,9 @@ namespace gamelib
     void defaultExport(const std::string& fname)
     {
         saveState(fname, [](Json::Value& node, Entity& ent) {
-                ent.writeToJson(node, [](Component* comp) {
-                        return comp->getID() != BrushComponent::id;
+                ent.writeToJson(node, [](Json::Value& compnode, Component& comp) {
+                        if (comp.getID() != BrushComponent::id)
+                            comp.writeToJson(compnode);
                     });
             });
         LOG("Map saved to ", fname);

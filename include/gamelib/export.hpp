@@ -10,27 +10,16 @@
 namespace gamelib
 {
     void saveState(const std::string& fname);
-    void saveState(Json::Value& node);
+    void saveStateToJson(Json::Value& node);
 
     void loadState(const std::string& fname);
-    void loadState(const Json::Value& node);
+    void loadStateFromJson(const Json::Value& node);
 
     // Calls a callback for each entity about to be serialized.
     // The callback handles the serialization (or not).
     // Signature: void(Json::Value&, Entity&)
     template <typename F>
-    void saveState(const std::string& fname, F callback)
-    {
-        Json::Value node;
-        saveState(node, callback);
-        writeJsonToFile(fname, node);
-    }
-
-    // Calls a callback for each entity about to be serialized.
-    // The callback handles the serialization (or not).
-    // Signature: void(Json::Value&, Entity&)
-    template <typename F>
-    void saveState(Json::Value& node, F callback)
+    void saveStateToJson(Json::Value& node, F callback)
     {
         auto scene = getSubsystem<Scene>();
         if (scene)
@@ -41,6 +30,17 @@ namespace gamelib
             entmgr->writeToJson(node["entmgr"], callback);
 
         QPhysics::writeGlobalsToJson(node["physics"]);
+    }
+
+    // Calls a callback for each entity about to be serialized.
+    // The callback handles the serialization (or not).
+    // Signature: void(Json::Value&, Entity&)
+    template <typename F>
+    void saveState(const std::string& fname, F callback)
+    {
+        Json::Value node;
+        saveStateToJson(node, callback);
+        writeJsonToFile(fname, node);
     }
 }
 

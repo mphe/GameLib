@@ -6,13 +6,13 @@ namespace gamelib
     void saveState(const std::string& fname)
     {
         Json::Value node;
-        saveState(node);
+        saveStateToJson(node);
         writeJsonToFile(fname, node);
     }
 
-    void saveState(Json::Value& node)
+    void saveStateToJson(Json::Value& node)
     {
-        saveState(node, [](Json::Value& node, Entity& ent) {
+        saveStateToJson(node, [](Json::Value& node, Entity& ent) {
                 ent.writeToJson(node);
             });
     }
@@ -22,10 +22,10 @@ namespace gamelib
     {
         Json::Value node;
         loadJsonFromFile(fname, node);
-        loadState(node);
+        loadStateFromJson(node);
     }
 
-    void loadState(const Json::Value& node)
+    void loadStateFromJson(const Json::Value& node)
     {
         auto scene = Scene::getActive();
         if (scene)
