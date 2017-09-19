@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-// Visual Studio fails compiling this file.
+// Older versions of Visual Studio fail compiling this file.
 #ifdef DISABLE_LOGGING
 #   define LOG(...)
 #   define LOG_WARN(...)
@@ -15,9 +15,17 @@
 #   define LOG_DEBUG_RAW(...)
 #else
 
+#ifdef __linux__
+#   define LOG_WARNING_PREFIX "\033[1;33mWARNING: \033[0m"
+#   define LOG_ERROR_PREFIX "\033[1;31mERROR: \033[0m"
+// #   define LOG_DEBUG_PREFIX "\033[;35mDEBUG: \033[0m"
+#else
+#   define LOG_WARNING_PREFIX "WARNING: "
+#   define LOG_ERROR_PREFIX "ERROR: "
+// #   define LOG_DEBUG_PREFIX "DEBUG: "
+#endif
+
 #define LOG_NORMAL_PREFIX ""
-#define LOG_WARNING_PREFIX "WARNING: "
-#define LOG_ERROR_PREFIX "ERROR: "
 #define LOG_DEBUG_PREFIX "DEBUG: "
 
 // Use like this:
