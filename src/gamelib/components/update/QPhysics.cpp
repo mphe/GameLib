@@ -17,6 +17,7 @@ namespace gamelib
         UpdateComponent(name, interval),
         overbounce(1),
         ground(nullptr),
+        unstuckmethod(Normal),
         _bbox(box)
     { }
 
@@ -70,10 +71,11 @@ namespace gamelib
 
     void QPhysics::_clipmove(float elapsed)
     {
-        auto newpos = _bbox->pos;
+        // auto newpos = _bbox->pos;
         auto originalvel = vel;
         float timeleft = elapsed;
         TraceResult trace;
+        math::AABBf box(*_bbox);
 
         while (timeleft > 0)
         {
@@ -81,7 +83,7 @@ namespace gamelib
                 return;
 
             auto framevel = vel * timeleft;
-            trace = getSubsystem<CollisionSystem>()->trace(*_bbox, framevel, nullptr, collision_solid);
+            trace = getSubsystem<CollisionSystem>()->trace(box, framevel, nullptr, collision_solid);
 
             if (trace)
             {
@@ -93,17 +95,24 @@ namespace gamelib
                             vel[i] = 0;
 
                     // Magic Quake engine number that prevents getting stuck
-                    newpos += framevel * (trace.isec.time - 0.03125);
+                    box.pos += framevel * (trace.isec.time - 0.03125);
                     timeleft -= timeleft * trace.isec.time;
                 }
                 else
                 {
                     LOG_DEBUG("stuck");
                     LOG_DEBUG("normal: x: ", trace.isec.normal.x, " y: ", trace.isec.normal.y);
+                    if (unstuckmethod == Normal)
+                    {
+                        box.pos += trace.isec.normal;
+                        break;
+                    }
+                    else if (unstuckmethod == Upwards)
+                    {
+                        box.pos.y -= 0.03125;
+                        timeleft -= timeleft * (0.03125 / framevel.abs());
+                    }
                     // _nudge(&newpos, trace);
-                    // newpos += trace.isec.normal * 0.03125;
-                    newpos += trace.isec.normal;
-                    break;
                 }
 
                 if (vel.dot(originalvel) <= 0)
@@ -112,12 +121,12 @@ namespace gamelib
             else
             {
                 // Whole distance covered
-                newpos += framevel;
+                box.pos += framevel;
                 break;
             }
         }
 
-        getEntity()->getTransform().move(newpos - _bbox->pos);
+        getEntity()->getTransform().move(box.pos - _bbox->pos);
     }
 
     void QPhysics::_nudge(math::Vec2f* newpos, const TraceResult& trace)
@@ -166,6 +175,7 @@ namespace gamelib
         // gamelib::loadFromJson(node["transform"], *static_cast<Transformable*>(this));
         gamelib::loadFromJson(node["vel"], vel);
         overbounce = node.get("overbounce", overbounce).asFloat();
+        unstuckmethod = static_cast<UnstuckMethod>(node.get("unstuckmethod", unstuckmethod).asInt());
 
         if (node.isMember("global"))
             loadGlobalsFromJson(node["global"]);
@@ -179,6 +189,7 @@ namespace gamelib
         // gamelib::writeToJson(node["transform"], *static_cast<Transformable*>(this));
         gamelib::writeToJson(node["vel"], vel);
         node["overbounce"] = overbounce;
+        node["unstuckmethod"] = unstuckmethod;
     }
 
     bool QPhysics::loadGlobalsFromJson(const Json::Value& node)

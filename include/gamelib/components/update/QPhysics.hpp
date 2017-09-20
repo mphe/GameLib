@@ -16,6 +16,13 @@ namespace gamelib
         public:
             constexpr static const char* name = "QPhysicsComponent";
 
+            enum UnstuckMethod
+            {
+                Normal,
+                Upwards,
+                Nudge   // TODO: unimplemented
+            };
+
         public:
             QPhysics(int interval = 1);
             QPhysics(const math::AABBf* box, int interval = 1);
@@ -57,6 +64,7 @@ namespace gamelib
             math::Vec2f vel;
             float overbounce;
             CollisionComponent* ground;
+            UnstuckMethod unstuckmethod;
 
         protected:
             const math::AABBf* _bbox;
