@@ -34,6 +34,13 @@ namespace gamelib
     void RenderComponent::writeToJson(Json::Value& node)
     {
         Component::writeToJson(node);
+
+        if (getEntity())
+            *this -= getEntity()->getTransform();
+
         SceneObject::writeToJson(node);
+
+        if (getEntity())
+            *this += getEntity()->getTransform();
     }
 }

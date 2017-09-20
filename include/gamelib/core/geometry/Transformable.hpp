@@ -39,6 +39,9 @@ namespace gamelib
 
             auto reset() -> void;
 
+            auto operator-=(const Transformable& rhs) -> Transformable&;
+            auto operator+=(const Transformable& rhs) -> Transformable&;
+
         protected:
             unsigned int _supported;
     };

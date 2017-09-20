@@ -99,4 +99,20 @@ namespace gamelib
         setScale(1, 1);
         setRotation(0);
     }
+
+    Transformable& Transformable::operator-=(const Transformable& rhs)
+    {
+        move(-rhs.getPosition().asVector());
+        scale(math::Vec2f(1, 1) / rhs.getScale());
+        rotate(-rhs.getRotation());
+        return *this;
+    }
+
+    Transformable& Transformable::operator+=(const Transformable& rhs)
+    {
+        move(rhs.getPosition().asVector());
+        scale(rhs.getScale());
+        rotate(rhs.getRotation());
+        return *this;
+    }
 }

@@ -21,9 +21,7 @@ namespace gamelib
     void GroupTransform::add(Transformable* trans)
     {
         _objs.push_back(trans);
-        _objs.back()->setPosition(_pos);
-        _objs.back()->setScale(_scale);
-        _objs.back()->setRotation(_rotation);
+        *_objs.back() += *this;
         refreshBBox();
     }
 
@@ -35,6 +33,7 @@ namespace gamelib
             if (_objs.size() > 1)
                 std::swap(*it, _objs.back());
             _objs.pop_back();
+            *trans -= *this;
         }
         refreshBBox();
     }
