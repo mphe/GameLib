@@ -49,7 +49,10 @@ namespace gamelib
 
     Entity* EntityManager::find(const std::string& name)
     {
-        return const_cast<EntityManager*>(this)->find(name);
+        for (auto& i : _entities)
+            if (i.getName() == name)
+                return &i;
+        return nullptr;
     }
 
     void EntityManager::destroy(Handle handle)

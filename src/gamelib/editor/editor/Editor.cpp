@@ -334,7 +334,7 @@ namespace gamelib
             saveState(currentFilePath);
         }
 
-        chosenPath = exportdlg.chooseFileDialog(chooseexport);
+        chosenPath = exportdlg.saveFileDialog(chooseexport);
         if (strlen(chosenPath) > 0)
             _exportcallback(chosenPath);
 
