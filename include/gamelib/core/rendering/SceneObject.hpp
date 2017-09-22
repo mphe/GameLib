@@ -30,6 +30,10 @@ namespace gamelib
             virtual auto loadFromJson(const Json::Value& node) -> bool;
             virtual auto writeToJson(Json::Value& node)        -> void;
 
+            // TODO: should go into Transformable
+            auto setOrigin(const math::Point2f& origin) -> void;
+            auto getOrigin() const                      -> const math::Point2f&;
+
             virtual auto move(const math::Vec2f& rel)    -> void;
             virtual auto scale(const math::Vec2f& scale) -> void;
             virtual auto rotate(float angle)             -> void;
@@ -53,6 +57,7 @@ namespace gamelib
             math::AABBf _bbox;
             math::Point2f _pos;
             math::Vec2f _scale;
+            math::Point2f _origin;
             float _rotation;
     };
 }

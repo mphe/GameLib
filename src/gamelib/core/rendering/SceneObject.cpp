@@ -57,9 +57,9 @@ namespace gamelib
     void SceneObject::render(sf::RenderTarget& target, const sf::RenderStates& states_) const
     {
         sf::Transform trans;
-        trans.scale(_scale.x, _scale.y, _bbox.x, _bbox.y);
-        trans.rotate(_rotation);
         trans.translate(_pos.x, _pos.y);
+        trans.rotate(_rotation, _origin.x, _origin.y);
+        trans.scale(_scale.x, _scale.y, _origin.x, _origin.y);
 
         sf::RenderStates states(states_);
         states.transform.combine(trans);
@@ -78,6 +78,7 @@ namespace gamelib
             setLayer(layer);
 
         gamelib::loadFromJson(node["transform"], *static_cast<Transformable*>(this));
+        gamelib::loadFromJson(node["origin"], _origin);
 
         if (node.isMember("vertices"))
         {
@@ -103,6 +104,7 @@ namespace gamelib
             node["layer"] = (Json::UInt)layer->getUniqueID();
 
         gamelib::writeToJson(node["transform"], *static_cast<Transformable*>(this));
+        gamelib::writeToJson(node["origin"], _origin);
 
         auto& vertices = node["vertices"];
         vertices.resize(_vertices.getVertexCount());
@@ -135,6 +137,15 @@ namespace gamelib
         _updateBBox();
     }
 
+    void SceneObject::setOrigin(const math::Point2f& origin)
+    {
+        _origin = origin;
+    }
+
+    const math::Point2f& SceneObject::getOrigin() const
+    {
+        return _origin;
+    }
 
     const math::Point2f& SceneObject::getPosition() const
     {
@@ -159,9 +170,9 @@ namespace gamelib
     void SceneObject::_updateBBox()
     {
         sf::Transform trans;
-        trans.scale(_scale.x, _scale.y);
-        trans.rotate(_rotation);
         trans.translate(_pos.x, _pos.y);
+        trans.rotate(_rotation, _origin.x, _origin.y);
+        trans.scale(_scale.x, _scale.y, _origin.x, _origin.y);
 
         auto bounds = trans.transformRect(_vertices.getBounds());
         _bbox = math::AABBf(bounds.left, bounds.top, bounds.width, bounds.height);
