@@ -18,12 +18,14 @@ namespace gamelib
     void refresh(int selected, std::string* out)
     {
         JsonSerializer* obj = nullptr;
+        Entity* ent = nullptr;
 
         switch (selected)
         {
             default:
             case 0:
-                obj = EditorShared::getSelectTool().getSelected();
+                ent = EditorShared::getSelectTool().getSelected();
+                obj = ent;
                 break;
 
             case 1:
@@ -37,9 +39,18 @@ namespace gamelib
 
         if (obj)
         {
+            unsigned int oldflags;
+            if (ent)
+            {
+                oldflags = ent->flags;
+                ent->flags |= entity_exportcomponents;
+            }
             Json::Value json;
             obj->writeToJson(json);
             *out = json.toStyledString();
+
+            if (ent)
+                ent->flags = oldflags;
         }
         else
             out->clear();
