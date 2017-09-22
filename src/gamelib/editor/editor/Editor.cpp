@@ -95,22 +95,25 @@ namespace gamelib
 
     void Editor::render(sf::RenderTarget& target)
     {
-        // necessary, otherwise things will disappear randomly
-        getSubsystem<Game>()->getWindow().resetGLStates();
+        if (!_run)
+        {
+            // necessary, otherwise things will disappear randomly
+            getSubsystem<Game>()->getWindow().resetGLStates();
 
-        // if (!_gridOnTop && _snap)
-        //     _grid.render(target);
+            // if (!_gridOnTop && _snap)
+            //     _grid.render(target);
 
-        if (_gridOnTop && _snap)
-            _grid.render(target);
+            if (_gridOnTop && _snap)
+                _grid.render(target);
 
-        if (_currenttool)
-            _currenttool->render(target);
+            if (_currenttool)
+                _currenttool->render(target);
 
-        // if (_currenttool != &getSelectTool())
-        //     getSelectTool().render(target);
+            // if (_currenttool != &getSelectTool())
+            //     getSelectTool().render(target);
 
-        ImGui::Render();
+            ImGui::Render();
+        }
     }
 
     void Editor::setTool(Tools tool)
@@ -134,21 +137,16 @@ namespace gamelib
 
     void Editor::_updateRunFlags()
     {
-        static bool lastsnap = true;
-
         auto scene = getSubsystem<Scene>();
         if (_run)
         {
             RMFLAG(scene->flags, render_noparallax | render_drawhidden);
             RMFLAG(flags, gamestate_freeze);
-            lastsnap = _snap;
-            _snap = false;
         }
         else
         {
             scene->flags |= render_noparallax | render_drawhidden;
             flags |= gamestate_freeze;
-            _snap = lastsnap;
         }
     }
 
@@ -162,6 +160,15 @@ namespace gamelib
         Tool* realtool = me->_currenttool;  // backup
         if (game->isKeyPressed(sf::Keyboard::LControl))
             me->_currenttool = &me->getSelectTool();
+
+        if (sfev.type == sf::Event::KeyPressed && sfev.key.code == sf::Keyboard::F5)
+        {
+            me->_run = !me->_run;
+            me->_updateRunFlags();
+        }
+
+        if (me->_run)
+            return;
 
         switch (sfev.type)
         {
@@ -201,11 +208,6 @@ namespace gamelib
 
                     case sf::Keyboard::G:
                         me->_snap = !me->_snap;
-                        break;
-
-                    case sf::Keyboard::F5:
-                        me->_run = !me->_run;
-                        me->_updateRunFlags();
                         break;
                 }
                 break;
