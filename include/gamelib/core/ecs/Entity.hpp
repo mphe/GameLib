@@ -9,6 +9,7 @@
 #include "gamelib/core/geometry/GroupTransform.hpp"
 #include "gamelib/utils/json.hpp"
 #include "Component.hpp"
+#include "flags.hpp"
 
 /*
  * Config file structure:
@@ -126,20 +127,27 @@ namespace gamelib
             auto writeToJson(Json::Value& node, F callback) const -> void
             {
                 node["name"] = _name;
+                node["flags"] = flags;
                 gamelib::writeToJson(node["transform"], _transform);
 
-                auto& comps = node["components"];
-                comps = Json::Value(Json::arrayValue);
+                if (flags & entity_exportcomponents)
+                {
+                    auto& comps = node["components"];
+                    comps = Json::Value(Json::arrayValue);
 
-                for (auto& i : _components)
-                    if (i)
-                    {
-                        Json::Value comp;
-                        callback(comp, *i);
-                        if (!comp.isNull())
-                            comps.append(comp);
-                    }
+                    for (auto& i : _components)
+                        if (i)
+                        {
+                            Json::Value comp;
+                            callback(comp, *i);
+                            if (!comp.isNull())
+                                comps.append(comp);
+                        }
+                }
             }
+
+        public:
+            unsigned int flags;
 
         private:
             auto _init() -> void;   // Called by EntityManager when entity was added

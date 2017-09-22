@@ -84,7 +84,18 @@ namespace gamelib
         auto& ents = node["entities"];
         if (!ents.isNull())
             for (auto& i : ents)
-                factory->createFromJson(i);
+            {
+                Entity ent;
+                ent.loadFromJson(i); // loads meta data, no components
+
+                if (ent.flags & entity_exportcomponents)
+                    factory->createFromJson(i);
+                else
+                {
+                    auto handle = factory->create(ent.getName());
+                    getEntity(handle)->loadFromJson(i);
+                }
+            }
         return true;
     }
 

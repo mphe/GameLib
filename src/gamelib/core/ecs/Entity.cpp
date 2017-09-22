@@ -1,5 +1,6 @@
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
+// #include "gamelib/core/ecs/EntityFactory.hpp"
 #include "gamelib/utils/log.hpp"
 
 namespace gamelib
@@ -22,6 +23,7 @@ namespace gamelib
     { }
 
     Entity::Entity(Entity&& other) :
+        flags(other.flags),
         _entmgr(std::move(other._entmgr)),
         _handle(std::move(other._handle)),
         _name(std::move(other._name)),
@@ -50,11 +52,8 @@ namespace gamelib
     bool Entity::loadFromJson(const Json::Value& node)
     {
         _name = node.get("name", "").asString();
+        flags = node.get("flags", 0).asUInt();
         gamelib::loadFromJson(node["transform"], _transform);
-
-        // NOTE: Components aren't loaded this way
-        // TODO: maybe reload existing components this way
-
         return true;
     }
 
@@ -147,6 +146,7 @@ namespace gamelib
     {
         _quit();
         _transform.reset();
+        flags = 0;
     }
 
     void Entity::_quit()
@@ -193,6 +193,7 @@ namespace gamelib
 
     Entity& Entity::operator=(Entity&& other)
     {
+        flags = other.flags;
         _entmgr = std::move(other._entmgr);
         _name = std::move(other._name);
         _quitting = std::move(other._quitting);

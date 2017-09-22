@@ -1,5 +1,6 @@
 {
     "name": "linebrush",
+    "flags": 1,
     "components": [
         {
             "name": "PolygonShape",
