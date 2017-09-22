@@ -8,6 +8,7 @@
 #include "gamelib/core/res/JsonSerializer.hpp"
 #include "event/EventManager.hpp"
 #include "gamelib/core/Subsystem.hpp"
+#include "math/geometry/Point2.hpp"
 
 namespace gamelib
 {
@@ -46,6 +47,8 @@ namespace gamelib
 
             auto isFocused() const                         -> bool;
             auto isKeyPressed(sf::Keyboard::Key key) const -> bool;
+
+            auto getMouse() const -> math::Point2f;
 
         private:
             float _frametime; // TODO: Consider switching to double

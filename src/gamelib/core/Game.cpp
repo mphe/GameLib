@@ -101,7 +101,7 @@ namespace gamelib
 
                 _evmgr.update();
             }
-
+            _window.resetGLStates(); // without this things start randomly disappearing
             _window.clear(_bgcolor);
             for (auto& i : _states)
                 i->render(_window);
@@ -229,6 +229,13 @@ namespace gamelib
     bool Game::isKeyPressed(sf::Keyboard::Key key) const
     {
         return _focused && sf::Keyboard::isKeyPressed(key);
+    }
+
+    math::Point2f Game::getMouse() const
+    {
+        auto m = sf::Mouse::getPosition(_window);
+        auto p = _window.mapPixelToCoords(m);
+        return math::Point2f(p.x, p.y);
     }
 }
 
