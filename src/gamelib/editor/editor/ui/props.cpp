@@ -92,23 +92,34 @@ namespace gamelib
 
         if (ImGui::CollapsingHeader("Rendering", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            auto& ren = *ent.find<RenderComponent>();
-            int depth = ren.getDepth();
-            float parallax = ren.getParallax();
+            ent.findAll<RenderComponent>([&](RenderComponent* comp) {
+                ImGui::PushID(comp);
+                if (ImGui::TreeNode(comp->getName().c_str()))
+                {
+                    auto& ren = *ent.find<RenderComponent>();
+                    int depth = ren.getDepth();
+                    float parallax = ren.getParallax();
 
-            ImGui::CheckboxFlags("Hidden", &ren.flags, render_hidden);
-            ImGui::CheckboxFlags("Disable parallax", &ren.flags, render_noparallax);
-            ImGui::CheckboxFlags("Wireframe", &ren.flags, render_wireframe);
+                    ImGui::CheckboxFlags("Hidden", &ren.flags, render_hidden);
+                    ImGui::CheckboxFlags("Disable parallax", &ren.flags, render_noparallax);
+                    ImGui::CheckboxFlags("Wireframe", &ren.flags, render_wireframe);
 
-            if (ImGui::InputInt("Depth", &depth, 1, 100))
-                ren.setDepth(depth);
+                    if (ImGui::InputInt("Depth", &depth, 1, 100))
+                        ren.setDepth(depth);
 
-            if (ImGui::InputFloat("Parallax", &parallax, 0.01, 0.1, 3))
-                ren.setParallax(parallax);
+                    if (ImGui::InputFloat("Parallax", &parallax, 0.01, 0.1, 3))
+                        ren.setParallax(parallax);
 
-            auto handle = EditorShared::getLayerUI().drawSelector("Layer", ren.getLayer());
-            if (!handle.isNull())
-                ren.setLayer(handle);
+                    auto handle = EditorShared::getLayerUI().drawSelector("Layer", ren.getLayer());
+                    if (!handle.isNull())
+                        ren.setLayer(handle);
+
+                    ImGui::TreePop();
+                }
+
+                ImGui::PopID();
+                return false;
+            });
         }
 
         if (ImGui::CollapsingHeader("Collision", ImGuiTreeNodeFlags_DefaultOpen))
