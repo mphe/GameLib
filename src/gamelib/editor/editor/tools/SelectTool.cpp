@@ -44,6 +44,14 @@ namespace gamelib
             drawRectOutline(target, ent->getTransform().getBBox());
             if (_renderSolid)
                 drawCollisions(target, *ent, collision_solid);
+
+            auto& pos = ent->getTransform().getPosition();
+            sf::Vertex cross[4];
+            cross[0] = sf::Vertex(sf::Vector2f(pos.x - 2, pos.y - 2), sf::Color::Red);
+            cross[1] = sf::Vertex(sf::Vector2f(pos.x + 2, pos.y + 2), sf::Color::Red);
+            cross[2] = sf::Vertex(sf::Vector2f(pos.x + 2, pos.y - 2), sf::Color::Red);
+            cross[3] = sf::Vertex(sf::Vector2f(pos.x - 2, pos.y + 2), sf::Color::Red);
+            target.draw(cross, 4, sf::Lines);
         }
     }
 
