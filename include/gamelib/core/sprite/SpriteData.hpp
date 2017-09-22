@@ -2,6 +2,7 @@
 #define GAMELIB_SPRITE_DATA_HPP
 
 #include <SFML/Graphics/Rect.hpp>
+#include "gamelib/core/res/TextureResource.hpp"
 
 namespace gamelib
 {
@@ -9,8 +10,8 @@ namespace gamelib
     {
         public:
             AnimationData();
-            void update(float elapsed);
-            sf::IntRect getRect(int texw, int texh) const;
+            auto update(float elapsed) -> void;
+            auto getRect(int texw, int texh) const -> sf::IntRect;
 
         public:
             int length;
