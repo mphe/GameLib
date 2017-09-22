@@ -15,6 +15,7 @@ set(GAMELIB_SOURCES
     components/update/QController.cpp
     components/geometry/AABB.cpp
     components/geometry/Polygon.cpp
+    components/geometry/PixelCollision.cpp
     components/rendering/PolygonShape.cpp
 
     utils/SpriteBatch.cpp

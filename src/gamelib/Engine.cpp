@@ -2,6 +2,7 @@
 #include "gamelib/core/res/resources.hpp"
 #include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/components/geometry/AABB.hpp"
+#include "gamelib/components/geometry/PixelCollision.hpp"
 #include "gamelib/components/update/QPhysics.hpp"
 #include "gamelib/components/update/QController.hpp"
 #include "gamelib/components/rendering/PolygonShape.hpp"
@@ -12,6 +13,7 @@ namespace gamelib
     {
         entfactory.addComponent<Polygon>(Polygon::name);
         entfactory.addComponent<AABB>(AABB::name);
+        entfactory.addComponent<PixelCollision>(PixelCollision::name);
         entfactory.addComponent<QPhysics>(QPhysics::name);
         entfactory.addComponent<QController>(QController::name);
         entfactory.addComponent<PolygonShape>(PolygonShape::name);
