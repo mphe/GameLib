@@ -3,11 +3,11 @@
 
 namespace gamelib
 {
-    void saveState(const std::string& fname)
+    bool saveState(const std::string& fname)
     {
-        Json::Value node;
-        saveStateToJson(node);
-        writeJsonToFile(fname, node);
+        return saveState(fname, [](Json::Value& node, Entity& ent) {
+                ent.writeToJson(node);
+            });
     }
 
     void saveStateToJson(Json::Value& node)
@@ -18,11 +18,17 @@ namespace gamelib
     }
 
 
-    void loadState(const std::string& fname)
+    bool loadState(const std::string& fname)
     {
         Json::Value node;
-        loadJsonFromFile(fname, node);
+        if (!loadJsonFromFile(fname, node))
+        {
+            LOG_ERROR("Failed to load state from file ", fname);
+            return false;
+        }
+
         loadStateFromJson(node);
+        return true;
     }
 
     void loadStateFromJson(const Json::Value& node)

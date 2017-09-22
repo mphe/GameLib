@@ -9,10 +9,10 @@
 
 namespace gamelib
 {
-    void saveState(const std::string& fname);
+    bool saveState(const std::string& fname);
     void saveStateToJson(Json::Value& node);
 
-    void loadState(const std::string& fname);
+    bool loadState(const std::string& fname);
     void loadStateFromJson(const Json::Value& node);
 
     // Calls a callback for each entity about to be serialized.
@@ -36,11 +36,15 @@ namespace gamelib
     // The callback handles the serialization (or not).
     // Signature: void(Json::Value&, Entity&)
     template <typename F>
-    void saveState(const std::string& fname, F callback)
+    bool saveState(const std::string& fname, F callback)
     {
         Json::Value node;
         saveStateToJson(node, callback);
-        writeJsonToFile(fname, node);
+        if (writeJsonToFile(fname, node))
+            return true;
+
+        LOG_ERROR("Failed to save state to file ", fname);
+        return false;
     }
 }
 

@@ -1,4 +1,5 @@
 #include "gamelib/utils/json.hpp"
+#include "gamelib/utils/log.hpp"
 #include "gamelib/core/geometry/Transformable.hpp"
 #include <fstream>
 
@@ -14,6 +15,7 @@ namespace gamelib
             f.close();
             return true;
         }
+        LOG_ERROR("Failed to load json from file ", fname);
         return false;
     }
 
@@ -27,6 +29,7 @@ namespace gamelib
             f.close();
             return true;
         }
+        LOG_ERROR("Failed to write json to file ", fname);
         return false;
     }
 
