@@ -5,6 +5,7 @@
 #include "gamelib/components/geometry/PixelCollision.hpp"
 #include "gamelib/components/update/QPhysics.hpp"
 #include "gamelib/components/update/QController.hpp"
+#include "gamelib/components/update/SpriteComponent.hpp"
 #include "gamelib/components/rendering/PolygonShape.hpp"
 
 namespace gamelib
@@ -16,6 +17,7 @@ namespace gamelib
         entfactory.addComponent<PixelCollision>(PixelCollision::name);
         entfactory.addComponent<QPhysics>(QPhysics::name);
         entfactory.addComponent<QController>(QController::name);
+        entfactory.addComponent<SpriteComponent>(SpriteComponent::name);
         entfactory.addComponent<PolygonShape>(PolygonShape::name);
 
         registerPredefLoaders(resmgr);

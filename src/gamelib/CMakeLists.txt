@@ -13,6 +13,7 @@ set(GAMELIB_SOURCES
 
     components/update/QPhysics.cpp
     components/update/QController.cpp
+    components/update/SpriteComponent.cpp
     components/geometry/AABB.cpp
     components/geometry/Polygon.cpp
     components/geometry/PixelCollision.cpp

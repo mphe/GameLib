@@ -6,7 +6,9 @@ namespace gamelib
 {
     void registerJsonLoader(ResourceManager& resmgr)
     {
-        resmgr.registerFileType("json", jsonLoader);
+        // Maybe spr will become a separate resource
+        for (auto& i : { "json", "spr" })
+            resmgr.registerFileType(i, jsonLoader);
     }
 
     BaseResourceHandle jsonLoader(const std::string& fname, ResourceManager* resmgr)
