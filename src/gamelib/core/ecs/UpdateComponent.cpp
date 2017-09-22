@@ -2,11 +2,6 @@
 
 namespace gamelib
 {
-    UpdateComponent::UpdateComponent(int interval, UpdateSystem::HookType hook) :
-        Updatable(interval),
-        _hook(hook)
-    { }
-
     UpdateComponent::UpdateComponent(const std::string& name, int interval, UpdateSystem::HookType hook) :
         Identifier(name),
         Updatable(interval),

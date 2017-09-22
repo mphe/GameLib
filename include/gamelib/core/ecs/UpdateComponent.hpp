@@ -13,7 +13,6 @@ namespace gamelib
             typedef SlotKeyShort Handle;
 
         public:
-            UpdateComponent(int interval = 1, UpdateSystem::HookType hook = UpdateSystem::Frame);
             UpdateComponent(const std::string& name, int interval = 1, UpdateSystem::HookType hook = UpdateSystem::Frame);
             virtual ~UpdateComponent() {}
 
