@@ -64,7 +64,7 @@ namespace gamelib
     {
         sf::VertexArray vertices(sf::Lines);
 
-        ent.findAll<CollisionComponent>([&](CollisionComponent* comp) {
+        ent.findAllByType<CollisionComponent>([&](CollisionComponent* comp) {
                 if (comp->flags & flags)
                 {
                     if (comp->getName() == Polygon::name)
@@ -113,7 +113,7 @@ namespace gamelib
     BrushComponent* getIfBrush(Entity* ent)
     {
         if (ent)
-            return ent->find<BrushComponent>();
+            return ent->findByType<BrushComponent>();
         return nullptr;
     }
 }

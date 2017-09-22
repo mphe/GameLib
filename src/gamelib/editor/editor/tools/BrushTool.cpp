@@ -52,7 +52,7 @@ namespace gamelib
             auto handle = createEntity(brushEntities[_type]);
             auto brush = getEntity(handle);
 
-            selected = brush->find<BrushComponent>();
+            selected = brush->findByType<BrushComponent>();
             selected->setWidth(_linewidth);
             selected->getBrushShape()->texture = _tex;
             selected->getBrushShape()->setTexOffset(_offset);

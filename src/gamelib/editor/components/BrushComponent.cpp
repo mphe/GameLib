@@ -84,7 +84,7 @@ namespace gamelib
 
     void BrushComponent::_refresh()
     {
-        getEntity()->findAll<CollisionComponent>([&](CollisionComponent* comp) {
+        getEntity()->findAllByType<CollisionComponent>([&](CollisionComponent* comp) {
                 if (comp->getName() == Polygon::name)
                 {
                     auto pol = static_cast<Polygon*>(comp);
@@ -96,7 +96,7 @@ namespace gamelib
                 return false;
             });
 
-        _shape = getEntity()->find<PolygonShape>();
+        _shape = getEntity()->findByType<PolygonShape>();
     }
 
     void BrushComponent::_regenerate() const

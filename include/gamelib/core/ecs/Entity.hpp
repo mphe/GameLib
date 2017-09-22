@@ -84,7 +84,7 @@ namespace gamelib
             }
 
             template <typename T>
-            auto find() const -> T*
+            auto findByType() const -> T*
             {
                 static_assert(isIdentifiable<T>::value, "Only works for types derived from gamelib::Identifier");
                 return static_cast<T*>(find(T::id));
@@ -112,7 +112,7 @@ namespace gamelib
             // Signature: bool(T*)
             // If the lambda returns true, the loop breaks. To continue return false.
             template <typename T, typename F>
-            auto findAll(F callback) const -> void
+            auto findAllByType(F callback) const -> void
             {
                 static_assert(isIdentifiable<T>::value, "Only works for types derived from gamelib::Identifier");
                 findAll(T::id, [&](Component* comp) {

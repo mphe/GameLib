@@ -19,7 +19,7 @@ namespace gamelib
     {
         static std::string jsonstring;
 
-        auto brush = ent.find<BrushComponent>();
+        auto brush = ent.findByType<BrushComponent>();
 
         if (ImGui::CollapsingHeader("Geometry", ImGuiTreeNodeFlags_DefaultOpen))
         {
@@ -92,11 +92,11 @@ namespace gamelib
 
         if (ImGui::CollapsingHeader("Rendering", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            ent.findAll<RenderComponent>([&](RenderComponent* comp) {
+            ent.findAllByType<RenderComponent>([&](RenderComponent* comp) {
                 ImGui::PushID(comp);
                 if (ImGui::TreeNode(comp->getName().c_str()))
                 {
-                    auto& ren = *ent.find<RenderComponent>();
+                    auto& ren = *ent.findByType<RenderComponent>();
                     int depth = ren.getDepth();
                     float parallax = ren.getParallax();
 
@@ -124,7 +124,7 @@ namespace gamelib
 
         if (ImGui::CollapsingHeader("Collision", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            ent.findAll<CollisionComponent>([&](CollisionComponent* comp) {
+            ent.findAllByType<CollisionComponent>([&](CollisionComponent* comp) {
                     ImGui::PushID(comp);
                     if (ImGui::TreeNode(comp->getName().c_str()))
                     {

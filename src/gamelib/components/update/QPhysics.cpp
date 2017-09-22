@@ -159,7 +159,7 @@ namespace gamelib
 
     void QPhysics::_refresh()
     {
-        auto comp = getEntity()->find<CollisionComponent>();
+        auto comp = getEntity()->findByType<CollisionComponent>();
         if (comp)
         {
             _bbox = &comp->getBBox();

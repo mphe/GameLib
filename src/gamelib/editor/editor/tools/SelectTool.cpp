@@ -98,7 +98,7 @@ namespace gamelib
                 math::Point2f(x, y), flags, [&](Collidable* col) {
 
             auto ent = static_cast<CollisionComponent*>(col)->getEntity();
-            auto ren = ent->find<RenderComponent>();
+            auto ren = ent->findByType<RenderComponent>();
             if (!ren || !ren->isVisible())
                 return false;
 
