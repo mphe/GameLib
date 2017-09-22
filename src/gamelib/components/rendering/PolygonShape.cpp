@@ -12,6 +12,18 @@ namespace gamelib
         _vertices.setPrimitiveType(sf::TriangleStrip);
     }
 
+    void PolygonShape::fetch(const math::AABBf& rect, MappingMethod mappingMethod)
+    {
+        _vertices.resize(4);
+        _vertices[0].position = sf::Vector2f(0, 0);
+        _vertices[1].position = sf::Vector2f(0, rect.h);
+        _vertices[2].position = sf::Vector2f(rect.w, 0);
+        _vertices[3].position = sf::Vector2f(rect.w, rect.h);
+        _texoffset = rect.pos;
+        _mapTexture(mappingMethod);
+        _updateBBox();
+    }
+
     void PolygonShape::fetch(const math::Polygon<float>& pol, MappingMethod mappingMethod)
     {
         _vertices.clear();
@@ -23,36 +35,44 @@ namespace gamelib
             _vertices.append(sf::Vertex(sf::Vector2f(p.x, p.y), sf::Vector2f()));
         }
 
-        _mapTexture(pol, mappingMethod);
+        _mapTexture(mappingMethod);
         _updateBBox();
     }
 
-    void PolygonShape::_mapTexture(const math::Polygon<float>& pol, MappingMethod mappingMethod)
+    void PolygonShape::_mapTexture(MappingMethod mappingMethod)
     {
+        const sf::Vector2f worldpos(getPosition().x, getPosition().y);
+
         switch (mappingMethod)
         {
             case MapWorld:
             default:
-                for (size_t i = 0; i < pol.size(); ++i)
-                {
-                    const math::Point2f& p = pol.get(i);
-                    _vertices[i].texCoords.x = p.x + _texoffset.x;
-                    _vertices[i].texCoords.y = p.y + _texoffset.y;
-                }
+                for (size_t i = 0; i < size(); ++i)
+                    _vertices[i].texCoords = worldpos + _vertices[i].position + sf::Vector2f(_texoffset.x, _texoffset.y);
                 break;
+
+            case MapInstance:
+                {
+                    // auto pos = getLocalBounds().pos;
+                    // sf::Vector2f sfpos(pos.x, pos.y);
+                    for (size_t i = 0; i < size(); ++i)
+                        _vertices[i].texCoords = _vertices[i].position + sf::Vector2f(_texoffset.x, _texoffset.y);
+                        // _vertices[i].texCoords = (_vertices[i].position - sfpos) + sf::Vector2f(_texoffset.x, _texoffset.y);
+                    break;
+                }
 
             case MapLine:
                 {
                     float offx = _texoffset.x;
                     unsigned int texh = texture ? texture->getSize().y : 0;
 
-                    for (size_t i = 0; i + 4 <= pol.size(); i += 4)
+                    for (size_t i = 0; i + 4 <= size(); i += 4)
                     {
-                        const math::Point2f p[] = {
-                            pol.get(i),
-                            pol.get(i + 1),
-                            pol.get(i + 2),
-                            pol.get(i + 3)
+                        const sf::Vector2f p[] = {
+                            worldpos + _vertices[i].position,
+                            worldpos + _vertices[i + 1].position,
+                            worldpos + _vertices[i + 2].position,
+                            worldpos + _vertices[i + 3].position,
                         };
 
                         const double d[] = {
@@ -60,16 +80,23 @@ namespace gamelib
                             math::pointDistance(p[1].x, p[1].y, p[3].x, p[3].y)
                         };
 
-                        _vertices[i].texCoords = sf::Vector2f(offx, 0);
-                        _vertices[i + 1].texCoords = sf::Vector2f(offx, texh);
-                        _vertices[i + 2].texCoords = sf::Vector2f(offx + d[0], 0);
-                        _vertices[i + 3].texCoords = sf::Vector2f(offx + d[1], texh);
+                        _vertices[i].texCoords     = sf::Vector2f(offx,        _texoffset.y);
+                        _vertices[i + 1].texCoords = sf::Vector2f(offx,        texh + _texoffset.y);
+                        _vertices[i + 2].texCoords = sf::Vector2f(offx + d[0], _texoffset.y);
+                        _vertices[i + 3].texCoords = sf::Vector2f(offx + d[1], texh + _texoffset.y);
 
                         offx += std::min(d[0], d[1]);
                     }
                     break;
                 }
         }
+    }
+
+    void PolygonShape::adaptToTexture()
+    {
+        auto texw = texture->getSize().x,
+             texh = texture->getSize().y;
+        fetch(math::AABBf(0, 0, texw, texh), MapInstance);
     }
 
     void PolygonShape::setTexOffset(float x, float y)
@@ -90,6 +117,11 @@ namespace gamelib
     const math::Vec2f& PolygonShape::getTexOffset()
     {
         return _texoffset;
+    }
+
+    size_t PolygonShape::size() const
+    {
+        return _vertices.getVertexCount();
     }
 
     void PolygonShape::render(sf::RenderTarget& target, const sf::RenderStates& states_) const
@@ -127,6 +159,9 @@ namespace gamelib
 
         if (node.isMember("texture"))
             texture = ResourceManager::getActive()->get(node["texture"].asString());
+
+        if (node.get("fitTexture", false).asBool())
+            adaptToTexture();
 
         gamelib::loadFromJson(node["texoffset"], _texoffset);
 
