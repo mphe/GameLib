@@ -41,9 +41,11 @@ namespace gamelib
 
                 if (i.nextupdate == 0)
                 {
-                    i.obj->update(i.elapsed);
+                    // This must come first, because the object might delete itself
+                    auto frametime = i.elapsed;
                     i.nextupdate = i.obj->interval;
                     i.elapsed = 0;
+                    i.obj->update(frametime);
                 }
             }
     }
