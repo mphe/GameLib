@@ -12,7 +12,7 @@ namespace gamelib
         auto h = _objs[hook].acquire();
         auto& o = _objs[hook][h];
         o.obj = obj;
-        o.nextupdate = 1;
+        o.nextupdate = obj->interval;
         o.elapsed = 0;
         LOG_DEBUG("Added Updatable to UpdateSystem");
         return h;
