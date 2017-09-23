@@ -14,15 +14,15 @@ namespace gamelib
         if (!scene)
             return false;
 
-        scene->add(this);
         getEntity()->getTransform().add(this);
+        scene->add(this);
         return true;
     }
 
     void RenderComponent::_quit()
     {
-        getEntity()->getTransform().remove(this);
         unregister();
+        getEntity()->getTransform().remove(this);
     }
 
     bool RenderComponent::loadFromJson(const Json::Value& node)

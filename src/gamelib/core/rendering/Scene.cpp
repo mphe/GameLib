@@ -94,12 +94,13 @@ namespace gamelib
                     lastparallax = 1;
                 }
             }
-            else if (!math::almostEquals(lastparallax, parallax))
+            // else if (!math::almostEquals(lastparallax, parallax))
+            else
             {
-                // TODO: object-level parallax needs to be distance(camera, obj) * parallax
+                auto pos = o->getBBox().getCenter();
                 sf::View paraview = target.getView();
-                paraview.setCenter(view.getCenter().x * parallax,
-                                   view.getCenter().y * parallax);
+                paraview.setCenter(view.getCenter().x + (view.getCenter().x - pos.x) * (parallax - 1),
+                                   view.getCenter().y + (view.getCenter().y - pos.y) * (parallax - 1));
                 target.setView(paraview);
                 lastparallax = parallax;
             }
@@ -292,7 +293,7 @@ namespace gamelib
         if (_dirty)
         {
             LOG_DEBUG("Scene content changed -> sorting");
-            std::sort(_renderQueue.begin(), _renderQueue.end(), [this](SceneObject* a, SceneObject* b) {
+            std::stable_sort(_renderQueue.begin(), _renderQueue.end(), [this](SceneObject* a, SceneObject* b) {
                     auto la = a->getLayer(),
                          lb = b->getLayer();
                     const int da = _layers.isValid(la) ? _layers[la]._depth : 0,
