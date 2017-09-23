@@ -74,19 +74,6 @@ namespace gamelib
                 if (ImGui::InputInt("Line width", &width, 1, 32))
                     brush->setWidth(width);
 
-            ImGui::Checkbox("Export as sprite", &brush->exportAsSprite);
-
-            if (brush->exportAsSprite)
-            {
-                static int exportmode = 0;
-                ImGui::Indent(16);
-                ImGui::RadioButton("Keep collisions", &exportmode, BrushComponent::KeepCollisions);
-                ImGui::RadioButton("Drop collisions", &exportmode, BrushComponent::DropCollisions);
-                ImGui::RadioButton("Pixel perfect collisions", &exportmode, BrushComponent::UsePixelCollisions);
-                ImGui::Unindent(16);
-                brush->exportMode = static_cast<BrushComponent::ExportMode>(exportmode);
-            }
-
             ImGui::PopItemWidth();
         }
 

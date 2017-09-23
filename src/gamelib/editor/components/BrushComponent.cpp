@@ -10,8 +10,6 @@ namespace gamelib
 
     BrushComponent::BrushComponent() :
         Identifier(name),
-        exportAsSprite(false),
-        exportMode(KeepCollisions),
         _line(nullptr),
         _pol(nullptr),
         _shape(nullptr)
@@ -65,9 +63,6 @@ namespace gamelib
         Component::loadFromJson(node);
         int w = node.get("linewidth", _linewidth).asInt();
         setWidth(w);
-        exportAsSprite = node.get("exportAsSprite", exportAsSprite).asBool();
-        if (exportAsSprite)
-            exportMode = static_cast<ExportMode>(node.get("exportMode", exportMode).asInt());
         return true;
     }
 
@@ -75,11 +70,6 @@ namespace gamelib
     {
         Component::writeToJson(node);
         node["linewidth"] = _linewidth;
-        if (exportAsSprite)
-        {
-            node["exportAsSprite"] = exportAsSprite;
-            node["exportMode"] = exportMode;
-        }
     }
 
     void BrushComponent::_refresh()

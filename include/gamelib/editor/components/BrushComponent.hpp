@@ -15,13 +15,6 @@ namespace gamelib
         public:
             constexpr static const char* name = "BrushComponent";
 
-            enum ExportMode
-            {
-                KeepCollisions,
-                DropCollisions,
-                UsePixelCollisions
-            };
-
         public:
             BrushComponent();
             virtual ~BrushComponent() {};
@@ -40,10 +33,6 @@ namespace gamelib
 
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
-
-        public:
-            bool exportAsSprite;
-            ExportMode exportMode;
 
         protected:
             virtual auto _refresh()  -> void;
