@@ -327,6 +327,7 @@ namespace gamelib
         {
             currentFilePath = chosenPath;
             loadState(currentFilePath);
+            _layerui.refresh();
         }
 
         chosenPath = savedlg.saveFileDialog(choosesave);
