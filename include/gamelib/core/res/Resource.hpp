@@ -79,6 +79,9 @@ namespace gamelib
     {
         friend class ResourceManager;
 
+        template <typename T, ID>
+        friend class Resource;
+
         public:
             // Will never actually be used, it's just there to keep the
             // compiler happy.
@@ -125,6 +128,14 @@ namespace gamelib
             {
                 return std::make_shared<Resource<T, idval>>(
                         std::forward<Args>(args)...);
+            }
+
+            template <typename... Args>
+            static Handle createWithPath(const std::string& path, Args&&... args)
+            {
+                auto handle = create(std::forward<Args>(args)...);
+                handle.getResource()->_path = path;
+                return handle;
             }
 
         public:
