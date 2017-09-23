@@ -15,15 +15,15 @@ namespace gamelib
         if (!sys)
             return false;
 
-        sys->add(this);
         getEntity()->getTransform().add(this);
+        sys->add(this);
         return true;
     }
 
     void CollisionComponent::_quit()
     {
-        getEntity()->getTransform().remove(this);
         getSubsystem<CollisionSystem>()->remove(this);
+        getEntity()->getTransform().remove(this);
     }
 
     bool CollisionComponent::loadFromJson(const Json::Value& node)

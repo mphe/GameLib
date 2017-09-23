@@ -38,7 +38,7 @@ namespace gamelib
 
     Intersection AABB::sweep(const math::AABBf& rect, const math::Vec2f& vel) const
     {
-        return _rect.sweep(vel, rect);
+        return rect.sweep(vel, _rect);
     }
 
 
@@ -71,7 +71,7 @@ namespace gamelib
     bool AABB::loadFromJson(const Json::Value& node)
     {
         CollisionComponent::loadFromJson(node);
-        gamelib::loadFromJson(node["pos"], _rect.pos);
+        // gamelib::loadFromJson(node["pos"], _rect.pos);
         gamelib::loadFromJson(node["size"], _rect.size);
         return true;
     }
@@ -79,7 +79,7 @@ namespace gamelib
     void AABB::writeToJson(Json::Value& node)
     {
         CollisionComponent::writeToJson(node);
-        gamelib::writeToJson(node["pos"], _rect.pos);
+        // gamelib::writeToJson(node["pos"], _rect.pos);
         gamelib::writeToJson(node["size"], _rect.size);
     }
 }

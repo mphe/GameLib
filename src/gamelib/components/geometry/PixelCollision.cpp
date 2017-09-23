@@ -59,7 +59,7 @@ namespace gamelib
             // TODO: check only difference
 
             for (int y = rect.y + rect.h - 1; y >= rect.y; --y)
-                for (int x = rect.x; x < rect.x + rect.h; ++x)
+                for (int x = rect.x; x < rect.x + rect.w; ++x)
                     if (intersect(math::Point2f(x, y)))
                     {
                         return math::Intersection<float>(

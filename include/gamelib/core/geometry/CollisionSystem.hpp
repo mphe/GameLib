@@ -45,29 +45,127 @@ namespace gamelib
             auto trace(const math::AABBf& rect, const math::Vec2f& vel,
                     const Collidable* self = nullptr, unsigned int flags = 0) const -> TraceResult;
 
+            // Same as normal trace but calls a filter function for each found object.
+            // Signature: bool(Collidable*, const Intersection&)
+            // If the function returns false, the object will be skipped
+            template <typename F>
+            auto trace(const math::Line2f& line, F callback,
+                    const Collidable* self = nullptr, unsigned int flags = 0) const -> TraceResult;
+
+            template <typename F>
+            auto trace(const math::AABBf& rect, const math::Vec2f& vel, F callback,
+                    const Collidable* self = nullptr, unsigned int flags = 0) const -> TraceResult;
+
             // Returns the colliding object if there is a collison at the
             // given point/rect, otherwise nullptr.
-            auto find(const math::Point2f& point, unsigned int flags = 0) const -> Collidable*;
+            auto intersect(const math::Point2f& point, unsigned int flags = 0) const -> Collidable*;
+            auto intersect(const math::AABBf& rect, unsigned int flags = 0) const    -> Collidable*;
 
-            // Calls a function for each colliding object at the given point.
+            // Calls a function for each colliding object at the given point/rect.
             // Signature: bool(Collidable*)
-            // If the function returns true, the loop will break.
+            // If the function returns true, the loop will break and return that object.
             template <typename F>
-            auto findAll(const math::Point2f& point, unsigned int flags, F f) const -> void
-            {
-                // Use rbegin so it conforms with find().
-                for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
-                {
-                    Collidable* i = (*it);
-                    if ((!flags || i->flags & flags) && i->intersect(point))
-                        if (f(i))
-                            return;
-                }
-            }
+            auto intersectAll(const math::Point2f& point, unsigned int flags, F f) const -> Collidable*;
+
+            template <typename F>
+            auto intersectAll(const math::AABBf& rect, unsigned int flags, F f) const -> Collidable*;
+
+
+            // Deprecated, same as intersect
+            template <typename F>
+            auto findAll(const math::Point2f& point, unsigned int flags, F f) const -> void;
+            auto find(const math::Point2f& point, unsigned int flags = 0) const     -> Collidable*;
 
         private:
             std::vector<Collidable*> _objs;
     };
+
+    template <typename F>
+    void CollisionSystem::findAll(const math::Point2f& point, unsigned int flags, F f) const
+    {
+        intersectAll(point, flags, f);
+    }
+
+    template <typename F>
+    Collidable* CollisionSystem::intersectAll(const math::Point2f& point, unsigned int flags, F f) const
+    {
+        // Use rbegin so that newly added object are "on top"
+        for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
+        {
+            Collidable* i = (*it);
+            if ((!flags || i->flags & flags) && i->intersect(point))
+                if (f(i))
+                    return i;
+        }
+        return nullptr;
+    }
+
+    template <typename F>
+    Collidable* CollisionSystem::intersectAll(const math::AABBf& rect, unsigned int flags, F f) const
+    {
+        // Use rbegin so that newly added object are "on top"
+        for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
+        {
+            Collidable* i = (*it);
+            if ((!flags || i->flags & flags) && i->intersect(rect))
+                if (f(i))
+                    return i;
+        }
+        return nullptr;
+    }
+
+    template <typename F>
+    TraceResult CollisionSystem::trace(const math::Line2f& line, F callback, const Collidable* self, unsigned int flags) const
+    {
+        TraceResult nearest;
+        for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
+        {
+            Collidable* i = (*it);
+            if (i != self && (!flags || i->flags & flags))
+            {
+                auto isec = i->intersect(line);
+
+                if (isec)
+                {
+                    if (isec.type == math::LinexLine)
+                        std::swap(isec.near, isec.far);
+
+                    if (callback(i, isec))
+                        if (!nearest || isec.near < nearest.isec.near)
+                        {
+                            nearest.obj = i;
+                            nearest.isec = isec;
+                        }
+                }
+            }
+        }
+        return nearest;
+    }
+
+    template <typename F>
+    TraceResult CollisionSystem::trace(const math::AABBf& rect, const math::Vec2f& vel, F callback,
+            const Collidable* self, unsigned int flags) const
+    {
+        TraceResult nearest;
+        for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
+        {
+            Collidable* i = (*it);
+            if (i != self && (!flags || i->flags & flags))
+            {
+                auto isec = i->sweep(rect, vel);
+                if (isec)
+                {
+                    if (callback(i, isec))
+                        if (!nearest || isec.near < nearest.isec.near)
+                        {
+                            nearest.obj = i;
+                            nearest.isec = isec;
+                        }
+                }
+            }
+        }
+        return nearest;
+    }
 }
 
 #endif

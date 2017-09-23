@@ -27,56 +27,29 @@ namespace gamelib
         return _objs.size();
     }
 
+    Collidable* CollisionSystem::intersect(const math::Point2f& point, unsigned int flags) const
+    {
+        return intersectAll(point, flags, [](Collidable*) { return true; });
+    }
+
+    Collidable* CollisionSystem::intersect(const math::AABBf& rect, unsigned int flags) const
+    {
+        return intersectAll(rect, flags, [](Collidable*) { return true; });
+    }
+
     Collidable* CollisionSystem::find(const math::Point2f& point, unsigned int flags) const
     {
-        for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
-        {
-            Collidable* i = (*it);
-            if ((!flags || i->flags & flags) && i->intersect(point))
-                return i;
-        }
-        return nullptr;
+        return intersect(point, flags);
     }
 
     TraceResult CollisionSystem::trace(const math::Line2f& line, const Collidable* self, unsigned int flags) const
     {
-        TraceResult nearest;
-        for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
-        {
-            Collidable* i = (*it);
-            if (i != self && (!flags || i->flags & flags))
-            {
-                auto isec = i->intersect(line);
-                if (isec.type == math::LinexLine)
-                    std::swap(isec.near, isec.far);
-
-                if (isec && (!nearest || isec.near < nearest.isec.near))
-                {
-                    nearest.obj = i;
-                    nearest.isec = isec;
-                }
-            }
-        }
-        return nearest;
+        return trace(line, [](Collidable*, const Intersection&) { return true; }, self, flags);
     }
 
     TraceResult CollisionSystem::trace(const math::AABBf& rect, const math::Vec2f& vel, const Collidable* self, unsigned int flags) const
     {
-        TraceResult nearest;
-        for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
-        {
-            Collidable* i = (*it);
-            if (i != self && (!flags || i->flags & flags))
-            {
-                auto isec = i->sweep(rect, vel);
-                if (isec && (!nearest || isec.near < nearest.isec.near))
-                {
-                    nearest.obj = i;
-                    nearest.isec = isec;
-                }
-            }
-        }
-        return nearest;
+        return trace(rect, vel, [](Collidable*, const Intersection&) { return true; }, self, flags);
     }
 
 

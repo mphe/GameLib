@@ -28,7 +28,12 @@ namespace gamelib
 
     Intersection Polygon::intersect(const math::AABBf& rect) const
     {
-        throw "Not implemented";
+        Intersection isec;
+        polygon.foreachSegment([&](const math::Line2f& seg) {
+                isec = seg.intersect(rect);
+                return isec;
+            });
+        return isec;
     }
 
     Intersection Polygon::sweep(const math::AABBf& rect, const math::Vec2f& vel) const
