@@ -42,6 +42,9 @@ namespace gamelib
             ani.length = node.get("length", 1).asFloat();
             ani.speed = node.get("speed", 0).asFloat();
             ani.offset = node.get("index", 0).asFloat();
+            if (ani.offset < 0)
+                ani.offset = random() % (int)ani.length;
+
 
             math::Vec2f pos, size;
             gamelib::loadFromJson(node["pos"], pos);
