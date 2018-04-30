@@ -17,7 +17,7 @@ class BarComponent : public Identifier<0x650e189e, Component>
 
         void _refresh()
         {
-            FooComponent* foo = getEntity()->find<FooComponent>();
+            FooComponent* foo = getEntity()->findByType<FooComponent>();
             assert(foo && "FooComponent not found");
             x = foo->x;
         }
@@ -40,16 +40,16 @@ int main(int argc, char *argv[])
 
     assert("Component not found" && entity.find(FooComponent::id) != nullptr);
     assert("Component not found" && entity.find(BarComponent::id) != nullptr);
-    assert("Wrong x value" && entity.find<BarComponent>()->x == 42);
+    assert("Wrong x value" && entity.findByType<BarComponent>()->x == 42);
     // auto ptr = entity.find<NotAComponent>(); // This should produce a compiler error
 
     entity.remove(bar);
     assert("Wrong size" && entity.size() == 2);
     assert("Component not removed" && entity.find(BarComponent::id) == nullptr);
 
-    entity.remove(entity.find<FooComponent>());
+    entity.remove(entity.findByType<FooComponent>());
     assert("Wrong size" && entity.size() == 1);
-    assert("Wrong component removed" && entity.find<FooComponent>()->x == 88);
+    assert("Wrong component removed" && entity.findByType<FooComponent>()->x == 88);
 
     entity.destroy();
     assert("Wrong size" && entity.size() == 0);

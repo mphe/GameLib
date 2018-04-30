@@ -31,9 +31,9 @@ void testEntity(Entity& entity)
     assert(entity.getTransform().getScale() == math::Vec2f(-1.5, -1.5));
     assert(entity.getTransform().getRotation() == 90);
     assert(entity.size() == 2);
-    assert(entity.find<ComponentA>());
-    assert(entity.find<ComponentB>());
-    assert(entity.find<ComponentB>()->x == 42);
+    assert(entity.findByType<ComponentA>());
+    assert(entity.findByType<ComponentB>());
+    assert(entity.findByType<ComponentB>()->x == 42);
 }
 
 
