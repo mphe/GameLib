@@ -24,6 +24,7 @@ set(GAMELIB_SOURCES
     utils/DebugGui.cpp
     utils/string.cpp
     utils/json.cpp
+    utils/Property.cpp
 
     core/Game.cpp
     core/event/EventManager.cpp
