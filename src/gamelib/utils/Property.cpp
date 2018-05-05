@@ -6,11 +6,17 @@
 namespace gamelib
 {
     PropertyHandle::PropertyHandle() :
-        ptr(nullptr),
+        PropertyHandle(nullptr, nullptr, nullptr)
+    { }
+
+    PropertyHandle::PropertyHandle(void* var, PropSetterCallback setter, void* self) :
         type(PropUnknown),
         hints(nullptr),
         min(0),
-        max(0)
+        max(0),
+        _ptr(var),
+        _setter(setter),
+        _self(self)
     { }
 
     bool PropertyHandle::isPrimitive() const
@@ -24,6 +30,18 @@ namespace gamelib
         return type == PropVec2f || type == PropVec2i;
             // type == PropVec2d ||
     }
+
+    bool PropertyHandle::isSetter() const
+    {
+        return _setter != nullptr;
+    }
+
+
+    const void* PropertyHandle::get() const
+    {
+        return _ptr;
+    }
+
 
 
 
@@ -42,19 +60,19 @@ namespace gamelib
             switch (i.second.type)
             {
                 case PropInt:
-                    i.second.getAs<int>() = propnode.asInt();
+                    i.second.set<int>(propnode.asInt());
                     break;
                 case PropFloat:
-                    i.second.getAs<float>() = propnode.asFloat();
+                    i.second.set<float>(propnode.asFloat());
                     break;
                 case PropDouble:
-                    i.second.getAs<double>() = propnode.asDouble();
+                    i.second.set<double>(propnode.asDouble());
                     break;
                 case PropString:
-                    i.second.getAs<std::string>() = propnode.asString();
+                    i.second.set<std::string>(propnode.asString());
                     break;
                 case PropBool:
-                    i.second.getAs<bool>() = propnode.asBool();
+                    i.second.set<bool>(propnode.asBool());
                     break;
                 case PropVec2i:
                     {
@@ -62,17 +80,21 @@ namespace gamelib
                         // TODO: implement Vec2i serialization
                         math::Vec2f tmpvec;
                         ::gamelib::loadFromJson(propnode, tmpvec);
-                        i.second.getAs<math::Vec2i>() = tmpvec;
+                        i.second.set<math::Vec2i>(tmpvec);
                         break;
                     }
                 case PropVec2f:
-                    ::gamelib::loadFromJson(propnode, i.second.getAs<math::Vec2f>());
+                    {
+                        math::Vec2f tmpvec;
+                        ::gamelib::loadFromJson(propnode, tmpvec);
+                        i.second.set<math::Vec2f>(tmpvec);
+                    }
                     break;
                 // case PropVec2d:
                 //     ::gamelib::loadFromJson(propnode, i.second.getAs<math::Vec2d>());
                     // break;
                 case PropTexResource:
-                    i.second.getAs<TextureResource::Handle>() = ResourceManager::getActive()->get(propnode.asString());
+                    i.second.set<TextureResource::Handle>(ResourceManager::getActive()->get(propnode.asString()));
                     break;
                 case PropUnknown:
                     LOG_WARN("Can't read unknown property: ", i.first);
@@ -126,13 +148,13 @@ namespace gamelib
     }
 
 
-    void PropertyContainer::registerProperty(const std::string& name, void* prop, PropertyType type, int min, int max, const char** hints)
+    void PropertyContainer::_registerProperty(const std::string& name, void* prop, PropSetterCallback setter, void* self, PropertyType type, int min, int max, const char** hints)
     {
         if (_properties.find(name) != _properties.end())
             LOG_WARN("Overwriting existing property: ", name);
 
         auto& handle = _properties[name];
-        handle.ptr = prop;
+        handle = PropertyHandle(prop, setter, self);
         handle.type = type;
         handle.min = min;
         handle.max = max;
@@ -176,12 +198,10 @@ namespace gamelib
         return nullptr;
     }
 
-    PropertyHandle* PropertyContainer::find(const std::string& name)
+    const void* PropertyContainer::get(const std::string& name) const
     {
-        auto it = _properties.find(name);
-        if (it != _properties.end())
-            return &it->second;
-        return nullptr;
+        auto handle = find(name);
+        return handle ? handle->get() : nullptr;
     }
 
 
@@ -193,22 +213,5 @@ namespace gamelib
     void PropertyContainer::clear()
     {
         _properties.clear();
-    }
-
-
-    void* PropertyContainer::get(const std::string& name)
-    {
-        auto it = _properties.find(name);
-        if (it != _properties.end())
-            return it->second.ptr;
-        return nullptr;
-    }
-
-    const void* PropertyContainer::get(const std::string& name) const
-    {
-        auto it = _properties.find(name);
-        if (it != _properties.end())
-            return it->second.ptr;
-        return nullptr;
     }
 }

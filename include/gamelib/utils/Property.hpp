@@ -6,6 +6,7 @@
 #include "math/geometry/Vector.hpp"
 #include "gamelib/core/res/TextureResource.hpp"
 #include "gamelib/core/res/JsonSerializer.hpp"
+#include "gamelib/utils/log.hpp"
 
 namespace gamelib
 {
@@ -24,35 +25,54 @@ namespace gamelib
     };
 
 
+    typedef void(*PropSetterCallback)(void* var, const void* value, void* self);
+
+
     class PropertyHandle
     {
         public:
             PropertyHandle();
+            PropertyHandle(void* var, PropSetterCallback setter, void* self);
+
             auto isPrimitive() const -> bool;
             auto isVector() const    -> bool;
+            auto isSetter() const    -> bool;
+
+            auto get() const   -> const void*;
 
             template <typename T>
-            T& getAs()
+            auto getAs() const -> const T&
             {
-                return *static_cast<T*>(ptr);
+                return *static_cast<const T*>(get());
             }
 
             template <typename T>
-            const T& getAs() const
+            auto set(const T& val) const -> void
             {
-                return *static_cast<T*>(ptr);
+                if (isSetter())
+                    _setter(_ptr, &val, _self);
+                else
+                    *static_cast<T*>(_ptr) = val;
             }
 
         public:
-            void* ptr;
+            // Meta data for auto serialization, etc.
             PropertyType type;
             const char** hints;
             int min, max;
+
+        private:
+            void* _ptr;                  // Pointer to the variable
+            PropSetterCallback _setter;  // Setter function if direct access isn't possible
+            void* _self;                 // Data pointer that will be passed to the setter
     };
 
 
     class PropertyContainer : public JsonSerializer
     {
+        template <typename T, typename U>
+        using NicePropSetterCallback = void(*)(T* var, const T* value, U* self);
+
         public:
             typedef std::unordered_map<std::string, PropertyHandle> PropertyMap;
 
@@ -60,42 +80,24 @@ namespace gamelib
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
 
-            auto registerProperty(const std::string& name, void* prop, PropertyType type, int min = 0, int max = 0, const char** hints = nullptr) -> void;
             auto unregisterProperty(const std::string& name) -> void;
 
             template <typename T>
-            auto registerProperty(const std::string& name, T& prop, PropertyType type, int min = 0, int max = 0, const char** hints = nullptr) -> void
+            void registerProperty(const std::string& name, T& prop, int min = 0, int max = 0, const char** hints = nullptr)
             {
-                registerProperty(name, &prop, type, min, max, hints);
+                _registerProperty(name, &prop, nullptr, nullptr, categorizeProperty(prop), min, max, hints);
             }
 
             template <typename T>
-            auto registerProperty(const std::string& name, T& prop, int min = 0, int max = 0, const char** hints = nullptr) -> void
+            void registerProperty(const std::string& name, T& prop, PropSetterCallback setter, void* self, int min = 0, int max = 0, const char** hints = nullptr)
             {
-                PropertyType type;
+                _registerProperty(name, &prop, setter, self, categorizeProperty(prop), min, max, hints);
+            }
 
-                if (std::is_same<T, int>())
-                    type = PropInt;
-                else if (std::is_same<T, bool>())
-                    type = PropBool;
-                else if (std::is_same<T, float>())
-                    type = PropFloat;
-                else if (std::is_same<T, double>())
-                    type = PropDouble;
-                else if (std::is_same<T, std::string>())
-                    type = PropString;
-                else if (std::is_same<T, math::Vec2f>())
-                    type = PropVec2f;
-                else if (std::is_same<T, math::Vec2i>())
-                    type = PropVec2i;
-                // else if (std::is_same<T, math::Vec2d>())
-                //     type = PropVec2d;
-                else if (std::is_same<T, TextureResource::Handle>())
-                    type = PropTexResource;
-                else
-                    type = PropUnknown;
-
-                registerProperty(name, prop, type, min, max, hints);
+            template <typename T, typename U>
+            void registerProperty(const std::string& name, T& prop, NicePropSetterCallback<T, U> setter, U* self, int min = 0, int max = 0, const char** hints = nullptr)
+            {
+                _registerProperty(name, &prop, (PropSetterCallback)setter, static_cast<void*>(self), categorizeProperty(prop), min, max, hints);
             }
 
             auto begin() const -> PropertyMap::const_iterator;
@@ -103,21 +105,11 @@ namespace gamelib
             auto end() const   -> PropertyMap::const_iterator;
             auto end()         -> PropertyMap::iterator;
 
-            auto find(const std::string& name) const -> const PropertyHandle*;
-            auto find(const std::string& name)       -> PropertyHandle*;
-
             auto size() const -> size_t;
             auto clear()      -> void;
 
-            auto get(const std::string& name)       -> void*;
-            auto get(const std::string& name) const -> const void*;
-
-            template <typename T>
-            T* getAs(const std::string& name)
-            {
-                auto ptr = find(name);
-                return ptr ? &ptr->getAs<T>() : nullptr;
-            }
+            auto find(const std::string& name) const -> const PropertyHandle*;
+            auto get(const std::string& name) const  -> const void*;
 
             template <typename T>
             const T* getAs(const std::string& name) const
@@ -125,6 +117,44 @@ namespace gamelib
                 auto ptr = find(name);
                 return ptr ? &ptr->getAs<T>() : nullptr;
             }
+
+            template <typename T>
+            void set(const std::string& name, const T& val) const
+            {
+                auto handle = find(name);
+                if (handle)
+                    handle->set(val);
+                else
+                    LOG_WARN("Unknown property: ", name);
+            }
+
+            template <typename T>
+            PropertyType categorizeProperty(const T& prop) const
+            {
+                if (std::is_same<T, int>())
+                    return PropInt;
+                else if (std::is_same<T, bool>())
+                    return PropBool;
+                else if (std::is_same<T, float>())
+                    return PropFloat;
+                else if (std::is_same<T, double>())
+                    return PropDouble;
+                else if (std::is_same<T, std::string>())
+                    return PropString;
+                else if (std::is_same<T, math::Vec2f>())
+                    return PropVec2f;
+                else if (std::is_same<T, math::Vec2i>())
+                    return PropVec2i;
+                // else if (std::is_same<T, math::Vec2d>())
+                //     return PropVec2d;
+                else if (std::is_same<T, TextureResource::Handle>())
+                    return PropTexResource;
+                else
+                    return PropUnknown;
+            }
+
+        private:
+            auto _registerProperty(const std::string& name, void* prop, PropSetterCallback setter, void* self, PropertyType type, int min, int max, const char** hints) -> void;
 
         private:
             PropertyMap _properties;
