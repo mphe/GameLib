@@ -15,8 +15,8 @@ namespace gamelib
             CollisionComponent(const std::string& name);
             virtual ~CollisionComponent() {}
 
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node)        -> void;
+            virtual auto loadFromJson(const Json::Value& node) -> bool;
+            virtual auto writeToJson(Json::Value& node)        -> void;
 
         protected:
             virtual auto _init() -> bool;

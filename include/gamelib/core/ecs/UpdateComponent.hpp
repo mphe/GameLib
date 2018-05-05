@@ -16,8 +16,8 @@ namespace gamelib
             UpdateComponent(const std::string& name, int interval = 1, UpdateSystem::HookType hook = UpdateSystem::Frame);
             virtual ~UpdateComponent() {}
 
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node)        -> void;
+            virtual auto loadFromJson(const Json::Value& node) -> bool;
+            virtual auto writeToJson(Json::Value& node)        -> void;
 
         protected:
             virtual auto _init() -> bool;

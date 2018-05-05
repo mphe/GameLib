@@ -31,12 +31,13 @@ namespace gamelib
 
     bool Component::loadFromJson(const Json::Value& node)
     {
-        return true;
+        return _props.loadFromJson(node);
     }
 
     void Component::writeToJson(Json::Value& node)
     {
         node["name"] = getName();
+        _props.writeToJson(node);
     }
 
     bool Component::_init()

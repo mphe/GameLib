@@ -3,6 +3,7 @@
 
 #include "gamelib/core/Identifiable.hpp"
 #include "gamelib/utils/SlotMap.hpp"
+#include "gamelib/utils/Property.hpp"
 #include "gamelib/core/res/JsonSerializer.hpp"
 
 namespace gamelib
@@ -24,14 +25,17 @@ namespace gamelib
             auto getEntity() const       -> Entity*;
             auto getEntityHandle() const -> Handle;
 
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node)        -> void;
+            virtual auto loadFromJson(const Json::Value& node) -> bool;
+            virtual auto writeToJson(Json::Value& node)        -> void;
 
         protected:
             // Those are called by Entity
             virtual auto _init()    -> bool;
             virtual auto _quit()    -> void;
             virtual auto _refresh() -> void;
+
+        protected:
+            PropertyContainer _props;
 
         private:
             Handle _ent;   // Set by Entity
