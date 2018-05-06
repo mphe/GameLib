@@ -9,7 +9,10 @@ namespace gamelib
         camera(0),
         shakerad(5),
         _shake(false)
-    { }
+    {
+        _props.registerProperty("radius", shakerad);
+        _props.registerProperty("camera", camera);
+    }
 
     void CameraTracker::update(float elapsed)
     {
@@ -53,15 +56,15 @@ namespace gamelib
     bool CameraTracker::loadFromJson(const Json::Value& node)
     {
         UpdateComponent::loadFromJson(node);
-        shakerad = node.get("shakerad", shakerad).asFloat();
-        camera = node.get("camera", 0).asInt();
+        // shakerad = node.get("shakerad", shakerad).asFloat();
+        // camera = node.get("camera", 0).asInt();
         return true;
     }
 
     void CameraTracker::writeToJson(Json::Value& node)
     {
         UpdateComponent::writeToJson(node);
-        node["shakerad"] = shakerad;
-        node["camera"] = camera;
+        // node["shakerad"] = shakerad;
+        // node["camera"] = camera;
     }
 }

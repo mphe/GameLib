@@ -19,7 +19,12 @@ namespace gamelib
         ground(nullptr),
         unstuckmethod(Normal),
         _bbox(box)
-    { }
+    {
+        static const char* unstuckmethodHints[] = { "Normal", "Upwards", "Nudge (unimplemented)" };
+        _props.registerProperty("vel", vel);
+        _props.registerProperty("overbounce", overbounce);
+        _props.registerProperty("unstuckMethod", *(int*)(&unstuckmethod), 0, 2, unstuckmethodHints);
+    }
 
     void QPhysics::accelerate(const math::Vec2f& wishdir, float wishspeed, float accel)
     {
@@ -172,10 +177,9 @@ namespace gamelib
     {
         UpdateComponent::loadFromJson(node);
 
-        // gamelib::loadFromJson(node["transform"], *static_cast<Transformable*>(this));
-        gamelib::loadFromJson(node["vel"], vel);
-        overbounce = node.get("overbounce", overbounce).asFloat();
-        unstuckmethod = static_cast<UnstuckMethod>(node.get("unstuckmethod", unstuckmethod).asInt());
+        // gamelib::loadFromJson(node["vel"], vel);
+        // overbounce = node.get("overbounce", overbounce).asFloat();
+        // unstuckmethod = static_cast<UnstuckMethod>(node.get("unstuckmethod", unstuckmethod).asInt());
 
         if (node.isMember("global"))
             loadGlobalsFromJson(node["global"]);
@@ -186,10 +190,9 @@ namespace gamelib
     void QPhysics::writeToJson(Json::Value& node)
     {
         UpdateComponent::writeToJson(node);
-        // gamelib::writeToJson(node["transform"], *static_cast<Transformable*>(this));
-        gamelib::writeToJson(node["vel"], vel);
-        node["overbounce"] = overbounce;
-        node["unstuckmethod"] = unstuckmethod;
+        // gamelib::writeToJson(node["vel"], vel);
+        // node["overbounce"] = overbounce;
+        // node["unstuckmethod"] = unstuckmethod;
     }
 
     bool QPhysics::loadGlobalsFromJson(const Json::Value& node)

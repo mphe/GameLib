@@ -13,7 +13,12 @@ namespace gamelib
         jumpspeed(100),
         qphys(nullptr),
         _canjump(true)
-    { }
+    {
+        _props.registerProperty("accelerate", accelerate);
+        _props.registerProperty("airAccelerate", airAccelerate);
+        _props.registerProperty("maxspeed", maxspeed);
+        _props.registerProperty("jumpspeed", jumpspeed);
+    }
 
     void QController::update(float elapsed)
     {
@@ -44,10 +49,10 @@ namespace gamelib
     bool QController::loadFromJson(const Json::Value& node)
     {
         UpdateComponent::loadFromJson(node);
-        maxspeed = node.get("maxspeed", maxspeed).asFloat();
-        accelerate = node.get("accelerate", accelerate).asFloat();
-        airAccelerate = node.get("airAccelerate", airAccelerate).asFloat();
-        jumpspeed = node.get("jumpspeed", jumpspeed).asFloat();
+        // maxspeed = node.get("maxspeed", maxspeed).asFloat();
+        // accelerate = node.get("accelerate", accelerate).asFloat();
+        // airAccelerate = node.get("airAccelerate", airAccelerate).asFloat();
+        // jumpspeed = node.get("jumpspeed", jumpspeed).asFloat();
 
         return true;
     }
@@ -55,15 +60,14 @@ namespace gamelib
     void QController::writeToJson(Json::Value& node)
     {
         UpdateComponent::writeToJson(node);
-        node["maxspeed"] = maxspeed;
-        node["accelerate"] = accelerate;
-        node["airAccelerate"] = airAccelerate;
-        node["jumpspeed"] = jumpspeed;
+        // node["maxspeed"] = maxspeed;
+        // node["accelerate"] = accelerate;
+        // node["airAccelerate"] = airAccelerate;
+        // node["jumpspeed"] = jumpspeed;
     }
 
     void QController::_refresh()
     {
-        qphys = static_cast<QPhysics*>(
-                getEntity()->find(QPhysics::name));
+        qphys = static_cast<QPhysics*>(getEntity()->find(QPhysics::name));
     }
 }
