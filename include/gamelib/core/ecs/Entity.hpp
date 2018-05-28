@@ -163,7 +163,9 @@ namespace gamelib
             ComponentList _components;
     };
 
+
     auto getEntity(Entity::Handle handle) -> Entity*;
+    auto findEntity(const std::string& name) -> Entity*;
 }
 
 #endif

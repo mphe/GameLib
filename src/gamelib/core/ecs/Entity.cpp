@@ -1,6 +1,5 @@
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
-// #include "gamelib/core/ecs/EntityFactory.hpp"
 #include "gamelib/utils/log.hpp"
 
 namespace gamelib
@@ -10,13 +9,18 @@ namespace gamelib
         return getSubsystem<EntityManager>()->get(handle);
     }
 
+    Entity* findEntity(const std::string& name)
+    {
+        return getSubsystem<EntityManager>()->find(name);
+    }
+
 
     Entity::Entity() :
-        _entmgr(nullptr),
-        _quitting(false)
+        Entity("")
     { }
 
     Entity::Entity(const std::string& name) :
+        flags(0),
         _entmgr(nullptr),
         _name(name),
         _quitting(false)
