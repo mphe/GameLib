@@ -9,6 +9,7 @@
 #include "gamelib/core/event/Event.hpp"
 #include "ui/Grid.hpp"
 #include "ui/LayerUI.hpp"
+#include "EntityDesigner.hpp"
 
 namespace gamelib
 {
@@ -60,6 +61,7 @@ namespace gamelib
             math::Point2f _mouseSnapped;
             Grid _grid;
             LayerUI _layerui;
+            EntityDesigner _entdesigner;
             bool _snap;
             bool _drag;
             bool _gridOnTop;

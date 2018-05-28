@@ -12,7 +12,7 @@
 #include "editor/editor/tools/SelectTool.hpp"
 #include "editor/editor/tools/EntityTool.hpp"
 #include "editor/editor/ui/JsonView.hpp"
-#include "editor/editor/ui/props.hpp"
+#include "editor/editor/ui/inputs.hpp"
 #include "editor/editor/EditorShared.hpp"
 #include "editor/components/BrushComponent.hpp"
 #include "imgui.h"
@@ -71,6 +71,8 @@ namespace gamelib
 
     void Editor::quit()
     {
+        _entdesigner.close();
+
         auto evmgr = getSubsystem<EventManager>();
         evmgr->unregCallback(SFMLEvent::id, _eventCallback, this);
 
@@ -145,8 +147,8 @@ namespace gamelib
         }
         else
         {
-            scene->flags |= render_noparallax | render_drawhidden;
-            flags |= gamestate_freeze;
+            ADDFLAG(scene->flags, render_noparallax | render_drawhidden);
+            ADDFLAG(flags, gamestate_freeze);
         }
     }
 
@@ -301,6 +303,20 @@ namespace gamelib
             {
                 ImGui::MenuItem("Show test window", nullptr, &testwindow);
                 ImGui::MenuItem("Show json window", nullptr, &jsonwindow);
+
+                auto scene = getSubsystem<Scene>();
+                if (ImGui::MenuItem("Show hidden", nullptr, scene->flags & render_drawhidden))
+                    TOGGLEFLAG(scene->flags, render_drawhidden);
+
+                if (ImGui::MenuItem("Enable parallax", nullptr, !(scene->flags & render_noparallax)))
+                    TOGGLEFLAG(scene->flags, render_noparallax);
+
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Tools"))
+            {
+                if (ImGui::MenuItem("Open Entity Designer"))
+                    _entdesigner.open();
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Grid"))
@@ -316,50 +332,56 @@ namespace gamelib
             ImGui::EndMainMenuBar();
         }
 
-        if (testwindow)
-            ImGui::ShowTestWindow(&testwindow);
+        { // Loading / Saving
+            chosenPath = loaddlg.chooseFileDialog(chooseload);
+            if (strlen(chosenPath) > 0)
+            {
+                currentFilePath = chosenPath;
+                loadState(currentFilePath);
+                _layerui.refresh();
+            }
 
-        if (jsonwindow)
-            drawJsonView(&jsonwindow);
+            chosenPath = savedlg.saveFileDialog(choosesave);
+            if (strlen(chosenPath) > 0)
+            {
+                currentFilePath = chosenPath;
+                saveState(currentFilePath);
+            }
 
-        chosenPath = loaddlg.chooseFileDialog(chooseload);
-        if (strlen(chosenPath) > 0)
-        {
-            currentFilePath = chosenPath;
-            loadState(currentFilePath);
-            _layerui.refresh();
+            chosenPath = exportdlg.saveFileDialog(chooseexport);
+            if (strlen(chosenPath) > 0)
+                _exportcallback(chosenPath);
         }
 
-        chosenPath = savedlg.saveFileDialog(choosesave);
-        if (strlen(chosenPath) > 0)
-        {
-            currentFilePath = chosenPath;
-            saveState(currentFilePath);
-        }
+        { // Dialogues
+            if (testwindow)
+                ImGui::ShowTestWindow(&testwindow);
 
-        chosenPath = exportdlg.saveFileDialog(chooseexport);
-        if (strlen(chosenPath) > 0)
-            _exportcallback(chosenPath);
+            if (jsonwindow)
+                drawJsonView(&jsonwindow);
 
-        ImGui::Begin("Toolbox", nullptr, ImVec2(250, 125));
-        for (size_t i = 0; i < NumTools; ++i)
-            if (ImGui::Button(buttonStrings[i]))
-                setTool(static_cast<Tools>(i));
-        ImGui::End();
+            _entdesigner.draw();
 
-        ImGui::Begin("Tool properties", nullptr, ImVec2(250, 275));
-        _currenttool->drawGui();
-        ImGui::End();
-
-        ImGui::Begin("Layer Properties", nullptr, ImVec2(250, 285));
-        _layerui.drawLayerUI();
-        ImGui::End();
-
-        if (getSelectTool().getSelected())
-        {
-            ImGui::Begin("Entity properties", nullptr, ImVec2(256, 690));
-            drawEntityProps(*getSelectTool().getSelected());
+            ImGui::Begin("Toolbox", nullptr, ImVec2(250, 125));
+            for (size_t i = 0; i < NumTools; ++i)
+                if (ImGui::Button(buttonStrings[i]))
+                    setTool(static_cast<Tools>(i));
             ImGui::End();
+
+            ImGui::Begin("Tool properties", nullptr, ImVec2(250, 275));
+            _currenttool->drawGui();
+            ImGui::End();
+
+            ImGui::Begin("Layer Properties", nullptr, ImVec2(250, 285));
+            _layerui.drawLayerUI();
+            ImGui::End();
+
+            if (getSelectTool().getSelected())
+            {
+                ImGui::Begin("Orientation", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+                inputTransform(getSelectTool().getSelected()->getTransform());
+                ImGui::End();
+            }
         }
     }
 
