@@ -17,9 +17,6 @@ namespace gamelib
 
             auto update(float elapsed) -> void;
 
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node)        -> void;
-
         private:
             auto _refresh() -> void;
 

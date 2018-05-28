@@ -24,6 +24,7 @@ namespace gamelib
             auto getName() const         -> const std::string&;
             auto getEntity() const       -> Entity*;
             auto getEntityHandle() const -> Handle;
+            auto getProperties() const   -> const PropertyContainer&;
 
             virtual auto loadFromJson(const Json::Value& node) -> bool;
             virtual auto writeToJson(Json::Value& node)        -> void;

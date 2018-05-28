@@ -13,13 +13,12 @@ namespace gamelib
     enum PropertyType
     {
         PropInt,
+        PropBitflags,
         PropFloat,
-        PropDouble,
         PropString,
         PropBool,
         PropVec2i,
         PropVec2f,
-        // PropVec2d,
         PropTexResource,
         PropUnknown
     };
@@ -38,7 +37,8 @@ namespace gamelib
             auto isVector() const    -> bool;
             auto isSetter() const    -> bool;
 
-            auto get() const   -> const void*;
+            auto get() const              -> const void*;
+            auto getMutableOrNull() const -> void*;
 
             template <typename T>
             auto getAs() const -> const T&
@@ -58,7 +58,7 @@ namespace gamelib
         public:
             // Meta data for auto serialization, etc.
             PropertyType type;
-            const char** hints;
+            const char* const* hints;
             int min, max;
 
         private:
@@ -83,19 +83,19 @@ namespace gamelib
             auto unregisterProperty(const std::string& name) -> void;
 
             template <typename T>
-            void registerProperty(const std::string& name, T& prop, int min = 0, int max = 0, const char** hints = nullptr)
+            void registerProperty(const std::string& name, T& prop, int min = 0, int max = 0, const char* const* hints = nullptr)
             {
                 _registerProperty(name, &prop, nullptr, nullptr, categorizeProperty(prop), min, max, hints);
             }
 
             template <typename T>
-            void registerProperty(const std::string& name, T& prop, PropSetterCallback setter, void* self, int min = 0, int max = 0, const char** hints = nullptr)
+            void registerProperty(const std::string& name, T& prop, PropSetterCallback setter, void* self, int min = 0, int max = 0, const char* const* hints = nullptr)
             {
                 _registerProperty(name, &prop, setter, self, categorizeProperty(prop), min, max, hints);
             }
 
             template <typename T, typename U>
-            void registerProperty(const std::string& name, T& prop, NicePropSetterCallback<T, U> setter, U* self, int min = 0, int max = 0, const char** hints = nullptr)
+            void registerProperty(const std::string& name, T& prop, NicePropSetterCallback<T, U> setter, U* self, int min = 0, int max = 0, const char* const* hints = nullptr)
             {
                 _registerProperty(name, &prop, (PropSetterCallback)setter, static_cast<void*>(self), categorizeProperty(prop), min, max, hints);
             }
@@ -133,20 +133,18 @@ namespace gamelib
             {
                 if (std::is_same<T, int>())
                     return PropInt;
+                else if (std::is_same<T, unsigned int>())
+                    return PropBitflags;
                 else if (std::is_same<T, bool>())
                     return PropBool;
                 else if (std::is_same<T, float>())
                     return PropFloat;
-                else if (std::is_same<T, double>())
-                    return PropDouble;
                 else if (std::is_same<T, std::string>())
                     return PropString;
                 else if (std::is_same<T, math::Vec2f>())
                     return PropVec2f;
                 else if (std::is_same<T, math::Vec2i>())
                     return PropVec2i;
-                // else if (std::is_same<T, math::Vec2d>())
-                //     return PropVec2d;
                 else if (std::is_same<T, TextureResource::Handle>())
                     return PropTexResource;
                 else
@@ -154,7 +152,7 @@ namespace gamelib
             }
 
         private:
-            auto _registerProperty(const std::string& name, void* prop, PropSetterCallback setter, void* self, PropertyType type, int min, int max, const char** hints) -> void;
+            auto _registerProperty(const std::string& name, void* prop, PropSetterCallback setter, void* self, PropertyType type, int min, int max, const char* const* hints) -> void;
 
         private:
             PropertyMap _properties;

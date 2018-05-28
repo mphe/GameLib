@@ -9,6 +9,8 @@
 
 namespace gamelib
 {
+    constexpr const char* unstuckmethodHints[] = { "Normal", "Upwards", "Nudge (unimplemented)" };
+
     QPhysics::QPhysics(int interval) :
         QPhysics(nullptr, 1)
     { }
@@ -20,10 +22,9 @@ namespace gamelib
         unstuckmethod(Normal),
         _bbox(box)
     {
-        static const char* unstuckmethodHints[] = { "Normal", "Upwards", "Nudge (unimplemented)" };
         _props.registerProperty("vel", vel);
         _props.registerProperty("overbounce", overbounce);
-        _props.registerProperty("unstuckMethod", *(int*)(&unstuckmethod), 0, 2, unstuckmethodHints);
+        _props.registerProperty("unstuckMethod", *(int*)(&unstuckmethod), 0, 3, unstuckmethodHints);
     }
 
     void QPhysics::accelerate(const math::Vec2f& wishdir, float wishspeed, float accel)

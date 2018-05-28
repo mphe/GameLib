@@ -29,6 +29,11 @@ namespace gamelib
         return _ent;
     }
 
+    const PropertyContainer& Component::getProperties() const
+    {
+        return _props;
+    }
+
     bool Component::loadFromJson(const Json::Value& node)
     {
         return _props.loadFromJson(node);

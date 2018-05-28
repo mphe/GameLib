@@ -11,7 +11,7 @@ namespace gamelib
                                public Collidable
     {
         public:
-            CollisionComponent() {};
+            CollisionComponent();
             CollisionComponent(const std::string& name);
             virtual ~CollisionComponent() {}
 

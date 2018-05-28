@@ -21,14 +21,13 @@ namespace gamelib
 
     bool PropertyHandle::isPrimitive() const
     {
-        return type == PropInt || type == PropFloat || type == PropDouble ||
-            type == PropBool;
+        return type == PropInt || type == PropFloat ||
+            type == PropBool || type == PropBitflags;
     }
 
     bool PropertyHandle::isVector() const
     {
         return type == PropVec2f || type == PropVec2i;
-            // type == PropVec2d ||
     }
 
     bool PropertyHandle::isSetter() const
@@ -40,6 +39,11 @@ namespace gamelib
     const void* PropertyHandle::get() const
     {
         return _ptr;
+    }
+
+    void* PropertyHandle::getMutableOrNull() const
+    {
+        return isSetter() ? nullptr : _ptr;
     }
 
 
@@ -62,11 +66,11 @@ namespace gamelib
                 case PropInt:
                     i.second.set<int>(propnode.asInt());
                     break;
+                case PropBitflags:
+                    i.second.set<unsigned int>(propnode.asUInt());
+                    break;
                 case PropFloat:
                     i.second.set<float>(propnode.asFloat());
-                    break;
-                case PropDouble:
-                    i.second.set<double>(propnode.asDouble());
                     break;
                 case PropString:
                     i.second.set<std::string>(propnode.asString());
@@ -90,9 +94,6 @@ namespace gamelib
                         i.second.set<math::Vec2f>(tmpvec);
                     }
                     break;
-                // case PropVec2d:
-                //     ::gamelib::loadFromJson(propnode, i.second.getAs<math::Vec2d>());
-                    // break;
                 case PropTexResource:
                     i.second.set<TextureResource::Handle>(ResourceManager::getActive()->get(propnode.asString()));
                     break;
@@ -116,11 +117,11 @@ namespace gamelib
                 case PropInt:
                     propnode = i.second.getAs<int>();
                     break;
+                case PropBitflags:
+                    propnode = i.second.getAs<unsigned int>();
+                    break;
                 case PropFloat:
                     propnode = i.second.getAs<float>();
-                    break;
-                case PropDouble:
-                    propnode = i.second.getAs<double>();
                     break;
                 case PropString:
                     propnode = i.second.getAs<std::string>();
@@ -134,9 +135,6 @@ namespace gamelib
                 case PropVec2f:
                     ::gamelib::writeToJson(propnode, i.second.getAs<math::Vec2f>());
                     break;
-                // case PropVec2d:
-                //     ::gamelib::writeToJson(propnode, i.second.getAs<math::Vec2d>());
-                //     break;
                 case PropTexResource:
                     propnode = i.second.getAs<TextureResource::Handle>().getResource()->getPath();
                     break;
@@ -148,7 +146,7 @@ namespace gamelib
     }
 
 
-    void PropertyContainer::_registerProperty(const std::string& name, void* prop, PropSetterCallback setter, void* self, PropertyType type, int min, int max, const char** hints)
+    void PropertyContainer::_registerProperty(const std::string& name, void* prop, PropSetterCallback setter, void* self, PropertyType type, int min, int max, const char* const* hints)
     {
         if (_properties.find(name) != _properties.end())
             LOG_WARN("Overwriting existing property: ", name);

@@ -46,28 +46,8 @@ namespace gamelib
         }
     }
 
-    bool QController::loadFromJson(const Json::Value& node)
-    {
-        UpdateComponent::loadFromJson(node);
-        // maxspeed = node.get("maxspeed", maxspeed).asFloat();
-        // accelerate = node.get("accelerate", accelerate).asFloat();
-        // airAccelerate = node.get("airAccelerate", airAccelerate).asFloat();
-        // jumpspeed = node.get("jumpspeed", jumpspeed).asFloat();
-
-        return true;
-    }
-
-    void QController::writeToJson(Json::Value& node)
-    {
-        UpdateComponent::writeToJson(node);
-        // node["maxspeed"] = maxspeed;
-        // node["accelerate"] = accelerate;
-        // node["airAccelerate"] = airAccelerate;
-        // node["jumpspeed"] = jumpspeed;
-    }
-
     void QController::_refresh()
     {
-        qphys = static_cast<QPhysics*>(getEntity()->find(QPhysics::name));
+        qphys = getEntity()->findByName<QPhysics>();
     }
 }

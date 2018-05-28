@@ -5,9 +5,17 @@
 
 namespace gamelib
 {
+    constexpr const char* collisionFlagHints[] = { "Solid", "Mask" };
+
+    CollisionComponent::CollisionComponent() :
+        CollisionComponent("")
+    { }
+
     CollisionComponent::CollisionComponent(const std::string& name) :
         Identifier(name)
-    { }
+    {
+        _props.registerProperty("flags", flags, 0, 2, collisionFlagHints);
+    }
 
     bool CollisionComponent::_init()
     {

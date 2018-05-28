@@ -22,9 +22,6 @@ namespace gamelib
             auto shake(float seconds) -> void;
             auto getCamera() const    -> Camera*;
 
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node)        -> void;
-
         public:
             Transformable* track;
             int camera;

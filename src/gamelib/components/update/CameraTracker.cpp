@@ -52,19 +52,4 @@ namespace gamelib
     {
         return getSubsystem<Scene>()->getCamera(camera);
     }
-
-    bool CameraTracker::loadFromJson(const Json::Value& node)
-    {
-        UpdateComponent::loadFromJson(node);
-        // shakerad = node.get("shakerad", shakerad).asFloat();
-        // camera = node.get("camera", 0).asInt();
-        return true;
-    }
-
-    void CameraTracker::writeToJson(Json::Value& node)
-    {
-        UpdateComponent::writeToJson(node);
-        // node["shakerad"] = shakerad;
-        // node["camera"] = camera;
-    }
 }
