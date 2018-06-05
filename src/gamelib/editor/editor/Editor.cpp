@@ -376,11 +376,21 @@ namespace gamelib
             _layerui.drawLayerUI();
             ImGui::End();
 
-            if (getSelectTool().getSelected())
+            auto selected = getSelectTool().getSelected();
+            if (selected)
             {
-                ImGui::Begin("Orientation", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-                inputTransform(getSelectTool().getSelected()->getTransform());
-                ImGui::End();
+                if (hasflag(selected->flags, entity_exportcomponents))
+                {
+                    ImGui::Begin("Properties");
+                    inputEntityProps(*selected);
+                    ImGui::End();
+                }
+                else
+                {
+                    ImGui::Begin("Orientation", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+                    inputTransform(getSelectTool().getSelected()->getTransform());
+                    ImGui::End();
+                }
             }
         }
     }
