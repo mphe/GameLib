@@ -28,10 +28,8 @@ set(GAMELIB_SOURCES
 
     core/Game.cpp
     core/event/EventManager.cpp
-    core/tile/StaticRenderTilemap.cpp
     core/Camera.cpp
     core/sprite/AnimatedSprite.cpp
-    core/sprite/SpriteSet.cpp
     core/sprite/SpriteData.cpp
     core/geometry/CollisionSystem.cpp
     core/geometry/Transformable.cpp
@@ -68,6 +66,8 @@ set(GAMELIB_SOURCES
     # legacy/component/subsystem/UpdateSystem.cpp
     # legacy/component/UpdateComponent.cpp
     # legacy/TileWalker.cpp
+    # legacy/tile/StaticRenderTilemap.cpp
+    # legacy/sprite/SpriteSet.cpp
 )
 
 source_group(gamelib FILES ${GAMELIB_SOURCES})
