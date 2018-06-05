@@ -80,17 +80,6 @@ namespace gamelib
         gamelib::loadFromJson(node["transform"], *static_cast<Transformable*>(this));
         gamelib::loadFromJson(node["origin"], _origin);
 
-        if (node.isMember("vertices"))
-        {
-            auto& vertices = node["vertices"];
-            _vertices.resize(vertices.size());
-            for (Json::ArrayIndex i = 0; i < vertices.size(); ++i)
-            {
-                gamelib::loadFromJson(vertices[i][0], _vertices[i].position);
-                gamelib::loadFromJson(vertices[i][1], _vertices[i].texCoords);
-            }
-        }
-
         return true;
     }
 
@@ -105,17 +94,6 @@ namespace gamelib
 
         gamelib::writeToJson(node["transform"], *static_cast<Transformable*>(this));
         gamelib::writeToJson(node["origin"], _origin);
-
-        auto& vertices = node["vertices"];
-        vertices.resize(_vertices.getVertexCount());
-
-        for (Json::ArrayIndex i = 0; i < _vertices.getVertexCount(); ++i)
-        {
-            auto& vertex = vertices[i];
-            vertex.resize(2);
-            gamelib::writeToJson(vertex[0], _vertices[i].position);
-            gamelib::writeToJson(vertex[1], _vertices[i].texCoords);
-        }
     }
 
 
