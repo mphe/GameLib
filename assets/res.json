@@ -4,6 +4,8 @@
     "preload": {
         "tex" : [
             "dirt.png",
+            "dirt2.png",
+            "grass.png",
             "bg.png",
             "block.png",
             "sand.png",
