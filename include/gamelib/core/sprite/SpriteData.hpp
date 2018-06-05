@@ -6,26 +6,31 @@
 
 namespace gamelib
 {
+    auto getSpriteRect(int offset, const sf::IntRect& rect, int texw, int texh) -> sf::IntRect;
+
     class AnimationData
     {
         public:
             AnimationData();
             auto update(float elapsed) -> void;
-            auto getRect(int texw, int texh) const -> sf::IntRect;
 
         public:
             int length;
             float speed;
             float offset;
-            sf::IntRect rect;
     };
 
     // More memory efficient than storing sf::Sprite or gamelib::AnimatedSprite
     // if a drawable sprite object isn't needed.
-    struct SpriteData
+    class SpriteData
     {
-        AnimationData anidata;
-        sf::Vector2f origin;
+        public:
+            auto getRect(int texw, int texh) const -> sf::IntRect;
+
+        public:
+            AnimationData anidata;
+            sf::Vector2f origin;
+            sf::IntRect rect;
     };
 }
 

@@ -1,0 +1,9 @@
+{
+    "texture": "tex/sheet.png",
+    "speed": 16,
+    "length": 8,
+    "offset": 0,
+    "framepos": [ 0, 64 ],
+    "framesize": [ 32, 32 ],
+    "origin": [ 16, 32 ]
+}

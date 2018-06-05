@@ -46,7 +46,7 @@ namespace gamelib
 
         private:
             AnimationData _anidata;
-
+            sf::IntRect _rect;
     };
 }
 

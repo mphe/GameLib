@@ -5,7 +5,7 @@
 #include "gamelib/components/geometry/PixelCollision.hpp"
 #include "gamelib/components/update/QPhysics.hpp"
 #include "gamelib/components/update/QController.hpp"
-#include "gamelib/components/update/SpriteComponent.hpp"
+#include "gamelib/components/rendering/SpriteComponent.hpp"
 #include "gamelib/components/update/CameraTracker.hpp"
 #include "gamelib/components/rendering/PolygonShape.hpp"
 

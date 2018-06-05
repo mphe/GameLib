@@ -19,7 +19,14 @@ namespace gamelib
         }
     }
 
-    sf::IntRect AnimationData::getRect(int texw, int texh) const
+
+    sf::IntRect SpriteData::getRect(int texw, int texh) const
+    {
+        return getSpriteRect(anidata.offset, rect, texw, texh);
+    }
+
+
+    sf::IntRect getSpriteRect(int offset, const sf::IntRect& rect, int texw, int texh)
     {
         int x = rect.left + (int)offset * rect.width;
         return sf::IntRect(x % texw, (rect.top + x / texw * rect.height) % texh, rect.width, rect.height);

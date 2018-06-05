@@ -32,7 +32,7 @@ namespace gamelib
     void AnimatedSprite::update(float elapsed)
     {
         _anidata.update(elapsed);
-        setTextureRect(_anidata.getRect(getTexture()->getSize().x, getTexture()->getSize().y));
+        setTextureRect(getSpriteRect(_anidata.offset, _rect, getTexture()->getSize().x, getTexture()->getSize().y));
     }
 
     void AnimatedSprite::render(sf::RenderTarget& target)
@@ -43,12 +43,14 @@ namespace gamelib
     void AnimatedSprite::change(const AnimationData& anidata)
     {
         _anidata = anidata;
-        setTextureRect(_anidata.getRect(getTexture()->getSize().x, getTexture()->getSize().y));
+        setTextureRect(getSpriteRect(_anidata.offset, _rect, getTexture()->getSize().x, getTexture()->getSize().y));
     }
 
     void AnimatedSprite::change(const SpriteData& spritedata)
     {
         change(spritedata.anidata);
         setOrigin(spritedata.origin);
+        _rect = spritedata.rect;
+        setTextureRect(_rect);
     }
 }

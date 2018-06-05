@@ -13,12 +13,13 @@ set(GAMELIB_SOURCES
 
     components/update/QPhysics.cpp
     components/update/QController.cpp
-    components/update/SpriteComponent.cpp
+    components/update/AnimationComponent.cpp
     components/update/CameraTracker.cpp
     components/geometry/AABB.cpp
     components/geometry/Polygon.cpp
     components/geometry/PixelCollision.cpp
     components/rendering/PolygonShape.cpp
+    components/rendering/SpriteComponent.cpp
 
     utils/SpriteBatch.cpp
     utils/DebugGui.cpp
