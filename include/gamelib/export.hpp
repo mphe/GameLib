@@ -5,7 +5,6 @@
 #include "utils/json.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
-#include "gamelib/components/update/QPhysics.hpp"
 
 namespace gamelib
 {
@@ -28,8 +27,6 @@ namespace gamelib
         auto entmgr = getSubsystem<EntityManager>();
         if (entmgr)
             entmgr->writeToJson(node["entmgr"], callback);
-
-        QPhysics::writeGlobalsToJson(node["physics"]);
     }
 
     // Calls a callback for each entity about to be serialized.

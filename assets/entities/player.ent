@@ -7,13 +7,14 @@
         },
         {
             "name": "QPhysicsComponent",
-            "overbounce": 1,
-            "global": {
-                "gravity": 700,
-                "friction": 10,
-                "stopFriction": 10,
-                "stopSpeed": 70
-            }
+            "overbounce": 1
+        },
+        {
+            "name": "QConfig",
+            "gravity": 700,
+            "friction": 10,
+            "stopFriction": 10,
+            "stopSpeed": 70
         },
         {
             "name": "QController",

@@ -1,0 +1,9 @@
+{
+    "name": "globalconfig",
+    "flags": 1,
+    "components": [
+        {
+            "name": "QConfig"
+        }
+    ]
+}

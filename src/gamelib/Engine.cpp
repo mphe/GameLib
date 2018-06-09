@@ -17,6 +17,7 @@ namespace gamelib
         entfactory.addComponent<AABB>(AABB::name);
         entfactory.addComponent<PixelCollision>(PixelCollision::name);
         entfactory.addComponent<QPhysics>(QPhysics::name);
+        entfactory.addComponent<QConfig>(QConfig::name);
         entfactory.addComponent<QController>(QController::name);
         entfactory.addComponent<SpriteComponent>(SpriteComponent::name);
         entfactory.addComponent<CameraTracker>(CameraTracker::name);

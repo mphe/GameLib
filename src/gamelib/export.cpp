@@ -40,7 +40,5 @@ namespace gamelib
         auto entmgr = EntityManager::getActive();
         if (entmgr)
             entmgr->loadFromJson(node["entmgr"]);
-
-        QPhysics::loadGlobalsFromJson(node["physics"]);
     }
 }

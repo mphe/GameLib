@@ -14,7 +14,8 @@
         "entities": [
             "linebrush.ent",
             "polygonbrush.ent",
-            "player.ent"
+            "player.ent",
+            "globalconfig.ent"
         ],
         "spr": [
             "player_stand.spr",

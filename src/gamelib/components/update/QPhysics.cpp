@@ -5,11 +5,24 @@
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/CollisionComponent.hpp"
 #include "gamelib/core/Game.hpp"
-#include "gamelib/utils/json.hpp"
 
 namespace gamelib
 {
     constexpr const char* unstuckmethodHints[] = { "Normal", "Upwards", "Nudge (unimplemented)" };
+
+    constexpr const char* QConfig::name; // Why?
+
+    QConfig::QConfig() :
+        Identifier(name)
+    {
+        _props.registerProperty("gravityDirection", QPhysics::gravityDirection);
+        _props.registerProperty("gravity", QPhysics::gravity);
+        _props.registerProperty("friction", QPhysics::friction);
+        _props.registerProperty("stopFriction", QPhysics::stopFriction);
+        _props.registerProperty("stopSpeed", QPhysics::stopSpeed);
+    }
+
+
 
     QPhysics::QPhysics(int interval) :
         QPhysics(nullptr, 1)
@@ -108,6 +121,7 @@ namespace gamelib
                 {
                     LOG_DEBUG("stuck");
                     LOG_DEBUG("normal: x: ", trace.isec.normal.x, " y: ", trace.isec.normal.y);
+
                     if (unstuckmethod == Normal)
                     {
                         box.pos += trace.isec.normal;
@@ -150,19 +164,6 @@ namespace gamelib
         //     }
     }
 
-    bool QPhysics::_init()
-    {
-        UpdateComponent::_init();
-        // getEntity()->getTransform().add(this);
-        return true;
-    }
-
-    void QPhysics::_quit()
-    {
-        UpdateComponent::_quit();
-        // getEntity()->getTransform().remove(this);
-    }
-
     void QPhysics::_refresh()
     {
         auto comp = getEntity()->findByType<CollisionComponent>();
@@ -171,64 +172,7 @@ namespace gamelib
             _bbox = &comp->getBBox();
             _self = comp;
         }
-        // getEntity()->getTransform().remove(this);
     }
-
-    bool QPhysics::loadFromJson(const Json::Value& node)
-    {
-        UpdateComponent::loadFromJson(node);
-
-        // gamelib::loadFromJson(node["vel"], vel);
-        // overbounce = node.get("overbounce", overbounce).asFloat();
-        // unstuckmethod = static_cast<UnstuckMethod>(node.get("unstuckmethod", unstuckmethod).asInt());
-
-        if (node.isMember("global"))
-            loadGlobalsFromJson(node["global"]);
-
-        return true;
-    }
-
-    void QPhysics::writeToJson(Json::Value& node)
-    {
-        UpdateComponent::writeToJson(node);
-        // gamelib::writeToJson(node["vel"], vel);
-        // node["overbounce"] = overbounce;
-        // node["unstuckmethod"] = unstuckmethod;
-    }
-
-    bool QPhysics::loadGlobalsFromJson(const Json::Value& node)
-    {
-        gamelib::loadFromJson(node["gravityDirection"], gravityDirection);
-        gravity = node.get("gravity", gravity).asFloat();
-        friction = node.get("friction", friction).asFloat();
-        stopFriction = node.get("stopFriction", stopFriction).asFloat();
-        stopSpeed = node.get("stopSpeed", stopSpeed).asFloat();
-        return true;
-    }
-
-    void QPhysics::writeGlobalsToJson(Json::Value& node)
-    {
-        gamelib::writeToJson(node["gravityDirection"], gravityDirection);
-        node["gravity"] = gravity;
-        node["friction"] = friction;
-        node["stopFriction"] = stopFriction;
-        node["stopSpeed"] = stopSpeed;
-    }
-
-    // void QPhysics::move(const math::Vec2f& rel)
-    // {
-    //     _bbox.pos += rel;
-    // }
-    //
-    // const math::Point2f& QPhysics::getPosition() const
-    // {
-    //     return _bbox.getCenter().asPoint();
-    // }
-    //
-    // const math::AABBf& QPhysics::getBBox() const
-    // {
-    //     return _bbox;
-    // }
 
 
     math::Vec2f QPhysics::gravityDirection(0, 1);
