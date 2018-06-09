@@ -10,6 +10,7 @@
 #include "ui/Grid.hpp"
 #include "ui/LayerUI.hpp"
 #include "EntityDesigner.hpp"
+#include "ui/ResourceViewer.hpp"
 
 namespace gamelib
 {
@@ -62,6 +63,7 @@ namespace gamelib
             Grid _grid;
             LayerUI _layerui;
             EntityDesigner _entdesigner;
+            ResourceViewer _resviewer;
             bool _snap;
             bool _drag;
             bool _gridOnTop;

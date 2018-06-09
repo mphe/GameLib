@@ -72,6 +72,7 @@ namespace gamelib
     void Editor::quit()
     {
         _entdesigner.close();
+        _resviewer.close();
 
         auto evmgr = getSubsystem<EventManager>();
         evmgr->unregCallback(SFMLEvent::id, _eventCallback, this);
@@ -317,6 +318,8 @@ namespace gamelib
             {
                 if (ImGui::MenuItem("Open Entity Designer"))
                     _entdesigner.open();
+                if (ImGui::MenuItem("Open Resource Viewer"))
+                    _resviewer.open();
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Grid"))
@@ -361,6 +364,7 @@ namespace gamelib
                 drawJsonView(&jsonwindow);
 
             _entdesigner.draw();
+            _resviewer.draw();
 
             ImGui::Begin("Toolbox", nullptr, ImVec2(250, 125));
             for (size_t i = 0; i < NumTools; ++i)
@@ -379,18 +383,18 @@ namespace gamelib
             auto selected = getSelectTool().getSelected();
             if (selected)
             {
-                if (hasflag(selected->flags, entity_exportcomponents))
+                // if (hasflag(selected->flags, entity_exportcomponents))
                 {
                     ImGui::Begin("Properties");
                     inputEntityProps(*selected);
                     ImGui::End();
                 }
-                else
-                {
-                    ImGui::Begin("Orientation", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-                    inputTransform(getSelectTool().getSelected()->getTransform());
-                    ImGui::End();
-                }
+                // else
+                // {
+                //     ImGui::Begin("Orientation", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+                //     inputTransform(getSelectTool().getSelected()->getTransform());
+                //     ImGui::End();
+                // }
             }
         }
     }
