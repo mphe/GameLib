@@ -36,8 +36,8 @@ namespace gamelib
         const auto& rect = _sprite->rect;
         auto tsize = _sprite->tex->getSize();
 
-        int x = (rect.x + index * rect.w);
-        int y = (rect.y + x / tsize.x * rect.h) % tsize.y;
+        int x = rect.x + index * rect.w;
+        int y = (rect.y + (int)(x / tsize.x) * rect.h) % tsize.y;
         x = x % tsize.x;
 
         _vertices[0].texCoords = sf::Vector2f(x, y);

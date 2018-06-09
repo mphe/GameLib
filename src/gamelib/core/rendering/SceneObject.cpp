@@ -57,6 +57,7 @@ namespace gamelib
     void SceneObject::render(sf::RenderTarget& target, const sf::RenderStates& states_) const
     {
         sf::Transform trans;
+        // trans.translate((int)_pos.x, (int)_pos.y);
         trans.translate(_pos.x, _pos.y);
         trans.rotate(_rotation, _origin.x, _origin.y);
         trans.scale(_scale.x, _scale.y, _origin.x, _origin.y);
