@@ -2,11 +2,9 @@
 #define GAMELIB_CAMERA_TRACKER_HPP
 
 #include "gamelib/core/ecs/UpdateComponent.hpp"
-#include "math/geometry/Point2.hpp"
 
 namespace gamelib
 {
-    class Transformable;
     class Camera;
 
     class CameraTracker : public UpdateComponent
@@ -23,7 +21,6 @@ namespace gamelib
             auto getCamera() const    -> Camera*;
 
         public:
-            Transformable* track;
             int camera;
             float shakerad;
 

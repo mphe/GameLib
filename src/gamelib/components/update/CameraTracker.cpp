@@ -1,22 +1,23 @@
 #include "gamelib/components/update/CameraTracker.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
+#include "gamelib/core/ecs/Entity.hpp"
 
 namespace gamelib
 {
     CameraTracker::CameraTracker() :
         UpdateComponent(name),
-        track(nullptr),
         camera(0),
         shakerad(5),
         _shake(false)
     {
-        _props.registerProperty("radius", shakerad);
+        _props.registerProperty("shakeradius", shakerad);
         _props.registerProperty("camera", camera);
     }
 
     void CameraTracker::update(float elapsed)
     {
-        if (!track)
+        auto ent = getEntity();
+        if (!ent)
             return;
 
         Camera* cam = getCamera();
@@ -34,11 +35,11 @@ namespace gamelib
             off += math::Vec2f(std::fmod(random(), shakerad * 2),
                                std::fmod(random(), shakerad * 2));
 
-            cam->center(track->getBBox().getCenter() + off);
+            cam->center(ent->getTransform().getBBox().getCenter() + off);
         }
         else
         {
-            cam->center(track->getBBox().getCenter());
+            cam->center(ent->getTransform().getBBox().getCenter());
         }
     }
 
