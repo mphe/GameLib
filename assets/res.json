@@ -15,6 +15,11 @@
             "linebrush.ent",
             "polygonbrush.ent",
             "player.ent"
+        ],
+        "spr": [
+            "player_stand.spr",
+            "player_walk.spr",
+            "player_jump.spr"
         ]
     }
 }
