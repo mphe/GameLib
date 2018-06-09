@@ -9,12 +9,6 @@ namespace gamelib
     {
         _vertices.resize(4);
         _vertices.setPrimitiveType(sf::TriangleStrip);
-
-        _props.registerProperty("framepos", _rect.pos);
-        _props.registerProperty("framesize", _rect.size);
-        _props.registerProperty("texture", _tex);
-
-        // TODO: custom change handlers to automatically update rect coords
     }
 
     bool SpriteComponent::_init()
@@ -35,40 +29,52 @@ namespace gamelib
 
     void SpriteComponent::setIndex(int index)
     {
-        auto tsize = _tex->getSize();
-        int x = (_rect.x + index * _rect.w);
-        int y = (_rect.y + x / tsize.x * _rect.h) % tsize.y;
+        const auto& rect = _sprite->rect;
+        auto tsize = _sprite->tex->getSize();
+
+        int x = (rect.x + index * rect.w);
+        int y = (rect.y + x / tsize.x * rect.h) % tsize.y;
         x = x % tsize.x;
 
         _vertices[0].texCoords = sf::Vector2f(x, y);
-        _vertices[1].texCoords = sf::Vector2f(x, y + _rect.h);
-        _vertices[2].texCoords = sf::Vector2f(x + _rect.w, y);
-        _vertices[3].texCoords = sf::Vector2f(x + _rect.w, y + _rect.h);
+        _vertices[1].texCoords = sf::Vector2f(x, y + rect.h);
+        _vertices[2].texCoords = sf::Vector2f(x + rect.w, y);
+        _vertices[3].texCoords = sf::Vector2f(x + rect.w, y + rect.h);
     }
 
     void SpriteComponent::change(const std::string& fname)
     {
-        auto sprite = getSubsystem<ResourceManager>()->get(fname).as<JsonResource>();
-        if (sprite)
-            loadFromJson(*sprite);
+        change(getSubsystem<ResourceManager>()->get(fname).as<SpriteResource>());
+    }
 
-        // Set this after loadFromJson(), to prevent overwriting by nested
-        // change() calls
+    void SpriteComponent::change(SpriteResource::Handle sprite)
+    {
         _sprite = sprite;
+        if (_sprite)
+        {
+            _ani.ani = _sprite->ani;
+            if (_ani.ani.offset < 0)
+                _ani.ani.randomize();
+
+            _initShape();
+        }
     }
 
     bool SpriteComponent::loadFromJson(const Json::Value& node)
     {
-        if (node.isMember("sprite"))
-            change(node["sprite"].asString());
-        else
+        if (!node.isMember("sprite"))
+        {
             _sprite.reset();
+            return false;
+        }
+        else
+            change(node["sprite"].asString());
 
-        // Allows overriding sprite parameters (-> props)
+        // Allows overriding animation parameters (-> props)
         bool success = RenderComponent::loadFromJson(node);
 
         if (_ani.ani.offset < 0)
-            _ani.ani.offset = random() % (int)_ani.ani.length;
+            _ani.ani.randomize();
 
         _initShape();
 
@@ -93,7 +99,7 @@ namespace gamelib
         if (!states_.texture)
         {
             sf::RenderStates states(states_);
-            states.texture = _tex.get();
+            states.texture = _sprite->tex.get();
             SceneObject::render(target, states);
         }
         else
@@ -104,9 +110,9 @@ namespace gamelib
     void SpriteComponent::_initShape()
     {
         _vertices[0].position = sf::Vector2f(0, 0);
-        _vertices[1].position = sf::Vector2f(0, _rect.h);
-        _vertices[2].position = sf::Vector2f(_rect.w, 0);
-        _vertices[3].position = sf::Vector2f(_rect.w, _rect.h);
+        _vertices[1].position = sf::Vector2f(0, _sprite->rect.h);
+        _vertices[2].position = sf::Vector2f(_sprite->rect.w, 0);
+        _vertices[3].position = sf::Vector2f(_sprite->rect.w, _sprite->rect.h);
 
         setIndex(_ani.ani.offset);
     }

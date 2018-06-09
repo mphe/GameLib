@@ -3,16 +3,20 @@
 
 #include <SFML/Graphics/Rect.hpp>
 #include "gamelib/core/res/TextureResource.hpp"
+#include "math/geometry/AABB.hpp"
 
 namespace gamelib
 {
     auto getSpriteRect(int offset, const sf::IntRect& rect, int texw, int texh) -> sf::IntRect;
+    auto getSpriteRect(int offset, const math::AABBi& rect, int texw, int texh) -> math::AABBi;
 
     class AnimationData
     {
         public:
             AnimationData();
             auto update(float elapsed) -> void;
+            auto randomize()           -> void;
+            auto setIndex(int index)   -> void;
 
         public:
             int length;

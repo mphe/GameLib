@@ -3,9 +3,7 @@
 
 #include "gamelib/core/ecs/RenderComponent.hpp"
 #include "gamelib/components/update/AnimationComponent.hpp"
-#include "gamelib/core/sprite/SpriteData.hpp"
-#include "gamelib/core/res/TextureResource.hpp"
-#include "gamelib/core/res/JsonResource.hpp"
+#include "gamelib/core/res/SpriteResource.hpp"
 
 // Has to be a render component because it needs custom imgui support
 
@@ -14,13 +12,9 @@
  * {
  *     <RenderComponent entries>,
  *
- *     # Loads the given sprite (optional) (can be used as template)
  *     "sprite": "filename"
  *
- *     # Use this sprite data (optional) (allows overrides)
- *     "texture": "texture",
- *     "framepos": [ x, y],
- *     "framesize": [ w, h],
+ *     # Animation overrides (optional)
  *     "length": length,
  *     "speed": speed,
  *     "offset": offset (-1 for random)
@@ -42,7 +36,8 @@ namespace gamelib
         public:
             SpriteComponent();
 
-            auto change(const std::string& fname) -> void;
+            auto change(const std::string& fname)      -> void;
+            auto change(SpriteResource::Handle sprite) -> void;
             auto setIndex(int index)              -> void;
 
             auto getSpriteName() const -> const std::string&;
@@ -60,10 +55,8 @@ namespace gamelib
             auto _initShape() -> void;
 
         private:
-            TextureResource::Handle _tex;
-            JsonResource::Handle _sprite;
+            SpriteResource::Handle _sprite;
             AnimationComponent _ani;
-            math::AABBi _rect;
     };
 }
 

@@ -41,6 +41,7 @@ set(GAMELIB_SOURCES
     core/res/resources.cpp
     core/res/TextureResource.cpp
     core/res/JsonResource.cpp
+    core/res/SpriteResource.cpp
     core/res/EntityConfigResource.cpp
     core/rendering/Scene.cpp
     core/rendering/SceneData.cpp

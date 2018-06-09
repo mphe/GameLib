@@ -171,16 +171,27 @@ namespace gamelib
     void ResourceManager::clean()
     {
         LOG_DEBUG_WARN("Freeing unreferenced resources");
-        for (auto it = _res.begin(); it != _res.end();)
+
+        // The do-loop ensures that all resources are freed correctly when
+        // there are resources that reference others, e.g.
+        // SpriteResource -> TextureResource.
+        // This does _not_ solve cyclic dependencies!
+        int freed;
+        do
         {
-            if (it->second.use_count() == 1)
+            freed = 0;
+            for (auto it = _res.begin(); it != _res.end();)
             {
-                LOG_DEBUG_WARN("\t", it->first);
-                it = _res.erase(it);
+                if (it->second.use_count() == 1)
+                {
+                    LOG_DEBUG_WARN("\t", it->first);
+                    it = _res.erase(it);
+                    ++freed;
+                }
+                else
+                    ++it;
             }
-            else
-                ++it;
-        }
+        } while (freed > 0);
     }
 
     void ResourceManager::clear()
