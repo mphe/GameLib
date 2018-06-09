@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include "math/geometry/Vector.hpp"
-#include "gamelib/core/res/TextureResource.hpp"
+#include "gamelib/core/res/Resource.hpp"
 #include "gamelib/core/res/JsonSerializer.hpp"
 #include "gamelib/utils/log.hpp"
 
@@ -19,7 +19,7 @@ namespace gamelib
         PropBool,
         PropVec2i,
         PropVec2f,
-        PropTexResource,
+        PropResource,
         PropUnknown
     };
 
@@ -59,7 +59,11 @@ namespace gamelib
             // Meta data for auto serialization, etc.
             PropertyType type;
             const char* const* hints;
-            int min, max;
+
+            union {
+                unsigned int id;    // Resource ID
+                struct { int min, max; };
+            };
 
         private:
             void* _ptr;                  // Pointer to the variable
@@ -88,16 +92,28 @@ namespace gamelib
                 _registerProperty(name, &prop, nullptr, nullptr, categorizeProperty(prop), min, max, hints);
             }
 
+            template <typename T, typename U>
+            void registerProperty(const std::string& name, T& prop, NicePropSetterCallback<T, U> setter, U* self, int min = 0, int max = 0, const char* const* hints = nullptr)
+            {
+                _registerProperty(name, &prop, (PropSetterCallback)setter, static_cast<void*>(self), categorizeProperty(prop), min, max, hints);
+            }
+
             template <typename T>
             void registerProperty(const std::string& name, T& prop, PropSetterCallback setter, void* self, int min = 0, int max = 0, const char* const* hints = nullptr)
             {
                 _registerProperty(name, &prop, setter, self, categorizeProperty(prop), min, max, hints);
             }
 
-            template <typename T, typename U>
-            void registerProperty(const std::string& name, T& prop, NicePropSetterCallback<T, U> setter, U* self, int min = 0, int max = 0, const char* const* hints = nullptr)
+            template <typename T>
+            void registerProperty(const std::string& name, ResourceHandle<T>& prop, const char* const* hints = nullptr)
             {
-                _registerProperty(name, &prop, (PropSetterCallback)setter, static_cast<void*>(self), categorizeProperty(prop), min, max, hints);
+                _registerProperty(name, &prop, nullptr, nullptr, PropResource, T::id, T::id, hints);
+            }
+
+            template <typename T, typename U>
+            void registerProperty(const std::string& name, ResourceHandle<T>& prop, NicePropSetterCallback<ResourceHandle<T>, U> setter, U* self, const char* const* hints = nullptr)
+            {
+                _registerProperty(name, &prop, (PropSetterCallback)setter, static_cast<void*>(self), PropResource, T::id, T::id, hints);
             }
 
             auto begin() const -> PropertyMap::const_iterator;
@@ -109,6 +125,7 @@ namespace gamelib
             auto clear()      -> void;
 
             auto find(const std::string& name) const -> const PropertyHandle*;
+            auto find(const std::string& name)       -> PropertyHandle*;
             auto get(const std::string& name) const  -> const void*;
 
             template <typename T>
@@ -145,10 +162,16 @@ namespace gamelib
                     return PropVec2f;
                 else if (std::is_same<T, math::Vec2i>())
                     return PropVec2i;
-                else if (std::is_same<T, TextureResource::Handle>())
-                    return PropTexResource;
+                else if (std::is_same<T, BaseResourceHandle>())
+                    return PropResource;
                 else
                     return PropUnknown;
+            }
+
+            template <typename T>
+            PropertyType categorizeProperty(const ResourceHandle<T>& prop) const
+            {
+                return PropResource;
             }
 
         private:

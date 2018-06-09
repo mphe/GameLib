@@ -9,6 +9,10 @@ namespace gamelib
     {
         _vertices.resize(4);
         _vertices.setPrimitiveType(sf::TriangleStrip);
+
+        _props.registerProperty("sprite", _sprite, +[](SpriteResource::Handle* sprite, const SpriteResource::Handle* val, SpriteComponent* self) {
+                self->change(*val);
+            }, this);
     }
 
     bool SpriteComponent::_init()
@@ -67,8 +71,6 @@ namespace gamelib
             _sprite.reset();
             return false;
         }
-        else
-            change(node["sprite"].asString());
 
         // Allows overriding animation parameters (-> props)
         bool success = RenderComponent::loadFromJson(node);
@@ -84,9 +86,6 @@ namespace gamelib
     void SpriteComponent::writeToJson(Json::Value& node)
     {
         RenderComponent::writeToJson(node);
-
-        if (_sprite)
-            node["sprite"] = _sprite.getResource()->getPath();
     }
 
     const std::string& SpriteComponent::getSpriteName() const

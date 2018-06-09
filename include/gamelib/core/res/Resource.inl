@@ -13,6 +13,13 @@ namespace gamelib
     }
 
     template <typename T>
+    ResourceHandle<BaseResource> ResourceHandle<T>::asBase() const
+    {
+        return as<BaseResource>();
+    }
+
+
+    template <typename T>
     T* ResourceHandle<T>::getResource() const
     {
         return _res.get();

@@ -1,69 +1,350 @@
 #include "editor/editor/ui/resources.hpp"
+#include "gamelib/core/res/SpriteResource.hpp"
+#include "gamelib/core/res/JsonResource.hpp"
+#include "gamelib/core/res/EntityConfigResource.hpp"
+#include "gamelib/core/Game.hpp"
 #include "imgui.h"
+#include "imgui_internal.h" // for imgui context
 #include "imgui-SFML.h"
 
 namespace gamelib
 {
-    const char* popupTextureSelect = "Select Texture";
-
-
-    bool drawTextureSelect(TextureResource::Handle* tex)
+    bool getThumbnailTexture(BaseResourceHandle res, sf::Sprite* sprite)
     {
-        ImGui::Text("Texture");
-        if (*tex)
-        {
-            if (ImGui::ImageButton(**tex, ImVec2(32, 32)))
-                ImGui::OpenPopup(popupTextureSelect);
-            ImGui::SameLine();
-        }
-
-        if (ImGui::Button("Change"))
-            ImGui::OpenPopup(popupTextureSelect);
-
-        // Select texture popup
-        auto newtex = drawTextureSelectPopup();
-        if (newtex)
-        {
-            *tex = newtex;
-            return true;
-        }
-        return false;
+        if (res)
+            sprite->setTexture(*res.as<TextureResource>(), true);
+        return (bool)res;
     }
 
-    TextureResource::Handle drawTextureSelectPopup()
+    bool getThumbnailSprite(BaseResourceHandle res, sf::Sprite* sprite)
     {
-        using namespace gamelib;
-
-        TextureResource::Handle  ptr;
-
-        if (ImGui::BeginPopupModal(popupTextureSelect))
+        if (res)
         {
-            float w = ImGui::GetWindowContentRegionWidth();
-            constexpr float size = 72;
+            auto sprres = res.as<SpriteResource>();
+            sprite->setTexture(*sprres->tex);
+            sprite->setTextureRect(sf::IntRect(sprres->rect.x, sprres->rect.y, sprres->rect.w, sprres->rect.h));
+        }
+        return (bool)res;
+    }
 
-            ResourceManager::getActive()->foreach([&](const std::string& fname, BaseResourceHandle res) {
-                    TextureResource::Handle tex = res.as<TextureResource>();
-                    if (ImGui::ImageButton(*tex, sf::Vector2f(size, size)))
-                    {
-                        ptr = tex;
-                        ImGui::CloseCurrentPopup();
-                    }
+    void previewTexture(BaseResourceHandle res)
+    {
+        if (res)
+        {
+            auto tex = res.as<TextureResource>();
+            auto w = ImGui::GetContentRegionAvailWidth();
+            ImGui::Image(*tex, ImVec2(w, w * ((float)tex->getSize().y / tex->getSize().x)));
+            ImGui::Text("Resolution: %ux%upx", tex->getSize().x, tex->getSize().y);
+        }
+    }
 
-                    w -= size;
-                    if (w > size)
-                        ImGui::SameLine();
-                    else
-                        w = ImGui::GetWindowContentRegionWidth();
-                }, TextureResource::id);
+    void previewSprite(BaseResourceHandle res)
+    {
+        static BaseResource* last = nullptr;
+        static AnimationData ani;
+        static bool paused = false;
 
-            ImGui::NewLine();
+        if (res)
+        {
+            auto sprite = res.as<SpriteResource>();
 
-            if (ImGui::Button("Cancel"))
-                ImGui::CloseCurrentPopup();
+            // Update sprite if resource changed
+            if (!last || last != res.getResource())
+            {
+                last = res.getResource();
+                ani = sprite->ani;
+            }
 
-            ImGui::EndPopup();
+            if (!paused)
+                ani.update(getSubsystem<Game>()->getFrametime());
+
+            ImGuiContext& g = *ImGui::GetCurrentContext();
+            auto size = g.FontSize + g.Style.FramePadding.y * 2.0f;
+            auto bsize = ImVec2(size, size);
+
+            auto rect = getSpriteRect(ani.offset, sprite->rect, sprite->tex->getSize().x, sprite->tex->getSize().y);
+            auto w = ImGui::GetContentRegionAvailWidth() * 0.8;
+            ImGui::Image(*sprite->tex, ImVec2(w, w * ((float)rect.h / rect.w)), sf::FloatRect(rect.x, rect.y, rect.w, rect.h));
+
+            { // Animation controls
+                if (paused && ImGui::Button(">", bsize))
+                    paused = false;
+                else if (!paused && ImGui::Button("||", bsize))
+                    paused = true;
+
+                ImGui::SameLine();
+                ImGui::Spacing();
+                ImGui::SameLine();
+
+                ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() * 0.5);
+                int frame = ani.offset;
+                if (ImGui::SliderInt("Frame", &frame, 0, ani.length - 1))
+                    ani.offset = frame;
+                ImGui::PopItemWidth();
+
+                ImGui::SameLine();
+                ImGui::Spacing();
+                ImGui::SameLine();
+
+                if (ImGui::Button("+", bsize))
+                    ani.setIndex(ani.offset + 1);
+                ImGui::SameLine();
+                if (ImGui::Button("-", bsize))
+                    ani.setIndex(ani.offset - 1);
+            }
+
+            ImGui::Text("Length: %i", ani.length);
+            ImGui::Text("Speed: %.2f", ani.speed);
+            ImGui::Text("Texture: %s", sprite->tex.getResource()->getPath().c_str());
+            ImGui::Text("Resolution: %ix%ipx", sprite->rect.w, sprite->rect.h);
+            ImGui::Text("Offset: X: %ipx  Y: %ipx", sprite->rect.x, sprite->rect.y);
+        }
+    }
+
+    void previewJson(BaseResourceHandle res)
+    {
+        static BaseResource* last = nullptr;
+        static std::string cache;
+
+        if (res)
+        {
+            // Update cache if resource changed
+            if (!last || last != res.getResource())
+            {
+                last = res.getResource();
+                cache = res.as<JsonResource>()->toStyledString();
+            }
+
+            ImGui::Text("%s", cache.c_str());
+        }
+    }
+
+
+    void getResourceMeta(ID id, const char** name, ThumbnailFunction* thumbgetter, PreviewFunction* preview)
+    {
+        const char* tmpname;
+        ThumbnailFunction tmpthumb = nullptr;
+        PreviewFunction tmppreview = nullptr;
+
+        switch (id)
+        {
+            case TextureResource::id:
+                tmpname = "Texture";
+                tmpthumb = getThumbnailTexture;
+                tmppreview = previewTexture;
+                break;
+            case SpriteResource::id:
+                tmpname = "Sprite";
+                tmpthumb = getThumbnailSprite;
+                tmppreview = previewSprite;
+                break;
+            case JsonResource::id:
+                tmpname = "Json";
+                tmppreview = previewJson;
+                break;
+            default:
+                tmpname = "Other";
+                break;
         }
 
-        return ptr;
+        if (name)
+            *name = tmpname;
+        if (thumbgetter)
+            *thumbgetter = tmpthumb;
+        if (preview)
+            *preview = tmppreview;
+    }
+
+
+    bool inputResource(BaseResourceHandle* res, ID id, bool preview_, int size)
+    {
+        const char* name = nullptr;
+        ThumbnailFunction thumbgetter = nullptr;
+        PreviewFunction preview = nullptr;
+
+        getResourceMeta(id, &name, &thumbgetter, preview_ ? &preview : nullptr);
+
+        return inputResource(res, id, name, thumbgetter, preview, size);
+    }
+
+    bool inputResource(BaseResourceHandle* res, ID id, const char* name, ThumbnailFunction thumbgetter, PreviewFunction preview, int size)
+    {
+        static BaseResourceHandle tmphandle; // Don't set anything until OK is pressed if preview is used
+
+        { // Widget
+            bool startSelect = false;
+
+            ImGui::Text("%s", name);
+
+            if (*res)
+            {
+                if (thumbgetter)
+                {
+                    sf::Sprite thumb;
+                    thumbgetter(*res, &thumb);
+                    if (ImGui::ImageButton(thumb, ImVec2(32, 32)))
+                        startSelect = true;
+                }
+                else
+                {
+                    ImGui::Text("%s", res->getResource()->getPath().c_str());
+                }
+                ImGui::SameLine();
+            }
+
+            if (ImGui::Button("Change"))
+                startSelect = true;
+
+            if (startSelect)
+            {
+                ImGui::OpenPopup("Select Resource");
+                ImGui::SetNextWindowSize(ImVec2(300, 300));
+                tmphandle = *res;
+            }
+        }
+
+        { // Selection Popup
+            bool selected = false;
+            bool close = false;
+
+            if (ImGui::BeginPopupModal("Select Resource"))
+            {
+                selected = drawResourceSelection(preview ? &tmphandle : res, id, thumbgetter, preview, size);
+                if (selected && !preview)
+                    ImGui::CloseCurrentPopup();
+
+                { // OK / Cancel
+                    ImGui::PushItemWidth(-140); // Align right
+
+                    if (preview)
+                    {
+                        selected = false;   // Don't set anything until OK is pressed
+
+                        if (ImGui::Button("OK"))
+                        {
+                            selected = true;
+                            close = true;
+                        }
+                        ImGui::SameLine();
+                    }
+
+                    if (ImGui::Button("Cancel"))
+                        close = true;
+
+                    ImGui::PopItemWidth();
+
+                    if (close)
+                    {
+                        ImGui::CloseCurrentPopup();
+
+                        if (preview)
+                        {
+                            *res = tmphandle;
+                            tmphandle.reset();
+                        }
+                    }
+                }
+
+                ImGui::EndPopup();
+            }
+
+            return selected;
+        }
+    }
+
+
+    bool drawResourceSelection(BaseResourceHandle* handle, ID id, bool preview_, int size)
+    {
+        ThumbnailFunction thumbgetter = nullptr;
+        PreviewFunction preview = nullptr;
+
+        getResourceMeta(id, nullptr, &thumbgetter, preview_ ? &preview : nullptr);
+
+        return drawResourceSelection(handle, id, thumbgetter, preview, size);
+    }
+
+
+    bool drawResourceSelection(BaseResourceHandle* handle, ID id, ThumbnailFunction thumbgetter, PreviewFunction preview, int size)
+    {
+        bool selected = false;
+
+        if (preview && *handle)
+            ImGui::Columns(2);
+
+        ImGui::BeginChild("List", ImVec2(0, -ImGui::GetItemsLineHeightWithSpacing()));
+        if (thumbgetter)
+            selected = drawResourceSelectionGrid(handle, id, thumbgetter, size);
+        else
+            selected = drawResourceSelectionList(handle, id);
+        ImGui::EndChild();
+
+        if (preview && *handle)
+        {
+            ImGui::NextColumn();
+            ImGui::BeginChild("Preview");
+            preview(*handle);
+            if (thumbgetter)
+                ImGui::Text("File: %s", handle->getResource()->getPath().c_str());
+            ImGui::EndChild();
+            ImGui::Columns(1);
+        }
+
+        return selected;
+    }
+
+    bool drawResourceSelectionGrid(BaseResourceHandle* handle, ID id, ThumbnailFunction thumbgetter, int size)
+    {
+        bool selected = false;
+        float w = ImGui::GetContentRegionAvailWidth();
+        sf::Sprite thumb;
+
+        ResourceManager::getActive()->foreach([&](const std::string& fname, BaseResourceHandle res) {
+                if (thumbgetter)
+                    thumbgetter(res, &thumb);
+
+                ImGui::PushID(fname.c_str());
+                if (ImGui::ImageButton(thumb, sf::Vector2f(size, size)))
+                {
+                    *handle = res;
+                    selected = true;
+                }
+                ImGui::PopID();
+
+                if (ImGui::IsItemHovered())
+                {
+                    ImGui::BeginTooltip();
+                    ImGui::Text("%s", res.getResource()->getPath().c_str());
+                    ImGui::EndTooltip();
+                }
+
+                w -= size + GImGui->Style.ItemSpacing.x + GImGui->Style.FramePadding.x * 2;
+                if (w > size)
+                    ImGui::SameLine();
+                else
+                    w = ImGui::GetContentRegionAvailWidth();
+                }, id);
+
+        ImGui::NewLine();
+
+        return selected;
+    }
+
+    bool drawResourceSelectionList(BaseResourceHandle* handle, ID id)
+    {
+        static int current = 0;
+
+        int i = 0;
+        bool selected = false;
+        ResourceManager::getActive()->foreach([&](const std::string& fname, BaseResourceHandle res) {
+                if (ImGui::Selectable(fname.c_str(), current == i))
+                {
+                    current = i;
+                    *handle = res;
+                    selected = true;
+                }
+                ++i;
+        }, id);
+
+        return selected;
     }
 }

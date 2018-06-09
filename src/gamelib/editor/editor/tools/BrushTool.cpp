@@ -108,7 +108,9 @@ namespace gamelib
 
         ImGui::Separator();
 
-        drawTextureSelect(&_tex);
+        if (inputResource(&_tex) && _tex)
+            _linewidth = _tex->getSize().y;
+
         ImGui::InputFloat2("Texture offset", &_offset[0], 2);
 
         ImGui::PopItemWidth();

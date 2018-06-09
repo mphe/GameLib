@@ -61,8 +61,8 @@ namespace gamelib
                     return ImGui::InputInt2(name.c_str(), static_cast<int*>(ptr));
                 case PropVec2f:
                     return ImGui::InputFloat2(name.c_str(), static_cast<float*>(ptr), 2);
-                case PropTexResource:
-                    return drawTextureSelect(static_cast<TextureResource::Handle*>(ptr));
+                case PropResource:
+                    return inputResource(static_cast<BaseResourceHandle*>(ptr), handle.id);
                 case PropUnknown:
                     ImGui::Text("Unknown property");
                     break;
@@ -165,7 +165,7 @@ namespace gamelib
         if (transflags | Transformable::rotatable)
         {
             float rot = trans.getRotation();
-            if (ImGui::InputFloat("Rotation", &rot))
+            if (ImGui::InputFloat("Rotation", &rot, 1, 10, 2))
             {
                 trans.setRotation(rot);
                 changed = true;
@@ -197,8 +197,8 @@ namespace gamelib
                 return detail::inputPropertyBuffered<math::Vec2i>(name, handle);
             case PropVec2f:
                 return detail::inputPropertyBuffered<math::Vec2f>(name, handle);
-            case PropTexResource:
-                return detail::inputPropertyBuffered<TextureResource::Handle>(name, handle);
+            case PropResource:
+                return detail::inputPropertyBuffered<BaseResourceHandle>(name, handle);
             case PropUnknown:
                 ImGui::Text("Unknown property");
                 break;

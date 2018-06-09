@@ -38,6 +38,8 @@ namespace gamelib
             template <typename U>
             auto as() const -> ResourceHandle<U>;
 
+            auto asBase() const -> ResourceHandle<BaseResource>;
+
             auto getResource() const -> T*;
 
             auto use_count() const -> long;

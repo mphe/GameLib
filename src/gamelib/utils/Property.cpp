@@ -94,8 +94,8 @@ namespace gamelib
                         i.second.set<math::Vec2f>(tmpvec);
                     }
                     break;
-                case PropTexResource:
-                    i.second.set<TextureResource::Handle>(ResourceManager::getActive()->get(propnode.asString()));
+                case PropResource:
+                    i.second.set<BaseResourceHandle>(getSubsystem<ResourceManager>()->get(propnode.asString()));
                     break;
                 case PropUnknown:
                     LOG_WARN("Can't read unknown property: ", i.first);
@@ -135,9 +135,13 @@ namespace gamelib
                 case PropVec2f:
                     ::gamelib::writeToJson(propnode, i.second.getAs<math::Vec2f>());
                     break;
-                case PropTexResource:
-                    propnode = i.second.getAs<TextureResource::Handle>().getResource()->getPath();
-                    break;
+                case PropResource:
+                    {
+                        auto handle = i.second.getAs<BaseResourceHandle>();
+                        if (handle)
+                            propnode = handle.getResource()->getPath();
+                        break;
+                    }
                 case PropUnknown:
                     LOG_WARN("Can't write unknown property: ", i.first);
                     break;
@@ -194,6 +198,11 @@ namespace gamelib
         if (it != _properties.end())
             return &it->second;
         return nullptr;
+    }
+
+    PropertyHandle* PropertyContainer::find(const std::string& name)
+    {
+        return const_cast<PropertyHandle*>(static_cast<const PropertyContainer*>(this)->find(name));
     }
 
     const void* PropertyContainer::get(const std::string& name) const
