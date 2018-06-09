@@ -3,6 +3,7 @@
 #include "gamelib/editor/editor/EditorShared.hpp"
 #include "editor/components/BrushComponent.hpp"
 #include "gamelib/components/geometry/AABB.hpp"
+#include "gamelib/core/geometry/flags.hpp"
 
 namespace gamelib
 {
@@ -67,7 +68,7 @@ namespace gamelib
         ent.findAllByType<CollisionComponent>([&](CollisionComponent* comp) {
                 if (comp->flags & flags)
                 {
-                    if (comp->getName() == Polygon::name)
+                    if (comp->getName() == Polygon::name && !(comp->flags & collision_noprecise))
                     {
                         auto pol = static_cast<Polygon*>(comp);
                         pol->polygon.foreachSegment([&](const math::Line2f seg) {

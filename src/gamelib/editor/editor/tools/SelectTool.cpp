@@ -94,7 +94,7 @@ namespace gamelib
     {
         Entity* top = nullptr;
         int depth = 0;
-        CollisionSystem::getActive()->findAll(
+        CollisionSystem::getActive()->intersectAll(
                 math::Point2f(x, y), flags, [&](Collidable* col) {
 
             auto ent = static_cast<CollisionComponent*>(col)->getEntity();

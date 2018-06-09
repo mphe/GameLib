@@ -5,6 +5,7 @@
 #include "math/geometry/Line2.hpp"
 #include "gamelib/core/Subsystem.hpp"
 #include "Collidable.hpp"
+#include "flags.hpp"
 
 // TODO: Use quadtrees
 
@@ -70,48 +71,51 @@ namespace gamelib
             template <typename F>
             auto intersectAll(const math::AABBf& rect, unsigned int flags, F f) const -> Collidable*;
 
-
-            // Deprecated, same as intersect
-            template <typename F>
-            auto findAll(const math::Point2f& point, unsigned int flags, F f) const -> void;
-            auto find(const math::Point2f& point, unsigned int flags = 0) const     -> Collidable*;
+        private:
+            template <typename Shape, typename F>
+            auto _intersectAll(const Shape& shape, unsigned int flags, F f) const -> Collidable*;
 
         private:
             std::vector<Collidable*> _objs;
     };
 
-    template <typename F>
-    void CollisionSystem::findAll(const math::Point2f& point, unsigned int flags, F f) const
+    template <typename Shape, typename F>
+    Collidable* CollisionSystem::_intersectAll(const Shape& shape, unsigned int flags, F f) const
     {
-        intersectAll(point, flags, f);
+        // Use rbegin so that newly added object are "on top"
+        for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
+        {
+            Collidable* c = (*it);
+            if (!flags || c->flags & flags)
+            {
+                if (c->flags & collision_noprecise)
+                {
+                    if (!c->getBBox().intersect(shape))
+                        continue;
+                }
+                else
+                {
+                    if (!c->intersect(shape))
+                        continue;
+                }
+
+                if (f(c))
+                    return c;
+            }
+        }
+        return nullptr;
     }
 
     template <typename F>
     Collidable* CollisionSystem::intersectAll(const math::Point2f& point, unsigned int flags, F f) const
     {
-        // Use rbegin so that newly added object are "on top"
-        for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
-        {
-            Collidable* i = (*it);
-            if ((!flags || i->flags & flags) && i->intersect(point))
-                if (f(i))
-                    return i;
-        }
-        return nullptr;
+        return _intersectAll(point, flags, f);
     }
 
     template <typename F>
     Collidable* CollisionSystem::intersectAll(const math::AABBf& rect, unsigned int flags, F f) const
     {
-        // Use rbegin so that newly added object are "on top"
-        for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
-        {
-            Collidable* i = (*it);
-            if ((!flags || i->flags & flags) && i->intersect(rect))
-                if (f(i))
-                    return i;
-        }
-        return nullptr;
+        return _intersectAll(rect, flags, f);
     }
 
     template <typename F>
@@ -123,19 +127,20 @@ namespace gamelib
             Collidable* i = (*it);
             if (i != self && (!flags || i->flags & flags))
             {
-                auto isec = i->intersect(line);
-
-                if (isec)
+                Intersection isec;
+                if (i->flags & collision_noprecise)
+                    isec = line.intersect(i->getBBox());
+                else
                 {
-                    if (isec.type == math::LinexLine)
+                    isec = i->intersect(line);
+                    if (isec && isec.type == math::LinexLine)
                         std::swap(isec.near, isec.far);
+                }
 
-                    if (callback(i, isec))
-                        if (!nearest || isec.near < nearest.isec.near)
-                        {
-                            nearest.obj = i;
-                            nearest.isec = isec;
-                        }
+                if (isec && callback(i, isec) && (!nearest || isec.near < nearest.isec.near))
+                {
+                    nearest.obj = i;
+                    nearest.isec = isec;
                 }
             }
         }
@@ -152,15 +157,16 @@ namespace gamelib
             Collidable* i = (*it);
             if (i != self && (!flags || i->flags & flags))
             {
-                auto isec = i->sweep(rect, vel);
-                if (isec)
+                Intersection isec;
+                if (i->flags & collision_noprecise)
+                    isec = rect.sweep(vel, i->getBBox());
+                else
+                    isec = i->sweep(rect, vel);
+
+                if (isec && callback(i, isec) && (!nearest || isec.near < nearest.isec.near))
                 {
-                    if (callback(i, isec))
-                        if (!nearest || isec.near < nearest.isec.near)
-                        {
-                            nearest.obj = i;
-                            nearest.isec = isec;
-                        }
+                    nearest.obj = i;
+                    nearest.isec = isec;
                 }
             }
         }

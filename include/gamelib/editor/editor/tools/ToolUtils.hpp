@@ -28,7 +28,7 @@ namespace gamelib
 
     void drawRectOutline(sf::RenderTarget& target, const math::AABBf& box, sf::Color col = sf::Color::Magenta);
 
-    void drawCollisions(sf::RenderTarget& target, const Entity& ent, unsigned int flags,  sf::Color col = sf::Color::Red);
+    void drawCollisions(sf::RenderTarget& target, const Entity& ent, unsigned int flags, sf::Color col = sf::Color::Red);
 
     // Returns the snapped vertex or the grid snapped input point in case it wasn't snapped
     math::Point2f snap(const math::Polygon<float>& pol, const math::Point2f& p, size_t ignoreindex = -1);

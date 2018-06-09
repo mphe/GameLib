@@ -37,11 +37,6 @@ namespace gamelib
         return intersectAll(rect, flags, [](Collidable*) { return true; });
     }
 
-    Collidable* CollisionSystem::find(const math::Point2f& point, unsigned int flags) const
-    {
-        return intersect(point, flags);
-    }
-
     TraceResult CollisionSystem::trace(const math::Line2f& line, const Collidable* self, unsigned int flags) const
     {
         return trace(line, [](Collidable*, const Intersection&) { return true; }, self, flags);
