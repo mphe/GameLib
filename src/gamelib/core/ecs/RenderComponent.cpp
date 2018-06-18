@@ -35,12 +35,12 @@ namespace gamelib
     {
         Component::writeToJson(node);
 
-        if (getEntity())
-            *this -= getEntity()->getTransform();
+        // if (getEntity())
+        //     *this -= getEntity()->getTransform();
 
         SceneObject::writeToJson(node);
 
-        if (getEntity())
-            *this += getEntity()->getTransform();
+        // if (getEntity())
+        //     *this += getEntity()->getTransform();
     }
 }

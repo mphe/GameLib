@@ -21,7 +21,7 @@ namespace gamelib
     void GroupTransform::add(Transformable* trans)
     {
         _objs.push_back(trans);
-        *_objs.back() += *this;
+        // *_objs.back() += *this;
         refreshBBox();
     }
 

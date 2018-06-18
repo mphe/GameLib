@@ -38,7 +38,6 @@ namespace gamelib
     {
         Component::loadFromJson(node);
         gamelib::loadFromJson(node["transform"], *static_cast<Transformable*>(this));
-        flags = node.get("flags", 0).asUInt();
         return true;
     }
 
@@ -46,14 +45,12 @@ namespace gamelib
     {
         Component::writeToJson(node);
 
-        if (getEntity())
-            *this -= getEntity()->getTransform();
+        // if (getEntity())
+        //     *this -= getEntity()->getTransform();
 
         gamelib::writeToJson(node["transform"], *static_cast<Transformable*>(this));
 
-        if (getEntity())
-            *this += getEntity()->getTransform();
-
-        node["flags"] = flags;
+        // if (getEntity())
+        //     *this += getEntity()->getTransform();
     }
 }
