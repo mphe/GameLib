@@ -22,6 +22,14 @@ namespace gamelib
     void writeToJson(Json::Value& node, const math::Vec2f& vec);
     void writeToJson(Json::Value& node, const math::Point2f& p);
     void writeToJson(Json::Value& node, const sf::Vector2f& vec);
+
+    template <typename T>
+    void writeToFile(const std::string& fname, const T& obj)
+    {
+        Json::Value json;
+        writeToJson(json, obj);
+        writeJsonToFile(fname, json);
+    }
 }
 
 #endif

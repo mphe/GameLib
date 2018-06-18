@@ -14,13 +14,13 @@ namespace gamelib
 
     namespace internal
     {
-        template <class T>
+        template <typename T>
         void joinString(std::stringstream& ss, const T& arg)
         {
             ss << arg;
         }
 
-        template <class T, class... Args>
+        template <typename T, typename... Args>
         void joinString(std::stringstream& ss, const T& arg, Args&&... rest)
         {
             ss << arg;
@@ -28,12 +28,29 @@ namespace gamelib
         }
     }
 
-    template <class... Args>
+    template <typename... Args>
     std::string join(Args&&... args)
     {
         std::stringstream ss;
         internal::joinString(ss, std::forward<Args>(args)...);
         return ss.str();
+    }
+
+    template <typename T>
+    T fromString(const std::string& str, const T& default_)
+    {
+        std::stringstream ss(str);
+        T x;
+        return ss >> x ? x : default_;
+    }
+
+    template <typename T>
+    T fromString(const std::string& str)
+    {
+        std::stringstream ss(str);
+        T x;
+        ss >> x;
+        return x;
     }
 
     // Replace '/' or '\' with each other, depending on which platform the
