@@ -41,7 +41,7 @@ namespace gamelib
 
     void Component::writeToJson(Json::Value& node)
     {
-        node["name"] = getName();
+        // node["name"] = getName();
         _props.writeToJson(node);
     }
 

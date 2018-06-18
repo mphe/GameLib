@@ -37,56 +37,50 @@ void testEntity(Entity& entity)
 }
 
 
-int main(int argc, char *argv[])
+int main()
 {
     auto res = JsonResource::create();
-    Json::Reader().parse("{\n\
-            \"name\": \"testentity\",\n\
-            \"transform\": {\n\
-                \"pos\": [ 5, 5 ],\n\
-                \"scale\": [ -1.5, -1.5 ],\n\
-                \"angle\": 90\n\
-            },\n\
-            \"components\": [\n\
-                {\n\
-                    \"name\": \"ComponentA\"\n\
-                },\n\
-                {\n\
-                    \"name\": \"ComponentB\",\n\
-                    \"x\": 42\n\
-                }\n\
-            ]\n\
+    Json::Reader().parse("{\
+            \"name\": \"testentity\",\
+            \"transform\": {\
+                \"pos\": [ 5, 5 ],\
+                \"scale\": [ -1.5, -1.5 ],\
+                \"angle\": 90\
+            },\
+            \"components\": {\
+                \"ComponentA\": {\
+                },\
+                \"ComponentB\": {\
+                    \"x\": 42\
+                }\
+            }\
         }", *res);
 
     auto shortenedres = JsonResource::create();
-    Json::Reader().parse("{\n\
-            \"name\": \"testentity\",\n\
-            \"components\": [\n\
-                {\n\
-                    \"name\": \"ComponentA\"\n\
-                },\n\
-                {\n\
-                    \"name\": \"ComponentB\",\n\
-                    \"x\": 42\n\
-                }\n\
-            ]\n\
+    Json::Reader().parse("{\
+            \"name\": \"testentity\",\
+            \"components\": {\
+                \"ComponentA\": {\
+                },\
+                \"ComponentB\": {\
+                    \"x\": 42\
+                }\
+            }\
         }", *shortenedres);
 
     auto shortenedres2 = JsonResource::create();
-    Json::Reader().parse("{\n\
-            \"name\": \"testentity\",\n\
-            \"transform\": {\n\
-                \"scale\": [ -1.5 ]\n\
-            },\n\
-            \"components\": [\n\
-                {\n\
-                    \"name\": \"ComponentA\"\n\
-                },\n\
-                {\n\
-                    \"name\": \"ComponentB\",\n\
-                    \"x\": 42\n\
-                }\n\
-            ]\n\
+    Json::Reader().parse("{\
+            \"name\": \"testentity\",\
+            \"transform\": {\
+                \"scale\": [ -1.5 ]\
+            },\
+            \"components\": {\
+                \"ComponentA\": {\
+                },\
+                \"ComponentB\": {\
+                    \"x\": 42\
+                }\
+            }\
         }", *shortenedres2);
 
 

@@ -1,17 +1,11 @@
 {
     "name": "polygonbrush",
-    "flags": 1,
-    "components": [
-        {
-            "name": "PolygonShape"
-        },
-        {
-            "name": "PolygonCollision",
+    "components": {
+        "PolygonCollision": {
             "type": 1,
             "flags": 2
         },
-        {
-            "name": "BrushComponent"
-        }
-    ]
+        "PolygonShape": { },
+        "BrushComponent": { }
+    }
 }

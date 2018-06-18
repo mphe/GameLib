@@ -209,7 +209,7 @@ namespace gamelib
 
     void inputEntity(Entity& ent)
     {
-        static constexpr const char* entityFlags[] { "Export Components", "Persistent (Unimplemented)", "Static (Unimplemented)" };
+        static constexpr const char* entityFlags[] { "Persistent (Unimplemented)", "Static (Unimplemented)" };
 
         ImGui::Columns(2, nullptr, false);
 
@@ -222,7 +222,7 @@ namespace gamelib
 
         ImGui::Text("Flags");
         ImGui::Indent(8);
-        inputBitflags(&ent.flags, 3, entityFlags);
+        inputBitflags(&ent.flags, 2, entityFlags);
         ImGui::Unindent(8);
 
         ImGui::Columns(1);
@@ -245,25 +245,25 @@ namespace gamelib
             ImGui::SameLine();
             ImGui::Button("Add");
 
-            for (auto it = ent.begin(); it != ent.end(); ++it)
-            {
-                Component* comp = it->get();
+            ent.foreach([](Component* comp) {
                 ImGui::PushID(comp);
                 if (ImGui::TreeNode(comp->getName().c_str()))
                 {
+                    ImGui::PushID(comp);
                     if (comp->getID() == RenderComponent::id)
                         inputRenderComponent(*static_cast<RenderComponent*>(comp));
-                    // else if (comp->getID() == CollisionComponent::id)
-                    //     ImGui::CheckboxFlags("Solid", &static_cast<CollisionComponent*>(comp)->flags, collision_solid);
 
                     for (auto it : comp->getProperties())
                         inputProperty(it.first, it.second);
 
                     ImGui::TreePop();
+                    ImGui::PopID();
                 }
 
                 ImGui::PopID();
-            }
+
+                return true;
+            });
         }
     }
 

@@ -27,12 +27,14 @@ namespace gamelib
         public:
             EntityFactory();
 
+            auto createWithDelta(const std::string& name, const Json::Value& node)              -> Entity::Handle;
+            auto createWithDelta(const std::string& name, const Json::Value& node, Entity* ent) -> void;
             auto createFromJson(const Json::Value& node)              -> Entity::Handle;
             auto createFromJson(const Json::Value& node, Entity* ent) -> void;
             auto create(const std::string& name)                  -> Entity::Handle;
             auto create(const std::string& name, Entity* ent)     -> void;
             auto createComponent(const std::string& name)         -> ComponentPtr;
-            auto createComponentFromJson(const Json::Value& node) -> ComponentPtr;
+            auto createComponentFromJson(const std::string& name, const Json::Value& node) -> ComponentPtr;
 
             auto add(JsonResource::Handle res)                          -> void;
             auto add(const std::string& name, JsonResource::Handle res) -> void;

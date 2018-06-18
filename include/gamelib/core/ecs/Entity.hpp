@@ -36,13 +36,20 @@ namespace gamelib
 
     typedef std::unique_ptr<Component> ComponentPtr;
 
-    class Entity : public JsonSerializer
+    class Entity //: public JsonSerializer
     {
         friend class EntityManager;
 
+        private:
+            struct ComponentData
+            {
+                unsigned int id;
+                ComponentPtr ptr;
+            };
+
         public:
             typedef SlotKeyShort Handle;
-            typedef std::vector<ComponentPtr> ComponentList;
+            typedef std::vector<ComponentData> ComponentList;
 
         public:
             Entity();
@@ -54,9 +61,6 @@ namespace gamelib
 
             // auto clone()   -> Entity; // TODO Explicit copy might be better here than copy constructor
             auto destroy() -> void;
-
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node)        -> void;
 
             auto getHandle() const    -> Handle;
             auto getName() const      -> const std::string&;
@@ -72,79 +76,46 @@ namespace gamelib
             auto clear()                             -> void;
 
             auto begin() const -> ComponentList::const_iterator;
-            auto begin()       -> ComponentList::iterator;
             auto end() const   -> ComponentList::const_iterator;
-            auto end()         -> ComponentList::iterator;
+
+            // Iterate over each component
+            // Signature: bool(Component*)
+            // If the lambda returns false, the loop breaks. To continue return true.
+            template <typename F>
+            auto foreach(F f) const -> void;
 
             template <typename T, typename... Args>
-            auto add(Args&&... args) -> T*
-            {
-                auto comp = add(ComponentPtr(new T(std::forward<Args>(args)...)));
-                return static_cast<T*>(comp);
-            }
+            auto add(Args&&... args) -> T*;
 
             template <typename T>
-            auto findByType() const -> T*
-            {
-                static_assert(isIdentifiable<T>::value, "Only works for types derived from gamelib::Identifier");
-                return static_cast<T*>(find(T::id));
-            }
+            auto findByType() const -> T*;
 
             template <typename T>
-            auto findByName() const -> T*
-            {
-                return static_cast<T*>(find(T::name));
-            }
+            auto findByName() const -> T*;
 
             // Calls a callback for each found component.
             // Signature: bool(Component*)
             // If the lambda returns true, the loop breaks. To continue return false.
             template <typename F>
-            auto findAll(ID type, F callback) const -> void
-            {
-                for (auto it = _components.begin(), end = _components.end(); it != end; ++it)
-                    if ((*it)->getID() == type)
-                        if (callback(it->get()))
-                            break;
-            }
+            auto findAll(ID type, F callback) const -> void;
+
+            // Calls a callback for each found component.
+            // Signature: bool(Component*)
+            // If the lambda returns true, the loop breaks. To continue return false.
+            template <typename F>
+            auto findAll(const std::string& name, F callback) const -> void;
 
             // Calls a callback for each found T component.
             // Signature: bool(T*)
             // If the lambda returns true, the loop breaks. To continue return false.
             template <typename T, typename F>
-            auto findAllByType(F callback) const -> void
-            {
-                static_assert(isIdentifiable<T>::value, "Only works for types derived from gamelib::Identifier");
-                findAll(T::id, [&](Component* comp) {
-                        return callback(static_cast<T*>(comp));
-                    });
-            }
+            auto findAllByType(F callback) const -> void;
 
-            // Calls a callback for each component about to be serialized.
-            // The callback handles the serialization (or not).
-            // Signature: bool(Json::Value&, Component&)
-            template <typename F>
-            auto writeToJson(Json::Value& node, F callback) const -> void
-            {
-                node["name"] = _name;
-                node["flags"] = flags;
-                gamelib::writeToJson(node["transform"], _transform);
-
-                if (flags & entity_exportcomponents)
-                {
-                    auto& comps = node["components"];
-                    comps = Json::Value(Json::arrayValue);
-
-                    for (auto& i : _components)
-                        if (i)
-                        {
-                            Json::Value comp;
-                            callback(comp, *i);
-                            if (!comp.isNull())
-                                comps.append(comp);
-                        }
-                }
-            }
+            // Calls a callback for each found T component.
+            // Signature: bool(T*)
+            // If the lambda returns true, the loop breaks. To continue return false.
+            template <typename T, typename F>
+            auto findAllByName(F callback) const -> void;
 
         public:
             unsigned int flags;
@@ -161,11 +132,84 @@ namespace gamelib
             GroupTransform _transform;
             bool _quitting;
             ComponentList _components;
+
+        public:
+            template <typename F>
+            friend void writeToJson(Json::Value&, const Entity&, F);
+            friend bool extendFromJson(const Json::Value&, Entity&, bool);
     };
 
 
     auto getEntity(Entity::Handle handle) -> Entity*;
     auto findEntity(const std::string& name) -> Entity*;
+
+
+
+    template <typename F>
+    auto Entity::foreach(F f) const -> void
+    {
+        for (const auto& i : _components)
+            if (!f(i.ptr.get()))
+                return;
+    }
+
+    template <typename T, typename... Args>
+    auto Entity::add(Args&&... args) -> T*
+    {
+        auto comp = add(ComponentPtr(new T(std::forward<Args>(args)...)));
+        return static_cast<T*>(comp);
+    }
+
+
+    template <typename T>
+    auto Entity::findByType() const -> T*
+    {
+        static_assert(isIdentifiable<T>::value, "Only works for types derived from gamelib::Identifier");
+        return static_cast<T*>(find(T::id));
+    }
+
+    template <typename T>
+    auto Entity::findByName() const -> T*
+    {
+        return static_cast<T*>(find(T::name));
+    }
+
+    template <typename T, typename F>
+    auto Entity::findAllByType(F callback) const -> void
+    {
+        static_assert(isIdentifiable<T>::value, "Only works for types derived from gamelib::Identifier");
+        findAll(T::id, [&](Component* comp) {
+                return callback(static_cast<T*>(comp));
+            });
+    }
+
+    template <typename T, typename F>
+    auto Entity::findAllByName(F callback) const -> void
+    {
+        findAll(T::name, [&](Component* comp) {
+                return callback(static_cast<T*>(comp));
+            });
+    }
+
+
+    template <typename F>
+    auto Entity::findAll(ID type, F callback) const -> void
+    {
+        for (const auto& i : _components)
+            if (i.ptr->getID() == type)
+                if (callback(i.ptr.get()))
+                    break;
+    }
+
+    template <typename F>
+    auto Entity::findAll(const std::string& name, F callback) const -> void
+    {
+        for (const auto& i : _components)
+            if (i.ptr->getName() == name)
+                if (callback(i.ptr.get()))
+                    break;
+    }
 }
+
 
 #endif

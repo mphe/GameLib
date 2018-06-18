@@ -1,44 +1,64 @@
 #include "gamelib/export.hpp"
-#include "gamelib/core/ecs/Entity.hpp"
+#include "gamelib/core/ecs/serialization.hpp"
+#include "gamelib/core/ecs/EntityFactory.hpp"
 
 namespace gamelib
 {
-    bool saveState(const std::string& fname)
+    bool save(const std::string& fname)
     {
-        return saveState(fname, [](Json::Value& node, Entity& ent) {
-                ent.writeToJson(node);
+        return save(fname, [](Json::Value& node, Entity& ent) {
+                writeToJson(node, ent);
             });
     }
 
-    void saveStateToJson(Json::Value& node)
+    bool saveToJson(Json::Value& node)
     {
-        saveStateToJson(node, [](Json::Value& node, Entity& ent) {
-                ent.writeToJson(node);
+        return saveToJson(node, [](Json::Value& node, Entity& ent) {
+                writeToJson(node, ent);
             });
     }
 
 
-    bool loadState(const std::string& fname)
+    bool loadSave(const std::string& fname, bool direct)
     {
         Json::Value node;
         if (!loadJsonFromFile(fname, node))
         {
-            LOG_ERROR("Failed to load state from file ", fname);
+            LOG_ERROR("Failed to load save from file ", fname);
             return false;
         }
 
-        loadStateFromJson(node);
-        return true;
+        return loadSaveFromJson(node, direct);
     }
 
-    void loadStateFromJson(const Json::Value& node)
+    bool loadSaveFromJson(const Json::Value& node, bool direct)
     {
         auto scene = Scene::getActive();
         if (scene)
             scene->loadFromJson(node["scene"]);
 
-        auto entmgr = EntityManager::getActive();
-        if (entmgr)
-            entmgr->loadFromJson(node["entmgr"]);
+        auto entmgr = getSubsystem<EntityManager>();
+        auto factory = getSubsystem<EntityFactory>();
+
+        if (entmgr && factory)
+        {
+            const auto& mgrnode = node["entmgr"];
+            entmgr->clear();
+
+            if (!mgrnode.isArray())
+            {
+                LOG_WARN("No valid entity array in save file");
+                return true;
+            };
+
+            if (direct)
+                for (auto& i : mgrnode)
+                    factory->createFromJson(i);
+            else
+                for (auto& i : mgrnode)
+                    factory->createWithDelta(i["name"].asString(), i);
+        }
+
+        return true;
     }
 }

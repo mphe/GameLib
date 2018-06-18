@@ -2,6 +2,7 @@
 
 #include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
+#include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/editor/editor/ui/inputs.hpp"
 #include "imgui.h"
 
@@ -60,7 +61,7 @@ namespace gamelib
                     if (currentFilePath.empty())
                         choosesave = true;
                     else
-                        ent.writeToFile(currentFilePath);
+                        writeToFile(currentFilePath, ent);
                 }
 
                 if (ImGui::MenuItem("Save as"))
@@ -95,7 +96,7 @@ namespace gamelib
             if (strlen(chosenPath) > 0)
             {
                 currentFilePath = chosenPath;
-                ent.writeToFile(currentFilePath);
+                writeToFile(currentFilePath, ent);
             }
         }
 

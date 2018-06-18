@@ -51,6 +51,7 @@ set(GAMELIB_SOURCES
     core/ecs/Entity.cpp
     core/ecs/EntityManager.cpp
     core/ecs/EntityFactory.cpp
+    core/ecs/serialization.cpp
     core/ecs/Component.cpp
     core/ecs/RenderComponent.cpp
     core/ecs/CollisionComponent.cpp

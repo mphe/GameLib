@@ -53,21 +53,6 @@ namespace gamelib
             clear();
     }
 
-    bool Entity::loadFromJson(const Json::Value& node)
-    {
-        _name = node.get("name", "").asString();
-        flags = node.get("flags", 0).asUInt();
-        gamelib::loadFromJson(node["transform"], _transform);
-        return true;
-    }
-
-    void Entity::writeToJson(Json::Value& node)
-    {
-        writeToJson(node, [](Json::Value& compnode, Component& comp) {
-                comp.writeToJson(compnode);
-            });
-    }
-
     Entity::Handle Entity::getHandle() const
     {
         return _handle;
@@ -105,21 +90,28 @@ namespace gamelib
             return nullptr;
         }
 
-        _components.push_back(std::move(comp));
+        // Find highest id of these component types
+        unsigned int id = 0;
+        for (auto& i : _components)
+            if (i.ptr->getName() == comp->getName())
+                id = std::max(id, i.id);
+        ++id;
+
+        _components.push_back({ id, std::move(comp) });
         _refresh();
-        return _components.back().get();
+        return _components.back().ptr.get();
     }
 
     void Entity::remove(Component* comp)
     {
         for (auto it = _components.begin(), end = _components.end(); it != end; ++it)
-            if (it->get() == comp)
+            if (it->ptr.get() == comp)
             {
-                (*it)->_quit();
+                it->ptr->_quit();
                 if (!_quitting)
                     _components.erase(it);
                 else
-                    it->reset();
+                    it->ptr.reset();
                 _refresh();
                 break;
             }
@@ -127,18 +119,22 @@ namespace gamelib
 
     Component* Entity::find(ID type) const
     {
-        for (auto it = _components.begin(), end = _components.end(); it != end; ++it)
-            if ((*it)->getID() == type)
-                return it->get();
-        return nullptr;
+        Component* ptr = nullptr;
+        findAll(type, [&ptr](Component* comp) {
+                ptr = comp;
+                return true; // Break after first found
+            });
+        return ptr;
     }
 
     Component* Entity::find(const std::string& name) const
     {
-        for (auto it = _components.begin(), end = _components.end(); it != end; ++it)
-            if ((*it)->getName() == name)
-                return it->get();
-        return nullptr;
+        Component* ptr = nullptr;
+        findAll(name, [&ptr](Component* comp) {
+                ptr = comp;
+                return true; // Break after first found
+            });
+        return ptr;
     }
 
     size_t Entity::size() const
@@ -161,8 +157,8 @@ namespace gamelib
         // _quitting is set, but reset the pointer instead.
         _quitting = true;
         for (auto& i : _components)
-            if (i)
-                i->_quit();
+            if (i.ptr)
+                i.ptr->_quit();
         _components.clear();
         _quitting = false;
     }
@@ -170,17 +166,12 @@ namespace gamelib
     void Entity::_refresh()
     {
         for (auto& i : _components)
-            if (i)
-                i->_refresh();
+            if (i.ptr)
+                i.ptr->_refresh();
     }
 
 
     Entity::ComponentList::const_iterator Entity::begin() const
-    {
-        return _components.begin();
-    }
-
-    Entity::ComponentList::iterator Entity::begin()
     {
         return _components.begin();
     }
@@ -190,10 +181,6 @@ namespace gamelib
         return _components.end();
     }
 
-    Entity::ComponentList::iterator Entity::end()
-    {
-        return _components.end();
-    }
 
     Entity& Entity::operator=(Entity&& other)
     {

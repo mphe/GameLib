@@ -73,36 +73,6 @@ namespace gamelib
         _entities.clear();
     }
 
-    bool EntityManager::loadFromJson(const Json::Value& node)
-    {
-        auto factory = getSubsystem<EntityFactory>();
-        assert(factory != nullptr && "Requires EntityFactory");
-
-        if (node.get("clear", true).asBool())
-            clear();
-
-        auto& ents = node["entities"];
-        if (!ents.isNull())
-            for (auto& i : ents)
-            {
-                Entity ent;
-                ent.loadFromJson(i); // loads meta data, no components
-
-                if (ent.flags & entity_exportcomponents)
-                    factory->createFromJson(i);
-                else
-                {
-                    auto handle = factory->create(ent.getName());
-                    getEntity(handle)->loadFromJson(i);
-                }
-            }
-        return true;
-    }
-
-    void EntityManager::writeToJson(Json::Value& node)
-    {
-        writeToJson(node, [](Json::Value& node, Entity& ent) { ent.writeToJson(node); });
-    }
 
     SlotMapShort<Entity>::const_iterator EntityManager::begin() const
     {

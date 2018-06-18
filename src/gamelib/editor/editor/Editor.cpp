@@ -6,6 +6,7 @@
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
+#include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/events/SFMLEvent.hpp"
 #include "editor/editor/tools/BrushTool.hpp"
 #include "editor/editor/tools/VertexTool.hpp"
@@ -277,7 +278,7 @@ namespace gamelib
                     if (currentFilePath.empty())
                         choosesave = true;
                     else
-                        saveState(currentFilePath);
+                        save(currentFilePath);
                 }
 
                 if (ImGui::MenuItem("Save as"))
@@ -340,7 +341,7 @@ namespace gamelib
             if (strlen(chosenPath) > 0)
             {
                 currentFilePath = chosenPath;
-                loadState(currentFilePath);
+                loadSave(currentFilePath);
                 _layerui.refresh();
             }
 
@@ -348,7 +349,7 @@ namespace gamelib
             if (strlen(chosenPath) > 0)
             {
                 currentFilePath = chosenPath;
-                saveState(currentFilePath);
+                save(currentFilePath);
             }
 
             chosenPath = exportdlg.saveFileDialog(chooseexport);
@@ -383,18 +384,9 @@ namespace gamelib
             auto selected = getSelectTool().getSelected();
             if (selected)
             {
-                // if (hasflag(selected->flags, entity_exportcomponents))
-                {
-                    ImGui::Begin("Properties");
-                    inputEntityProps(*selected);
-                    ImGui::End();
-                }
-                // else
-                // {
-                //     ImGui::Begin("Orientation", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-                //     inputTransform(getSelectTool().getSelected()->getTransform());
-                //     ImGui::End();
-                // }
+                ImGui::Begin("Properties");
+                inputEntityProps(*selected);
+                ImGui::End();
             }
         }
     }
@@ -415,8 +407,8 @@ namespace gamelib
 
     void defaultExport(const std::string& fname)
     {
-        saveState(fname, [](Json::Value& node, Entity& ent) {
-                ent.writeToJson(node, [](Json::Value& compnode, Component& comp) {
+        save(fname, [](Json::Value& node, Entity& ent) {
+                writeToJson(node, ent, [](Json::Value& compnode, Component& comp) {
                         if (comp.getID() != BrushComponent::id)
                             comp.writeToJson(compnode);
                     });

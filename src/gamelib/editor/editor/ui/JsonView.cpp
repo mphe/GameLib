@@ -3,6 +3,7 @@
 #include "json/json.h"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
+#include "gamelib/core/ecs/serialization.hpp"
 #include "editor/editor/EditorShared.hpp"
 #include "editor/editor/tools/SelectTool.hpp"
 #include <string>
@@ -25,7 +26,6 @@ namespace gamelib
             default:
             case 0:
                 ent = EditorShared::getSelectTool().getSelected();
-                obj = ent;
                 break;
 
             case 1:
@@ -37,20 +37,14 @@ namespace gamelib
                 break;
         }
 
-        if (obj)
+        if (obj || ent)
         {
-            unsigned int oldflags;
-            if (ent)
-            {
-                oldflags = ent->flags;
-                ent->flags |= entity_exportcomponents;
-            }
             Json::Value json;
-            obj->writeToJson(json);
-            *out = json.toStyledString();
-
             if (ent)
-                ent->flags = oldflags;
+                writeToJson(json, *ent);
+            else
+                obj->writeToJson(json);
+            *out = json.toStyledString();
         }
         else
             out->clear();
@@ -83,7 +77,7 @@ namespace gamelib
 
                 { // json
                     ImGui::BeginChild("json view", ImVec2(0, -ImGui::GetItemsLineHeightWithSpacing()));
-                    ImGui::Text("%s", jsonstring.c_str());
+                    ImGui::TextUnformatted(jsonstring.c_str(), jsonstring.c_str() + jsonstring.size());
                     ImGui::EndChild();
                 }
                 { // butons

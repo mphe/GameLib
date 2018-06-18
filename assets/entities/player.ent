@@ -1,36 +1,29 @@
 {
     "name": "player",
-    "components": [
-        {
-            "name": "SpriteComponent",
+    "components": {
+        "SpriteComponent": {
             "sprite": "spr/player_walk.spr"
         },
-        {
-            "name": "QPhysicsComponent",
+        "QPhysicsComponent": {
             "overbounce": 1
         },
-        {
-            "name": "QConfig",
+        "QConfig": {
             "gravity": 700,
             "friction": 10,
             "stopFriction": 10,
             "stopSpeed": 70
         },
-        {
-            "name": "QController",
+        "QController": {
             "maxspeed": 140,
             "jumpspeed": 300,
             "accelerate": 25,
             "airAccelerate": 10
         },
-        {
-            "name": "AABBCollision",
+        "AABBCollision": {
             "flags": 2,
             "pos": [0, 0],
             "size": [32, 32]
         },
-        {
-            "name": "CameraTracker"
-        }
-    ]
+        "CameraTracker": { }
+    }
 }
