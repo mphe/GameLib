@@ -50,17 +50,17 @@ namespace gamelib
 
     void Transformable::move(const math::Vec2f& rel)
     {
-        LOG_DEBUG_WARN("Setting position is not supported by this object");
+        // LOG_DEBUG_WARN("Setting position is not supported by this object");
     }
 
     void Transformable::scale(const math::Vec2f& scale)
     {
-        LOG_DEBUG_WARN("Scaling is not supported by this object");
+        // LOG_DEBUG_WARN("Scaling is not supported by this object");
     }
 
     void Transformable::rotate(float angle)
     {
-        LOG_DEBUG_WARN("Rotating is not supported by this object");
+        // LOG_DEBUG_WARN("Rotating is not supported by this object");
     }
 
     const math::AABBf& Transformable::getBBox() const
