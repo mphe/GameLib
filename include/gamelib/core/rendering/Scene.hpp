@@ -56,7 +56,7 @@ namespace gamelib
             auto destroy() -> void;
 
             auto update(float elapsed) -> void;
-            auto render(sf::RenderTarget& target) -> void;
+            auto render(sf::RenderTarget& target) -> unsigned int;
 
             auto add(SceneObject* obj)    -> SceneObject*;
             auto remove(SceneObject* obj) -> void;

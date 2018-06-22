@@ -109,7 +109,6 @@ namespace gamelib
 
             // Get elapsed time
             _frametime = clock.getElapsedTime().asMilliseconds() / 1000.0f;
-            // LOG_DEBUG_RAW("\r", LOG_DUMP(elapsed), "ms, ", LOG_DUMP(fps), "              \r"); // write some spaces to overwrite existing characters
         }
     }
 

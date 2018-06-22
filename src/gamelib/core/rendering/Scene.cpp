@@ -33,15 +33,17 @@ namespace gamelib
             i.update(elapsed);
     }
 
-    void Scene::render(sf::RenderTarget& target)
+    unsigned int Scene::render(sf::RenderTarget& target)
     {
+        unsigned int numrendered = 0;
+
         // This call must be in render(), otherwise new objects won't appear
         // when the update loop is paused.
         _updateQueue();
 
         if (_cams.empty())
         {
-            _render(target, target.getView());
+            numrendered = _render(target, target.getView());
         }
         else
         {
@@ -53,7 +55,6 @@ namespace gamelib
             else
                 backup = _cams[_default].getView();
 
-            unsigned int numrendered = 0;
             for (size_t i = 0; i < _cams.size(); ++i)
             {
                 _currentcam = i;
@@ -61,11 +62,11 @@ namespace gamelib
                 numrendered += _render(target, _cams[i].getView());
             }
 
-            LOG_DEBUG_RAW("Rendered ", numrendered, " objects with ", _cams.size(), " camera(s)\r");
-
             target.setView(backup); // reset view
             _currentcam = _default;
         }
+
+        return numrendered;
     }
 
     unsigned int Scene::_render(sf::RenderTarget& target, const sf::View& view)

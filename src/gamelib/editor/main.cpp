@@ -9,7 +9,7 @@ using namespace gamelib;
 int main(int argc, char *argv[])
 {
     Game game;
-    GameStatePtr engineState(new Engine());
+    GameStatePtr engineState(new Engine(false));
     auto engine = static_cast<Engine*>(engineState.get());
 
     engine->entfactory.addComponent<BrushComponent>(BrushComponent::name);

@@ -15,7 +15,7 @@ namespace gamelib
     class Engine : public GameState
     {
         public:
-            Engine();
+            Engine(bool printstatus = true);
 
             auto init(Game* game) -> bool;
             auto quit()           -> void;
@@ -30,6 +30,10 @@ namespace gamelib
             EntityManager entmgr;
             EntityFactory entfactory;
             UpdateSystem updatesystem;
+
+        private:
+            Game* _game;
+            bool _printstatus;
     };
 }
 
