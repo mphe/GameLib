@@ -33,6 +33,8 @@ namespace gamelib
 
     bool loadSaveFromJson(const Json::Value& node, bool direct)
     {
+        LOG("Loading game...");
+
         auto scene = Scene::getActive();
         if (scene)
             scene->loadFromJson(node["scene"]);
@@ -59,6 +61,7 @@ namespace gamelib
                     factory->createWithDelta(i["name"].asString(), i);
         }
 
+        LOG("Loading finished");
         return true;
     }
 }

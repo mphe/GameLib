@@ -39,6 +39,8 @@ namespace gamelib
     template <typename F>
     bool saveToJson(Json::Value& node, F callback)
     {
+        LOG("Saving game...");
+
         auto scene = getSubsystem<Scene>();
         if (scene)
             scene->writeToJson(node["scene"]);
@@ -56,6 +58,7 @@ namespace gamelib
             }
         }
 
+        LOG("Saving finished");
         return true;
     }
 

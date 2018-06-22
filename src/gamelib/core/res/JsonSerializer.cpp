@@ -7,32 +7,23 @@ namespace gamelib
 {
     bool JsonSerializer::loadFromFile(const std::string& fname)
     {
-        LOG("(Re)Loading ", fname, "...");
         _fname = fname;
         Json::Value node;
         if (loadJsonFromFile(fname, node))
             return loadFromJson(node);
-        LOG_ERROR("Failed to open ", fname);
         return false;
     }
 
     bool JsonSerializer::writeToFile(const std::string& fname)
     {
-        LOG("Writing to file ", fname, "...");
-
         // TODO: Think about if this would be a good idea.
         // Problems arise when a class implements loadFromJson(), but not
         // writeToJson(). A reload() would then try to load an empty file.
         // _fname = fname;
 
-        Json::Value doc;
-        writeToJson(doc);
-
-        if (writeJsonToFile(fname, doc))
-            return true;
-
-        LOG_ERROR("Failed to open ", fname);
-        return false;
+        Json::Value node;
+        writeToJson(node);
+        return writeJsonToFile(fname, node);
     }
 
     bool JsonSerializer::reload()

@@ -7,6 +7,7 @@ namespace gamelib
 {
     bool loadJsonFromFile(const std::string& fname, Json::Value& node)
     {
+        LOG("(Re)Loading ", fname, "...");
         std::ifstream f;
         f.open(fname.c_str());
         if (f.is_open())
@@ -21,6 +22,7 @@ namespace gamelib
 
     bool writeJsonToFile(const std::string& fname, const Json::Value& node)
     {
+        LOG("Writing to file ", fname, "...");
         std::ofstream f;
         f.open(fname.c_str());
         if (f.is_open())
