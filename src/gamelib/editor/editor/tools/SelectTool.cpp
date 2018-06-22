@@ -4,6 +4,7 @@
 #include "gamelib/core/ecs/RenderComponent.hpp"
 #include "gamelib/core/ecs/CollisionComponent.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
+#include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/geometry/CollisionSystem.hpp"
 #include "editor/editor/tools/ToolUtils.hpp"
 #include "editor/editor/EditorShared.hpp"
@@ -94,6 +95,7 @@ namespace gamelib
     {
         Entity* top = nullptr;
         int depth = 0;
+        int layerdepth = 0;
         CollisionSystem::getActive()->intersectAll(
                 math::Point2f(x, y), flags, [&](Collidable* col) {
 
@@ -116,10 +118,13 @@ namespace gamelib
             //    Note that this also means you need to adapt the
             //    render code to use the render component bbox rather
             //    than the collision component bbox.
+            auto layer = Scene::getActive()->getLayer(ren->getLayer());
+            int layerd = layer ? layer->getDepth() : 0;
             int d = ren->getDepth();
-            if (top == nullptr || d < depth)
+            if (top == nullptr || layerd < layerdepth || (layerd == layerdepth && d < depth))
             {
                 depth = d;
+                layerdepth = layerd;
                 top = ent;
             }
             return false;
