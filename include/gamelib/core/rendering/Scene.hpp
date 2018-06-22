@@ -21,7 +21,7 @@
  * SceneObjects.
  * If no camera was added, the scene will be rendered with the RenderTarget's
  * current view.
- * Adding a SceneObject requires an update() call for the object being placed
+ * Adding a SceneObject requires a render() call for the object being placed
  * at its correct position in the render queue (according to depth).
  * That means, it's fast to add multiple elements at once and then call
  * update() afterwards.
@@ -84,11 +84,12 @@ namespace gamelib
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
 
-            auto createLayer()                        -> Layer::Handle;
-            auto deleteLayer(Layer::Handle handle)    -> void;
-            auto getLayer(Layer::Handle handle) const -> const Layer*;
-            auto getLayer(Layer::Handle handle)       -> Layer*;
-            auto getLayer(size_t layerid) const       -> Layer::Handle;
+            // Creates a new layer or returns an existing one
+            auto createLayer(const std::string& name)    -> Layer::Handle;
+            auto deleteLayer(Layer::Handle handle)       -> void;
+            auto getLayer(Layer::Handle handle) const    -> const Layer*;
+            auto getLayer(Layer::Handle handle)          -> Layer*;
+            auto getLayer(const std::string& name) const -> Layer::Handle;
 
             // Calls a function for each layer.
             // Signature: void (Handle, Layer&)
@@ -104,7 +105,6 @@ namespace gamelib
             auto _updateQueue() -> void;
 
         private:
-            size_t _layerIDcounter;
             size_t _currentcam;
             size_t _default;
             SlotMapShort<Layer> _layers;
@@ -117,13 +117,12 @@ namespace gamelib
 /*
  * Config file format
  * {
- *     "layers": [
- *         {
+ *     "layers": {
+ *         "<layername>": {
  *             <scenedata>
- *             "id": <uint>
  *         },
  *         ...
- *     ],
+ *     },
  *     "cameras": [
  *         "path/to/camera.json",
  *         {

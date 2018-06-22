@@ -7,35 +7,8 @@
 
 namespace gamelib
 {
-    class LayerUI
-    {
-        public:
-            typedef Layer::Handle LayerHandle;
-
-        public:
-            LayerUI();
-
-            auto drawLayerUI() -> void;
-            auto drawSelector(const std::string& label, LayerHandle default_) const -> LayerHandle;
-
-            auto refresh()          -> void;
-            auto getCurrent() const -> LayerHandle;
-
-        private:
-            static bool _itemGetter(void* me_, int index, const char** name);
-            void _add(LayerHandle handle = LayerHandle());
-
-        private:
-            struct LayerCache
-            {
-                LayerHandle handle;
-                std::string name;
-            };
-
-        private:
-            int _current;
-            std::vector<LayerCache> _layers;
-    };
+    void drawLayerUI();
+    bool inputLayer(const std::string& label, Layer::Handle* handle);
 }
 
 #endif

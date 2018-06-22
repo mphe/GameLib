@@ -14,6 +14,7 @@
 #include "editor/editor/tools/EntityTool.hpp"
 #include "editor/editor/ui/JsonView.hpp"
 #include "editor/editor/ui/inputs.hpp"
+#include "editor/editor/ui/LayerUI.hpp"
 #include "editor/editor/EditorShared.hpp"
 #include "editor/components/BrushComponent.hpp"
 #include "imgui.h"
@@ -64,8 +65,6 @@ namespace gamelib
         _tools[ToolVertex].reset(new VertexTool());
         _tools[ToolEntity].reset(new EntityTool());
         setTool(ToolBrush);
-
-        _layerui.refresh();
 
         return true;
     }
@@ -342,7 +341,6 @@ namespace gamelib
             {
                 currentFilePath = chosenPath;
                 loadSave(currentFilePath);
-                _layerui.refresh();
             }
 
             chosenPath = savedlg.saveFileDialog(choosesave);
@@ -378,7 +376,7 @@ namespace gamelib
             ImGui::End();
 
             ImGui::Begin("Layer Properties", nullptr, ImVec2(250, 285));
-            _layerui.drawLayerUI();
+            drawLayerUI();
             ImGui::End();
 
             auto selected = getSelectTool().getSelected();

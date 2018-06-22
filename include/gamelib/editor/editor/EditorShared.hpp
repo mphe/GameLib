@@ -6,7 +6,6 @@
 namespace gamelib
 {
     class Editor;
-    class LayerUI;
     class SelectTool;
 
     class EditorShared
@@ -20,7 +19,6 @@ namespace gamelib
             static auto isSnapEnabled() -> bool;
             static auto snap(const math::Point2f& p) -> math::Point2f;
 
-            static auto getLayerUI()    -> const LayerUI&;
             static auto getSelectTool() -> SelectTool&;
 
         private:

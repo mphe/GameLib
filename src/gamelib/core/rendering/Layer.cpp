@@ -3,12 +3,16 @@
 namespace gamelib
 {
     Layer::Layer(int depth, float parallax, unsigned int flags) :
-        SceneData(depth, parallax, flags),
-        _id(0)
+        Layer("unnamed", depth, parallax, flags)
     { };
 
-    size_t Layer::getUniqueID() const
+    Layer::Layer(const std::string& name, int depth, float parallax, unsigned int flags) :
+        SceneData(depth, parallax, flags),
+        _name(name)
+    { };
+
+    const std::string& Layer::getName() const
     {
-        return _id;
+        return _name;
     }
 }

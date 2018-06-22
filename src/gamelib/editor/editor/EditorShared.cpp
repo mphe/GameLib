@@ -25,11 +25,6 @@ namespace gamelib
         return _editor->_snap;
     }
 
-    const LayerUI& EditorShared::getLayerUI()
-    {
-        return _editor->_layerui;
-    }
-
     SelectTool& EditorShared::getSelectTool()
     {
         return _editor->getSelectTool();

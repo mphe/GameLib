@@ -8,7 +8,6 @@
 #include "gamelib/core/FreeCam.hpp"
 #include "gamelib/core/event/Event.hpp"
 #include "ui/Grid.hpp"
-#include "ui/LayerUI.hpp"
 #include "EntityDesigner.hpp"
 #include "ui/ResourceViewer.hpp"
 
@@ -61,7 +60,6 @@ namespace gamelib
             math::Point2f _mouse;
             math::Point2f _mouseSnapped;
             Grid _grid;
-            LayerUI _layerui;
             EntityDesigner _entdesigner;
             ResourceViewer _resviewer;
             bool _snap;

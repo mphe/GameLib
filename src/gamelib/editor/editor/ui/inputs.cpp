@@ -48,7 +48,7 @@ namespace gamelib
                         auto size = std::min((size_t)handle.max, std::min(sizeof(buf) - 1, str->size()));
                         strncpy(buf, str->c_str(), size);
                         buf[size] = '\0';
-                        if (ImGui::InputText(name.c_str(), buf, size))
+                        if (ImGui::InputText(name.c_str(), buf, size, ImGuiInputTextFlags_EnterReturnsTrue))
                         {
                             (*str).assign(buf, size);
                             return true;
@@ -85,6 +85,22 @@ namespace gamelib
     }
 
 
+    bool okButton(const char* label, const ImVec2& size)
+    {
+        return defaultButton(label, sf::Keyboard::Return, size);
+    }
+
+    bool cancelButton(const char* label, const ImVec2& size)
+    {
+        return defaultButton(label, sf::Keyboard::Escape, size);
+    }
+
+    bool defaultButton(const char* label, int key, const ImVec2& size)
+    {
+        return ImGui::Button(label, size) || ImGui::IsKeyPressed(key);
+    }
+
+
     bool inputBitflags(unsigned int* flags, int num, const char* const* names)
     {
         bool changed = false;
@@ -96,23 +112,28 @@ namespace gamelib
     }
 
 
-    void inputRenderComponent(RenderComponent& ren)
+    void inputSceneData(SceneData& sd)
     {
-        int depth = ren.getDepth();
-        float parallax = ren.getParallax();
+        static constexpr const char* renderFlags[] { "Invisible", "Disable parallax", "Wireframe", "Hidden", "Draw hidden" };
 
-        ImGui::CheckboxFlags("Hidden", &ren.flags, render_hidden);
-        ImGui::CheckboxFlags("Disable parallax", &ren.flags, render_noparallax);
-        ImGui::CheckboxFlags("Wireframe", &ren.flags, render_wireframe);
+        int depth = sd.getDepth();
+        float parallax = sd.getParallax();
+
+        inputBitflags(&sd.flags, 5, renderFlags);
 
         if (ImGui::InputInt("Depth", &depth, 1, 100))
-            ren.setDepth(depth);
+            sd.setDepth(depth);
 
         if (ImGui::InputFloat("Parallax", &parallax, 0.01, 0.1, 3))
-            ren.setParallax(parallax);
+            sd.setParallax(parallax);
+    }
 
-        auto handle = EditorShared::getLayerUI().drawSelector("Layer", ren.getLayer());
-        if (!handle.isNull())
+    void inputRenderComponent(RenderComponent& ren)
+    {
+        inputSceneData(ren);
+
+        Layer::Handle handle = ren.getLayer();
+        if (inputLayer("Layer", &handle))
             ren.setLayer(handle);
     }
 

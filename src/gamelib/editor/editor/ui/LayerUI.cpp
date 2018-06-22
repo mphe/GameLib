@@ -1,160 +1,132 @@
 #include "editor/editor/ui/LayerUI.hpp"
+#include "editor/editor/ui/inputs.hpp"
 #include "gamelib/utils/string.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/utils/log.hpp"
 
-#include "imgui.h"
-
 namespace gamelib
 {
-    LayerUI::LayerUI() :
-        _current(0)
+    void drawLayerUI()
     {
-        _add();
-    }
+        static Layer::Handle current;
+        static char newlayerbuf[256];
+        static bool exists = false;
 
-    void LayerUI::drawLayerUI()
-    {
         Scene& scene = *Scene::getActive();
         Layer* layer = nullptr;
 
-        { // Layer listbox with checkboxes to toggle visibility
-            // TODO: Maybe open an issue on imgui's github page related to
-            //       proper scaling when a listbox contains not only text
+        // Layer listbox with checkboxes to toggle visibility
+        // TODO: Maybe open an issue on imgui's github page related to
+        //       proper scaling when a listbox contains not only text
+        if (ImGui::ListBoxHeader("Layers", -1, 7))
+        {
+            scene.foreachLayer([&](Layer::Handle handle, Layer& layer) {
+                ImGui::PushID(layer.getName().c_str());
+                bool visible = !(layer.flags & render_invisible);
+                if (ImGui::Checkbox("##layervis", &visible))
+                    TOGGLEFLAG(layer.flags, render_invisible);
 
-            if (ImGui::ListBoxHeader("Layers", -1, 7))
-            {
-                for (int i = 0; i < _layers.size(); i++)
-                {
-                    layer = scene.getLayer(_layers[i].handle);
-                    bool layervis = layer ? !(layer->flags & render_invisible) : true;
+                ImGui::SameLine();
 
-                    ImGui::PushID(i);
+                if (ImGui::Selectable(layer.getName().c_str(), (handle == current)))
+                    current = handle;
 
-                    if (ImGui::Checkbox("##layervis", &layervis) && layer)
-                    {
-                        if (layervis)
-                            RMFLAG(layer->flags, render_invisible);
-                        else
-                            layer->flags |= render_invisible;
-                    }
-
-                    ImGui::SameLine();
-
-                    if (ImGui::Selectable(_layers[i].name.c_str(), (i == _current)))
-                        _current = i;
-
-                    ImGui::PopID();
-                }
-
-                ImGui::ListBoxFooter();
-            }
+                ImGui::PopID();
+            });
+            ImGui::ListBoxFooter();
         }
 
         if (ImGui::Button("New Layer"))
         {
-            _add(scene.createLayer());
-            _current = _layers.size() - 1;
+            ImGui::OpenPopup("Create new layer");
+            memset(newlayerbuf, 0, sizeof(newlayerbuf));
+            exists = false;
         }
 
         ImGui::SameLine();
 
-        if (ImGui::Button("Delete") && _current > 0)
+        if (ImGui::Button("Delete") && !current.isNull())
         {
-            scene.deleteLayer(getCurrent());
-            _layers.erase(_layers.begin() + _current);
-            if (_current >= _layers.size())
-                _current = _layers.size() - 1;
+            scene.deleteLayer(current);
+            current = Layer::Handle();
         }
 
         ImGui::Separator();
 
-        layer = scene.getLayer(getCurrent());
-
+        // Layer properties
+        layer = scene.getLayer(current);
         if (layer)
         {
-            ImGui::InputText("Name", &_layers[_current].name[0], 30);
+            // ImGui::Text("Name: %s", layer->getName().c_str());
+            inputSceneData(*layer);
+        }
 
-            int depth = layer->getDepth();
-            float parallax = layer->getParallax();
+        if (ImGui::BeginPopupModal("Create new layer", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            if (!ImGui::IsAnyItemActive())
+                ImGui::SetKeyboardFocusHere();
 
-            if (ImGui::InputInt("Depth", &depth, 1, 100))
-                layer->setDepth(depth);
+            if (ImGui::InputText("Name", newlayerbuf, sizeof(newlayerbuf)))
+            {
+                exists = false;
+                scene.foreachLayer([&](Layer::Handle, Layer& layer) {
+                        if (layer.getName() == newlayerbuf)
+                            exists = true;
+                    });
+            }
 
-            if (ImGui::InputFloat("Parallax", &parallax, 0.01, 0.1, 3))
-                layer->setParallax(parallax);
+            if (exists)
+                ImGui::TextColored(sf::Color::Red, "A layer with that name already exists.");
 
-            ImGui::CheckboxFlags("Disable parallax", &layer->flags, render_noparallax);
+            ImGui::Columns(2, nullptr, false);
+
+            if (okButton("Create") && strlen(newlayerbuf) > 0 && !exists)
+            {
+                scene.createLayer(std::string(newlayerbuf));
+                ImGui::CloseCurrentPopup();
+            }
+
+            ImGui::NextColumn();
+
+            if (cancelButton("Cancel"))
+                ImGui::CloseCurrentPopup();
+
+            ImGui::Columns(1);
+            ImGui::EndPopup();
         }
     }
 
-    LayerUI::LayerHandle LayerUI::drawSelector(const std::string& label, LayerHandle default_) const
+    bool inputLayer(const std::string& label, Layer::Handle* handle)
     {
-        static int selected = 0;
-        static LayerHandle last;
+        int selected = 0;
+        auto scene = Scene::getActive();
+        std::vector<Layer::Handle> cache;
 
-        // Cache index
-        if (default_ != last)
-        {
-            selected = 0;
-            last = default_;
-            for (size_t i = 0; i < _layers.size(); ++i)
-                if (_layers[i].handle == default_)
-                {
+        int i = 1;
+        cache.push_back(Layer::Handle());
+        scene->foreachLayer([&](Layer::Handle h, Layer&) {
+                if (handle && h == *handle)
                     selected = i;
-                    break;
-                }
-        }
-        else if (Scene::getActive()->getLayer(default_) == nullptr)
-            selected = 0;
-
-        if (ImGui::Combo(label.c_str(), &selected, _itemGetter, (void*)&_layers, _layers.size()))
-        {
-            if (_layers[selected].handle.isNull())
-                // Dirty hack to differentiate between null handle and default layer
-                return LayerHandle(-1, -2);
-            return _layers[selected].handle;
-        }
-
-        return LayerHandle();
-    }
-
-    void LayerUI::refresh()
-    {
-        LayerHandle oldhandle = getCurrent();;
-
-        _layers.clear();
-        _add();
-
-        Scene::getActive()->foreachLayer([&](LayerHandle handle, Layer& layer) {
-                if (handle == oldhandle)
-                    _current = _layers.size();
-                _add(handle);
+                cache.push_back(h);
+                ++i;
             });
 
-        if (_current >= _layers.size())
-            _current = _layers.size() - 1;
-    }
+        auto itemgetter = [](void* cache_, int index, const char** name) {
+            auto& handles = *static_cast<decltype(cache)*>(cache_);
+            if (handles[index].isNull())
+                *name = "default";
+            else
+                *name = Scene::getActive()->getLayer(handles[index])->getName().c_str();
+            return true;
+        };
 
-    LayerUI::LayerHandle LayerUI::getCurrent() const
-    {
-        return _layers[_current].handle;
-    }
+        if (ImGui::Combo(label.c_str(), &selected, itemgetter, (void*)&cache, cache.size()))
+        {
+            *handle = cache[selected];
+            return true;
+        }
 
-    bool LayerUI::_itemGetter(void* layers, int index, const char** out)
-    {
-        *out = static_cast<decltype(_layers)*>(layers)->at(index).name.c_str();
-        return true;
-    }
-
-    void LayerUI::_add(LayerHandle handle)
-    {
-        auto scene = Scene::getActive();
-        if (handle.isNull())
-            _layers.emplace_back(LayerCache { handle, "default" });
-        else
-            _layers.emplace_back(LayerCache { handle, join("Layer ", scene->getLayer(handle)->getUniqueID()) });
-        _layers.back().name.resize(30);
+        return false;
     }
 }

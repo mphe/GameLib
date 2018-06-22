@@ -11,7 +11,6 @@ namespace gamelib
     constexpr const char* Scene::name;
 
     Scene::Scene() :
-        _layerIDcounter(0),
         _currentcam(-1),
         _default(-1),
         _dirty(false)
@@ -25,7 +24,6 @@ namespace gamelib
         _default = -1;
         _dirty = false;
         _layers.clear();
-        _layerIDcounter = 0;
         LOG_DEBUG_WARN("Scene destroyed");
     }
 
@@ -37,6 +35,8 @@ namespace gamelib
 
     void Scene::render(sf::RenderTarget& target)
     {
+        // This call must be in render(), otherwise new objects won't appear
+        // when the update loop is paused.
         _updateQueue();
 
         if (_cams.empty())
@@ -175,11 +175,18 @@ namespace gamelib
         return _cams.size();
     }
 
-    Layer::Handle Scene::createLayer()
+    Layer::Handle Scene::createLayer(const std::string& name)
     {
-        auto hnd = _layers.acquire();
-        _layers[hnd]._scene = this;
-        _layers[hnd]._id = _layerIDcounter++;
+        auto hnd = getLayer(name);
+        if (hnd.isNull())
+        {
+            hnd = _layers.acquire();
+            _layers[hnd] = Layer(name);
+            _layers[hnd]._scene = this;
+        }
+        else
+            LOG_WARN("Layer already exists: ", name, " -> using existing one");
+
         return hnd;
     }
 
@@ -198,10 +205,10 @@ namespace gamelib
         return (_layers.isValid(handle)) ? &_layers[handle] : nullptr;
     }
 
-    Layer::Handle Scene::getLayer(size_t layerid) const
+    Layer::Handle Scene::getLayer(const std::string& name) const
     {
         for (auto it = _layers.begin(), end = _layers.end(); it != end; ++it)
-            if ((*it).getUniqueID() == layerid)
+            if ((*it).getName() == name)
                 return it.handle();
         return Layer::Handle();
     }
@@ -215,17 +222,11 @@ namespace gamelib
         if (node.isMember("layers"))
         {
             const auto& layers = node["layers"];
-            for (const auto& i : layers)
+            for (auto it = layers.begin(), end = layers.end(); it != end; ++it)
             {
-                auto h = createLayer();
-                auto layer = getLayer(h);
-                if (layer->loadFromJson(i))
-                {
-                    layer->_id = i.get("id", (Json::UInt)layer->_id).asUInt();
-                    if (layer->_id > _layerIDcounter)
-                        _layerIDcounter = layer->_id + 1;
-                }
-                else
+                auto h = createLayer(it.key().asString());
+
+                if (!getLayer(h)->loadFromJson(*it))
                     deleteLayer(h);
             }
         }
@@ -271,11 +272,7 @@ namespace gamelib
         {
             auto& layers = node["layers"];
             for (auto& i : _layers)
-            {
-                auto& data = layers.append(Json::Value());
-                i.writeToJson(data);
-                data["id"] = (Json::UInt)i._id;
-            }
+                i.writeToJson(layers[i.getName()]);
         }
 
         auto& cams = node["cameras"];

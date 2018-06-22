@@ -15,11 +15,12 @@ namespace gamelib
 
         public:
             Layer(int depth = 0, float parallax = 1, unsigned int flags = 0);
+            Layer(const std::string& name, int depth = 0, float parallax = 1, unsigned int flags = 0);
 
-            auto getUniqueID() const -> size_t;
+            auto getName() const -> const std::string&;
 
         private:
-            size_t _id; // unique id to identify layers when loading configs
+            std::string _name;  // unique id
     };
 }
 
