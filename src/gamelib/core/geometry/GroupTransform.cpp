@@ -90,4 +90,9 @@ namespace gamelib
     {
         return _bbox;
     }
+
+    const std::vector<Transformable*>& GroupTransform::getChildren() const
+    {
+        return _objs;
+    }
 }

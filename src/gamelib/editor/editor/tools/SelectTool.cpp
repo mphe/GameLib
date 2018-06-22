@@ -14,7 +14,8 @@
 namespace gamelib
 {
     SelectTool::SelectTool() :
-        _renderSolid(true)
+        _renderSolid(true),
+        _renderAllBoxes(false)
     { }
 
     void SelectTool::onMousePressed()
@@ -42,7 +43,19 @@ namespace gamelib
         auto* ent = getSelected();
         if (ent)
         {
-            drawRectOutline(target, ent->getTransform().getBBox());
+            if (_renderAllBoxes)
+            {
+                math::AABBf box = ent->getTransform().getBBox();
+                box.extend(math::AABBf(0, 0, 1, 1));
+                drawRectOutline(target, box);
+            }
+            else
+                drawRectOutline(target, ent->getTransform().getBBox());
+
+            if (_renderAllBoxes)
+                for (auto& i : ent->getTransform().getChildren())
+                    drawRectOutline(target, i->getBBox(), sf::Color::Green);
+
             if (_renderSolid)
                 drawCollisions(target, *ent, collision_solid);
 
@@ -59,6 +72,7 @@ namespace gamelib
     void SelectTool::drawGui()
     {
         ImGui::Checkbox("Show solid", &_renderSolid);
+        ImGui::Checkbox("Show child transforms", &_renderAllBoxes);
     }
 
     void SelectTool::select(Entity::Handle enthandle)

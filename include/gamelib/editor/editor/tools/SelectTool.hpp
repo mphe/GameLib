@@ -29,6 +29,7 @@ namespace gamelib
             Entity::Handle _selected;
             math::Vec2f _dragoffset;
             bool _renderSolid;
+            bool _renderAllBoxes;
     };
 }
 

@@ -8,10 +8,6 @@
 namespace gamelib
 {
     class Entity;
-}
-
-namespace gamelib
-{
     class BrushComponent;
 
     // Half size of a drag box

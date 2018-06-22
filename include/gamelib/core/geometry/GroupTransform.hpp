@@ -29,6 +29,8 @@ namespace gamelib
             auto getRotation() const -> float;
             auto getBBox() const     -> const math::AABBf&;
 
+            auto getChildren() const -> const std::vector<Transformable*>&;
+
         protected:
             math::AABBf _bbox;
             math::Point2f _pos;
