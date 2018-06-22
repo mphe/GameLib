@@ -40,10 +40,9 @@ namespace gamelib
         _exportcallback(defaultExport),
         _currenttool(nullptr),
         _camctrl(getSubsystem<Scene>()),
+        _drag(false),
         _grid(32, 32),
         _snap(true),
-        _drag(false),
-        _gridOnTop(true),
         _run(false)
     { }
 
@@ -70,7 +69,6 @@ namespace gamelib
 
     void Editor::quit()
     {
-        _entdesigner.close();
         _resviewer.close();
 
         auto evmgr = getSubsystem<EventManager>();
@@ -97,31 +95,24 @@ namespace gamelib
 
     void Editor::render(sf::RenderTarget& target)
     {
-        if (!_run)
-        {
-            // necessary, otherwise things will disappear randomly
-            getSubsystem<Game>()->getWindow().resetGLStates();
+        if (_run)
+            return;
 
-            // if (!_gridOnTop && _snap)
-            //     _grid.render(target);
+        // necessary, otherwise things will disappear randomly
+        getSubsystem<Game>()->getWindow().resetGLStates();
 
-            if (_gridOnTop && _snap)
-                _grid.render(target);
+        if (_snap)
+            _grid.render(target);
 
-            if (_currenttool)
-                _currenttool->render(target);
+        if (_currenttool)
+            _currenttool->render(target);
 
-            // if (_currenttool != &getSelectTool())
-            //     getSelectTool().render(target);
-
-            ImGui::Render();
-        }
+        ImGui::Render();
     }
 
     void Editor::setTool(Tools tool)
     {
         _currenttool = _tools[tool].get();
-        LOG("Selected tool: ", buttonStrings[static_cast<size_t>(tool)]);
     }
 
     SelectTool& Editor::getSelectTool()
@@ -129,12 +120,46 @@ namespace gamelib
         return *(SelectTool*)_tools[ToolSelect].get();
     }
 
+
+    void Editor::pause()
+    {
+        _run = false;
+        _updateRunFlags();
+    }
+
+    void Editor::unpause()
+    {
+        _run = true;
+        _updateRunFlags();
+    }
+
+
+    bool Editor::load()
+    {
+        return _savefile.empty() ? false : gamelib::loadSave(_savefile);
+    }
+
+    bool Editor::load(const std::string& fname)
+    {
+        _savefile = fname;
+        return load();
+    }
+
+    bool Editor::save()
+    {
+        return _savefile.empty() ? false : gamelib::save(_savefile);
+    }
+
+    bool Editor::save(const std::string& fname)
+    {
+        _savefile = fname;
+        return this->save();
+    }
+
+
     void Editor::registerExportCallback(ExportFunction callback)
     {
-        if (callback == nullptr)
-            _exportcallback = defaultExport;
-        else
-            _exportcallback = callback;
+        _exportcallback = callback ? callback : defaultExport;
     }
 
     void Editor::_updateRunFlags()
@@ -152,24 +177,25 @@ namespace gamelib
         }
     }
 
-    void Editor::_eventCallback(Editor* me, EventPtr ev)
+
+    void Editor::_eventCallback(Editor* self, EventPtr ev)
     {
         sf::Event& sfev = ev->get<SFMLEvent>()->ev;
         ImGui::SFML::ProcessEvent(sfev);
         bool consumed = ImGui::GetIO().WantCaptureMouse;
         auto game = getSubsystem<Game>();
 
-        Tool* realtool = me->_currenttool;  // backup
+        Tool* realtool = self->_currenttool;  // backup
         if (game->isKeyPressed(sf::Keyboard::LControl))
-            me->_currenttool = &me->getSelectTool();
+            self->_currenttool = &self->getSelectTool();
 
         if (sfev.type == sf::Event::KeyPressed && sfev.key.code == sf::Keyboard::F5)
         {
-            me->_run = !me->_run;
-            me->_updateRunFlags();
+            self->_run = !self->_run;
+            self->_updateRunFlags();
         }
 
-        if (me->_run)
+        if (self->_run)
             return;
 
         switch (sfev.type)
@@ -180,104 +206,93 @@ namespace gamelib
 
                 switch (sfev.key.code)
                 {
-                    case sf::Keyboard::R:
-                        LOG_WARN("---------------- Reloading...");
-                        game->reload();
-                        me->quit();
-                        me->init(game);
-                        LOG("---------------- Reloading complete");
-                        return; // early out, so that _currenttool doesn't get reset at the end of the function
-
-                    // case sf::Keyboard::Q:
-                    //     game->close();
-                    //     break;
-
                     case sf::Keyboard::Delete:
-                        if (me->getSelectTool().getSelected())
+                        if (self->getSelectTool().getSelected())
                         {
-                            me->getSelectTool().getSelected()->destroy();
-                            me->getSelectTool().select(nullptr);
+                            self->getSelectTool().getSelected()->destroy();
+                            self->getSelectTool().select(nullptr);
                         }
                         break;
 
                     case sf::Keyboard::Q:
-                        me->_grid.increase();
+                        self->_grid.increase();
                         break;
 
                     case sf::Keyboard::E:
-                        me->_grid.decrease();
+                        self->_grid.decrease();
                         break;
 
                     case sf::Keyboard::G:
-                        me->_snap = !me->_snap;
+                        self->_snap = !self->_snap;
                         break;
+
+                    default: break;
                 }
                 break;
 
             case sf::Event::MouseButtonPressed:
                 if (!consumed && sfev.mouseButton.button == sf::Mouse::Left)
                 {
-                    me->_updateMouse(sfev.mouseButton.x, sfev.mouseButton.y);
-                    me->_currenttool->onMousePressed();
-                    me->_drag = true;
+                    self->_updateMouse(sfev.mouseButton.x, sfev.mouseButton.y);
+                    self->_currenttool->onMousePressed();
+                    self->_drag = true;
                 }
                 break;
 
             case sf::Event::MouseMoved:
                 {
-                    me->_updateMouse(sfev.mouseMove.x, sfev.mouseMove.y);
-                    if (me->_drag)
-                        me->_currenttool->onDrag();
+                    self->_updateMouse(sfev.mouseMove.x, sfev.mouseMove.y);
+                    if (self->_drag)
+                        self->_currenttool->onDrag();
                     else
-                        me->_currenttool->onMouseMove();
+                        self->_currenttool->onMouseMove();
                 }
                 break;
 
             case sf::Event::MouseButtonReleased:
                 {
-                    me->_updateMouse(sfev.mouseButton.x, sfev.mouseButton.y);
-                    me->_drag = false;
-                    me->_currenttool->onMouseRelease();
+                    self->_updateMouse(sfev.mouseButton.x, sfev.mouseButton.y);
+                    self->_drag = false;
+                    self->_currenttool->onMouseRelease();
                 }
                 break;
 
             case sf::Event::MouseWheelMoved:
                 if (!consumed)
                 {
-                    auto p = me->_mapCoords(sfev.mouseWheel.x, sfev.mouseWheel.y);
+                    auto p = self->_mapCoords(sfev.mouseWheel.x, sfev.mouseWheel.y);
                     getSubsystem<Scene>()->getCamera(0)->zoomTowards(p.x, p.y, sfev.mouseWheel.delta / -10.0);
                 }
                 break;
+
+            default: break;
+
         }
 
-        me->_currenttool = realtool;
+        self->_currenttool = realtool;
     }
 
     void Editor::_drawGui()
     {
         static bool testwindow = false;
         static bool jsonwindow = false;
+        static bool toolbox = true;
+        static bool layerbox = true;
+        static bool entprops = true;
         static ImGuiFs::Dialog loaddlg;
         static ImGuiFs::Dialog savedlg;
         static ImGuiFs::Dialog exportdlg;
-        static std::string currentFilePath;
 
         bool chooseload = false;
         bool choosesave = false;
         bool chooseexport = false;
-        const char* chosenPath;
 
         if (ImGui::BeginMainMenuBar())
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("Save"))
-                {
-                    if (currentFilePath.empty())
-                        choosesave = true;
-                    else
-                        save(currentFilePath);
-                }
+                if (ImGui::MenuItem("Save", nullptr, nullptr, !_savefile.empty()))
+                    save();
 
                 if (ImGui::MenuItem("Save as"))
                     choosesave = true;
@@ -301,9 +316,6 @@ namespace gamelib
             }
             if (ImGui::BeginMenu("View"))
             {
-                ImGui::MenuItem("Show test window", nullptr, &testwindow);
-                ImGui::MenuItem("Show json window", nullptr, &jsonwindow);
-
                 auto scene = getSubsystem<Scene>();
                 if (ImGui::MenuItem("Show hidden", nullptr, scene->flags & render_drawhidden))
                     TOGGLEFLAG(scene->flags, render_drawhidden);
@@ -315,19 +327,21 @@ namespace gamelib
             }
             if (ImGui::BeginMenu("Tools"))
             {
-                if (ImGui::MenuItem("Open Entity Designer"))
-                    _entdesigner.open();
                 if (ImGui::MenuItem("Open Resource Viewer"))
                     _resviewer.open();
+                ImGui::MenuItem("Show toolbox", nullptr, &toolbox);
+                ImGui::MenuItem("Show entity properties", nullptr, &entprops);
+                ImGui::MenuItem("Show layer properties", nullptr, &layerbox);
+                ImGui::MenuItem("Show test window", nullptr, &testwindow);
+                ImGui::MenuItem("Show json viewer", nullptr, &jsonwindow);
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Grid"))
             {
-                ImGui::MenuItem("Snap to grid", nullptr, &_snap);
-                // ImGui::MenuItem("Grid on top", nullptr, &_gridOnTop);
-                if (ImGui::MenuItem("Increase"))
+                ImGui::MenuItem("Snap to grid", "G", &_snap);
+                if (ImGui::MenuItem("Increase", "Q"))
                     _grid.increase();
-                if (ImGui::MenuItem("Decrease"))
+                if (ImGui::MenuItem("Decrease", "E"))
                     _grid.decrease();
                 ImGui::EndMenu();
             }
@@ -335,23 +349,14 @@ namespace gamelib
         }
 
         { // Loading / Saving
-            chosenPath = loaddlg.chooseFileDialog(chooseload);
-            if (strlen(chosenPath) > 0)
-            {
-                currentFilePath = chosenPath;
-                loadSave(currentFilePath);
-            }
+            if (strlen(loaddlg.chooseFileDialog(chooseload)) > 0)
+                load(loaddlg.getChosenPath());
 
-            chosenPath = savedlg.saveFileDialog(choosesave);
-            if (strlen(chosenPath) > 0)
-            {
-                currentFilePath = chosenPath;
-                save(currentFilePath);
-            }
+            if (strlen(savedlg.saveFileDialog(choosesave)) > 0)
+                this->save(savedlg.getChosenPath());
 
-            chosenPath = exportdlg.saveFileDialog(chooseexport);
-            if (strlen(chosenPath) > 0)
-                _exportcallback(chosenPath);
+            if (strlen(exportdlg.saveFileDialog(chooseexport)) > 0)
+                _exportcallback(exportdlg.getChosenPath());
         }
 
         { // Dialogues
@@ -361,27 +366,26 @@ namespace gamelib
             if (jsonwindow)
                 drawJsonView(&jsonwindow);
 
-            _entdesigner.draw();
+            if (layerbox)
+                drawLayerUI(&layerbox);
+
             _resviewer.draw();
 
-            ImGui::Begin("Toolbox", nullptr, ImVec2(250, 125));
-            for (size_t i = 0; i < NumTools; ++i)
-                if (ImGui::Button(buttonStrings[i]))
-                    setTool(static_cast<Tools>(i));
-            ImGui::End();
+            if (toolbox && ImGui::Begin("Toolbox", &toolbox, ImVec2(250, 125)))
+            {
+                for (size_t i = 0; i < NumTools; ++i)
+                    if (ImGui::Button(buttonStrings[i]))
+                        setTool(static_cast<Tools>(i));
+                ImGui::Separator();
 
-            ImGui::Begin("Tool properties", nullptr, ImVec2(250, 275));
-            _currenttool->drawGui();
-            ImGui::End();
+                _currenttool->drawGui();
 
-            ImGui::Begin("Layer Properties", nullptr, ImVec2(250, 285));
-            drawLayerUI();
-            ImGui::End();
+                ImGui::End();
+            }
 
             auto selected = getSelectTool().getSelected();
-            if (selected)
+            if (entprops && selected && ImGui::Begin("Properties"))
             {
-                ImGui::Begin("Properties");
                 inputEntityProps(*selected);
                 ImGui::End();
             }
@@ -410,6 +414,6 @@ namespace gamelib
                             comp.writeToJson(compnode);
                     });
             });
-        LOG("Map saved to ", fname);
+        LOG("Map exported to ", fname);
     }
 }

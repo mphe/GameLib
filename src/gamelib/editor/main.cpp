@@ -1,6 +1,7 @@
 #include "gamelib/Engine.hpp"
 #include "gamelib/core/Game.hpp"
 #include "gamelib/editor/editor/Editor.hpp"
+#include <cstring>
 
 #include "gamelib/editor/components/BrushComponent.hpp"
 
@@ -24,6 +25,10 @@ int main(int argc, char *argv[])
     game.loadFromFile("assets/editor.json");
     game.pushState(std::move(engineState));
     game.pushState(GameStatePtr(new Editor()));
+
+    if (argc > 1 && strlen(argv[1]) > 0)
+        static_cast<Editor&>(game.pullState()).load(argv[1]);
+
     game.run();
     game.destroy();
 

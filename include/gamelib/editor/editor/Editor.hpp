@@ -8,7 +8,6 @@
 #include "gamelib/core/FreeCam.hpp"
 #include "gamelib/core/event/Event.hpp"
 #include "ui/Grid.hpp"
-#include "EntityDesigner.hpp"
 #include "ui/ResourceViewer.hpp"
 
 namespace gamelib
@@ -43,10 +42,18 @@ namespace gamelib
             auto setTool(Tools tool) -> void;
             auto getSelectTool()     -> SelectTool&;
 
+            auto pause()   -> void;
+            auto unpause() -> void;
+
+            auto load()                         -> bool;
+            auto load(const std::string& fname) -> bool;
+            auto save()                         -> bool;
+            auto save(const std::string& fname) -> bool;
+
             auto registerExportCallback(ExportFunction callback) -> void;
 
         private:
-            static auto _eventCallback(Editor* me, EventPtr ev) -> void;
+            static auto _eventCallback(Editor* self, EventPtr ev) -> void;
             auto _drawGui() -> void;
             auto _mapCoords(float x, float y) -> math::Point2f;
             auto _updateMouse(float mx, float my) -> void;
@@ -54,17 +61,21 @@ namespace gamelib
 
         private:
             ExportFunction _exportcallback;
+            std::string _savefile;
+
             std::unique_ptr<Tool> _tools[NumTools];
             Tool* _currenttool;
+
             FreeCam _camctrl;
+            ResourceViewer _resviewer;
+
             math::Point2f _mouse;
             math::Point2f _mouseSnapped;
-            Grid _grid;
-            EntityDesigner _entdesigner;
-            ResourceViewer _resviewer;
-            bool _snap;
             bool _drag;
-            bool _gridOnTop;
+
+            Grid _grid;
+            bool _snap;
+
             bool _run;
     };
 }
