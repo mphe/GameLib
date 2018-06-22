@@ -10,7 +10,7 @@ namespace gamelib
         _vertices.resize(4);
         _vertices.setPrimitiveType(sf::TriangleStrip);
 
-        _props.registerProperty("sprite", _sprite, +[](SpriteResource::Handle* sprite, const SpriteResource::Handle* val, SpriteComponent* self) {
+        _props.registerProperty("sprite", _sprite, +[](SpriteResource::Handle*, const SpriteResource::Handle* val, SpriteComponent* self) {
                 self->change(*val);
             }, this);
     }
@@ -33,6 +33,11 @@ namespace gamelib
 
     void SpriteComponent::setIndex(int index)
     {
+        // Adding this to the tex coords will prevent the 1px border glitch (hopefully)
+        // https://gamedev.stackexchange.com/a/75244
+        // https://stackoverflow.com/questions/19611745/opengl-black-lines-in-between-tiles
+        constexpr float magic = 0.375;
+
         const auto& rect = _sprite->rect;
         auto tsize = _sprite->tex->getSize();
 
@@ -40,10 +45,10 @@ namespace gamelib
         int y = (rect.y + (int)(x / tsize.x) * rect.h) % tsize.y;
         x = x % tsize.x;
 
-        _vertices[0].texCoords = sf::Vector2f(x, y);
-        _vertices[1].texCoords = sf::Vector2f(x, y + rect.h);
-        _vertices[2].texCoords = sf::Vector2f(x + rect.w, y);
-        _vertices[3].texCoords = sf::Vector2f(x + rect.w, y + rect.h);
+        _vertices[0].texCoords = sf::Vector2f(x + magic, y + magic);
+        _vertices[1].texCoords = sf::Vector2f(x + magic, y + rect.h - magic);
+        _vertices[2].texCoords = sf::Vector2f(x + rect.w - magic, y + magic);
+        _vertices[3].texCoords = sf::Vector2f(x + rect.w - magic, y + rect.h - magic);
     }
 
     void SpriteComponent::change(const std::string& fname)
