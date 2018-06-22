@@ -141,14 +141,14 @@ namespace gamelib
             sf::Vertex line[3];
             line[0] = sf::Vertex(_vertices[0].position);
             line[1] = sf::Vertex(_vertices[1].position);
-            target.draw(line, 2, sf::LineStrip);
+            target.draw(line, 2, sf::LineStrip, states_);
 
             for (size_t i = 2; i < _vertices.getVertexCount(); ++i)
             {
                 line[0] = sf::Vertex(_vertices[i - 2].position);
                 line[1] = sf::Vertex(_vertices[i].position);
                 line[2] = sf::Vertex(_vertices[i - 1].position);
-                target.draw(line, 3, sf::LineStrip);
+                target.draw(line, 3, sf::LineStrip, states_);
             }
         }
     }
@@ -174,6 +174,7 @@ namespace gamelib
                 gamelib::loadFromJson(vertices[i][0], _vertices[i].position);
                 gamelib::loadFromJson(vertices[i][1], _vertices[i].texCoords);
             }
+            _updateBBox();
         }
 
         return true;

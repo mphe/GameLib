@@ -53,24 +53,49 @@ namespace gamelib
             else
                 backup = _cams[_default].getView();
 
+            unsigned int numrendered = 0;
             for (size_t i = 0; i < _cams.size(); ++i)
             {
                 _currentcam = i;
                 target.setView(_cams[i].getView());
-                _render(target, _cams[i].getView());
+                numrendered += _render(target, _cams[i].getView());
             }
+
+            LOG_DEBUG_RAW("Rendered ", numrendered, " objects with ", _cams.size(), " camera(s)\r");
 
             target.setView(backup); // reset view
             _currentcam = _default;
         }
     }
 
-    void Scene::_render(sf::RenderTarget& target, const sf::View& view)
+    unsigned int Scene::_render(sf::RenderTarget& target, const sf::View& view)
     {
         float lastparallax = 1;
+        math::AABBf vbox;
+        unsigned int numrendered = 0;
+
+        { // Calculate view bounding box
+            sf::Vector2f vpos(view.getCenter().x - view.getSize().x / 2,
+                    view.getCenter().y - view.getSize().y / 2);
+
+            sf::Transform vtrans;
+            vtrans.translate(vpos.x, vpos.y);
+            vtrans.rotate(view.getRotation());
+
+            auto camrect = vtrans.transformRect(sf::FloatRect(sf::Vector2f(0, 0), view.getSize()));
+            vbox = math::AABBf(camrect.left, camrect.top, camrect.width, camrect.height);
+        }
 
         for (auto& o : _renderQueue)
         {
+            // Skip if outside of view
+            if (!o->getBBox().intersect(vbox))
+            {
+                if (o->getBBox().w == 0 || o->getBBox().h == 0)
+                    LOG_WARN("SceneObject bounding box has 0 width or height");
+                continue;
+            }
+
             unsigned int flags = o->flags | this->flags;
             float parallax = o->getParallax() * getParallax();
 
@@ -106,7 +131,10 @@ namespace gamelib
             }
 
             o->render(target);
+            ++numrendered;
         }
+
+        return numrendered;
     }
 
     SceneObject* Scene::add(SceneObject* obj)

@@ -17,7 +17,6 @@
 #include "editor/editor/ui/LayerUI.hpp"
 #include "editor/editor/EditorShared.hpp"
 #include "editor/components/BrushComponent.hpp"
-#include "imgui.h"
 #include "imgui-SFML.h"
 #include "imguifilesystem.h"
 
@@ -89,7 +88,7 @@ namespace gamelib
     {
         auto game = getSubsystem<Game>();
 
-        if (!_run)
+        if (!_run && !ImGui::GetIO().WantCaptureKeyboard)
             _camctrl.update(elapsed);
 
         ImGui::SFML::Update(game->getWindow(), sf::seconds(elapsed));

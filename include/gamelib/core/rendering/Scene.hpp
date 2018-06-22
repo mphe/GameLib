@@ -101,7 +101,7 @@ namespace gamelib
             }
 
         private:
-            auto _render(sf::RenderTarget& surface, const sf::View& view) -> void;
+            auto _render(sf::RenderTarget& surface, const sf::View& view) -> unsigned int;
             auto _updateQueue() -> void;
 
         private:

@@ -112,6 +112,7 @@ namespace gamelib
         _vertices[1].position = sf::Vector2f(0, _sprite->rect.h);
         _vertices[2].position = sf::Vector2f(_sprite->rect.w, 0);
         _vertices[3].position = sf::Vector2f(_sprite->rect.w, _sprite->rect.h);
+        _updateBBox();
 
         setIndex(_ani.ani.offset);
     }

@@ -102,12 +102,14 @@ namespace gamelib
     {
         _bbox.pos += rel;
         _pos += rel;
+        _updateBBox();
     }
 
     void SceneObject::scale(const math::Vec2f& scale)
     {
         _bbox.size *= scale;
         _scale *= scale;
+        _updateBBox();
     }
 
     void SceneObject::rotate(float angle)
