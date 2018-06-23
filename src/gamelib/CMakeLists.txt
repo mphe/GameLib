@@ -99,6 +99,7 @@ if(GAMELIB_BUILD_EDITOR)
         editor/editor/ui/Grid.cpp
         editor/editor/ui/JsonView.cpp
         editor/editor/ui/ResourceViewer.cpp
+        editor/editor/ui/EntityList.cpp
         editor/editor/ui/inputs.cpp
         editor/editor/EntityDesigner.cpp
         editor/events/OnSelect.cpp

@@ -7,7 +7,7 @@
 
 namespace gamelib
 {
-    bool drawLayerUI(bool* open)
+    void drawLayerUI(bool* open)
     {
         static Layer::Handle current;
         static char newlayerbuf[256];
@@ -98,10 +98,8 @@ namespace gamelib
                 ImGui::EndPopup();
             }
 
-            ImGui::End();
-            return true;
         }
-        return false;
+        ImGui::End();
     }
 
     bool inputLayer(const std::string& label, Layer::Handle* handle)

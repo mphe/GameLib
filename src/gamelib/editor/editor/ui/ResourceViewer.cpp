@@ -39,29 +39,27 @@ namespace gamelib
         if (!_open)
             return;
 
-        ImGui::Begin("Resource Viewer", &_open);
+        if (ImGui::Begin("Resource Viewer", &_open))
+        {
+            if (ImGui::Button("Refresh"))
+                _refresh();
 
-        // ImGui::PushItemWidth(ImGui::GetWindowWidth() *)
+            ImGui::SameLine();
+            ImGui::Spacing();
+            ImGui::SameLine();
 
-        if (ImGui::Button("Refresh"))
-            _refresh();
-
-        ImGui::SameLine();
-        ImGui::Spacing();
-        ImGui::SameLine();
-
-        if (ImGui::Combo("Category", &_category, [](void* data, int index, const char** name) -> bool {
-                    const auto& cache = *static_cast<decltype(_cache)*>(data);
-                    if (index < 0 || index >= cache.size())
-                        return false;
-                    *name = cache[index].name;
-                    return true;
-                }, &_cache, _cache.size()))
+            if (ImGui::Combo("Category", &_category, [](void* data, int index, const char** name) -> bool {
+                        const auto& cache = *static_cast<decltype(_cache)*>(data);
+                        if (index < 0 || index >= cache.size())
+                            return false;
+                        *name = cache[index].name;
+                        return true;
+                    }, &_cache, _cache.size()))
             _selected.reset();
 
-        ImGui::NewLine();
-        drawResourceSelection(&_selected, _cache[_category].id, true);
-
+            ImGui::NewLine();
+            drawResourceSelection(&_selected, _cache[_category].id, true);
+        }
         ImGui::End();
 
         if (!_open)

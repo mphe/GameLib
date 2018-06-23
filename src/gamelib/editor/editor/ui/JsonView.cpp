@@ -55,10 +55,8 @@ namespace gamelib
         static std::string jsonstring;
         static int selected = 0;
 
-        if (!isopen || *isopen)
+        if (ImGui::Begin("Json Viewer", isopen, ImVec2(300, 300)))
         {
-            ImGui::Begin("Json Viewer", isopen, ImVec2(300, 300));
-
             { // left
                 ImGui::BeginChild("left pane", ImVec2(150, 0), true);
                 for (int i = 0; i < 3; ++i)
@@ -95,8 +93,7 @@ namespace gamelib
 
                 ImGui::EndGroup();
             }
-
-            ImGui::End();
         }
+        ImGui::End();
     }
 }

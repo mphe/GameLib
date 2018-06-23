@@ -15,6 +15,7 @@
 #include "editor/editor/ui/JsonView.hpp"
 #include "editor/editor/ui/inputs.hpp"
 #include "editor/editor/ui/LayerUI.hpp"
+#include "editor/editor/ui/EntityList.hpp"
 #include "editor/editor/EditorShared.hpp"
 #include "editor/components/BrushComponent.hpp"
 #include "imgui-SFML.h"
@@ -279,6 +280,7 @@ namespace gamelib
         static bool toolbox = true;
         static bool layerbox = true;
         static bool entprops = true;
+        static bool entlist = true;
         static ImGuiFs::Dialog loaddlg;
         static ImGuiFs::Dialog savedlg;
         static ImGuiFs::Dialog exportdlg;
@@ -331,7 +333,8 @@ namespace gamelib
                     _resviewer.open();
                 ImGui::MenuItem("Show toolbox", nullptr, &toolbox);
                 ImGui::MenuItem("Show entity properties", nullptr, &entprops);
-                ImGui::MenuItem("Show layer properties", nullptr, &layerbox);
+                ImGui::MenuItem("Show entity list", nullptr, &entlist);
+                ImGui::MenuItem("Show layers", nullptr, &layerbox);
                 ImGui::MenuItem("Show test window", nullptr, &testwindow);
                 ImGui::MenuItem("Show json viewer", nullptr, &jsonwindow);
                 ImGui::EndMenu();
@@ -369,24 +372,30 @@ namespace gamelib
             if (layerbox)
                 drawLayerUI(&layerbox);
 
+            if (entlist)
+                drawEntityList(&entlist);
+
             _resviewer.draw();
 
-            if (toolbox && ImGui::Begin("Toolbox", &toolbox, ImVec2(250, 125)))
+            if (toolbox)
             {
-                for (size_t i = 0; i < NumTools; ++i)
-                    if (ImGui::Button(buttonStrings[i]))
-                        setTool(static_cast<Tools>(i));
-                ImGui::Separator();
+                if (ImGui::Begin("Toolbox", &toolbox, ImVec2(250, 125)))
+                {
+                    for (size_t i = 0; i < NumTools; ++i)
+                        if (ImGui::Button(buttonStrings[i]))
+                            setTool(static_cast<Tools>(i));
+                    ImGui::Separator();
 
-                _currenttool->drawGui();
-
+                    _currenttool->drawGui();
+                }
                 ImGui::End();
             }
 
             auto selected = getSelectTool().getSelected();
-            if (entprops && selected && ImGui::Begin("Properties"))
+            if (entprops && selected)
             {
-                inputEntityProps(*selected);
+                if (ImGui::Begin("Properties"))
+                    inputEntityProps(*selected);
                 ImGui::End();
             }
         }
