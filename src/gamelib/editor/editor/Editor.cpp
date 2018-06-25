@@ -7,6 +7,7 @@
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
+#include "gamelib/core/event/EventManager.hpp"
 #include "gamelib/events/SFMLEvent.hpp"
 #include "editor/editor/tools/BrushTool.hpp"
 #include "editor/editor/tools/VertexTool.hpp"

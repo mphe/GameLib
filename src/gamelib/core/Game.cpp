@@ -3,6 +3,7 @@
 #include "gamelib/core/GameState.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/json.hpp"
+#include "gamelib/core/event/EventManager.hpp"
 #include "gamelib/events/SFMLEvent.hpp"
 
 constexpr const char* game_title = "Unnamed game";
@@ -44,18 +45,18 @@ namespace gamelib
     void Game::run()
     {
         sf::Clock clock;
-        SFMLEvent::Pointer ev(new SFMLEvent());
+        sf::Event ev;
 
         while (_window.isOpen())
         {
             clock.restart();
 
-            while (_window.pollEvent(ev->ev))
+            while (_window.pollEvent(ev))
             {
-                switch (ev->ev.type)
+                switch (ev.type)
                 {
                     case sf::Event::KeyPressed:
-                        if (_escclose && ev->ev.key.code == sf::Keyboard::Escape)
+                        if (_escclose && ev.key.code == sf::Keyboard::Escape)
                         {
                             close();
                             return;
@@ -79,8 +80,9 @@ namespace gamelib
                         break;
                 }
 
-                _evmgr.triggerEvent(ev);
-                ev.reset(new SFMLEvent());
+                auto evmgr = getSubsystem<EventManager>();
+                if (evmgr)
+                    evmgr->triggerEvent(SFMLEvent::create(ev));
             }
 
             if (_focused)
@@ -98,9 +100,8 @@ namespace gamelib
                     if (state->flags & gamestate_freeze)
                         frozen = true;
                 }
-
-                _evmgr.update();
             }
+
             _window.resetGLStates(); // without this things start randomly disappearing
             _window.clear(_bgcolor);
             for (auto& i : _states)
@@ -213,11 +214,6 @@ namespace gamelib
     sf::RenderWindow& Game::getWindow()
     {
         return _window;
-    }
-
-    EventManager& Game::getEventManager()
-    {
-        return _evmgr;
     }
 
     bool Game::isFocused() const

@@ -44,6 +44,7 @@ namespace gamelib
         updatesystem.destroy();
         resmgr.clear();
         entfactory.clear();
+        evmgr.clear();
     }
 
 
@@ -51,6 +52,7 @@ namespace gamelib
     {
         updatesystem.update(elapsed);
         scene.update(elapsed);
+        evmgr.update();
     }
 
     void Engine::render(sf::RenderTarget& target)

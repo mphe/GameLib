@@ -6,7 +6,6 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include "gamelib/core/res/JsonSerializer.hpp"
-#include "event/EventManager.hpp"
 #include "gamelib/core/Subsystem.hpp"
 #include "math/geometry/Point2.hpp"
 
@@ -42,7 +41,6 @@ namespace gamelib
             auto pullState() const                           -> GameState&;
 
             auto getWindow()          -> sf::RenderWindow&;
-            auto getEventManager()    -> EventManager&;
             auto getFrametime() const -> float;
 
             auto isFocused() const                         -> bool;
@@ -58,7 +56,6 @@ namespace gamelib
             bool _focused;
             bool _handleclose;
             bool _escclose;
-            EventManager _evmgr;
     };
 }
 
