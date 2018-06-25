@@ -2,7 +2,7 @@
 #define EVENT_MANAGER_HPP
 
 #include <queue>
-#include <map>
+#include <unordered_map>
 #include "Event.hpp"
 #include "CallbackHandler.hpp"
 #include "gamelib/core/Subsystem.hpp"
@@ -11,6 +11,9 @@ namespace gamelib
 {
     typedef void (*EventCallback)(void*, EventPtr);
 
+    template <typename T>
+    using NiceEventCallback = void (*)(T*, EventPtr);
+
     class EventManager : public Subsystem<EventManager>
     {
         public:
@@ -18,35 +21,44 @@ namespace gamelib
 
         public:
             template <class T>
-            void regCallback(EventID id, void (*callback)(T*, EventPtr), T* me)
+            void regCallback(EventID id, NiceEventCallback<T> callback, T* data)
             {
-                _callbacks[id].regCallback((EventCallback)callback, me);
+                regCallback(id, (EventCallback)callback, data);
             }
 
             template <class T>
-            void unregCallback(EventID id, void (*callback)(T*, EventPtr), T* me)
+            void unregCallback(EventID id, NiceEventCallback<T> callback, T* data)
             {
-                auto it = _callbacks.find(id);
-                if (it == _callbacks.end())
-                    return;
-                it->second.unregCallback((EventCallback)callback, me);
-
-                if (!it->second.size()) // remove the callback handler if it is empty
-                    _callbacks.erase(it);
+                unregCallback(id, (EventCallback)callback, data);
             }
 
+            template <class E, class T>
+            void regCallback(NiceEventCallback<T> callback, T* data)
+            {
+                static_assert(isIdentifiable<E>::value, "Only works for types derived from gamelib::Identifier");
+                regCallback(E::id, callback, data);
+            }
 
-            void regCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
-            void unregCallback(EventID id, void (*callback)(void*, EventPtr), void* me);
+            template <class E, class T>
+            void unregCallback(NiceEventCallback<T> callback, T* data)
+            {
+                static_assert(isIdentifiable<E>::value, "Only works for types derived from gamelib::Identifier");
+                unregCallback(E::id, callback, data);
+            }
+
+            void regCallback(EventID id, void (*callback)(void*, EventPtr), void* data);
+            void unregCallback(EventID id, void (*callback)(void*, EventPtr), void* data);
 
             void triggerEvent(EventPtr event);
             void queueEvent(EventPtr event);
 
             void update();
 
+            void clear();
+
         private:
             std::queue<EventPtr> _evqueue;
-            std::map<EventID, CallbackHandler<void, EventPtr> > _callbacks;
+            std::unordered_map<EventID, CallbackHandler<void, EventPtr> > _callbacks;
     };
 }
 
