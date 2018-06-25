@@ -27,6 +27,7 @@ set(GAMELIB_SOURCES
     utils/json.cpp
     utils/Property.cpp
 
+    core/input/InputSystem.cpp
     core/Game.cpp
     core/event/EventManager.cpp
     core/Camera.cpp

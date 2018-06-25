@@ -55,8 +55,6 @@ namespace gamelib
         private:
             static auto _eventCallback(Editor* self, EventPtr ev) -> void;
             auto _drawGui() -> void;
-            auto _mapCoords(float x, float y) -> math::Point2f;
-            auto _updateMouse(float mx, float my) -> void;
             auto _updateRunFlags() -> void;
 
         private:
@@ -69,7 +67,6 @@ namespace gamelib
             FreeCam _camctrl;
             ResourceViewer _resviewer;
 
-            math::Point2f _mouse;
             math::Point2f _mouseSnapped;
             bool _drag;
 

@@ -32,6 +32,7 @@ namespace gamelib
     bool Engine::init(Game* game)
     {
         _game = game;
+        inputsys.setWindow(game->getWindow());
         return true;
     }
 
@@ -45,6 +46,7 @@ namespace gamelib
         resmgr.clear();
         entfactory.clear();
         evmgr.clear();
+        inputsys.beginFrame();
     }
 
 

@@ -9,6 +9,7 @@
 #include "core/ecs/EntityFactory.hpp"
 #include "core/update/UpdateSystem.hpp"
 #include "core/event/EventManager.hpp"
+#include "core/input/InputSystem.hpp"
 
 namespace gamelib
 {
@@ -31,6 +32,7 @@ namespace gamelib
             EntityFactory entfactory;
             UpdateSystem updatesystem;
             EventManager evmgr;
+            InputSystem inputsys;
 
         private:
             Game* _game;

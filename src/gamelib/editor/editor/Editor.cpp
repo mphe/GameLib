@@ -7,6 +7,7 @@
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
+#include "gamelib/core/input/InputSystem.hpp"
 #include "gamelib/core/event/EventManager.hpp"
 #include "gamelib/events/SFMLEvent.hpp"
 #include "editor/editor/tools/BrushTool.hpp"
@@ -21,8 +22,6 @@
 #include "editor/components/BrushComponent.hpp"
 #include "imgui-SFML.h"
 #include "imguifilesystem.h"
-
-// TODO: block key pressed when they are consumed by imgui
 
 namespace gamelib
 {
@@ -86,13 +85,73 @@ namespace gamelib
 
     void Editor::update(float elapsed)
     {
-        auto game = getSubsystem<Game>();
+        auto input = getSubsystem<InputSystem>();
 
-        if (!_run && !ImGui::GetIO().WantCaptureKeyboard)
+        input->markConsumed(ImGui::GetIO().WantCaptureKeyboard,
+                            ImGui::GetIO().WantCaptureMouse);
+
+        if (input->isKeyPressed(sf::Keyboard::F5))
+        {
+            _run = !_run;
+            _updateRunFlags();
+        }
+
+        if (!_run)
+        {
             _camctrl.update(elapsed);
 
-        ImGui::SFML::Update(game->getWindow(), sf::seconds(elapsed));
-        _drawGui();
+            auto& mouse = input->getMouse();
+            _mouseSnapped = EditorShared::snap(mouse.world);
+
+            Tool* realtool = _currenttool;  // backup
+
+            { // Keyboard
+                if (input->isKeyDown(sf::Keyboard::LControl))
+                    _currenttool = &getSelectTool();
+
+                if (input->isKeyPressed(sf::Keyboard::Delete) && getSelectTool().getSelected())
+                {
+                    getSelectTool().getSelected()->destroy();
+                    getSelectTool().select(nullptr);
+                }
+
+                if (input->isKeyPressed(sf::Keyboard::Q))
+                    _grid.increase();
+
+                if (input->isKeyPressed(sf::Keyboard::E))
+                    _grid.decrease();
+
+                if (input->isKeyPressed(sf::Keyboard::G))
+                    _snap = !_snap;
+            }
+
+            { // Mouse
+                if (_drag)
+                    _currenttool->onDrag();
+                else
+                    _currenttool->onMouseMove();
+
+                if (mouse.wheel)
+                    getSubsystem<Scene>()->getCamera(0)->zoomTowards(mouse.world.x, mouse.world.y, mouse.wheel / -10.0);
+
+                if (input->isMousePressed(sf::Mouse::Left))
+                {
+                    _currenttool->onMousePressed();
+                    _drag = true;
+                }
+                else if (input->isMouseReleased(sf::Mouse::Left))
+                {
+                    _currenttool->onMouseRelease();
+                    _drag = false;
+                }
+            }
+
+            _currenttool = realtool;
+
+            ImGui::SFML::Update(getSubsystem<Game>()->getWindow(), sf::seconds(elapsed));
+            _drawGui();
+
+        }
     }
 
     void Editor::render(sf::RenderTarget& target)
@@ -184,94 +243,6 @@ namespace gamelib
     {
         sf::Event& sfev = ev->get<SFMLEvent>()->ev;
         ImGui::SFML::ProcessEvent(sfev);
-        bool consumed = ImGui::GetIO().WantCaptureMouse;
-        auto game = getSubsystem<Game>();
-
-        Tool* realtool = self->_currenttool;  // backup
-        if (game->isKeyPressed(sf::Keyboard::LControl))
-            self->_currenttool = &self->getSelectTool();
-
-        if (sfev.type == sf::Event::KeyPressed && sfev.key.code == sf::Keyboard::F5)
-        {
-            self->_run = !self->_run;
-            self->_updateRunFlags();
-        }
-
-        if (self->_run)
-            return;
-
-        switch (sfev.type)
-        {
-            case sf::Event::KeyPressed:
-                if (ImGui::GetIO().WantCaptureKeyboard)
-                    break;
-
-                switch (sfev.key.code)
-                {
-                    case sf::Keyboard::Delete:
-                        if (self->getSelectTool().getSelected())
-                        {
-                            self->getSelectTool().getSelected()->destroy();
-                            self->getSelectTool().select(nullptr);
-                        }
-                        break;
-
-                    case sf::Keyboard::Q:
-                        self->_grid.increase();
-                        break;
-
-                    case sf::Keyboard::E:
-                        self->_grid.decrease();
-                        break;
-
-                    case sf::Keyboard::G:
-                        self->_snap = !self->_snap;
-                        break;
-
-                    default: break;
-                }
-                break;
-
-            case sf::Event::MouseButtonPressed:
-                if (!consumed && sfev.mouseButton.button == sf::Mouse::Left)
-                {
-                    self->_updateMouse(sfev.mouseButton.x, sfev.mouseButton.y);
-                    self->_currenttool->onMousePressed();
-                    self->_drag = true;
-                }
-                break;
-
-            case sf::Event::MouseMoved:
-                {
-                    self->_updateMouse(sfev.mouseMove.x, sfev.mouseMove.y);
-                    if (self->_drag)
-                        self->_currenttool->onDrag();
-                    else
-                        self->_currenttool->onMouseMove();
-                }
-                break;
-
-            case sf::Event::MouseButtonReleased:
-                {
-                    self->_updateMouse(sfev.mouseButton.x, sfev.mouseButton.y);
-                    self->_drag = false;
-                    self->_currenttool->onMouseRelease();
-                }
-                break;
-
-            case sf::Event::MouseWheelMoved:
-                if (!consumed)
-                {
-                    auto p = self->_mapCoords(sfev.mouseWheel.x, sfev.mouseWheel.y);
-                    getSubsystem<Scene>()->getCamera(0)->zoomTowards(p.x, p.y, sfev.mouseWheel.delta / -10.0);
-                }
-                break;
-
-            default: break;
-
-        }
-
-        self->_currenttool = realtool;
     }
 
     void Editor::_drawGui()
@@ -400,18 +371,6 @@ namespace gamelib
                 ImGui::End();
             }
         }
-    }
-
-    math::Point2f Editor::_mapCoords(float x, float y)
-    {
-        auto p = getSubsystem<Game>()->getWindow().mapPixelToCoords(sf::Vector2i(x, y));
-        return math::Point2f(p.x, p.y);
-    }
-
-    void Editor::_updateMouse(float mx, float my)
-    {
-        _mouse = _mapCoords(mx, my);
-        _mouseSnapped = EditorShared::snap(_mouse);
     }
 
 

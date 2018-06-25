@@ -6,7 +6,7 @@
 #include "math/geometry/Vector.hpp"
 #include "math/geometry/AABB.hpp"
 
-namespace conversions
+namespace gamelib
 {
     template <class T>
     math::Vec2<T> convert(const sf::Vector2<T>& vec)

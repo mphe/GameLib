@@ -5,6 +5,7 @@
 #include "gamelib/utils/json.hpp"
 #include "gamelib/core/event/EventManager.hpp"
 #include "gamelib/events/SFMLEvent.hpp"
+#include "gamelib/core/input/InputSystem.hpp"
 
 constexpr const char* game_title = "Unnamed game";
 constexpr int game_width         = 640;
@@ -21,7 +22,6 @@ namespace gamelib
 
     Game::Game() :
         _frametime(0),
-        _focused(true),
         _handleclose(game_closebutton),
         _escclose(game_escclose)
     { }
@@ -51,41 +51,28 @@ namespace gamelib
         {
             clock.restart();
 
+            auto inputsys = getSubsystem<InputSystem>();
+            if (inputsys)
+                inputsys->beginFrame();
+
             while (_window.pollEvent(ev))
             {
-                switch (ev.type)
+                if ((ev.type == sf::Event::KeyPressed && _escclose && ev.key.code == sf::Keyboard::Escape)
+                        || (ev.type == sf::Event::Closed && _handleclose))
                 {
-                    case sf::Event::KeyPressed:
-                        if (_escclose && ev.key.code == sf::Keyboard::Escape)
-                        {
-                            close();
-                            return;
-                        }
-                        break;
-
-                    case sf::Event::Closed:
-                        if (_handleclose)
-                        {
-                            close();
-                            return;
-                        }
-                        break;
-
-                    case sf::Event::GainedFocus:
-                        _focused = true;
-                        break;
-
-                    case sf::Event::LostFocus:
-                        _focused = false;
-                        break;
+                    close();
+                    return;
                 }
+
+                if (inputsys)
+                    inputsys->process(ev);
 
                 auto evmgr = getSubsystem<EventManager>();
                 if (evmgr)
                     evmgr->triggerEvent(SFMLEvent::create(ev));
             }
 
-            if (_focused)
+            if (_window.hasFocus())
             {
                 bool frozen = false;
                 for (auto it = _states.rbegin(), end = _states.rend(); it != end; ++it)
@@ -214,23 +201,6 @@ namespace gamelib
     sf::RenderWindow& Game::getWindow()
     {
         return _window;
-    }
-
-    bool Game::isFocused() const
-    {
-        return _focused;
-    }
-
-    bool Game::isKeyPressed(sf::Keyboard::Key key) const
-    {
-        return _focused && sf::Keyboard::isKeyPressed(key);
-    }
-
-    math::Point2f Game::getMouse() const
-    {
-        auto m = sf::Mouse::getPosition(_window);
-        auto p = _window.mapPixelToCoords(m);
-        return math::Point2f(p.x, p.y);
     }
 }
 

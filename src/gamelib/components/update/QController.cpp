@@ -1,7 +1,7 @@
 #include "gamelib/components/update/QController.hpp"
 #include "gamelib/components/update/QPhysics.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
-#include "gamelib/core/Game.hpp"
+#include "gamelib/core/input/InputSystem.hpp"
 
 namespace gamelib
 {
@@ -24,24 +24,24 @@ namespace gamelib
     {
         if (qphys)
         {
-            auto game = Game::getActive();
+            auto input = InputSystem::getActive();
 
             auto acc = qphys->ground ? accelerate : airAccelerate;
 
-            if (game->isKeyPressed(sf::Keyboard::A))
+            if (input->isKeyDown(sf::Keyboard::A))
                 qphys->accelerate(math::Vec2f(-1, 0), maxspeed, acc);
-            if (game->isKeyPressed(sf::Keyboard::D))
+            if (input->isKeyDown(sf::Keyboard::D))
                 qphys->accelerate(math::Vec2f(1, 0), maxspeed, acc);
 
             if (_canjump)
             {
-                if (qphys->ground && game->isKeyPressed(sf::Keyboard::W))
+                if (qphys->ground && input->isKeyDown(sf::Keyboard::W))
                 {
                     _canjump = false;
                     qphys->accelerate(math::Vec2f(0, -1), jumpspeed, accelerate);
                 }
             }
-            else if (!game->isKeyPressed(sf::Keyboard::W))
+            else if (!input->isKeyDown(sf::Keyboard::W))
                 _canjump = true;
         }
     }

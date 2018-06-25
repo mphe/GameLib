@@ -24,7 +24,7 @@ namespace gamelib
 
     void drawLine(sf::RenderTarget& target, const math::Point2f a, const math::Point2f b, sf::Color color)
     {
-        drawLine(target, a.x, a.y, b.x, b.y);
+        drawLine(target, a.x, a.y, b.x, b.y, color);
     }
 
     void drawLine(sf::RenderTarget& target, float x1, float y1, float x2, float y2, sf::Color color)

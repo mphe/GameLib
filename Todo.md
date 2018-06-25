@@ -1,7 +1,6 @@
 # Todo
 
 * FPS scaling
-* origin in Transformable
 * Render parent like GroupTransform but for RenderComponents
 * Give resources a type name member
 * ResourceManager: load all files from a folder
@@ -11,15 +10,24 @@
 * handle json return values in EntityFactory
 * SpriteBrush
 * Background entity
+* SlotMap size()
+* imgui dialogues
 
-* Give Layer a name member
-  * name is its unique id
+* Transformable
+  * Add parent reference to update parent bbox on transformation
+  * Consider removing GroupTransform and instead give all Transformables a vector of children
+  * Origin
+
+* InputSystem
+  * map["shoot"] = { Space, Enter, ... }
 
 * components
   * Automatically register components to factory
     * component factory as static Component member
   * migrate components to property system
+    * UpdateComponent
     * RenderComponent
+      * Scene should store and update a string array of layer names that can be used as hints for the layer property
     * BrushComponent
     * ...
   * component flags:
@@ -60,7 +68,7 @@
   * grid numbers
   * mouse coordinates
   * automatically add sprite and mask to entities without rendering
-  * entity list
+  * toolbox class
 
 * make Engine a Subsystem
   * makes a backup of an existing active Engine
@@ -71,13 +79,10 @@
   * PropIntArray, PropFloatArray, ... instead of PropVec2i, PropVec2f, ...
   * imgui sliders for properties with min-max bounds
   * property docs
+  * string hints
+    * dropdown menu for strings
 
-* Fix sprite flickering
-  * Reproducing:
-    * Use default QPhysics values (gravity, etc)
-    * Build testmap
-    * Set to fullscreen
-    * Jump repeatedly
+* Fix sprite flickering (maybe fixed)
 
 
 <!--- vim: tabstop=2 shiftwidth=2 --->

@@ -43,17 +43,11 @@ namespace gamelib
             auto getWindow()          -> sf::RenderWindow&;
             auto getFrametime() const -> float;
 
-            auto isFocused() const                         -> bool;
-            auto isKeyPressed(sf::Keyboard::Key key) const -> bool;
-
-            auto getMouse() const -> math::Point2f;
-
         private:
             float _frametime; // TODO: Consider switching to double
             sf::Color _bgcolor;
             sf::RenderWindow _window;
             std::vector<GameStatePtr> _states;
-            bool _focused;
             bool _handleclose;
             bool _escclose;
     };

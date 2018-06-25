@@ -1,11 +1,12 @@
 #include "gamelib/editor/editor/EditorShared.hpp"
 #include "gamelib/editor/editor/Editor.hpp"
+#include "gamelib/core/input/InputSystem.hpp"
 
 namespace gamelib
 {
     const math::Point2f& EditorShared::getMouse()
     {
-        return _editor->_mouse;
+        return InputSystem::getActive()->getMouse().world;
     }
 
     const math::Point2f& EditorShared::getMouseSnapped()
