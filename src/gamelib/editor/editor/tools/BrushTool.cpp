@@ -103,7 +103,7 @@ namespace gamelib
         if (_type == Line)
         {
             ImGui::InputInt("Line width", &_linewidth, 1, 32);
-            if (_linewidth != (int)_tex->getSize().y)
+            if (_tex && _linewidth != (int)_tex->getSize().y)
             {
                 ImGui::SameLine();
                 if (ImGui::Button("Reset"))
