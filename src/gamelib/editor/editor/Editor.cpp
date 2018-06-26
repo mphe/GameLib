@@ -131,7 +131,7 @@ namespace gamelib
                 else
                     _currenttool->onMouseMove();
 
-                if (mouse.wheel)
+                if (!input->isMouseConsumed() && mouse.wheel)
                     getSubsystem<Scene>()->getCamera(0)->zoomTowards(mouse.world.x, mouse.world.y, mouse.wheel / -10.0);
 
                 if (input->isMousePressed(sf::Mouse::Left))
