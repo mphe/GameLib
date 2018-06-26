@@ -32,6 +32,9 @@ namespace gamelib
         if (loadFromJson(node["framesize"], tmp))
             sprite->rect.size = tmp;
 
+        if (loadFromJson(node["origin"], tmp))
+            sprite->origin = tmp.asPoint();
+
         sprite->ani.length = node.get("length", 1).asInt();
         sprite->ani.speed = node.get("speed", 0).asFloat();
         sprite->ani.setIndex(node.get("offset", 0).asInt());

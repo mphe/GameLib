@@ -12,6 +12,7 @@
  *     "texture": "texture",
  *     "framepos": [ x, y ],
  *     "framesize": [ w, h ],
+ *     "origin": [ x, y ],
  *     "length": length,
  *     "speed": speed,
  *     "offset": offset
@@ -31,6 +32,7 @@ namespace gamelib
         TextureResource::Handle tex;
         AnimationData ani;
         math::AABBi rect;
+        math::Point2f origin;
     };
 
     typedef Resource<SpriteResourceData, 0xd5b8e3bf> SpriteResource;

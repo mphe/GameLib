@@ -13,11 +13,6 @@
  *     <RenderComponent entries>,
  *
  *     "sprite": "filename"
- *
- *     # Animation overrides (optional)
- *     "length": length,
- *     "speed": speed,
- *     "offset": offset (-1 for random)
  * }
  */
 
@@ -27,7 +22,6 @@ namespace gamelib
 
     class SpriteComponent : public RenderComponent
     {
-        // HACK: allows AnimationComponent to register its props in this component
         friend class AnimationComponent;
 
         public:
@@ -53,6 +47,7 @@ namespace gamelib
             auto _init()    -> bool;
             auto _quit()    -> void;
             auto _initShape() -> void;
+            auto _updateUV()  -> void;
 
         private:
             SpriteResource::Handle _sprite;

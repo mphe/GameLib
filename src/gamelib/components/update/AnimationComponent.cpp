@@ -10,12 +10,7 @@ namespace gamelib
     AnimationComponent::AnimationComponent(SpriteComponent* sprite_) :
         UpdateComponent(name),
         sprite(sprite_)
-    {
-        PropertyContainer* props = sprite ? &sprite->_props : &_props;
-        props->registerProperty("length", ani.length);
-        props->registerProperty("speed", ani.speed);
-        props->registerProperty("offset", ani.offset);
-    }
+    { }
 
     void AnimationComponent::update(float elapsed)
     {
@@ -25,7 +20,7 @@ namespace gamelib
         if (old != (int)ani.offset)
         {
             assert(sprite && "No sprite assigned");
-            sprite->setIndex((int)ani.offset);
+            sprite->_updateUV();
         }
     }
 }

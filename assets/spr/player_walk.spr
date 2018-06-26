@@ -5,5 +5,5 @@
     "offset": 0,
     "framepos": [ 0, 64 ],
     "framesize": [ 32, 32 ],
-    "origin": [ 16, 32 ]
+    "origin": [ 16, 16 ]
 }
