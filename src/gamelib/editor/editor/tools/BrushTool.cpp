@@ -13,8 +13,8 @@
 namespace gamelib
 {
     static const char* brushEntities[] = {
-        "polygonbrush",
-        "linebrush",
+        "brush_polygon",
+        "brush_line",
     };
 
     static const char* brushNames[] = {

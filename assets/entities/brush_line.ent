@@ -1,5 +1,5 @@
 {
-    "name": "linebrush",
+    "name": "brush_line",
     "components": {
         "PolygonShape": {
             "mapping": 1

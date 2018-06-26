@@ -47,7 +47,7 @@ namespace gamelib
             _entities.reserve(factory->size());
 
             factory->iterkeys([&](const std::string& name) {
-                    if (name.find("brush") != std::string::npos)
+                    if (name.find("brush_") != std::string::npos)
                         return false;
                     if (name == current)
                         _selected = _entities.size();
@@ -58,6 +58,8 @@ namespace gamelib
 
         if (_entities.empty())
             _selected = -1;
+
+        std::sort(_entities.begin(), _entities.end());
     }
 
     void EntityTool::drawGui()

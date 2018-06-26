@@ -12,8 +12,8 @@
             "sand2.png"
         ],
         "entities": [
-            "linebrush.ent",
-            "polygonbrush.ent",
+            "brush_line.ent",
+            "brush_polygon.ent",
             "player.ent",
             "globalconfig.ent"
         ],
