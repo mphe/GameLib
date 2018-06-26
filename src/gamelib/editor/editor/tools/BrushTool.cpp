@@ -100,31 +100,34 @@ namespace gamelib
         ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() * 0.5f);
         ImGui::Combo("Brush type", (int*)&_type, brushNames, NumBrushTypes);
 
-        ImGui::Checkbox("Show drag boxes", &_showdraggers);
-        ImGui::Checkbox("Snap to points", &_snappoint);
-
         if (_type == Line)
+        {
             ImGui::InputInt("Line width", &_linewidth, 1, 32);
-
-        ImGui::Separator();
+            if (_linewidth != (int)_tex->getSize().y)
+            {
+                ImGui::SameLine();
+                if (ImGui::Button("Reset"))
+                    _linewidth = _tex->getSize().y;
+            }
+        }
 
         if (inputResource(&_tex) && _tex)
             _linewidth = _tex->getSize().y;
 
         ImGui::InputFloat2("Texture offset", &_offset[0], 2);
 
+        ImGui::Checkbox("Snap to points", &_snappoint);
+        ImGui::Checkbox("Show drag boxes", &_showdraggers);
+
         ImGui::PopItemWidth();
         ImGui::Separator();
 
-        if (ImGui::Button("Apply"))
+        auto brush = _getIfSame();
+        if (brush && ImGui::Button("Apply"))
         {
-            auto brush = getIfBrush(EditorShared::getSelectTool().getSelected());
-            if (brush)
-            {
-                brush->setWidth(_linewidth);
-                brush->getBrushShape()->texture = _tex;
-                brush->getBrushShape()->setTexOffset(_offset);
-            }
+            brush->setWidth(_linewidth);
+            brush->getBrushShape()->texture = _tex;
+            brush->getBrushShape()->setTexOffset(_offset);
         }
     }
 
