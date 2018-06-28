@@ -1,0 +1,5 @@
+{
+    "texture": "tex/sheet.png",
+    "framepos": [ 64, 0 ],
+    "framesize": [ 32, 32 ]
+}

@@ -16,12 +16,14 @@
             "brush_polygon.ent",
             "brush_sprite.ent",
             "player.ent",
-            "globalconfig.ent"
+            "globalconfig.ent",
+            "box.ent"
         ],
         "spr": [
             "player_stand.spr",
             "player_walk.spr",
-            "player_jump.spr"
+            "player_jump.spr",
+            "box.spr"
         ]
     }
 }

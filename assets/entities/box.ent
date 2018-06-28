@@ -1,0 +1,14 @@
+{
+    "name": "box",
+    "components": {
+        "QPhysicsComponent": { },
+        "SpriteComponent": {
+            "sprite": "spr/box.spr"
+        },
+        "AABBCollision": {
+            "flags": 3,
+            "pos": [0, 0],
+            "size": [32, 32]
+        }
+    }
+}
