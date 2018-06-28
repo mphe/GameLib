@@ -80,6 +80,11 @@ namespace gamelib
         _clipmove(elapsed);
     }
 
+    const math::AABBf* QPhysics::getHull()
+    {
+        return _bbox;
+    }
+
 
     void QPhysics::_checkGround()
     {

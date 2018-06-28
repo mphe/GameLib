@@ -20,6 +20,8 @@ namespace gamelib
     void drawLine(sf::RenderTarget& target, const math::Point2f a, const math::Point2f b, sf::Color color = sf::Color::White);
     void drawLine(sf::RenderTarget& target, float x1, float y1, float x2, float y2, sf::Color color = sf::Color::White);
 
+    void drawArrow(sf::RenderTarget& target, float x1, float y1, float x2, float y2, sf::Color color = sf::Color::Green);
+
     void drawDragBoxes(sf::RenderTarget& target, const math::Polygon<float>& pol, size_t selected = -1);
 
     void drawRectOutline(sf::RenderTarget& target, const math::AABBf& box, sf::Color col = sf::Color::Magenta);

@@ -36,6 +36,24 @@ namespace gamelib
         target.draw(v, 2, sf::Lines);
     }
 
+    void drawArrow(sf::RenderTarget& target, float x1, float y1, float x2, float y2, sf::Color color)
+    {
+        auto len = math::pointDistance(x1, y1, x2, y2);
+        sf::Transform trans;
+        trans.translate(x1, y1);
+        trans.rotate(math::Vec2f(x2 - x1, y2 - y1).angle());
+
+        sf::Vertex v[] = {
+            sf::Vertex(sf::Vector2f(0, 0), color),
+            sf::Vertex(sf::Vector2f(len, 0), color),
+            sf::Vertex(sf::Vector2f(len, 0), color),
+            sf::Vertex(sf::Vector2f(len - 5, -5), color),
+            sf::Vertex(sf::Vector2f(len, 0), color),
+            sf::Vertex(sf::Vector2f(len - 5, 5), color),
+        };
+        target.draw(v, 6, sf::Lines, trans);
+    }
+
     void drawDragBoxes(sf::RenderTarget& target, const math::Polygon<float>& pol, size_t selected)
     {
         for (size_t i = 0; i < pol.size(); ++i)

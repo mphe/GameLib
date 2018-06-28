@@ -30,6 +30,7 @@ namespace gamelib
             math::Vec2f _dragoffset;
             bool _renderSolid;
             bool _renderAllBoxes;
+            bool _renderVel;
     };
 }
 

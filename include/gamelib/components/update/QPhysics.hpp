@@ -45,6 +45,8 @@ namespace gamelib
             // Expects wishdir to be a normalized vector.
             auto accelerate(const math::Vec2f& wishdir, float wishspeed, float accel) -> void;
 
+            auto getHull() -> const math::AABBf*;
+
         protected:
             virtual auto _refresh() -> void;
 
