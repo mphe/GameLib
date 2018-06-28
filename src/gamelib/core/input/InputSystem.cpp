@@ -22,6 +22,7 @@ namespace gamelib
     {
         _states.clear();
         _mouse.wheel = 0;
+        _mouse.moved = false;
         _consumedMouse = _consumedKeyboard = false;
     }
 
@@ -72,10 +73,10 @@ namespace gamelib
                 _mouse.desktop = convert(sf::Mouse::getPosition()).asPoint();
                 _mouse.win = convert(m).asPoint();
                 _mouse.world = convert(_window->mapPixelToCoords(m)).asPoint();
+                _mouse.moved = true;
             }
             else if (ev.type == sf::Event::MouseWheelMoved)
                 _mouse.wheel = ev.mouseWheel.delta;
-
         }
     }
 

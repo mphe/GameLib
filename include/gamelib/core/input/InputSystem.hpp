@@ -26,6 +26,7 @@ namespace gamelib
                 math::Point2i win;
                 math::Point2f world;
                 int wheel;
+                bool moved;
             };
 
         public:

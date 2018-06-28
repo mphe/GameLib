@@ -126,13 +126,19 @@ namespace gamelib
             }
 
             { // Mouse
-                if (_drag)
-                    _currenttool->onDrag();
-                else
-                    _currenttool->onMouseMove();
+                if (!input->isMouseConsumed())
+                {
+                    if (input->getMouse().moved)
+                    {
+                        if (_drag)
+                            _currenttool->onDrag();
+                        else
+                            _currenttool->onMouseMove();
+                    }
 
-                if (!input->isMouseConsumed() && mouse.wheel)
-                    getSubsystem<Scene>()->getCamera(0)->zoomTowards(mouse.world.x, mouse.world.y, mouse.wheel / -10.0);
+                    if (mouse.wheel)
+                        getSubsystem<Scene>()->getCamera(0)->zoomTowards(mouse.world.x, mouse.world.y, mouse.wheel / -10.0);
+                }
 
                 if (input->isMousePressed(sf::Mouse::Left))
                 {
