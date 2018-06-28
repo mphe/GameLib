@@ -57,13 +57,6 @@ namespace gamelib
 
             while (_window.pollEvent(ev))
             {
-                if ((ev.type == sf::Event::KeyPressed && _escclose && ev.key.code == sf::Keyboard::Escape)
-                        || (ev.type == sf::Event::Closed && _handleclose))
-                {
-                    close();
-                    return;
-                }
-
                 if (inputsys)
                     inputsys->process(ev);
 
@@ -86,6 +79,12 @@ namespace gamelib
 
                     if (state->flags & gamestate_freeze)
                         frozen = true;
+                }
+
+                if (_escclose && inputsys && inputsys->isKeyPressed(sf::Keyboard::Escape))
+                {
+                    close();
+                    return;
                 }
             }
 
