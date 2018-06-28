@@ -123,6 +123,17 @@ namespace gamelib
 
                 if (input->isKeyPressed(sf::Keyboard::G))
                     _snap = !_snap;
+
+                if (input->isKeyPressed(sf::Keyboard::Z))
+                {
+                    auto selected = getSelectTool().getSelected();
+                    if (selected)
+                    {
+                        auto cam = getSubsystem<Scene>()->getCamera(0);
+                        cam->center(selected->getTransform().getPosition().asVector());
+                        cam->zoom = 1;
+                    }
+                }
             }
 
             { // Mouse
