@@ -17,6 +17,11 @@ namespace gamelib
     bool getThumbnailSprite(BaseResourceHandle res, sf::Sprite* sprite);
     bool getThumbnailTexture(BaseResourceHandle res, sf::Sprite* sprite);
     void previewTexture(BaseResourceHandle res);
+    void previewSprite(BaseResourceHandle res);
+    void previewJson(BaseResourceHandle res);
+
+    void previewTexture(BaseResourceHandle res, int imgsize);
+    void previewSprite(BaseResourceHandle res, int imgsize);
 
     bool inputResource(BaseResourceHandle* res, ID id, bool preview = false, int thumbsize = defaultThumbsize);
     bool inputResource(BaseResourceHandle* res, ID id, const char* name, ThumbnailFunction thumbgetter, PreviewFunction preview, int thumbsize = defaultThumbsize);

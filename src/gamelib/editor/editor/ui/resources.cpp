@@ -29,16 +29,46 @@ namespace gamelib
 
     void previewTexture(BaseResourceHandle res)
     {
+        previewTexture(res, -1);
+    }
+
+    void previewSprite(BaseResourceHandle res)
+    {
+        previewSprite(res, -1);
+    }
+
+    void previewJson(BaseResourceHandle res)
+    {
+        static BaseResource* last = nullptr;
+        static std::string cache;
+
+        if (res)
+        {
+            // Update cache if resource changed
+            if (!last || last != res.getResource())
+            {
+                last = res.getResource();
+                cache = res.as<JsonResource>()->toStyledString();
+            }
+
+            ImGui::Text("%s", cache.c_str());
+        }
+    }
+
+
+    void previewTexture(BaseResourceHandle res, int imgsize)
+    {
         if (res)
         {
             auto tex = res.as<TextureResource>();
-            auto w = ImGui::GetContentRegionAvailWidth();
-            ImGui::Image(*tex, ImVec2(w, w * ((float)tex->getSize().y / tex->getSize().x)));
+            auto w = (imgsize == -1) ? ImGui::GetContentRegionAvailWidth() : imgsize;
+            auto h = w * ((float)tex->getSize().y / tex->getSize().x);
+            ImGui::Image(*tex, ImVec2(w, h));
             ImGui::Text("Resolution: %ux%upx", tex->getSize().x, tex->getSize().y);
         }
     }
 
-    void previewSprite(BaseResourceHandle res)
+    void previewSprite(BaseResourceHandle res, int imgsize)
     {
         static BaseResource* last = nullptr;
         static AnimationData ani;
@@ -63,8 +93,9 @@ namespace gamelib
             auto bsize = ImVec2(size, size);
 
             auto rect = getSpriteRect(ani.offset, sprite->rect, sprite->tex->getSize().x, sprite->tex->getSize().y);
-            auto w = ImGui::GetContentRegionAvailWidth() * 0.8;
-            ImGui::Image(*sprite->tex, ImVec2(w, w * ((float)rect.h / rect.w)), sf::FloatRect(rect.x, rect.y, rect.w, rect.h));
+            auto w = (imgsize == -1) ? ImGui::GetContentRegionAvailWidth() * 0.8 : imgsize;
+            auto h = w * ((float)rect.h / rect.w);
+            ImGui::Image(*sprite->tex, ImVec2(w, h), sf::FloatRect(rect.x, rect.y, rect.w, rect.h));
 
             { // Animation controls
                 if (paused && ImGui::Button(">", bsize))
@@ -98,24 +129,6 @@ namespace gamelib
             ImGui::Text("Texture: %s", sprite->tex.getResource()->getPath().c_str());
             ImGui::Text("Resolution: %ix%ipx", sprite->rect.w, sprite->rect.h);
             ImGui::Text("Offset: X: %ipx  Y: %ipx", sprite->rect.x, sprite->rect.y);
-        }
-    }
-
-    void previewJson(BaseResourceHandle res)
-    {
-        static BaseResource* last = nullptr;
-        static std::string cache;
-
-        if (res)
-        {
-            // Update cache if resource changed
-            if (!last || last != res.getResource())
-            {
-                last = res.getResource();
-                cache = res.as<JsonResource>()->toStyledString();
-            }
-
-            ImGui::Text("%s", cache.c_str());
         }
     }
 
