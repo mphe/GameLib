@@ -11,7 +11,7 @@ namespace gamelib
 
 namespace gamelib
 {
-    class OnSelectEvent : public Event<0x69e801b0>
+    class OnSelectEvent : public Event<0x69e801b0, OnSelectEvent>
     {
         public:
             OnSelectEvent() {};

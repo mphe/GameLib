@@ -57,8 +57,7 @@ namespace gamelib
     void SceneObject::render(sf::RenderTarget& target, const sf::RenderStates& states_) const
     {
         sf::Transform trans;
-        // trans.translate((int)_pos.x, (int)_pos.y);
-        trans.translate(_pos.x, _pos.y);
+        trans.translate(_pos.x - _origin.x, _pos.y - _origin.y);
         trans.rotate(_rotation, _origin.x, _origin.y);
         trans.scale(_scale.x, _scale.y, _origin.x, _origin.y);
 
@@ -66,6 +65,18 @@ namespace gamelib
         states.transform.combine(trans);
 
         target.draw(_vertices, states);
+    }
+
+    void SceneObject::_updateBBox()
+    {
+        sf::Transform trans;
+        trans.translate(_pos.x - _origin.x, _pos.y - _origin.y);
+        // trans.translate(-_origin.x, -_origin.y);
+        trans.rotate(_rotation, _origin.x, _origin.y);
+        trans.scale(_scale.x, _scale.y, _origin.x, _origin.y);
+
+        auto bounds = trans.transformRect(_vertices.getBounds());
+        _bbox = math::AABBf(bounds.left, bounds.top, bounds.width, bounds.height);
     }
 
 
@@ -146,17 +157,6 @@ namespace gamelib
     const math::AABBf& SceneObject::getBBox() const
     {
         return _bbox;
-    }
-
-    void SceneObject::_updateBBox()
-    {
-        sf::Transform trans;
-        trans.translate(_pos.x, _pos.y);
-        trans.rotate(_rotation, _origin.x, _origin.y);
-        trans.scale(_scale.x, _scale.y, _origin.x, _origin.y);
-
-        auto bounds = trans.transformRect(_vertices.getBounds());
-        _bbox = math::AABBf(bounds.left, bounds.top, bounds.width, bounds.height);
     }
 
     math::AABBf SceneObject::getLocalBounds() const

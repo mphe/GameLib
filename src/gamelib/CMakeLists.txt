@@ -91,6 +91,7 @@ if(GAMELIB_BUILD_EDITOR)
         editor/editor/Editor.cpp
         editor/editor/EditorShared.cpp
         editor/editor/tools/SelectTool.cpp
+        editor/editor/tools/SpriteTool.cpp
         editor/editor/tools/BrushTool.cpp
         editor/editor/tools/VertexTool.cpp
         editor/editor/tools/EntityTool.cpp

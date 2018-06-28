@@ -10,6 +10,7 @@
 #include "gamelib/core/input/InputSystem.hpp"
 #include "gamelib/core/event/EventManager.hpp"
 #include "gamelib/events/SFMLEvent.hpp"
+#include "editor/editor/tools/SpriteTool.hpp"
 #include "editor/editor/tools/BrushTool.hpp"
 #include "editor/editor/tools/VertexTool.hpp"
 #include "editor/editor/tools/SelectTool.hpp"
@@ -27,6 +28,7 @@ namespace gamelib
 {
     constexpr const char* buttonStrings[] = {
         "Select Tool",
+        "Sprite Tool",
         "Polygon Tool",
         "Vertex Tool",
         "Entity Tool"
@@ -60,6 +62,7 @@ namespace gamelib
         _updateRunFlags();
 
         _tools[ToolSelect].reset(new SelectTool());
+        _tools[ToolSprite].reset(new SpriteTool());
         _tools[ToolBrush].reset(new BrushTool());
         _tools[ToolVertex].reset(new VertexTool());
         _tools[ToolEntity].reset(new EntityTool());

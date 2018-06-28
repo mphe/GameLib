@@ -22,6 +22,7 @@ namespace gamelib
         public:
             enum Tools{
                 ToolSelect,
+                ToolSprite,
                 ToolBrush,
                 ToolVertex,
                 ToolEntity,

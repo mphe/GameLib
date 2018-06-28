@@ -14,6 +14,7 @@
         "entities": [
             "brush_line.ent",
             "brush_polygon.ent",
+            "brush_sprite.ent",
             "player.ent",
             "globalconfig.ent"
         ],

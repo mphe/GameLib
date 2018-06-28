@@ -112,6 +112,9 @@ namespace gamelib
 
     void SpriteComponent::_initShape()
     {
+        if (!_sprite)
+            return;
+
         _vertices[0].position = sf::Vector2f(0, 0);
         _vertices[1].position = sf::Vector2f(0, _sprite->rect.h);
         _vertices[2].position = sf::Vector2f(_sprite->rect.w, 0);
@@ -123,6 +126,9 @@ namespace gamelib
 
     void SpriteComponent::_updateUV()
     {
+        if (!_sprite)
+            return;
+
         // Adding this to the tex coords will prevent the 1px border glitch (hopefully)
         // https://gamedev.stackexchange.com/a/75244
         // https://stackoverflow.com/questions/19611745/opengl-black-lines-in-between-tiles

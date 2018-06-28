@@ -26,10 +26,7 @@ namespace gamelib
 
         auto* ent = getSelected();
         if (ent)
-        {
             _dragoffset = EditorShared::getMouse() - ent->getTransform().getPosition();
-            ent->getTransform().refreshBBox();
-        }
     }
 
     void SelectTool::onDrag()
@@ -99,6 +96,7 @@ namespace gamelib
         if (getEntity(enthandle))
         {
             _selected = enthandle;
+            getEntity(enthandle)->getTransform().refreshBBox();
             LOG("Selected entity ", enthandle.index, enthandle.version);
         }
         else
@@ -107,8 +105,7 @@ namespace gamelib
             LOG("Selection cleared");
         }
 
-        EventManager::getActive()->triggerEvent(
-                EventPtr(new OnSelectEvent(old, enthandle)));
+        EventManager::getActive()->triggerEvent(OnSelectEvent::create(old, _selected));
     }
 
     void SelectTool::select(Entity* ent)

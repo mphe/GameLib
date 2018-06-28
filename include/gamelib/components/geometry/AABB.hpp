@@ -22,15 +22,15 @@ namespace gamelib
 
             auto sweep(const math::AABBf& rect, const math::Vec2f& vel) const -> Intersection;
 
+            auto setSize(const math::Vec2f& size) -> void;
+            auto setSize(float w, float h)        -> void;
+
             auto move(const math::Vec2f& rel)    -> void;
             auto scale(const math::Vec2f& scale) -> void;
             auto getPosition() const             -> const math::Point2f&;
             auto getScale() const                -> const math::Vec2f&;
 
             auto getBBox() const -> const math::AABBf&;
-
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node)        -> void;
 
         protected:
             math::Vec2f _scale;
