@@ -90,25 +90,25 @@ namespace gamelib
                     {
                         auto pol = static_cast<Polygon*>(comp);
                         pol->polygon.foreachSegment([&](const math::Line2f seg) {
-                                vertices.append(sf::Vertex(sf::Vector2f(seg.p.x, seg.p.y), sf::Color::Red));
-                                vertices.append(sf::Vertex(sf::Vector2f(seg.p.x + seg.d.x, seg.p.y + seg.d.y), sf::Color::Red));
+                                vertices.append(sf::Vertex(sf::Vector2f(seg.p.x, seg.p.y), col));
+                                vertices.append(sf::Vertex(sf::Vector2f(seg.p.x + seg.d.x, seg.p.y + seg.d.y), col));
                                 return false;
                             });
                     }
-                    else if (comp->getName() == AABB::name)
+                    else
                     {
                         auto& rect = comp->getBBox();
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x, rect.y), sf::Color::Red));
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x + rect.w, rect.y), sf::Color::Red));
+                        vertices.append(sf::Vertex(sf::Vector2f(rect.x, rect.y), col));
+                        vertices.append(sf::Vertex(sf::Vector2f(rect.x + rect.w, rect.y), col));
 
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x + rect.w, rect.y), sf::Color::Red));
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x + rect.w, rect.y + rect.h), sf::Color::Red));
+                        vertices.append(sf::Vertex(sf::Vector2f(rect.x + rect.w, rect.y), col));
+                        vertices.append(sf::Vertex(sf::Vector2f(rect.x + rect.w, rect.y + rect.h), col));
 
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x, rect.y), sf::Color::Red));
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x, rect.y + rect.h), sf::Color::Red));
+                        vertices.append(sf::Vertex(sf::Vector2f(rect.x, rect.y), col));
+                        vertices.append(sf::Vertex(sf::Vector2f(rect.x, rect.y + rect.h), col));
 
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x, rect.y + rect.h), sf::Color::Red));
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x + rect.w, rect.y + rect.h), sf::Color::Red));
+                        vertices.append(sf::Vertex(sf::Vector2f(rect.x, rect.y + rect.h), col));
+                        vertices.append(sf::Vertex(sf::Vector2f(rect.x + rect.w, rect.y + rect.h), col));
                     }
                 }
                 return false;
