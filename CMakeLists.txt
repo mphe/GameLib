@@ -19,7 +19,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # Enable warnings
 if (CMAKE_COMPILER_IS_GNUCC)
-    add_definitions(-Wall -Wno-switch -Wno-sign-compare -fdiagnostics-color=auto)
+    add_definitions(-Wall -Wno-switch -Wno-sign-compare -Wno-parentheses -fdiagnostics-color=auto)
 elseif (MSVC)
     # Untested
     add_definitions(/W3)
