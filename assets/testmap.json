@@ -1,0 +1,1252 @@
+{
+   "entmgr" : [
+      {
+         "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 64
+            },
+            "PolygonCollision#1" : {
+               "flags" : 2,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 480, 320 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 1,
+               "vertices" : [
+                  [ 0, 0 ],
+                  [ 0, 64 ],
+                  [ 96, -32 ],
+                  [ 96, 96 ],
+                  [ 192, 0 ],
+                  [ 192, 96 ],
+                  [ 288, -32 ],
+                  [ 256, 96 ],
+                  [ 384, 32 ],
+                  [ 352, 96 ]
+               ]
+            },
+            "PolygonShape#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "texoffset" : [ 0, 0 ],
+               "texture" : "tex/dirt2.png",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 480, 320 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "vertices" : [
+                  [
+                     [ 0, 0 ],
+                     [ 480, 320 ]
+                  ],
+                  [
+                     [ 0, 64 ],
+                     [ 480, 384 ]
+                  ],
+                  [
+                     [ 96, -32 ],
+                     [ 576, 288 ]
+                  ],
+                  [
+                     [ 96, 96 ],
+                     [ 576, 416 ]
+                  ],
+                  [
+                     [ 192, 0 ],
+                     [ 672, 320 ]
+                  ],
+                  [
+                     [ 192, 96 ],
+                     [ 672, 416 ]
+                  ],
+                  [
+                     [ 288, -32 ],
+                     [ 768, 288 ]
+                  ],
+                  [
+                     [ 256, 96 ],
+                     [ 736, 416 ]
+                  ],
+                  [
+                     [ 384, 32 ],
+                     [ 864, 352 ]
+                  ],
+                  [
+                     [ 352, 96 ],
+                     [ 832, 416 ]
+                  ]
+               ]
+            }
+         },
+         "flags" : 0,
+         "name" : "brush_polygon",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ 480, 320 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 64
+            },
+            "PolygonCollision#1" : {
+               "flags" : 1,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 480, 320 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 0,
+               "vertices" : [
+                  [ 0, 0 ],
+                  [ 96, -32 ],
+                  [ 192, 0 ],
+                  [ 288, -32 ],
+                  [ 384, 32 ],
+                  [ 352, 96 ],
+                  [ 96, 96 ],
+                  [ 0, 64 ],
+                  [ 0, 0 ],
+                  [ 96, -32 ]
+               ]
+            },
+            "PolygonCollision#2" : {
+               "flags" : 2,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 480, 320 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 1,
+               "vertices" : [
+                  [ -10.119293212890625, -30.357879638671875 ],
+                  [ 10.119293212890625, 30.357879638671875 ],
+                  [ 96, -65.73095703125 ],
+                  [ 96, 1.73095703125 ],
+                  [ 116.23858642578125, -58.984771728515625 ],
+                  [ 96, 1.73095703125 ],
+                  [ 192, -33.73095703125 ],
+                  [ 192, 33.73095703125 ],
+                  [ 192, -33.73095703125 ],
+                  [ 212.23858642578125, 26.984771728515625 ],
+                  [ 292.728271484375, -67.307037353515625 ],
+                  [ 283.271728515625, 3.307037353515625 ],
+                  [ 318.77252197265625, -49.944183349609375 ],
+                  [ 283.271728515625, 3.307037353515625 ],
+                  [ 425.2550048828125, 21.04412841796875 ],
+                  [ 342.7449951171875, 42.95587158203125 ],
+                  [ 399.98834228515625, 71.577545166015625 ],
+                  [ 342.7449951171875, 42.95587158203125 ],
+                  [ 371.777099609375, 128 ],
+                  [ 332.222900390625, 64 ],
+                  [ 332.222900390625, 128 ],
+                  [ 332.222900390625, 64 ],
+                  [ 90.80712890625, 128 ],
+                  [ 101.19287109375, 64 ],
+                  [ 80.95428466796875, 124.71572875976562 ],
+                  [ 101.19287109375, 64 ],
+                  [ -32, 87.064300537109375 ],
+                  [ 32, 40.935699462890625 ],
+                  [ -32, 40.935699462890625 ],
+                  [ 32, 40.935699462890625 ],
+                  [ -32, -23.064300537109375 ],
+                  [ 32, 23.064300537109375 ],
+                  [ 11.76141357421875, -37.65142822265625 ],
+                  [ 32, 23.064300537109375 ],
+                  [ 85.8807373046875, -62.35784912109375 ],
+                  [ 106.1192626953125, -1.64215087890625 ]
+               ]
+            },
+            "PolygonShape#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "texoffset" : [ 0, 0 ],
+               "texture" : "tex/grass.png",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 480, 320 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "vertices" : [
+                  [
+                     [ -10.119293212890625, -30.357879638671875 ],
+                     [ 0, 0 ]
+                  ],
+                  [
+                     [ 10.119293212890625, 30.357879638671875 ],
+                     [ 0, 64 ]
+                  ],
+                  [
+                     [ 96, -65.73095703125 ],
+                     [ 111.85955047607422, 0 ]
+                  ],
+                  [
+                     [ 96, 1.73095703125 ],
+                     [ 90.526222229003906, 64 ]
+                  ],
+                  [
+                     [ 116.23858642578125, -58.984771728515625 ],
+                     [ 90.526222229003906, 0 ]
+                  ],
+                  [
+                     [ 96, 1.73095703125 ],
+                     [ 90.526222229003906, 64 ]
+                  ],
+                  [
+                     [ 192, -33.73095703125 ],
+                     [ 170.38577270507812, 0 ]
+                  ],
+                  [
+                     [ 192, 33.73095703125 ],
+                     [ 191.71910095214844, 64 ]
+                  ],
+                  [
+                     [ 192, -33.73095703125 ],
+                     [ 170.38577270507812, 0 ]
+                  ],
+                  [
+                     [ 212.23858642578125, 26.984771728515625 ],
+                     [ 170.38577270507812, 64 ]
+                  ],
+                  [
+                     [ 292.728271484375, -67.307037353515625 ],
+                     [ 276.56268310546875, 0 ]
+                  ],
+                  [
+                     [ 283.271728515625, 3.307037353515625 ],
+                     [ 245.26129150390625, 64 ]
+                  ],
+                  [
+                     [ 318.77252197265625, -49.944183349609375 ],
+                     [ 245.26129150390625, 0 ]
+                  ],
+                  [
+                     [ 283.271728515625, 3.307037353515625 ],
+                     [ 245.26129150390625, 64 ]
+                  ],
+                  [
+                     [ 425.2550048828125, 21.04412841796875 ],
+                     [ 373.2373046875, 0 ]
+                  ],
+                  [
+                     [ 342.7449951171875, 42.95587158203125 ],
+                     [ 316.7392578125, 64 ]
+                  ],
+                  [
+                     [ 399.98834228515625, 71.577545166015625 ],
+                     [ 316.7392578125, 0 ]
+                  ],
+                  [
+                     [ 342.7449951171875, 42.95587158203125 ],
+                     [ 316.7392578125, 64 ]
+                  ],
+                  [
+                     [ 371.777099609375, 128 ],
+                     [ 379.82147216796875, 0 ]
+                  ],
+                  [
+                     [ 332.222900390625, 64 ],
+                     [ 340.267333984375, 64 ]
+                  ],
+                  [
+                     [ 332.222900390625, 128 ],
+                     [ 340.267333984375, 0 ]
+                  ],
+                  [
+                     [ 332.222900390625, 64 ],
+                     [ 340.267333984375, 64 ]
+                  ],
+                  [
+                     [ 90.80712890625, 128 ],
+                     [ 581.68310546875, 0 ]
+                  ],
+                  [
+                     [ 101.19287109375, 64 ],
+                     [ 571.29736328125, 64 ]
+                  ],
+                  [
+                     [ 80.95428466796875, 124.71572875976562 ],
+                     [ 571.29736328125, 0 ]
+                  ],
+                  [
+                     [ 101.19287109375, 64 ],
+                     [ 571.29736328125, 64 ]
+                  ],
+                  [
+                     [ -32, 87.064300537109375 ],
+                     [ 690.36163330078125, 0 ]
+                  ],
+                  [
+                     [ 32, 40.935699462890625 ],
+                     [ 644.2330322265625, 64 ]
+                  ],
+                  [
+                     [ -32, 40.935699462890625 ],
+                     [ 644.2330322265625, 0 ]
+                  ],
+                  [
+                     [ 32, 40.935699462890625 ],
+                     [ 644.2330322265625, 64 ]
+                  ],
+                  [
+                     [ -32, -23.064300537109375 ],
+                     [ 708.2330322265625, 0 ]
+                  ],
+                  [
+                     [ 32, 23.064300537109375 ],
+                     [ 662.10443115234375, 64 ]
+                  ],
+                  [
+                     [ 11.76141357421875, -37.65142822265625 ],
+                     [ 662.10443115234375, 0 ]
+                  ],
+                  [
+                     [ 32, 23.064300537109375 ],
+                     [ 662.10443115234375, 64 ]
+                  ],
+                  [
+                     [ 85.8807373046875, -62.35784912109375 ],
+                     [ 740.2330322265625, 0 ]
+                  ],
+                  [
+                     [ 106.1192626953125, -1.64215087890625 ],
+                     [ 740.2330322265625, 64 ]
+                  ]
+               ]
+            }
+         },
+         "flags" : 0,
+         "name" : "brush_line",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ 480, 320 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "AABBCollision#1" : {
+               "flags" : 11,
+               "size" : [ 32, 32 ],
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1052.2265625, 352 ],
+                  "scale" : [ 1, 1 ]
+               }
+            },
+            "QPhysicsComponent#1" : {
+               "Snap distance" : 10,
+               "airFriction" : false,
+               "basevel" : [ 0, 0 ],
+               "friction multiplier" : 1,
+               "gravity multiplier" : 0,
+               "hook" : 2,
+               "interval" : 1,
+               "keepMomentum" : true,
+               "maxSlope" : 0.5,
+               "overbounce" : 2,
+               "vel" : [ 150, 0 ]
+            },
+            "SpriteComponent#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "sprite" : "spr/box.spr",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1052.2265625, 352 ],
+                  "scale" : [ 1, 1 ]
+               }
+            }
+         },
+         "flags" : 0,
+         "name" : "box",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ 1052.2265625, 352 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "QConfig#1" : {
+               "friction" : 10,
+               "gravity" : 700,
+               "gravityDirection" : [ 0, 1 ],
+               "stopFriction" : 10,
+               "stopSpeed" : 70
+            }
+         },
+         "flags" : 0,
+         "name" : "globalconfig",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ 480, 128 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
+            "PolygonCollision#1" : {
+               "flags" : 7,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1184, 320 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 1,
+               "vertices" : [
+                  [ 0, 0 ],
+                  [ 0, 96 ],
+                  [ 160, 0 ],
+                  [ 160, 96 ]
+               ]
+            },
+            "PolygonShape#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "texoffset" : [ 0, 0 ],
+               "texture" : "tex/block.png",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1184, 320 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "vertices" : [
+                  [
+                     [ 0, 0 ],
+                     [ 1184, 320 ]
+                  ],
+                  [
+                     [ 0, 96 ],
+                     [ 1184, 416 ]
+                  ],
+                  [
+                     [ 160, 0 ],
+                     [ 1344, 320 ]
+                  ],
+                  [
+                     [ 160, 96 ],
+                     [ 1344, 416 ]
+                  ]
+               ]
+            }
+         },
+         "flags" : 0,
+         "name" : "brush_polygon",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ 1184, 320 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
+            "PolygonCollision#1" : {
+               "flags" : 7,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 864, 352 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 1,
+               "vertices" : [
+                  [ 0, -32 ],
+                  [ 0, 96 ],
+                  [ 32, -32 ],
+                  [ 32, 96 ]
+               ]
+            },
+            "PolygonShape#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "texoffset" : [ 0, 0 ],
+               "texture" : "tex/block.png",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 864, 352 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "vertices" : [
+                  [
+                     [ 0, -32 ],
+                     [ 864, 320 ]
+                  ],
+                  [
+                     [ 0, 96 ],
+                     [ 864, 448 ]
+                  ],
+                  [
+                     [ 32, -32 ],
+                     [ 896, 320 ]
+                  ],
+                  [
+                     [ 32, 96 ],
+                     [ 896, 448 ]
+                  ]
+               ]
+            }
+         },
+         "flags" : 0,
+         "name" : "brush_polygon",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ 864, 352 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
+            "PolygonCollision#1" : {
+               "flags" : 0,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1088, 416 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 0,
+               "vertices" : [
+                  [ 0, 0 ],
+                  [ 352, 0 ]
+               ]
+            },
+            "PolygonCollision#2" : {
+               "flags" : 7,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1088, 416 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 1,
+               "vertices" : [
+                  [ 0, -16 ],
+                  [ 0, 16 ],
+                  [ 352, -16 ],
+                  [ 352, 16 ]
+               ]
+            },
+            "PolygonShape#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "texoffset" : [ 0, 0 ],
+               "texture" : "tex/block.png",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1088, 416 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "vertices" : [
+                  [
+                     [ 0, -16 ],
+                     [ 0, 0 ]
+                  ],
+                  [
+                     [ 0, 16 ],
+                     [ 0, 32 ]
+                  ],
+                  [
+                     [ 352, -16 ],
+                     [ 352, 0 ]
+                  ],
+                  [
+                     [ 352, 16 ],
+                     [ 352, 32 ]
+                  ]
+               ]
+            }
+         },
+         "flags" : 0,
+         "name" : "brush_line",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ 1088, 416 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "AABBCollision#1" : {
+               "flags" : 26,
+               "size" : [ 32, 31 ],
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ -255.97200012207031, 272.80633544921875 ],
+                  "scale" : [ 1, 1 ]
+               }
+            },
+            "CameraTracker#1" : {
+               "camera" : 0,
+               "hook" : 2,
+               "interval" : 1,
+               "shakeradius" : 5
+            },
+            "QController#1" : {
+               "accelerate" : 25,
+               "airAccelerate" : 25,
+               "hook" : 2,
+               "interval" : 1,
+               "jumpDecelerate" : 5,
+               "jumpspeed" : 356,
+               "maxspeed" : 140
+            },
+            "QPhysicsComponent#1" : {
+               "Snap distance" : 10,
+               "airFriction" : false,
+               "basevel" : [ 0, 0 ],
+               "friction multiplier" : 1,
+               "gravity multiplier" : 1,
+               "hook" : 2,
+               "interval" : 1,
+               "keepMomentum" : true,
+               "maxSlope" : 0.5,
+               "overbounce" : 1,
+               "vel" : [ 0, 0 ]
+            },
+            "SpriteComponent#1" : {
+               "depth" : -1,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "sprite" : "spr/player_walk.spr",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ -255.97200012207031, 272.80633544921875 ],
+                  "scale" : [ 1, 1 ]
+               }
+            }
+         },
+         "flags" : 0,
+         "name" : "player",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ -255.97200012207031, 272.80633544921875 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
+            "PolygonCollision#1" : {
+               "flags" : 0,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 976, 480 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 0,
+               "vertices" : [
+                  [ 0, 0 ],
+                  [ 640, 0 ]
+               ]
+            },
+            "PolygonCollision#2" : {
+               "flags" : 7,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 976, 480 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 1,
+               "vertices" : [
+                  [ 0, -16 ],
+                  [ 0, 16 ],
+                  [ 640, -16 ],
+                  [ 640, 16 ]
+               ]
+            },
+            "PolygonShape#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "texoffset" : [ 0, 0 ],
+               "texture" : "tex/block.png",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 976, 480 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "vertices" : [
+                  [
+                     [ 0, -16 ],
+                     [ 0, 0 ]
+                  ],
+                  [
+                     [ 0, 16 ],
+                     [ 0, 32 ]
+                  ],
+                  [
+                     [ 640, -16 ],
+                     [ 640, 0 ]
+                  ],
+                  [
+                     [ 640, 16 ],
+                     [ 640, 32 ]
+                  ]
+               ]
+            }
+         },
+         "flags" : 0,
+         "name" : "brush_line",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ 976, 480 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
+            "PolygonCollision#1" : {
+               "flags" : 0,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1600, 448 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 0,
+               "vertices" : [
+                  [ 0, 48 ],
+                  [ 0, -352 ],
+                  [ 0, -400 ]
+               ]
+            },
+            "PolygonCollision#2" : {
+               "flags" : 7,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1600, 448 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 1,
+               "vertices" : [
+                  [ -16, 48 ],
+                  [ 16, 48 ],
+                  [ -16, -400 ],
+                  [ 16, -400 ]
+               ]
+            },
+            "PolygonShape#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "texoffset" : [ 0, 0 ],
+               "texture" : "tex/block.png",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1600, 448 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "vertices" : [
+                  [
+                     [ -16, 48 ],
+                     [ 0, 0 ]
+                  ],
+                  [
+                     [ 16, 48 ],
+                     [ 0, 32 ]
+                  ],
+                  [
+                     [ -16, -400 ],
+                     [ 448, 0 ]
+                  ],
+                  [
+                     [ 16, -400 ],
+                     [ 448, 32 ]
+                  ]
+               ]
+            }
+         },
+         "flags" : 0,
+         "name" : "brush_line",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ 1600, 448 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
+            "PolygonCollision#1" : {
+               "flags" : 0,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1472, 256 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 0,
+               "vertices" : [
+                  [ 0, 0 ],
+                  [ -128, 0 ]
+               ]
+            },
+            "PolygonCollision#2" : {
+               "flags" : 7,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1472, 256 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 1,
+               "vertices" : [
+                  [ 0, 16 ],
+                  [ 0, -16 ],
+                  [ -128, 16 ],
+                  [ -128, -16 ]
+               ]
+            },
+            "PolygonShape#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "texoffset" : [ 0, 0 ],
+               "texture" : "tex/block.png",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1472, 256 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "vertices" : [
+                  [
+                     [ 0, 16 ],
+                     [ 0, 0 ]
+                  ],
+                  [
+                     [ 0, -16 ],
+                     [ 0, 32 ]
+                  ],
+                  [
+                     [ -128, 16 ],
+                     [ 128, 0 ]
+                  ],
+                  [
+                     [ -128, -16 ],
+                     [ 128, 32 ]
+                  ]
+               ]
+            }
+         },
+         "flags" : 0,
+         "name" : "brush_line",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ 1472, 256 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "AABBCollision#1" : {
+               "flags" : 11,
+               "size" : [ 32, 32 ],
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1536, 128.09999084472656 ],
+                  "scale" : [ 1, 1 ]
+               }
+            },
+            "QPhysicsComponent#1" : {
+               "Snap distance" : 10,
+               "airFriction" : false,
+               "basevel" : [ 0, 0 ],
+               "friction multiplier" : 0,
+               "gravity multiplier" : 0,
+               "hook" : 2,
+               "interval" : 1,
+               "keepMomentum" : true,
+               "maxSlope" : 0.5,
+               "overbounce" : 2,
+               "vel" : [ 0, 200 ]
+            },
+            "SpriteComponent#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "sprite" : "spr/box.spr",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1536, 128.09999084472656 ],
+                  "scale" : [ 1, 1 ]
+               }
+            }
+         },
+         "flags" : 0,
+         "name" : "box",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ 1536, 128.09999084472656 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
+            "PolygonCollision#1" : {
+               "flags" : 0,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1616, 96 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 0,
+               "vertices" : [
+                  [ 0, 0 ],
+                  [ -160, 0 ]
+               ]
+            },
+            "PolygonCollision#2" : {
+               "flags" : 7,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1616, 96 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 1,
+               "vertices" : [
+                  [ 0, 16 ],
+                  [ 0, -16 ],
+                  [ -160, 16 ],
+                  [ -160, -16 ]
+               ]
+            },
+            "PolygonShape#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "texoffset" : [ 0, 0 ],
+               "texture" : "tex/block.png",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 1616, 96 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "vertices" : [
+                  [
+                     [ 0, 16 ],
+                     [ 0, 0 ]
+                  ],
+                  [
+                     [ 0, -16 ],
+                     [ 0, 32 ]
+                  ],
+                  [
+                     [ -160, 16 ],
+                     [ 160, 0 ]
+                  ],
+                  [
+                     [ -160, -16 ],
+                     [ 160, 32 ]
+                  ]
+               ]
+            }
+         },
+         "flags" : 0,
+         "name" : "brush_line",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ 1616, 96 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
+            "PolygonCollision#1" : {
+               "flags" : 0,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 448, 320 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 0,
+               "vertices" : [
+                  [ 0, 0 ],
+                  [ -1120, 0 ]
+               ]
+            },
+            "PolygonCollision#2" : {
+               "flags" : 7,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 448, 320 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 1,
+               "vertices" : [
+                  [ 0, 16 ],
+                  [ 0, -16 ],
+                  [ -1120, 16 ],
+                  [ -1120, -16 ]
+               ]
+            },
+            "PolygonShape#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "texoffset" : [ 0, 0 ],
+               "texture" : "tex/block.png",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ 448, 320 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "vertices" : [
+                  [
+                     [ 0, 16 ],
+                     [ 0, 0 ]
+                  ],
+                  [
+                     [ 0, -16 ],
+                     [ 0, 32 ]
+                  ],
+                  [
+                     [ -1120, 16 ],
+                     [ 1120, 0 ]
+                  ],
+                  [
+                     [ -1120, -16 ],
+                     [ 1120, 32 ]
+                  ]
+               ]
+            }
+         },
+         "flags" : 0,
+         "name" : "brush_line",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ 448, 320 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "AABBCollision#1" : {
+               "flags" : 11,
+               "size" : [ 32, 32 ],
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ -591.5, 256 ],
+                  "scale" : [ 1, 1 ]
+               }
+            },
+            "QPhysicsComponent#1" : {
+               "Snap distance" : 10,
+               "airFriction" : false,
+               "basevel" : [ 0, 0 ],
+               "friction multiplier" : 0,
+               "gravity multiplier" : 0,
+               "hook" : 2,
+               "interval" : 1,
+               "keepMomentum" : true,
+               "maxSlope" : 0.5,
+               "overbounce" : 2,
+               "vel" : [ 1000, 0 ]
+            },
+            "SpriteComponent#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "sprite" : "spr/box.spr",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ -591.5, 256 ],
+                  "scale" : [ 1, 1 ]
+               }
+            }
+         },
+         "flags" : 0,
+         "name" : "box",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ -591.5, 256 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
+            "PolygonCollision#1" : {
+               "flags" : 7,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ -672, 176 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 1,
+               "vertices" : [
+                  [ 0, 0 ],
+                  [ 0, 144 ],
+                  [ 32, 0 ],
+                  [ 32, 144 ]
+               ]
+            },
+            "PolygonShape#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "texoffset" : [ 0, 0 ],
+               "texture" : "tex/block.png",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ -672, 176 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "vertices" : [
+                  [
+                     [ 0, 0 ],
+                     [ -672, 192 ]
+                  ],
+                  [
+                     [ 0, 144 ],
+                     [ -672, 336 ]
+                  ],
+                  [
+                     [ 32, 0 ],
+                     [ -640, 192 ]
+                  ],
+                  [
+                     [ 32, 144 ],
+                     [ -640, 336 ]
+                  ]
+               ]
+            }
+         },
+         "flags" : 0,
+         "name" : "brush_polygon",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ -672, 176 ],
+            "scale" : [ 1, 1 ]
+         }
+      },
+      {
+         "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
+            "PolygonCollision#1" : {
+               "flags" : 7,
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ -288, 288 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "type" : 1,
+               "vertices" : [
+                  [ 0, 0 ],
+                  [ 0, 24 ],
+                  [ 32, 0 ],
+                  [ 32, 24 ]
+               ]
+            },
+            "PolygonShape#1" : {
+               "depth" : 0,
+               "flags" : 0,
+               "origin" : [ 0, 0 ],
+               "parallax" : 1,
+               "texoffset" : [ 0, 0 ],
+               "texture" : "tex/block.png",
+               "transform" : {
+                  "angle" : 0,
+                  "pos" : [ -288, 288 ],
+                  "scale" : [ 1, 1 ]
+               },
+               "vertices" : [
+                  [
+                     [ 0, 0 ],
+                     [ -448, 280 ]
+                  ],
+                  [
+                     [ 0, 24 ],
+                     [ -448, 304 ]
+                  ],
+                  [
+                     [ 32, 0 ],
+                     [ -416, 280 ]
+                  ],
+                  [
+                     [ 32, 24 ],
+                     [ -416, 304 ]
+                  ]
+               ]
+            }
+         },
+         "flags" : 0,
+         "name" : "brush_polygon",
+         "transform" : {
+            "angle" : 0,
+            "pos" : [ -288, 288 ],
+            "scale" : [ 1, 1 ]
+         }
+      }
+   ],
+   "scene" : {
+      "cameras" : [
+         {
+            "pos" : [ -879.97198486328125, -71.19366455078125 ],
+            "size" : [ 1280, 720 ],
+            "velocity" : [ 0, 0 ],
+            "viewport" : {
+               "pos" : [ 0, 0 ],
+               "size" : [ 1, 1 ]
+            },
+            "zoom" : 0.59999990463256836
+         }
+      ],
+      "defaultcam" : 0,
+      "depth" : 0,
+      "flags" : 18,
+      "layers" : {
+         "test" : {
+            "depth" : 7,
+            "flags" : 0,
+            "parallax" : 1
+         }
+      },
+      "parallax" : 1
+   }
+}
