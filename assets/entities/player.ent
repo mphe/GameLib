@@ -2,16 +2,11 @@
     "name": "player",
     "components": {
         "SpriteComponent": {
-            "sprite": "spr/player_walk.spr"
+            "sprite": "spr/player_walk.spr",
+            "origin": [0, 0]
         },
         "QPhysicsComponent": {
             "overbounce": 1
-        },
-        "QConfig": {
-            "gravity": 700,
-            "friction": 10,
-            "stopFriction": 10,
-            "stopSpeed": 70
         },
         "QController": {
             "maxspeed": 140,
@@ -20,7 +15,7 @@
             "airAccelerate": 10
         },
         "AABBCollision": {
-            "flags": 2,
+            "flags": 10,
             "pos": [0, 0],
             "size": [32, 32]
         },

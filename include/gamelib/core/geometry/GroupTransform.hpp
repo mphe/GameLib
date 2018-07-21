@@ -9,6 +9,11 @@ namespace gamelib
     class GroupTransform : public Transformable
     {
         public:
+            using Transformable::move;
+            using Transformable::scale;
+            using Transformable::rotate;
+
+        public:
             GroupTransform();
             GroupTransform(float x, float y);
             GroupTransform(const math::Point2f& pos);

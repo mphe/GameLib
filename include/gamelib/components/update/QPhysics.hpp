@@ -27,12 +27,14 @@ namespace gamelib
         public:
             constexpr static const char* name = "QPhysicsComponent";
 
-            enum UnstuckMethod
+            enum State
             {
-                Normal,
-                Upwards,
-                Nudge   // TODO: unimplemented
+                Air,
+                Ground,
+                Stuck
             };
+
+            struct GroundData;
 
         public:
             QPhysics(int interval = 1);
@@ -43,16 +45,30 @@ namespace gamelib
 
             // Accelerate by a given amount of units/sec in a certain direction
             // Expects wishdir to be a normalized vector.
+            // Accelerates in a 1 / accel second to the desired speed.
             auto accelerate(const math::Vec2f& wishdir, float wishspeed, float accel) -> void;
 
-            auto getHull() -> const math::AABBf*;
+            auto moveToContact(const math::Vec2f& dist)    -> CollisionComponent*;
+            auto moveIfContact(const math::Vec2f& dist)    -> CollisionComponent*;
+            auto clipmove(math::Vec2f* vel, float elapsed) -> void;
+            auto clipmove(math::Vec2f* vel)                -> void; // TODO
+            auto nudge()                                   -> bool;
+
+            auto isStuck(const math::AABBf& box) const -> bool;
+            auto isStuck() const   -> bool;
+            auto getHull() const   -> const math::AABBf*;
+            auto getState() const  -> State;
+            auto getGround() const -> const GroundData&;
+
+            auto categorizePosition() -> void;
+            auto setGround(CollisionComponent* ground, const math::Vec2f& normal) -> void;
 
         protected:
             virtual auto _refresh() -> void;
 
-            auto _checkGround()           -> void;
-            auto _clipmove(float elapsed) -> void;
-            auto _nudge(math::Vec2f* newpos, const TraceResult& trace) -> void;
+            auto _nudge(math::AABBf* box)       -> bool;
+            auto _move(const math::Vec2f& dist) -> void;
+            auto _snapToMovingGround()          -> void;
 
         public:
             static float gravity;
@@ -63,13 +79,26 @@ namespace gamelib
 
         public:
             math::Vec2f vel;
+            math::Vec2f basevel;
             float overbounce;
-            CollisionComponent* ground;
-            UnstuckMethod unstuckmethod;
+            float gravMultiplier;
+            float fricMultiplier;
+            float maxSlope;
+            int movingPlatformSnapDist;
+            bool keepMomentum;
+            bool airFriction;
+            // TODO: flags treated as solid
 
         protected:
             const math::AABBf* _bbox;
-            const Collidable* _self;
+            Collidable* _self;
+            State _state;
+
+            struct GroundData {
+                CollisionComponent* hull;
+                math::Vec2f normal;
+                float slope;
+            } _ground;
     };
 
 }

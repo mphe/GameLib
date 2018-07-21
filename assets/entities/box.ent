@@ -6,7 +6,7 @@
             "sprite": "spr/box.spr"
         },
         "AABBCollision": {
-            "flags": 3,
+            "flags": 11,
             "pos": [0, 0],
             "size": [32, 32]
         }

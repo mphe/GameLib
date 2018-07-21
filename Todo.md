@@ -7,19 +7,38 @@
 * Automatically adapt (render size and) aspect ratio on window resize
 * ScopedIterator
 * move utils in a separate git repo
-* handle json return values in EntityFactory
-* SpriteBrush
 * Background entity
 * SlotMap size()
 * imgui dialogues
+* entity tags
+* inputBitflags() exclude list
+* loadFromJson update bool to differentiate between load and update from json
+* MaskComponent
+* option to freeze game on lost focus
+* Properties in Game class
+* json diff
+
+* Split Updatable in Updatable and BaseUpdatable
+  * BaseUpdatable <- Updatable
+  * BaseUpdatable <- PhysicsComponent
+
+* EntityFactory
+  * handle json return values
+  * query ResourceManager if entity name not found
+
+* SpriteComponent
+  * loadFromJson fix overrides by tmp saving overrides and applying afterwards (again)
 
 * Transformable
   * Add parent reference to update parent bbox on transformation
   * Consider removing GroupTransform and instead give all Transformables a vector of children
   * Origin
+  * store position, scaling, rotation relative to parent
+    * add 2 functions to GroupTransform one to add as absolute and one to add relative
 
 * InputSystem
   * map["shoot"] = { Space, Enter, ... }
+  * functions for checking multiple inputs at once with "all pressed" or "any pressed"
 
 * components
   * Automatically register components to factory
@@ -46,10 +65,8 @@
   * Fix pointDirection in cppmath (Vector.angle() works correctly)
 
 * Q-Stuff
-  * PhysicsHull flag for collidables so physics can automatically find the correct collision component
-  * Fix right movement faster than left
-  * Add alternative QController for better platformer controls
-    * Fix aircontrol
+  * fix slope corners
+    * average normals
 
 * collisions
   * Remove Collidable and merge it into CollisionComponent
@@ -69,6 +86,14 @@
   * mouse coordinates
   * automatically add sprite and mask to entities without rendering
   * toolbox class
+  * custom entities
+    * entity flag to load an entity from savefile directly
+  * RectBrush
+  * PhysicsBrush
+  * copy entity
+  * fix behaviour in negative coord space
+  * watch properties when running
+  * BrushTool solid option
 
 * make Engine a Subsystem
   * makes a backup of an existing active Engine
@@ -81,8 +106,9 @@
   * property docs
   * string hints
     * dropdown menu for strings
-
-* Fix sprite flickering (maybe fixed)
+  * flags
+    * override
+    * readonly
 
 
 <!--- vim: tabstop=2 shiftwidth=2 --->

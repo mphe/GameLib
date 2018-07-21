@@ -25,7 +25,8 @@ namespace gamelib
             float airAccelerate;
             float maxspeed;
             float jumpspeed;
-            QPhysics* qphys;
+            float jumpDecelerate;
+            QPhysics* phys;
 
         private:
             bool _canjump;

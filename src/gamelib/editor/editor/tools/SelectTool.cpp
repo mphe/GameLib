@@ -65,7 +65,7 @@ namespace gamelib
                 {
                     auto start = phys->getHull()->getCenter();
                     auto end = start + phys->vel;
-                    drawArrow(target, start.x, start.y, end.x, end.y);
+                    drawArrow(target, start.x, start.y, end.x, end.y, sf::Color::Cyan);
                 }
             }
 
@@ -121,9 +121,8 @@ namespace gamelib
         Entity* top = nullptr;
         int depth = 0;
         int layerdepth = 0;
-        CollisionSystem::getActive()->intersectAll(
-                math::Point2f(x, y), flags, [&](Collidable* col) {
 
+        auto selector = [&](Collidable* col) {
             auto ent = static_cast<CollisionComponent*>(col)->getEntity();
             auto ren = ent->findByType<RenderComponent>();
             if (!ren || !ren->isVisible())
@@ -153,8 +152,9 @@ namespace gamelib
                 top = ent;
             }
             return false;
-        });
+        };
 
+        CollisionSystem::getActive()->intersectAll(math::Point2f(x, y), nullptr, flags, selector);
         select(top);
     }
 
