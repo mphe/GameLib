@@ -1,4 +1,5 @@
 #include "editor/editor/ui/resources.hpp"
+#include "editor/editor/ui/inputs.hpp"
 #include "gamelib/core/res/SpriteResource.hpp"
 #include "gamelib/core/res/JsonResource.hpp"
 #include "gamelib/core/res/EntityConfigResource.hpp"
@@ -233,7 +234,7 @@ namespace gamelib
                     {
                         selected = false;   // Don't set anything until OK is pressed
 
-                        if (ImGui::Button("OK"))
+                        if (okButton())
                         {
                             selected = true;
                             close = true;
@@ -241,7 +242,7 @@ namespace gamelib
                         ImGui::SameLine();
                     }
 
-                    if (ImGui::Button("Cancel"))
+                    if (cancelButton())
                         close = true;
 
                     ImGui::PopItemWidth();
