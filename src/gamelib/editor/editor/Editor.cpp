@@ -46,7 +46,8 @@ namespace gamelib
         _drag(false),
         _grid(32, 32),
         _snap(true),
-        _run(false)
+        _run(false),
+        _hidegui(true)
     { }
 
     bool Editor::init(Game* game)
@@ -89,9 +90,7 @@ namespace gamelib
     void Editor::update(float elapsed)
     {
         auto input = getSubsystem<InputSystem>();
-
-        input->markConsumed(ImGui::GetIO().WantCaptureKeyboard,
-                            ImGui::GetIO().WantCaptureMouse);
+        _mouseSnapped = EditorShared::snap(input->getMouse().world);
 
         if (input->isKeyPressed(sf::Keyboard::F5))
         {
@@ -99,84 +98,25 @@ namespace gamelib
             _updateRunFlags();
         }
 
-        if (!_run)
+        if (!_run || !_hidegui)
         {
-            _camctrl.update(elapsed);
-
-            auto& mouse = input->getMouse();
-            _mouseSnapped = EditorShared::snap(mouse.world);
-
-            Tool* realtool = _currenttool;  // backup
-
-            { // Keyboard
-                if (input->isKeyDown(sf::Keyboard::LControl))
-                    _currenttool = &getSelectTool();
-
-                if (input->isKeyPressed(sf::Keyboard::Delete) && getSelectTool().getSelected())
-                {
-                    getSelectTool().getSelected()->destroy();
-                    getSelectTool().select(nullptr);
-                }
-
-                if (input->isKeyPressed(sf::Keyboard::Q))
-                    _grid.increase();
-
-                if (input->isKeyPressed(sf::Keyboard::E))
-                    _grid.decrease();
-
-                if (input->isKeyPressed(sf::Keyboard::G))
-                    _snap = !_snap;
-
-                if (input->isKeyPressed(sf::Keyboard::Z))
-                {
-                    auto selected = getSelectTool().getSelected();
-                    if (selected)
-                    {
-                        auto cam = getSubsystem<Scene>()->getCamera(0);
-                        cam->center(selected->getTransform().getPosition().asVector());
-                        cam->zoom = 1;
-                    }
-                }
-            }
-
-            { // Mouse
-                if (!input->isMouseConsumed())
-                {
-                    if (input->getMouse().moved)
-                    {
-                        if (_drag)
-                            _currenttool->onDrag();
-                        else
-                            _currenttool->onMouseMove();
-                    }
-
-                    if (mouse.wheel)
-                        getSubsystem<Scene>()->getCamera(0)->zoomTowards(mouse.world.x, mouse.world.y, mouse.wheel / -10.0);
-                }
-
-                if (input->isMousePressed(sf::Mouse::Left))
-                {
-                    _currenttool->onMousePressed();
-                    _drag = true;
-                }
-                else if (input->isMouseReleased(sf::Mouse::Left))
-                {
-                    _currenttool->onMouseRelease();
-                    _drag = false;
-                }
-            }
-
-            _currenttool = realtool;
+            input->markConsumed(ImGui::GetIO().WantCaptureKeyboard,
+                    ImGui::GetIO().WantCaptureMouse);
 
             ImGui::SFML::Update(getSubsystem<Game>()->getWindow(), sf::seconds(elapsed));
             _drawGui();
+        }
 
+        if (!_run)
+        {
+            _handleInput();
+            _camctrl.update(elapsed);
         }
     }
 
     void Editor::render(sf::RenderTarget& target)
     {
-        if (_run)
+        if (_run && _hidegui)
             return;
 
         // necessary, otherwise things will disappear randomly
@@ -190,6 +130,7 @@ namespace gamelib
 
         ImGui::Render();
     }
+
 
     void Editor::setTool(Tools tool)
     {
@@ -281,6 +222,9 @@ namespace gamelib
         bool choosesave = false;
         bool chooseexport = false;
 
+        auto selected = getSelectTool().getSelected();
+        auto input = getSubsystem<InputSystem>();
+
         if (ImGui::BeginMainMenuBar())
         {
             if (ImGui::BeginMenu("File"))
@@ -293,6 +237,9 @@ namespace gamelib
 
                 if (ImGui::MenuItem("Load"))
                     chooseload = true;
+
+                if (ImGui::MenuItem("Reload"))
+                    load();
 
                 if (ImGui::MenuItem("Export"))
                     chooseexport = true;
@@ -317,6 +264,8 @@ namespace gamelib
                 if (ImGui::MenuItem("Enable parallax", nullptr, !(scene->flags & render_noparallax)))
                     TOGGLEFLAG(scene->flags, render_noparallax);
 
+                ImGui::MenuItem("Hide Editor when running", nullptr, &_hidegui);
+
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Tools"))
@@ -326,7 +275,7 @@ namespace gamelib
                 ImGui::MenuItem("Show toolbox", nullptr, &toolbox);
                 ImGui::MenuItem("Show entity properties", nullptr, &entprops);
                 ImGui::MenuItem("Show entity list", nullptr, &entlist);
-                ImGui::MenuItem("Show layers", nullptr, &layerbox);
+                ImGui::MenuItem("Show layer settings", nullptr, &layerbox);
                 ImGui::MenuItem("Show test window", nullptr, &testwindow);
                 ImGui::MenuItem("Show json viewer", nullptr, &jsonwindow);
                 ImGui::EndMenu();
@@ -344,14 +293,21 @@ namespace gamelib
         }
 
         { // Loading / Saving
-            if (strlen(loaddlg.chooseFileDialog(chooseload)) > 0)
+            if (strlen(loaddlg.chooseFileDialog(chooseload, loaddlg.getLastDirectory())) > 0)
                 load(loaddlg.getChosenPath());
 
-            if (strlen(savedlg.saveFileDialog(choosesave)) > 0)
+            if (strlen(savedlg.saveFileDialog(choosesave, savedlg.getLastDirectory())) > 0)
                 this->save(savedlg.getChosenPath());
 
-            if (strlen(exportdlg.saveFileDialog(chooseexport)) > 0)
+            if (strlen(exportdlg.saveFileDialog(chooseexport, exportdlg.getLastDirectory())) > 0)
                 _exportcallback(exportdlg.getChosenPath());
+        }
+
+        if (ImGui::BeginPopupContextVoid("Context Menu", sf::Mouse::Right))
+        {
+            if (ImGui::Selectable("Move entity here") && selected)
+                selected->getTransform().setPosition(input->getMouse().world);
+            ImGui::EndPopup();
         }
 
         { // Dialogues
@@ -393,6 +349,83 @@ namespace gamelib
         }
     }
 
+    void Editor::_handleInput()
+    {
+        auto input = getSubsystem<InputSystem>();
+        Tool* realtool = _currenttool;  // backup
+
+        { // Keyboard
+            if (input->isKeyDown(sf::Keyboard::LControl))
+            {
+                _currenttool = &getSelectTool();
+
+                if (input->isKeyPressed(sf::Keyboard::S))
+                    save();
+                else if (input->isKeyPressed(sf::Keyboard::R))
+                    load();
+            }
+
+            if (input->isKeyPressed(sf::Keyboard::LShift))
+                _currenttool = &getSelectTool();
+
+            if (input->isKeyPressed(sf::Keyboard::Delete) && getSelectTool().getSelected())
+            {
+                getSelectTool().getSelected()->destroy();
+                getSelectTool().select(nullptr);
+            }
+
+            if (input->isKeyPressed(sf::Keyboard::Q))
+                _grid.increase();
+
+            if (input->isKeyPressed(sf::Keyboard::E))
+                _grid.decrease();
+
+            if (input->isKeyPressed(sf::Keyboard::G))
+                _snap = !_snap;
+
+            if (input->isKeyPressed(sf::Keyboard::Z))
+            {
+                auto selected = getSelectTool().getSelected();
+                if (selected)
+                {
+                    auto cam = getSubsystem<Scene>()->getCamera(0);
+                    cam->center(selected->getTransform().getPosition().asVector());
+                    cam->zoom = 1;
+                }
+            }
+        }
+
+        { // Mouse
+            auto& mouse = input->getMouse();
+
+            if (!input->isMouseConsumed())
+            {
+                if (input->getMouse().moved)
+                {
+                    if (_drag)
+                        _currenttool->onDrag();
+                    else
+                        _currenttool->onMouseMove();
+                }
+
+                if (mouse.wheel)
+                    getSubsystem<Scene>()->getCamera(0)->zoomTowards(mouse.world.x, mouse.world.y, mouse.wheel / -10.0);
+            }
+
+            if (input->isMousePressed(sf::Mouse::Left))
+            {
+                _currenttool->onMousePressed();
+                _drag = true;
+            }
+            else if (input->isMouseReleased(sf::Mouse::Left))
+            {
+                _currenttool->onMouseRelease();
+                _drag = false;
+            }
+        }
+
+        _currenttool = realtool;
+    }
 
 
     void defaultExport(const std::string& fname)

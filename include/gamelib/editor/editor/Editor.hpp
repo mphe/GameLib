@@ -56,6 +56,7 @@ namespace gamelib
         private:
             static auto _eventCallback(Editor* self, EventPtr ev) -> void;
             auto _drawGui() -> void;
+            auto _handleInput() -> void;
             auto _updateRunFlags() -> void;
 
         private:
@@ -75,6 +76,7 @@ namespace gamelib
             bool _snap;
 
             bool _run;
+            bool _hidegui;
     };
 }
 
