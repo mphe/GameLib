@@ -27,14 +27,14 @@ namespace gamelib
         return _objs.size();
     }
 
-    Collidable* CollisionSystem::intersect(const math::Point2f& point, unsigned int flags) const
+    Collidable* CollisionSystem::intersect(const math::Point2f& point, const Collidable* self, unsigned int flags) const
     {
-        return intersectAll(point, flags, [](Collidable*) { return true; });
+        return intersectAll(point, self, flags, [](Collidable*) { return true; });
     }
 
-    Collidable* CollisionSystem::intersect(const math::AABBf& rect, unsigned int flags) const
+    Collidable* CollisionSystem::intersect(const math::AABBf& rect, const Collidable* self, unsigned int flags) const
     {
-        return intersectAll(rect, flags, [](Collidable*) { return true; });
+        return intersectAll(rect, self, flags, [](Collidable*) { return true; });
     }
 
     TraceResult CollisionSystem::trace(const math::Line2f& line, const Collidable* self, unsigned int flags) const
@@ -50,6 +50,11 @@ namespace gamelib
 
     TraceResult::TraceResult() :
         obj(nullptr)
+    { }
+
+    TraceResult::TraceResult(Collidable* col, const Intersection& isec_) :
+        obj(col),
+        isec(isec_)
     { }
 
     TraceResult::operator bool() const

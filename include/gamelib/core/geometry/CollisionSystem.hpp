@@ -22,6 +22,7 @@ namespace gamelib
     {
         public:
             TraceResult();
+            TraceResult(Collidable* col, const Intersection& isec);
             operator bool() const;
 
         public:
@@ -59,34 +60,34 @@ namespace gamelib
 
             // Returns the colliding object if there is a collison at the
             // given point/rect, otherwise nullptr.
-            auto intersect(const math::Point2f& point, unsigned int flags = 0) const -> Collidable*;
-            auto intersect(const math::AABBf& rect, unsigned int flags = 0) const    -> Collidable*;
+            auto intersect(const math::Point2f& point, const Collidable* self = nullptr, unsigned int flags = 0) const -> Collidable*;
+            auto intersect(const math::AABBf& rect, const Collidable* self = nullptr, unsigned int flags = 0) const    -> Collidable*;
 
             // Calls a function for each colliding object at the given point/rect.
             // Signature: bool(Collidable*)
             // If the function returns true, the loop will break and return that object.
             template <typename F>
-            auto intersectAll(const math::Point2f& point, unsigned int flags, F f) const -> Collidable*;
+            auto intersectAll(const math::Point2f& point, const Collidable* self, unsigned int flags, F f) const -> Collidable*;
 
             template <typename F>
-            auto intersectAll(const math::AABBf& rect, unsigned int flags, F f) const -> Collidable*;
+            auto intersectAll(const math::AABBf& rect, const Collidable* self, unsigned int flags, F f) const -> Collidable*;
 
         private:
             template <typename Shape, typename F>
-            auto _intersectAll(const Shape& shape, unsigned int flags, F f) const -> Collidable*;
+            auto _intersectAll(const Shape& shape, F f, const Collidable* self, unsigned int flags) const -> Collidable*;
 
         private:
             std::vector<Collidable*> _objs;
     };
 
     template <typename Shape, typename F>
-    Collidable* CollisionSystem::_intersectAll(const Shape& shape, unsigned int flags, F f) const
+    Collidable* CollisionSystem::_intersectAll(const Shape& shape, F f, const Collidable* self, unsigned int flags) const
     {
         // Use rbegin so that newly added object are "on top"
         for (auto it = _objs.rbegin(), end = _objs.rend(); it != end; ++it)
         {
             Collidable* c = (*it);
-            if (!flags || c->flags & flags)
+            if (c != self && (!flags || c->flags & flags))
             {
                 if (c->flags & collision_noprecise)
                 {
@@ -107,15 +108,15 @@ namespace gamelib
     }
 
     template <typename F>
-    Collidable* CollisionSystem::intersectAll(const math::Point2f& point, unsigned int flags, F f) const
+    Collidable* CollisionSystem::intersectAll(const math::Point2f& point, const Collidable* self, unsigned int flags, F f) const
     {
-        return _intersectAll(point, flags, f);
+        return _intersectAll(point, f, self, flags);
     }
 
     template <typename F>
-    Collidable* CollisionSystem::intersectAll(const math::AABBf& rect, unsigned int flags, F f) const
+    Collidable* CollisionSystem::intersectAll(const math::AABBf& rect, const Collidable* self, unsigned int flags, F f) const
     {
-        return _intersectAll(rect, flags, f);
+        return _intersectAll(rect, f, self, flags);
     }
 
     template <typename F>
