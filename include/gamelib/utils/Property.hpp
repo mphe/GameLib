@@ -3,6 +3,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <SFML/Graphics/Color.hpp>
 #include "math/geometry/Vector.hpp"
 #include "gamelib/core/res/Resource.hpp"
 #include "gamelib/core/res/JsonSerializer.hpp"
@@ -20,6 +21,7 @@ namespace gamelib
         PropVec2i,
         PropVec2f,
         PropResource,
+        PropColor,
         PropUnknown
     };
 
@@ -164,6 +166,8 @@ namespace gamelib
                     return PropVec2i;
                 else if (std::is_same<T, BaseResourceHandle>())
                     return PropResource;
+                else if (std::is_same<T, sf::Color>())
+                    return PropColor;
                 else
                     return PropUnknown;
             }

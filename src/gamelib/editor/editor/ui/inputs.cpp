@@ -1,5 +1,4 @@
 #include "editor/editor/ui/inputs.hpp"
-
 #include "gamelib/utils/Property.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/RenderComponent.hpp"
@@ -12,6 +11,7 @@
 #include "editor/editor/ui/resources.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"
+#include <climits>
 
 namespace gamelib
 {
@@ -29,7 +29,7 @@ namespace gamelib
                         if (handle.hints && handle.max > 0)
                             return ImGui::Combo(name.c_str(), val, handle.hints, handle.max);
                         else
-                            return ImGui::InputInt(name.c_str(), val);
+                            return ImGui::InputInt(name.c_str(), val, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue);
                     }
 
                 case PropBitflags:
@@ -37,15 +37,15 @@ namespace gamelib
                         return inputBitflags(static_cast<unsigned int*>(ptr), handle.max, handle.hints);
                     else
                         // TODO: might not be good...
-                        return ImGui::InputInt(name.c_str(), static_cast<int*>(ptr));
+                        return ImGui::InputInt(name.c_str(), static_cast<int*>(ptr), ImGuiInputTextFlags_EnterReturnsTrue);
 
                 case PropFloat:
-                    return ImGui::InputFloat(name.c_str(), static_cast<float*>(ptr), 1, 10, 2);
+                    return ImGui::InputFloat(name.c_str(), static_cast<float*>(ptr), 1, 10, 2, ImGuiInputTextFlags_EnterReturnsTrue);
 
                 case PropString:
                     {
                         auto str = static_cast<std::string*>(ptr);
-                        auto size = std::min((size_t)handle.max, std::min(sizeof(buf) - 1, str->size()));
+                        auto size = std::min(handle.max > 0 ? (size_t)handle.max : INT_MAX, sizeof(buf) - 1);
                         strncpy(buf, str->c_str(), size);
                         buf[size] = '\0';
                         if (ImGui::InputText(name.c_str(), buf, size, ImGuiInputTextFlags_EnterReturnsTrue))
@@ -58,9 +58,21 @@ namespace gamelib
                 case PropBool:
                     return ImGui::Checkbox(name.c_str(), static_cast<bool*>(ptr));
                 case PropVec2i:
-                    return ImGui::InputInt2(name.c_str(), static_cast<int*>(ptr));
+                    return ImGui::InputInt2(name.c_str(), static_cast<int*>(ptr), ImGuiInputTextFlags_EnterReturnsTrue);
                 case PropVec2f:
-                    return ImGui::InputFloat2(name.c_str(), static_cast<float*>(ptr), 2);
+                    return ImGui::InputFloat2(name.c_str(), static_cast<float*>(ptr), 2, ImGuiInputTextFlags_EnterReturnsTrue);
+                case PropColor:
+                    {
+                        auto& col = *static_cast<sf::Color*>(ptr);
+                        auto tmp = math::Vec4f(col.r, col.g, col.b, col.a) / 255.f;
+                        if (ImGui::ColorEdit4(name.c_str(), &tmp.r))
+                        {
+                            tmp *= 255;
+                            col = sf::Color(tmp.r, tmp.g, tmp.b, tmp.a);
+                            return true;
+                        }
+                        return false;
+                    }
                 case PropResource:
                     return inputResource(static_cast<BaseResourceHandle*>(ptr), handle.id);
                 case PropUnknown:
@@ -202,6 +214,15 @@ namespace gamelib
     }
 
 
+    bool inputProperties(const PropertyContainer& props)
+    {
+        bool changed = false;
+        for (auto it : props)
+            if (inputProperty(it.first, it.second))
+                changed = true;
+        return changed;
+    }
+
     bool inputProperty(const std::string& name, const PropertyHandle& handle)
     {
         if (!handle.isSetter())
@@ -223,6 +244,8 @@ namespace gamelib
                 return detail::inputPropertyBuffered<math::Vec2i>(name, handle);
             case PropVec2f:
                 return detail::inputPropertyBuffered<math::Vec2f>(name, handle);
+            case PropColor:
+                return detail::inputPropertyBuffered<sf::Color>(name, handle);
             case PropResource:
                 return detail::inputPropertyBuffered<BaseResourceHandle>(name, handle);
             case PropUnknown:
@@ -279,8 +302,7 @@ namespace gamelib
                     if (comp->getID() == RenderComponent::id)
                         inputRenderComponent(*static_cast<RenderComponent*>(comp));
 
-                    for (auto it : comp->getProperties())
-                        inputProperty(it.first, it.second);
+                    inputProperties(comp->getProperties());
 
                     ImGui::TreePop();
                     ImGui::PopID();
@@ -292,5 +314,4 @@ namespace gamelib
             });
         }
     }
-
 }

@@ -10,6 +10,7 @@ namespace gamelib
     class SceneData;
     class Transformable;
     class PropertyHandle;
+    class PropertyContainer;
     class Entity;
 
     bool okButton(const char* label = "OK", const ImVec2& size = ImVec2(0, 0));
@@ -24,6 +25,7 @@ namespace gamelib
     bool inputTransform(Transformable& trans);
     bool inputTransform(Transformable& trans, unsigned int transflags);
 
+    bool inputProperties(const PropertyContainer& props);
     bool inputProperty(const std::string& name, const PropertyHandle& handle);
     void inputEntity(Entity& ent);
     void inputEntityProps(Entity& ent);

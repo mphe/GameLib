@@ -83,15 +83,22 @@ namespace gamelib
                         // TODO: Vec2i serialization is not implemented, so just use floats for now
                         // TODO: implement Vec2i serialization
                         math::Vec2f tmpvec;
-                        ::gamelib::loadFromJson(propnode, tmpvec);
+                        gamelib::loadFromJson(propnode, tmpvec);
                         i.second.set<math::Vec2i>(tmpvec);
                         break;
                     }
                 case PropVec2f:
                     {
                         math::Vec2f tmpvec;
-                        ::gamelib::loadFromJson(propnode, tmpvec);
+                        gamelib::loadFromJson(propnode, tmpvec);
                         i.second.set<math::Vec2f>(tmpvec);
+                    }
+                    break;
+                case PropColor:
+                    {
+                        math::Vec4f tmpvec;
+                        gamelib::loadFromJson(propnode, tmpvec);
+                        i.second.set<sf::Color>(sf::Color(tmpvec.r, tmpvec.g, tmpvec.b, tmpvec.a));
                     }
                     break;
                 case PropResource:
@@ -130,11 +137,17 @@ namespace gamelib
                     propnode = i.second.getAs<bool>();
                     break;
                 case PropVec2i:
-                    ::gamelib::writeToJson(propnode, i.second.getAs<math::Vec2i>());
+                    ::gamelib::writeToJson(propnode, static_cast<math::Vec2f>(i.second.getAs<math::Vec2i>()));
                     break;
                 case PropVec2f:
                     ::gamelib::writeToJson(propnode, i.second.getAs<math::Vec2f>());
                     break;
+                case PropColor:
+                    {
+                        auto& col = i.second.getAs<sf::Color>();
+                        ::gamelib::writeToJson(propnode, math::Vec4f(col.r, col.g, col.b, col.a));
+                        break;
+                    }
                 case PropResource:
                     {
                         auto handle = i.second.getAs<BaseResourceHandle>();
