@@ -1,5 +1,4 @@
 #include "gamelib/utils/json.hpp"
-#include "gamelib/utils/log.hpp"
 #include "gamelib/core/geometry/Transformable.hpp"
 #include <fstream>
 
@@ -50,15 +49,6 @@ namespace gamelib
         return true;
     }
 
-    bool loadFromJson(const Json::Value& node, math::Vec2f& vec)
-    {
-        if (!node.isArray())
-            return false;
-        vec.x = node.get((Json::ArrayIndex)0, vec.x).asFloat();
-        vec.y = node.get(1, vec.y).asFloat();
-        return true;
-    }
-
     bool loadFromJson(const Json::Value& node, math::Point2f& p)
     {
         return loadFromJson(node, p.asVector());
@@ -78,13 +68,6 @@ namespace gamelib
         writeToJson(node["pos"], transform.getPosition());
         writeToJson(node["scale"], transform.getScale());
         node["angle"] = transform.getRotation();
-    }
-
-    void writeToJson(Json::Value& node, const math::Vec2f& vec)
-    {
-        node.resize(2);
-        node[0] = vec.x;
-        node[1] = vec.y;
     }
 
     void writeToJson(Json::Value& node, const math::Point2f& p)

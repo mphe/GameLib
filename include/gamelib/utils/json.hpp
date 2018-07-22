@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "json/json.h"
 #include "math/geometry/Vector.hpp"
+#include "gamelib/utils/log.hpp"
 
 namespace gamelib
 {
@@ -14,14 +15,34 @@ namespace gamelib
 
     // TODO: implement Vec2i serialization
     bool loadFromJson(const Json::Value& node, Transformable& trans);
-    bool loadFromJson(const Json::Value& node, math::Vec2f& vec);
     bool loadFromJson(const Json::Value& node, math::Point2f& p);
     bool loadFromJson(const Json::Value& node, sf::Vector2f& vec);
 
     void writeToJson(Json::Value& node, const Transformable& trans);
-    void writeToJson(Json::Value& node, const math::Vec2f& vec);
     void writeToJson(Json::Value& node, const math::Point2f& p);
     void writeToJson(Json::Value& node, const sf::Vector2f& vec);
+
+
+    template <size_t N>
+    bool loadFromJson(const Json::Value& node, math::Vector<float, N>& vec)
+    {
+        if (!node.isArray())
+            return false;
+        if (node.size() != N)
+            LOG_WARN("Array size doesn't match expected size: ", node.size(), " != ", N);
+        for (Json::ArrayIndex i = 0; i < std::min((size_t)node.size(), N); ++i)
+            vec[i] = node.get(i, vec[i]).asFloat();
+        return true;
+    }
+
+    template <size_t N>
+    void writeToJson(Json::Value& node, const math::Vector<float, N>& vec)
+    {
+        node.resize(N);
+        for (Json::ArrayIndex i = 0; i < N; ++i)
+            node[i] = vec[i];
+    }
+
 
     template <typename T>
     void writeToFile(const std::string& fname, const T& obj)
@@ -29,6 +50,15 @@ namespace gamelib
         Json::Value json;
         writeToJson(json, obj);
         writeJsonToFile(fname, json);
+    }
+
+    template <typename T>
+    bool loadFromFile(const std::string& fname, T& obj)
+    {
+        Json::Value json;
+        if (!loadJsonFromFile(fname, json))
+            return false;
+        return loadFromJson(json, obj);
     }
 }
 
