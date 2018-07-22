@@ -19,6 +19,7 @@
 #include "editor/editor/ui/inputs.hpp"
 #include "editor/editor/ui/LayerUI.hpp"
 #include "editor/editor/ui/EntityList.hpp"
+#include "editor/editor/ui/GlobalGameConfig.hpp"
 #include "editor/editor/EditorShared.hpp"
 #include "editor/components/BrushComponent.hpp"
 #include "imgui-SFML.h"
@@ -214,6 +215,7 @@ namespace gamelib
         static bool layerbox = true;
         static bool entprops = true;
         static bool entlist = true;
+        static bool gamecfg = false;
         static ImGuiFs::Dialog loaddlg;
         static ImGuiFs::Dialog savedlg;
         static ImGuiFs::Dialog exportdlg;
@@ -270,14 +272,16 @@ namespace gamelib
             }
             if (ImGui::BeginMenu("Tools"))
             {
-                if (ImGui::MenuItem("Open Resource Viewer"))
+                if (ImGui::MenuItem("Resource Viewer"))
                     _resviewer.open();
-                ImGui::MenuItem("Show toolbox", nullptr, &toolbox);
-                ImGui::MenuItem("Show entity properties", nullptr, &entprops);
-                ImGui::MenuItem("Show entity list", nullptr, &entlist);
-                ImGui::MenuItem("Show layer settings", nullptr, &layerbox);
-                ImGui::MenuItem("Show test window", nullptr, &testwindow);
-                ImGui::MenuItem("Show json viewer", nullptr, &jsonwindow);
+                ImGui::MenuItem("Toolbox", nullptr, &toolbox);
+                ImGui::MenuItem("Entity properties", nullptr, &entprops);
+                ImGui::MenuItem("Entity list", nullptr, &entlist);
+                ImGui::MenuItem("Layer settings", nullptr, &layerbox);
+                ImGui::MenuItem("Json viewer", nullptr, &jsonwindow);
+                ImGui::MenuItem("Global game config", nullptr, &gamecfg);
+                ImGui::Separator();
+                ImGui::MenuItem("Test window", nullptr, &testwindow);
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Grid"))
@@ -322,6 +326,9 @@ namespace gamelib
 
             if (entlist)
                 drawEntityList(&entlist);
+
+            if (gamecfg)
+                drawGameConfig(&gamecfg);
 
             _resviewer.draw();
 

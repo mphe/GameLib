@@ -14,8 +14,6 @@
 * inputBitflags() exclude list
 * loadFromJson update bool to differentiate between load and update from json
 * MaskComponent
-* option to freeze game on lost focus
-* Properties in Game class
 * json diff
 
 * Split Updatable in Updatable and BaseUpdatable
@@ -109,6 +107,8 @@
   * flags
     * override
     * readonly
+    * filename
+    * notzero
 
 
 <!--- vim: tabstop=2 shiftwidth=2 --->

@@ -1,15 +1,11 @@
 {
-    "title": "Editor",
-    "width": 1280,
-    "height": 720,
-    "maxfps": 0,
-    "vsync": true,
-    "handleclose": true,
-    "escclose" : true,
-    "repeatkeys": false,
-    "bg": {
-        "r": 0,
-        "g": 43,
-        "b": 54
-    }
+   "bgcolor" : [ 0, 43, 54, 0 ],
+   "closebutton" : true,
+   "escclose" : true,
+   "maxfps" : 100,
+   "repeatkeys" : false,
+   "size" : [ 1280, 720 ],
+   "title" : "Editor",
+   "unfocusPause" : true,
+   "vsync" : true
 }

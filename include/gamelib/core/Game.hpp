@@ -8,6 +8,7 @@
 #include "gamelib/core/res/JsonSerializer.hpp"
 #include "gamelib/core/Subsystem.hpp"
 #include "math/geometry/Point2.hpp"
+#include "gamelib/utils/Property.hpp"
 
 namespace gamelib
 {
@@ -35,42 +36,36 @@ namespace gamelib
             auto destroy() -> void;
 
             auto loadFromJson(const Json::Value& node) -> bool;
+            auto writeToJson(Json::Value& node)        -> void;
 
-            auto pushState(std::unique_ptr<GameState> state) -> void;
-            auto popState()                                  -> void;
-            auto pullState() const                           -> GameState&;
+            auto pushState(GameStatePtr state) -> void;
+            auto popState()                    -> void;
+            auto pullState() const             -> GameState*;
 
             auto getWindow()          -> sf::RenderWindow&;
             auto getFrametime() const -> float;
+            auto getProperties() const -> const PropertyContainer&;
+
+            auto resize(const sf::Vector2u& size) -> void;
+
+        public:
+            sf::Color bgcolor;
+            bool closebutton;
+            bool escclose;
+            bool unfocusPause;
 
         private:
             float _frametime; // TODO: Consider switching to double
-            sf::Color _bgcolor;
+            math::Vec2i _size;
+            int _maxfps;
+            std::string _title;
+            bool _repeatkeys;
+            bool _vsync;
             sf::RenderWindow _window;
             std::vector<GameStatePtr> _states;
-            bool _handleclose;
-            bool _escclose;
+            PropertyContainer _props;
     };
 }
-
-/*
- * Config file structure:
- * {
- *     "title": <title>,
- *     "width": <window width>,
- *     "height": <window height>,
- *     "maxfps": <fps limit, 0 for no limit>,
- *     "vsync": <true|false>,
- *     "handleclose": <close when close button is pressed: true|false>,
- *     "escclose": <close when escape is pressed: true|false>,
- *     "repeatkeys": <true|false>,
- *     "bg": {
- *         "r": <red>,
- *         "g": <green>,
- *         "b": <blue>
- *     }
- * }
- */
 
 #endif
 

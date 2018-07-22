@@ -21,13 +21,13 @@ int main(int argc, char *argv[])
     engine->scene.getCamera(0)->loadFromFile("assets/editorcam.json");
     engine->scene.setDefaultCamera(0);
 
-    game.init();
     game.loadFromFile("assets/editor.json");
+    game.init();
     game.pushState(std::move(engineState));
     game.pushState(GameStatePtr(new Editor()));
 
     if (argc > 1 && strlen(argv[1]) > 0)
-        static_cast<Editor&>(game.pullState()).load(argv[1]);
+        static_cast<Editor*>(game.pullState())->load(argv[1]);
 
     game.run();
     game.destroy();

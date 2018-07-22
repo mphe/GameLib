@@ -1,5 +1,5 @@
-#ifndef EDITOR_ENTITY_LISTI_HPP
-#define EDITOR_ENTITY_LISTI_HPP
+#ifndef EDITOR_ENTITY_LIST_HPP
+#define EDITOR_ENTITY_LIST_HPP
 
 namespace gamelib
 {

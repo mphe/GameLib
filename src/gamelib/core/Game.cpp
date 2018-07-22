@@ -1,5 +1,6 @@
 #include "gamelib/core/Game.hpp"
 #include <SFML/Graphics.hpp>
+#include <climits>
 #include "gamelib/core/GameState.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/json.hpp"
@@ -7,24 +8,56 @@
 #include "gamelib/events/SFMLEvent.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
 
-constexpr const char* game_title = "Unnamed game";
-constexpr int game_width         = 640;
-constexpr int game_height        = 480;
-constexpr int game_max_fps       = 0;
-constexpr bool game_vsync        = true;
-constexpr bool game_escclose     = true;
-constexpr bool game_closebutton  = true;
-constexpr bool game_repeatkeys   = false;
-
 namespace gamelib
 {
     constexpr const char* Game::name;
 
     Game::Game() :
+        bgcolor(sf::Color::Black),
+        closebutton(true),
+        escclose(true),
+        unfocusPause(true),
         _frametime(0),
-        _handleclose(game_closebutton),
-        _escclose(game_escclose)
-    { }
+        _size(640, 480),
+        _maxfps(60),
+        _title("Unnamed Game"),
+        _repeatkeys(false),
+        _vsync(true)
+    {
+        auto setSize = +[](math::Vec2i* var, const math::Vec2i* val, Game* self) {
+            self->resize(sf::Vector2u(val->x, val->y));
+        };
+        auto setFPS = +[](int* var, const int* val, Game* self) {
+            *var = *val;
+            if (self->_window.isOpen())
+                self->_window.setFramerateLimit(*val);
+        };
+        auto setVsync = +[](bool* var, const bool* val, Game* self) {
+            *var = *val;
+            if (self->_window.isOpen())
+                self->_window.setVerticalSyncEnabled(*val);
+        };
+        auto setTitle = +[](std::string* var, const std::string* val, Game* self) {
+            *var = *val;
+            if (self->_window.isOpen())
+                self->_window.setTitle(*val);
+        };
+        auto setRepeat = +[](bool* var, const bool* val, Game* self) {
+            *var = *val;
+            if (self->_window.isOpen())
+                self->_window.setKeyRepeatEnabled(*val);
+        };
+
+        _props.registerProperty("bgcolor", bgcolor);
+        _props.registerProperty("closebutton", closebutton);
+        _props.registerProperty("escclose", escclose);
+        _props.registerProperty("unfocusPause", unfocusPause);
+        _props.registerProperty("size", _size, setSize, this);
+        _props.registerProperty("maxfps", _maxfps, setFPS, this, 0, INT_MAX);
+        _props.registerProperty("vsync", _vsync, setVsync, this);
+        _props.registerProperty("title", _title, setTitle, this);
+        _props.registerProperty("repeatkeys", _repeatkeys, setRepeat, this);
+    }
 
     Game::~Game()
     {
@@ -35,10 +68,10 @@ namespace gamelib
     bool Game::init()
     {
         LOG("Initializing game...");
-        _window.create(sf::VideoMode(game_width, game_height), game_title, sf::Style::Close);
-        _window.setFramerateLimit(game_max_fps);
-        _window.setVerticalSyncEnabled(game_vsync);
-        _window.setKeyRepeatEnabled(game_repeatkeys);
+        _window.create(sf::VideoMode(_size.x, _size.y), _title, sf::Style::Close);
+        _window.setFramerateLimit(_maxfps);
+        _window.setVerticalSyncEnabled(_vsync);
+        _window.setKeyRepeatEnabled(_repeatkeys);
         return true;
     }
 
@@ -65,7 +98,7 @@ namespace gamelib
                     evmgr->triggerEvent(SFMLEvent::create(ev));
             }
 
-            if (_window.hasFocus())
+            if (_window.hasFocus() || !unfocusPause)
             {
                 bool frozen = false;
                 for (auto it = _states.rbegin(), end = _states.rend(); it != end; ++it)
@@ -81,7 +114,7 @@ namespace gamelib
                         frozen = true;
                 }
 
-                if (_escclose && inputsys && inputsys->isKeyPressed(sf::Keyboard::Escape))
+                if (escclose && inputsys && inputsys->isKeyPressed(sf::Keyboard::Escape))
                 {
                     close();
                     return;
@@ -89,7 +122,7 @@ namespace gamelib
             }
 
             _window.resetGLStates(); // without this things start randomly disappearing
-            _window.clear(_bgcolor);
+            _window.clear(bgcolor);
             for (auto& i : _states)
                 i->render(_window);
             _window.display();
@@ -123,50 +156,12 @@ namespace gamelib
 
     bool Game::loadFromJson(const Json::Value& node)
     {
-        auto size = _window.getSize();
-        auto pos = _window.getPosition();
-        size.x = node.get("width", size.x).asUInt();
-        size.y = node.get("height", size.y).asUInt();
+        return _props.loadFromJson(node);
+    }
 
-        auto diff = size - _window.getSize();
-        pos.x -= diff.x / 2;
-        pos.y -= diff.y / 2;
-
-        _window.setSize(size);
-        _window.setPosition(pos);
-        _window.setView(sf::View(sf::FloatRect(0, 0, size.x, size.y)));
-
-        // Don't create a new window, as it could lead to problems
-        // if (size != _window.getSize())
-        // {
-        //     _window.close();
-        //     _window.create(sf::VideoMode(size.x, size.y), game_title, sf::Style::Close);
-        // }
-
-        if (node.isMember("title"))
-            _window.setTitle(node["title"].asString());
-
-        if (node.isMember("maxfps"))
-            _window.setFramerateLimit(node["maxfps"].asUInt());
-
-        if (node.isMember("vsync"))
-            _window.setVerticalSyncEnabled(node["vsync"].asBool());
-
-        if (node.isMember("repeatkeys"))
-            _window.setKeyRepeatEnabled(node["repeatkeys"].asBool());
-
-        _handleclose = node.get("handleclose", _handleclose).asBool();
-        _escclose = node.get("escclose", _escclose).asBool();
-
-        if (node.isMember("bg"))
-        {
-            const auto& bg = node["bg"];
-            _bgcolor.r = bg.get("r", _bgcolor.r).asUInt();
-            _bgcolor.g = bg.get("g", _bgcolor.g).asUInt();
-            _bgcolor.b = bg.get("b", _bgcolor.b).asUInt();
-        }
-
-        return true;
+    void Game::writeToJson(Json::Value& node)
+    {
+        _props.writeToJson(node);
     }
 
 
@@ -187,9 +182,9 @@ namespace gamelib
         _states.pop_back();
     }
 
-    GameState& Game::pullState() const
+    GameState* Game::pullState() const
     {
-        return *_states.back().get();
+        return _states.back().get();
     }
 
     float Game::getFrametime() const
@@ -200,6 +195,41 @@ namespace gamelib
     sf::RenderWindow& Game::getWindow()
     {
         return _window;
+    }
+
+    const PropertyContainer& Game::getProperties() const
+    {
+        return _props;
+    }
+
+    void Game::resize(const sf::Vector2u& size)
+    {
+        if (size.x <= 0 || size.y <= 0)
+        {
+            LOG_ERROR("Invalid window size: ", size.x, "x", size.y);
+            return;
+        }
+
+        _size.fill(size.x, size.y);
+
+        if (_window.isOpen())
+        {
+            auto diff = size - _window.getSize();
+            auto pos = _window.getPosition();
+            pos.x -= diff.x / 2;
+            pos.y -= diff.y / 2;
+
+            _window.setSize(size);
+            _window.setPosition(pos);
+            _window.setView(sf::View(sf::FloatRect(0, 0, size.x, size.y)));
+        }
+
+        // Don't create a new window, as it could lead to problems
+        // if (size != _window.getSize())
+        // {
+        //     _window.close();
+        //     _window.create(sf::VideoMode(size.x, size.y), game_title, sf::Style::Close);
+        // }
     }
 }
 
