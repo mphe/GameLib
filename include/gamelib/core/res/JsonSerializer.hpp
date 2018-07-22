@@ -10,9 +10,11 @@ namespace gamelib
     {
         public:
             virtual ~JsonSerializer() {}
-            virtual bool loadFromFile(const std::string& fname);
-            virtual bool writeToFile(const std::string& fname);
+            virtual bool loadFromFile(const std::string& fname, bool usefname = true);
+            virtual bool writeToFile(const std::string& fname, bool usefname = true);
+
             virtual bool reload();
+            virtual void write();
 
             // Will be called by loadFromFile(), after the file was read.
             // Derived classes should implement this.
