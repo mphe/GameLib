@@ -11,7 +11,7 @@ namespace gamelib
         airAccelerate(10),
         maxspeed(100),
         jumpspeed(100),
-        jumpDecelerate(5),
+        jumpDecelerate(500),
         phys(nullptr),
         _canjump(true)
     {
@@ -61,7 +61,7 @@ namespace gamelib
             }
 
             if (!onground && !input->isKeyDown(sf::Keyboard::W))
-                phys->vel.y += jumpDecelerate;
+                phys->vel.y += jumpDecelerate * elapsed;
         }
     }
 

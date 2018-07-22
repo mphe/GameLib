@@ -11,8 +11,9 @@
         "QController": {
             "maxspeed": 140,
             "jumpspeed": 300,
+            "jumpDecelerate": 500,
             "accelerate": 25,
-            "airAccelerate": 10
+            "airAccelerate": 25
         },
         "AABBCollision": {
             "flags": 10,
