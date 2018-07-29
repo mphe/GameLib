@@ -13,11 +13,14 @@ macro(gen_test TESTNAME SOURCE)
     set_property(TARGET ${TESTNAME} PROPERTY CXX_STANDARD 11)
 endmacro()
 
+
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/extlib/cppmath/include
     ${PROJECT_SOURCE_DIR}/extlib/jsoncpp/include
 )
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/test)
 
 gen_test(factorytest factory.cpp)
 gen_test(logtest log.cpp)

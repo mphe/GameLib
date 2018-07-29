@@ -1,7 +1,5 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.0)
 project(GameLib)
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 # Options {{{ -
 option(GAMELIB_DISABLE_LOGGING "Disable logging completely" OFF)
@@ -11,15 +9,19 @@ option(GAMELIB_BUILD_TESTS "Build tests" OFF)
 option(GAMELIB_BUILD_EXAMPLES "Build examples" OFF)
 option(GAMELIB_BUILD_EDITOR "Build the level editor" ON)
 option(GAMELIB_USE_CCACHE "Use ccache if available" ON)
-set(SFML_ROOT "" CACHE PATH "SFML library directory (optional)")
+set(SFML_DIR "" CACHE PATH "SFML library directory (optional)")
 
-# All binarys are tests, except examples, whose paths are set separately in examples/CMakeLists.txt
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/test)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-# Enable warnings
+# Set default build type to Debug
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+endif()
+
+
 if (CMAKE_COMPILER_IS_GNUCC)
-    add_definitions(-Wall -Wno-switch -Wno-sign-compare -Wno-parentheses -fdiagnostics-color=auto)
+    add_definitions(-Wall -Wno-switch -Wno-sign-compare -Wno-parentheses -fdiagnostics-color=always)
 elseif (MSVC)
     # Untested
     add_definitions(/W3)

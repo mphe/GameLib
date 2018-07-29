@@ -3,7 +3,9 @@ set(CXX_STANDARD_REQUIRED ON)
 find_package(SFML 2.4 COMPONENTS system window graphics REQUIRED)
 
 set(EXT_LIBRARIES
-    ${SFML_LIBRARIES}
+    sfml-graphics
+    sfml-window
+    sfml-system
     cppmath
     jsoncpp
 )
@@ -62,22 +64,11 @@ set(GAMELIB_SOURCES
 
     Engine.cpp
     export.cpp
-
-    # legacy/Scene/Scene.cpp
-    # legacy/Scene/TilemapAdapter.cpp
-    # legacy/Scene/VimCam.cpp
-    # legacy/component/Entity.cpp
-    # legacy/component/subsystem/UpdateSystem.cpp
-    # legacy/component/UpdateComponent.cpp
-    # legacy/TileWalker.cpp
-    # legacy/tile/StaticRenderTilemap.cpp
-    # legacy/sprite/SpriteSet.cpp
 )
 
 source_group(gamelib FILES ${GAMELIB_SOURCES})
 
 include_directories(
-    ${SFML_INCLUDE_DIR}
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/extlib/cppmath/include
     ${PROJECT_SOURCE_DIR}/extlib/jsoncpp/include
@@ -128,11 +119,14 @@ if(GAMELIB_BUILD_EDITOR)
         ${PROJECT_SOURCE_DIR}/include/gamelib
     )
 
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
     add_executable(editor editor/main.cpp)
     target_link_libraries(editor ${PROJECT_NAME})
     set_property(TARGET editor PROPERTY CXX_STANDARD 11)
+
+    add_custom_target(run
+        COMMAND editor assets/testmap.json
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        )
 endif()
 
 add_library(${PROJECT_NAME} ${GAMELIB_SOURCES})
