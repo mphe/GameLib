@@ -119,6 +119,9 @@ namespace gamelib
         if (vel.isZero())
             return;
 
+        int touches = 0;
+        std::vector<math::Vec2f> normals;
+
         while (timeleft > 0)
         {
             if (vel.isZero())
@@ -172,9 +175,22 @@ namespace gamelib
                 {
                     if (trace.isec.time > 0)
                     {
-                        vel = vel - trace.isec.normal * trace.isec.normal.dot(vel) * overbounce;
+                        ++touches;
+                        normals.push_back(trace.isec.normal);
+                        if (getEntity()->getName() == "player")
+                        {
+                            // LOG_DEBUG("timeleft", timeleft);
+                            // LOG_DEBUG("time near: ", trace.isec.near);
+                            // LOG_DEBUG("time far: ", trace.isec.far);
+                            // LOG_DEBUG("normal: x: ", trace.isec.normal.x, " y: ", trace.isec.normal.y);
+                            // LOG_DEBUG("vel: x: ", vel.x, " y: ", vel.y);
+                            // LOG_DEBUG("framevel: x: ", framevel.x, " y: ", framevel.y);
+                            // LOG_DEBUG("clipped framevel: x: ", framevel.x * trace.isec.time, " y: ", framevel.y * trace.isec.time);
+                        }
+
+                        vel -= trace.isec.normal * trace.isec.normal.dot(vel) * overbounce;
                         for (size_t i = 0; i < 2; ++i)
-                            if (math::inrange(vel[i], -0.2f, 0.2f))
+                            if (math::inrange(vel[i], -1.f, 1.f))
                                 vel[i] = 0;
 
                         box.pos += framevel * (trace.isec.time - magic_unstuck);
@@ -204,6 +220,20 @@ namespace gamelib
                     break;
                 }
             }
+        }
+
+        for (size_t i = 0; i < 2; ++i)
+            if (math::inrange(vel[i], -1.f, 1.f))
+                vel[i] = 0;
+
+        if (getEntity()->getName() == "player" && touches > 0)
+        {
+            LOG_DEBUG("--------------");
+            LOG_DEBUG("num touches: ", touches);
+            for (auto& i : normals)
+                LOG_DEBUG("normal: x: ", i.x, " y: ", i.y);
+            LOG_DEBUG("vel: x: ", vel.x, " y: ", vel.y);
+            LOG_DEBUG("--------------");
         }
 
         _move(box.pos - _bbox->pos);

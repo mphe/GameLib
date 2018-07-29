@@ -31,21 +31,27 @@ namespace gamelib
             auto acc = onground ? accelerate : airAccelerate;
             math::Vec2f wishdir(1, 0);
 
-            if (onground)
-            {
-                wishdir = phys->getGround().normal.right();
-                phys->airFriction = false;
-            }
+            // if (onground)
+            // {
+            //     phys->airFriction = false;
+            //     // wishdir = phys->getGround().normal.right();
+            // }
+
+            // if (onground && phys->getGround().normal.dot(QPhysics::gravityDirection) > 0)
+            // {
+            //     wishdir = phys->getGround().normal.right();
+            //     LOG_DEBUG("asfdasf ", phys->getGround().normal.x, ", ", phys->getGround().normal.y);
+            // }
 
             if (input->isKeyDown(sf::Keyboard::A))
                 phys->accelerate(-wishdir, maxspeed, acc);
-            else if (!onground && input->isKeyReleased(sf::Keyboard::A))
-                phys->airFriction = true;
+            // else if (!onground && input->isKeyReleased(sf::Keyboard::A))
+            //     phys->airFriction = true;
 
             if (input->isKeyDown(sf::Keyboard::D))
                 phys->accelerate(wishdir, maxspeed, acc);
-            else if (!onground && input->isKeyReleased(sf::Keyboard::D))
-                phys->airFriction = true;
+            // else if (!onground && input->isKeyReleased(sf::Keyboard::D))
+            //     phys->airFriction = true;
 
             if (!input->isKeyDown(sf::Keyboard::W))
                 _canjump = true;
