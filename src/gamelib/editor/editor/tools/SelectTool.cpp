@@ -10,6 +10,7 @@
 #include "editor/editor/EditorShared.hpp"
 #include "editor/events/OnSelect.hpp"
 #include "gamelib/components/update/QPhysics.hpp"
+#include "gamelib/components/geometry/Polygon.hpp"
 #include "imgui.h"
 
 namespace gamelib
@@ -17,7 +18,8 @@ namespace gamelib
     SelectTool::SelectTool() :
         _renderSolid(true),
         _renderAllBoxes(false),
-        _renderVel(true)
+        _renderVel(true),
+        _renderNormals(true)
     { }
 
     void SelectTool::onMousePressed()
@@ -69,6 +71,15 @@ namespace gamelib
                 }
             }
 
+            if (_renderNormals)
+            {
+                ent->findAllByName<Polygon>([&](Polygon* pol) {
+                        if (pol->flags & collision_solid)
+                            drawNormals(target, pol->polygon);
+                        return false;
+                    });
+            }
+
             auto& pos = ent->getTransform().getPosition();
             sf::Vertex cross[4];
             cross[0] = sf::Vertex(sf::Vector2f(pos.x - 2, pos.y - 2), sf::Color::Red);
@@ -84,6 +95,7 @@ namespace gamelib
         ImGui::Checkbox("Show solid", &_renderSolid);
         ImGui::Checkbox("Show child transforms", &_renderAllBoxes);
         ImGui::Checkbox("Show velocity", &_renderVel);
+        ImGui::Checkbox("Show solid polygon normals", &_renderNormals);
     }
 
     void SelectTool::select(Entity::Handle enthandle)

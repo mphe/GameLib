@@ -61,13 +61,16 @@
   * Generic polygon functions that accept pointers and offsets to compute polygon stuff
     * allows running functions on any data layouts (vertex buffers, raw point data, ...)
   * Fix pointDirection in cppmath (Vector.angle() works correctly)
+  * use inheritance for polygon classes
 
 * Q-Stuff
   * fix slope corners
-    * average normals
+    * averaging normals might not be the best solution
+  * add a non-gravity version
 
 * collisions
   * Remove Collidable and merge it into CollisionComponent
+  * Return TraceResult in all line checks
 
 * rendering
   * Consider making Renderable::render const
@@ -90,7 +93,6 @@
   * PhysicsBrush
   * copy entity
   * fix behaviour in negative coord space
-  * watch properties when running
   * BrushTool solid option
 
 * make Engine a Subsystem

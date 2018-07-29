@@ -31,6 +31,7 @@ namespace gamelib
             bool _renderSolid;
             bool _renderAllBoxes;
             bool _renderVel;
+            bool _renderNormals;
     };
 }
 

@@ -1,9 +1,10 @@
 #include "gamelib/editor/editor/tools/ToolUtils.hpp"
-#include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/editor/editor/EditorShared.hpp"
-#include "editor/components/BrushComponent.hpp"
-#include "gamelib/components/geometry/AABB.hpp"
+#include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/geometry/flags.hpp"
+#include "gamelib/utils/conversions.hpp"
+#include "gamelib/components/geometry/AABB.hpp"
+#include "editor/components/BrushComponent.hpp"
 
 namespace gamelib
 {
@@ -114,6 +115,32 @@ namespace gamelib
                 return false;
             });
 
+        target.draw(vertices);
+    }
+
+    void drawNormals(sf::RenderTarget& target, const math::Polygon<float>& pol, sf::Color col)
+    {
+        sf::VertexArray vertices(sf::Lines);
+
+        auto cb = [&](const math::Line2f seg) {
+            auto normal = seg.d.normalized().left();
+            math::Vec2f start = seg.p.asVector() + seg.d / 2;
+            math::Vec2f stop;
+
+            if (pol.normaldir == math::NormalLeft)
+                stop = start + normal * 5;
+            else if (pol.normaldir == math::NormalRight)
+                stop = start - normal * 5;
+            else
+            {
+                stop = start + normal * 5;
+                start -= normal * 5;
+            }
+            vertices.append(sf::Vertex(convert(start), col));
+            vertices.append(sf::Vertex(convert(stop), col));
+            return false;
+        };
+        pol.foreachSegment(cb);
         target.draw(vertices);
     }
 

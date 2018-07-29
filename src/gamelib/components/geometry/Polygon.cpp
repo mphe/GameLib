@@ -4,6 +4,8 @@
 
 namespace gamelib
 {
+    constexpr const char* normaldir_hints[] = { "Both", "Left", "Right" };
+
     Polygon::Polygon(unsigned int flags) :
         Polygon(math::TriangleStrip, flags)
     { }
@@ -14,6 +16,7 @@ namespace gamelib
     {
         flags = flags_;
         _supported = movable | scalable; // TODO: rotation
+        _props.registerProperty("Normals", *reinterpret_cast<int*>(&polygon.normaldir), 0, 3, normaldir_hints);
     }
 
     bool Polygon::intersect(const math::Point2f& point) const
