@@ -170,7 +170,7 @@ namespace gamelib
             { // Movement
                 if (trace)
                 {
-                    if (std::abs(trace.isec.time) > 0)
+                    if (trace.isec.time > 0)
                     {
                         vel = vel - trace.isec.normal * trace.isec.normal.dot(vel) * overbounce;
                         for (size_t i = 0; i < 2; ++i)
