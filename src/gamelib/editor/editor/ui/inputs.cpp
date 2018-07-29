@@ -294,6 +294,7 @@ namespace gamelib
             ImGui::SameLine();
             ImGui::Button("Add");
 
+            ImGui::PushItemWidth(0.5 * ImGui::GetWindowContentRegionWidth());
             ent.foreach([](Component* comp) {
                 ImGui::PushID(comp);
                 if (ImGui::TreeNode(comp->getName().c_str()))
@@ -312,6 +313,7 @@ namespace gamelib
 
                 return true;
             });
+            ImGui::PopItemWidth();
         }
     }
 }
