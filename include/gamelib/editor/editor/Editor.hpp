@@ -68,6 +68,7 @@ namespace gamelib
 
             FreeCam _camctrl;
             ResourceViewer _resviewer;
+            bool _entsearch;
 
             math::Point2f _mouseSnapped;
             bool _drag;

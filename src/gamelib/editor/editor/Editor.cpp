@@ -44,6 +44,7 @@ namespace gamelib
         _exportcallback(defaultExport),
         _currenttool(nullptr),
         _camctrl(getSubsystem<Scene>()),
+        _entsearch(false),
         _drag(false),
         _grid(32, 32),
         _snap(true),
@@ -327,6 +328,9 @@ namespace gamelib
             if (entlist)
                 drawEntityList(&entlist);
 
+            if (_entsearch)
+                drawSearchPopup(&_entsearch);
+
             if (gamecfg)
                 drawGameConfig(&gamecfg);
 
@@ -372,8 +376,8 @@ namespace gamelib
                     load();
             }
 
-            if (input->isKeyPressed(sf::Keyboard::LShift))
-                _currenttool = &getSelectTool();
+            if (input->isKeyPressed(sf::Keyboard::F))
+                _entsearch = true;
 
             if (input->isKeyPressed(sf::Keyboard::Delete) && getSelectTool().getSelected())
             {

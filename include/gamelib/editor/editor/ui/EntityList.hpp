@@ -3,6 +3,7 @@
 
 namespace gamelib
 {
+    void drawSearchPopup(bool* open = nullptr);
     void drawEntityList(bool* open = nullptr);
 }
 

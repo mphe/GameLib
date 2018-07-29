@@ -1,15 +1,68 @@
 #include "editor/editor/ui/EntityList.hpp"
+#include "editor/editor/ui/inputs.hpp"
 #include "editor/editor/EditorShared.hpp"
 #include "editor/editor/tools/SelectTool.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
 #include "imgui.h"
+#include "imgui_internal.h"
 
 namespace gamelib
 {
+    void drawSearchPopup(bool* open)
+    {
+        static char buf[256] = { 0 };
+        static Entity::Handle ent;
+
+        auto close = [&]() {
+            *open = false;
+            ent = Entity::Handle();
+            memset(buf, 0, sizeof(buf));
+        };
+
+        if (ImGui::Begin("Find entity", open, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            SelectTool& select = EditorShared::getSelectTool();
+            auto entmgr = getSubsystem<EntityManager>();
+
+            ImGui::SetKeyboardFocusHere();
+            if (ImGui::InputText("Search", buf, sizeof(buf)))
+                if (strlen(buf) > 0)
+                    for (auto& i : *entmgr)
+                        if (i.getName().find(buf) != std::string::npos)
+                        {
+                            ent = i.getHandle();
+                            break;
+                        }
+
+            auto entptr = getEntity(ent);
+
+            ImGui::SameLine();
+
+            if (okButton("Select") && entptr)
+            {
+                select.select(entptr);
+                if (open)
+                    close();
+            }
+
+            ImGui::SameLine();
+
+            if (open && cancelButton("Cancel"))
+                close();
+
+            if (!entptr)
+                ImGui::TextColored(sf::Color::Red, "No entity found");
+            else
+                ImGui::Text("%s", entptr->getName().c_str());
+        }
+        ImGui::End();
+    }
+
     void drawEntityList(bool* open)
     {
         SelectTool& select = EditorShared::getSelectTool();
         Entity::Handle current;
+        bool selectfirst = false;
 
         if (select.getSelected())
             current = select.getSelected()->getHandle();
@@ -18,10 +71,19 @@ namespace gamelib
         {
             static char buf[256] = { 0 };
 
+            ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() * 0.5);
             ImGui::InputText("Filter", buf, sizeof(buf));
+            ImGui::PopItemWidth();
+
             ImGui::SameLine();
-            if (ImGui::Button("Clear"))
+            if (okButton("Select"))
+                selectfirst = true;
+            ImGui::SameLine();
+            if (cancelButton("Clear"))
+            {
                 memset(buf, 0, sizeof(buf));
+                ImGui::SetKeyboardFocusHere(-1);
+            }
 
             if (ImGui::ListBoxHeader("##entities", ImVec2(-1, -1)))
             {
@@ -34,6 +96,14 @@ namespace gamelib
                             continue;
 
                         auto handle = i.getHandle();
+
+                        if (selectfirst)
+                        {
+                            selectfirst = false;
+                            current = handle;
+                            select.select(handle);
+                        }
+
                         ImGui::PushID(handle.index);
                         if (ImGui::Selectable(i.getName().c_str(), current == handle))
                         {
