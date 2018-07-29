@@ -363,12 +363,13 @@ namespace gamelib
 
     bool QPhysics::_nudge(math::AABBf* box)
     {
+        constexpr float nudgesize = 1;
         math::Vec2f alt;
         for (int y : { -1, 0, 1 })
         {
             for (int x : { -1, 0, 1 })
             {
-                auto offset = math::Vec2f(x, y) * 0.5;
+                auto offset = math::Vec2f(x, y) * nudgesize;
                 math::AABBf newbox(*box);
                 newbox.pos += offset;
                 if (!isStuck(newbox))
@@ -381,12 +382,12 @@ namespace gamelib
                         return true;
                     }
                     else
-                        alt.fill(x, y);
+                        alt = offset;
                 }
             }
         }
 
-        if (alt.x != 0 || alt.y != 0)
+        if (!alt.isZero())
         {
             LOG_DEBUG("nudged by x: ", alt.x, " y: ", alt.y);
             box->pos += alt;

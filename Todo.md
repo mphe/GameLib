@@ -67,6 +67,7 @@
   * fix slope corners
     * averaging normals might not be the best solution
   * add a non-gravity version
+  * fix sharp corners (<90°)
 
 * collisions
   * Remove Collidable and merge it into CollisionComponent
