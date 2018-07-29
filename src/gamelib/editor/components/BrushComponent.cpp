@@ -130,8 +130,8 @@ namespace gamelib
                         + (p1.x - p3.x) * (p1.y + p3.y);
             }
 
-            dir = (seg.d.normalized() + lastd.normalized()).ortho().normalized();
-            dir *= (_linewidth / 2.0) / dir.angle_cos(lastd.ortho());
+            dir = (seg.d.normalized() + lastd.normalized()).right().normalized();// / 2;
+            dir *= (_linewidth / 2.0) / dir.angle_cos(lastd.right());
 
             _pol->add(seg.p - dir);
             _pol->add(seg.p + dir);
@@ -143,11 +143,11 @@ namespace gamelib
                 if (area > 0)   // clockwise
                 {
                     _pol->add(seg.p - dir);
-                    _pol->add(seg.p - dir + seg.d.normalized().ortho() * _linewidth);
+                    _pol->add(seg.p - dir + seg.d.normalized().right() * _linewidth);
                 }
                 else   // counter clockwise
                 {
-                    _pol->add(seg.p + dir - seg.d.normalized().ortho() * _linewidth);
+                    _pol->add(seg.p + dir - seg.d.normalized().right() * _linewidth);
                     _pol->add(seg.p + dir);
                 }
             }
@@ -156,7 +156,7 @@ namespace gamelib
             return false;
         });
 
-        dir = lastd.ortho().normalized() * (_linewidth / 2.0);
+        dir = lastd.right().normalized() * (_linewidth / 2.0);
         _pol->add(linepol.get(-1) - dir);
         _pol->add(linepol.get(-1) + dir);
 

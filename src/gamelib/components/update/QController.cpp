@@ -33,7 +33,7 @@ namespace gamelib
 
             if (onground)
             {
-                wishdir = phys->getGround().normal.ortho();
+                wishdir = phys->getGround().normal.right();
                 phys->airFriction = false;
             }
 
@@ -41,13 +41,11 @@ namespace gamelib
                 phys->accelerate(-wishdir, maxspeed, acc);
             else if (!onground && input->isKeyReleased(sf::Keyboard::A))
                 phys->airFriction = true;
-                // phys->vel.x = std::min(phys->vel.x + maxspeed, 0.f);
 
             if (input->isKeyDown(sf::Keyboard::D))
                 phys->accelerate(wishdir, maxspeed, acc);
             else if (!onground && input->isKeyReleased(sf::Keyboard::D))
                 phys->airFriction = true;
-                // phys->vel.x = std::max(phys->vel.x - maxspeed, 0.f);
 
             if (!input->isKeyDown(sf::Keyboard::W))
                 _canjump = true;

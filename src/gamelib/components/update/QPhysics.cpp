@@ -174,7 +174,7 @@ namespace gamelib
                     {
                         vel = vel - trace.isec.normal * trace.isec.normal.dot(vel) * overbounce;
                         for (size_t i = 0; i < 2; ++i)
-                            if (vel[i] < 0.2 && vel[i] >= -0.2)
+                            if (math::inrange(vel[i], -0.2f, 0.2f))
                                 vel[i] = 0;
 
                         box.pos += framevel * (trace.isec.time - magic_unstuck);
@@ -254,7 +254,7 @@ namespace gamelib
         {// Friction
             if ((_state == Ground || airFriction) && fricMultiplier != 0.f)    // Apply friction
             {
-                auto walkdir = gravityDirection.ortho();
+                auto walkdir = gravityDirection.left();
                 float speedproj = vel.dot(walkdir);
                 float speed = std::abs(speedproj);
                 if (speed > 0)
