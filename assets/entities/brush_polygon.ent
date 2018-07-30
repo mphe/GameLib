@@ -3,7 +3,8 @@
     "components": {
         "PolygonCollision": {
             "type": 1,
-            "flags": 2
+            "flags": 2,
+            "Normals": 1
         },
         "PolygonShape": { },
         "BrushComponent": { }

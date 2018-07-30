@@ -12,7 +12,7 @@ namespace gamelib
 
     Polygon::Polygon(math::PolygonType type, unsigned int flags_) :
         CollisionComponent(name),
-        polygon(type)
+        polygon(type, math::NormalLeft)
     {
         flags = flags_;
         _supported = movable | scalable; // TODO: rotation
