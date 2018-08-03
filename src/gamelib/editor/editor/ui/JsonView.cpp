@@ -1,5 +1,6 @@
 #include "editor/editor/ui/JsonView.hpp"
 #include "imgui.h"
+#include "imguifilesystem.h"
 #include "json/json.h"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
@@ -16,7 +17,7 @@ namespace gamelib
         "ResourceManager",
     };
 
-    void refresh(int selected, std::string* out)
+    void refresh(int selected, Json::Value* out, std::string* stringout)
     {
         JsonSerializer* obj = nullptr;
         Entity* ent = nullptr;
@@ -39,21 +40,24 @@ namespace gamelib
 
         if (obj || ent)
         {
-            Json::Value json;
             if (ent)
-                writeToJson(json, *ent);
+                writeToJson(*out, *ent);
             else
-                obj->writeToJson(json);
-            *out = json.toStyledString();
+                obj->writeToJson(*out);
         }
         else
             out->clear();
+
+        *stringout = out->toStyledString();
     }
 
     void drawJsonView(bool* isopen)
     {
+        static Json::Value node;
         static std::string jsonstring;
         static int selected = 0;
+        static ImGuiFs::Dialog savedlg;
+        bool choosesave = false;
 
         if (ImGui::Begin("Json Viewer", isopen, ImVec2(300, 300)))
         {
@@ -63,7 +67,7 @@ namespace gamelib
                     if (ImGui::Selectable(items[i], selected == i))
                     {
                         selected = i;
-                        refresh(selected, &jsonstring);
+                        refresh(selected, &node, &jsonstring);
                     }
                 ImGui::EndChild();
             }
@@ -78,18 +82,19 @@ namespace gamelib
                     ImGui::TextUnformatted(jsonstring.c_str(), jsonstring.c_str() + jsonstring.size());
                     ImGui::EndChild();
                 }
-                { // butons
+                { // buttons
                     ImGui::BeginChild("buttons");
                     if (ImGui::Button("Refresh"))
-                        refresh(selected, &jsonstring);
+                        refresh(selected, &node, &jsonstring);
 
                     ImGui::SameLine();
                     if (ImGui::Button("Save as"))
-                    {
-                        // TODO
-                    }
+                        choosesave = true;
                     ImGui::EndChild();
                 }
+
+                if (strlen(savedlg.saveFileDialog(choosesave, savedlg.getLastDirectory())) > 0)
+                    writeJsonToFile(savedlg.getChosenPath(), node);
 
                 ImGui::EndGroup();
             }
