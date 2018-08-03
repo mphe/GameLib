@@ -20,6 +20,9 @@ namespace gamelib
         auto input = getSubsystem<InputSystem>();
         float speed = this->speed * elapsed;
 
+        if (input->isKeyDown(sf::Keyboard::LShift) || input->isKeyDown(sf::Keyboard::RShift))
+            speed *= 3;
+
         if (input->isKeyDown(sf::Keyboard::H)
                 || input->isKeyDown(sf::Keyboard::A)
                 || input->isKeyDown(sf::Keyboard::Left))
