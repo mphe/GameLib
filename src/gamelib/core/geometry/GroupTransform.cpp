@@ -18,14 +18,16 @@ namespace gamelib
         _rotation(0)
     { }
 
-    void GroupTransform::add(Transformable* trans)
+    void GroupTransform::add(Transformable* trans, bool relative)
     {
         _objs.push_back(trans);
-        // *_objs.back() += *this;
-        refreshBBox();
+        trans->_parent = this;
+        if (relative)
+            *trans += *this;
+        _dirty = true;
     }
 
-    void GroupTransform::remove(Transformable* trans)
+    void GroupTransform::remove(Transformable* trans, bool relative)
     {
         auto it = std::find(_objs.begin(), _objs.end(), trans);
         if (it != _objs.end())
@@ -33,17 +35,11 @@ namespace gamelib
             if (_objs.size() > 1)
                 std::swap(*it, _objs.back());
             _objs.pop_back();
-            *trans -= *this;
+            trans->_parent = nullptr;
+            if (relative)
+                *trans -= *this;
+            _dirty = true;
         }
-        refreshBBox();
-    }
-
-    void GroupTransform::refreshBBox()
-    {
-        math::AABBf bbox;
-        for (auto& i : _objs)
-            bbox.combine(i->getBBox());
-        _bbox = bbox;
     }
 
     void GroupTransform::move(const math::Vec2f& rel)
@@ -51,7 +47,8 @@ namespace gamelib
         for (auto& i : _objs)
             i->move(rel);
         _pos += rel;
-        _bbox.pos += rel;
+        _dirty = true;
+        Transformable::move(rel);
     }
 
     void GroupTransform::scale(const math::Vec2f& scale_)
@@ -59,7 +56,8 @@ namespace gamelib
         for (auto& i : _objs)
             i->scale(scale_);
         _scale *= scale_;
-        _bbox.size *= scale_;
+        _dirty = true;
+        Transformable::scale(scale_);
     }
 
     void GroupTransform::rotate(float angle)
@@ -67,7 +65,8 @@ namespace gamelib
         for (auto& i : _objs)
             i->rotate(angle);
         _rotation += angle;
-        refreshBBox();
+        _dirty = true;
+        Transformable::rotate(angle);
     }
 
 
@@ -88,6 +87,14 @@ namespace gamelib
 
     const math::AABBf& GroupTransform::getBBox() const
     {
+        if (_dirty)
+        {
+            math::AABBf bbox;
+            for (auto& i : _objs)
+                bbox.combine(i->getBBox());
+            _bbox = bbox;
+            _dirty = false;
+        }
         return _bbox;
     }
 

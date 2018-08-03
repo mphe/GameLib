@@ -1,5 +1,5 @@
 #include "gamelib/utils/json.hpp"
-#include "gamelib/core/geometry/Transformable.hpp"
+#include "gamelib/core/geometry/GroupTransform.hpp"
 #include <fstream>
 
 namespace gamelib
@@ -43,9 +43,19 @@ namespace gamelib
         math::Vec2f scale(1, 1);
         loadFromJson(node["pos"], pos);
         loadFromJson(node["scale"], scale);
-        transform.setPosition(pos);
-        transform.setScale(scale);
-        transform.setRotation(node.get("angle", 0).asFloat());
+
+        if (transform.getParent())
+        {
+            transform.move(pos.asVector());
+            transform.scale(scale);
+            transform.rotate(node.get("angle", 0).asFloat());
+        }
+        else
+        {
+            transform.setPosition(pos);
+            transform.setScale(scale);
+            transform.setRotation(node.get("angle", 0).asFloat());
+        }
         return true;
     }
 
@@ -65,9 +75,21 @@ namespace gamelib
 
     void writeToJson(Json::Value& node, const Transformable& transform)
     {
-        writeToJson(node["pos"], transform.getPosition());
-        writeToJson(node["scale"], transform.getScale());
-        node["angle"] = transform.getRotation();
+        auto pos = transform.getPosition();
+        auto scale = transform.getScale();
+        auto angle = transform.getRotation();
+        auto parent = transform.getParent();
+
+        if (parent)
+        {
+            pos -= parent->getPosition().asVector();
+            scale /= parent->getScale();
+            angle -= parent->getRotation();
+        }
+
+        writeToJson(node["pos"], pos);
+        writeToJson(node["scale"], scale);
+        node["angle"] = angle;
     }
 
     void writeToJson(Json::Value& node, const math::Point2f& p)

@@ -32,6 +32,8 @@ namespace gamelib
 
             auto getBBox() const -> const math::AABBf&;
 
+            virtual auto writeToJson(Json::Value& node) -> void;
+
         protected:
             math::Vec2f _scale;
             math::AABBf _rect;

@@ -1,10 +1,12 @@
 #include "gamelib/core/geometry/Transformable.hpp"
+#include "gamelib/core/geometry/GroupTransform.hpp"
 #include "gamelib/utils/log.hpp"
 
 namespace gamelib
 {
     Transformable::Transformable(unsigned int supported) :
-        _supported(supported)
+        _supported(supported),
+        _parent(nullptr)
     { }
 
     void Transformable::move(float x, float y)
@@ -50,17 +52,17 @@ namespace gamelib
 
     void Transformable::move(const math::Vec2f& rel)
     {
-        // LOG_DEBUG_WARN("Setting position is not supported by this object");
+        markDirty();
     }
 
     void Transformable::scale(const math::Vec2f& scale)
     {
-        // LOG_DEBUG_WARN("Scaling is not supported by this object");
+        markDirty();
     }
 
     void Transformable::rotate(float angle)
     {
-        // LOG_DEBUG_WARN("Rotating is not supported by this object");
+        markDirty();
     }
 
     const math::AABBf& Transformable::getBBox() const
@@ -100,11 +102,24 @@ namespace gamelib
         setRotation(0);
     }
 
+    GroupTransform* Transformable::getParent() const
+    {
+        return _parent;
+    }
+
+    void Transformable::markDirty() const
+    {
+        if (_parent)
+            _parent->_dirty = true;
+    }
+
+
     Transformable& Transformable::operator-=(const Transformable& rhs)
     {
         move(-rhs.getPosition().asVector());
         scale(math::Vec2f(1, 1) / rhs.getScale());
         rotate(-rhs.getRotation());
+        markDirty();
         return *this;
     }
 
@@ -113,6 +128,7 @@ namespace gamelib
         move(rhs.getPosition().asVector());
         scale(rhs.getScale());
         rotate(rhs.getRotation());
+        markDirty();
         return *this;
     }
 }

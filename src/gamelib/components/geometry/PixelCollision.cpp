@@ -149,6 +149,7 @@ namespace gamelib
     void PixelCollision::move(const math::Vec2f& rel)
     {
         _rect.pos += rel;
+        CollisionComponent::move(rel);
     }
 
     const math::Point2f& PixelCollision::getPosition() const
@@ -220,6 +221,7 @@ namespace gamelib
         _img.createMaskFromColor(_mask);
         _texname = fname;
         _rect.size.fill(_img.getSize().x, _img.getSize().y);
+        markDirty();
 
         return true;
     }
@@ -229,6 +231,7 @@ namespace gamelib
         _img = tex.copyToImage();
         _img.createMaskFromColor(_mask);
         _rect.size.fill(_img.getSize().x, _img.getSize().y);
+        markDirty();
     }
 
     void PixelCollision::loadImageFromTexture(TextureResource::Handle tex)

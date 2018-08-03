@@ -44,6 +44,7 @@ namespace gamelib
             virtual auto getBBox() const     -> const math::AABBf&;
 
             auto getLocalBounds() const -> math::AABBf;
+            auto getTransform() const -> sf::Transform;
 
         protected:
             // Should be called by parents whenever the vertex list changes

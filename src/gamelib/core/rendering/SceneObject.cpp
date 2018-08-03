@@ -56,27 +56,17 @@ namespace gamelib
 
     void SceneObject::render(sf::RenderTarget& target, const sf::RenderStates& states_) const
     {
-        sf::Transform trans;
-        trans.translate(_pos.x - _origin.x, _pos.y - _origin.y);
-        trans.rotate(_rotation, _origin.x, _origin.y);
-        trans.scale(_scale.x, _scale.y, _origin.x, _origin.y);
-
         sf::RenderStates states(states_);
-        states.transform.combine(trans);
-
+        states.transform.combine(getTransform());
         target.draw(_vertices, states);
     }
 
+
     void SceneObject::_updateBBox()
     {
-        sf::Transform trans;
-        trans.translate(_pos.x - _origin.x, _pos.y - _origin.y);
-        // trans.translate(-_origin.x, -_origin.y);
-        trans.rotate(_rotation, _origin.x, _origin.y);
-        trans.scale(_scale.x, _scale.y, _origin.x, _origin.y);
-
-        auto bounds = trans.transformRect(_vertices.getBounds());
+        auto bounds = getTransform().transformRect(_vertices.getBounds());
         _bbox = math::AABBf(bounds.left, bounds.top, bounds.width, bounds.height);
+        markDirty();
     }
 
 
@@ -114,6 +104,7 @@ namespace gamelib
         _bbox.pos += rel;
         _pos += rel;
         _updateBBox();
+        Transformable::move(rel);
     }
 
     void SceneObject::scale(const math::Vec2f& scale)
@@ -121,12 +112,14 @@ namespace gamelib
         _bbox.size *= scale;
         _scale *= scale;
         _updateBBox();
+        Transformable::scale(scale);
     }
 
     void SceneObject::rotate(float angle)
     {
         _rotation += angle;
         _updateBBox();
+        Transformable::rotate(angle);
     }
 
     void SceneObject::setOrigin(const math::Point2f& origin)
@@ -163,5 +156,14 @@ namespace gamelib
     {
         auto bounds = _vertices.getBounds();
         return math::AABBf(bounds.left, bounds.top, bounds.width, bounds.height);
+    }
+
+    sf::Transform SceneObject::getTransform() const
+    {
+        sf::Transform trans;
+        trans.translate(_pos.x - _origin.x, _pos.y - _origin.y);
+        trans.rotate(_rotation, _origin.x, _origin.y);
+        trans.scale(_scale.x, _scale.y, _origin.x, _origin.y);
+        return trans;
     }
 }

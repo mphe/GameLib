@@ -94,7 +94,6 @@ namespace gamelib
         if (!_line)
         {
             _shape->fetch(*_pol);
-            getEntity()->getTransform().refreshBBox();
             return;
         }
 
@@ -161,6 +160,5 @@ namespace gamelib
         _pol->add(linepol.get(-1) + dir);
 
         _shape->fetch(*_pol, MapLine);
-        getEntity()->getTransform().refreshBBox();
     }
 }

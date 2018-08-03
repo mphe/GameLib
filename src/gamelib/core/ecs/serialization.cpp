@@ -91,11 +91,15 @@ namespace gamelib
                     {
                         auto comp = factory->createComponent(name);
                         if (comp)
+                        {
                             if (comp->loadFromJson(*it))
                             {
                                 ent.add(std::move(comp));
                                 ent._components.back().id = id;
                             }
+                            else
+                                LOG_ERROR("Failed to load component ", comp->getName());
+                        }
                     }
                 }
             }

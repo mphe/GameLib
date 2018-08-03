@@ -18,6 +18,7 @@ namespace gamelib
     {
         flags = flags_;
         _supported = movable | scalable;
+
         _props.registerProperty("size", _rect.size, +[](math::Vec2f*, const math::Vec2f* val, AABB* self) {
                 self->setSize(*val);
             }, this);
@@ -27,6 +28,7 @@ namespace gamelib
     void AABB::setSize(const math::Vec2f& size)
     {
         _rect.size = size * _scale;
+        markDirty();
     }
 
     void AABB::setSize(float w, float h)
@@ -59,12 +61,14 @@ namespace gamelib
     void AABB::move(const math::Vec2f& rel)
     {
         _rect.pos += rel;
+        CollisionComponent::move(rel);
     }
 
     void AABB::scale(const math::Vec2f& scale)
     {
         _rect.size *= scale;
         _scale *= scale;
+        CollisionComponent::scale(scale);
     }
 
     const math::Point2f& AABB::getPosition() const
@@ -80,5 +84,13 @@ namespace gamelib
     const math::AABBf& AABB::getBBox() const
     {
         return _rect;
+    }
+
+    void AABB::writeToJson(Json::Value& node)
+    {
+        // save base size (without scaling)
+        _rect.size /= _scale;
+        CollisionComponent::writeToJson(node);
+        _rect.size *= _scale;
     }
 }

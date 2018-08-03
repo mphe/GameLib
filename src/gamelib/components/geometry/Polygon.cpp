@@ -48,11 +48,13 @@ namespace gamelib
     void Polygon::move(const math::Vec2f& rel)
     {
         polygon.move(rel);
+        CollisionComponent::move(rel);
     }
 
     void Polygon::scale(const math::Vec2f& scale)
     {
         polygon.setScale(getScale() * scale);
+        CollisionComponent::scale(scale);
     }
 
 

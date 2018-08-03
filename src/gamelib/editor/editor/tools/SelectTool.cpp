@@ -108,7 +108,6 @@ namespace gamelib
         if (getEntity(enthandle))
         {
             _selected = enthandle;
-            getEntity(enthandle)->getTransform().refreshBBox();
             LOG("Selected entity ", enthandle.index, enthandle.version);
         }
         else
@@ -140,20 +139,6 @@ namespace gamelib
             if (!ren || !ren->isVisible())
                 return false;
 
-            // NOTE: If you came back here, because you revised the ECS
-            // and now have the possibility of adding multiple render
-            // components with different depths which results in wrong
-            // results in the editor when selecting objects, you have
-            // 2 options:
-            //  - Add an option to mark a component as primary and check
-            //    that one
-            //  - Give render components a bounding box and check if the
-            //    point lies in that bounding box.
-            //    This option is probably better because you should use
-            //    a quadtree for rendering anyway.
-            //    Note that this also means you need to adapt the
-            //    render code to use the render component bbox rather
-            //    than the collision component bbox.
             auto layer = Scene::getActive()->getLayer(ren->getLayer());
             int layerd = layer ? layer->getDepth() : 0;
             int d = ren->getDepth();

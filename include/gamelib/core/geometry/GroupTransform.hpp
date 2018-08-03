@@ -8,6 +8,8 @@ namespace gamelib
 {
     class GroupTransform : public Transformable
     {
+        friend class Transformable;
+
         public:
             using Transformable::move;
             using Transformable::scale;
@@ -17,13 +19,10 @@ namespace gamelib
             GroupTransform();
             GroupTransform(float x, float y);
             GroupTransform(const math::Point2f& pos);
+            virtual ~GroupTransform() {};
 
-            auto add(Transformable* trans)    -> void;
-            auto remove(Transformable* trans) -> void;
-
-            // Refreshes the bounding box, in case a transformable changed
-            // its size independently.
-            auto refreshBBox() -> void;
+            auto add(Transformable* trans, bool relative = true)    -> void;
+            auto remove(Transformable* trans, bool relative = true) -> void;
 
             auto move(const math::Vec2f& rel)    -> void;
             auto scale(const math::Vec2f& scale) -> void;
@@ -37,11 +36,12 @@ namespace gamelib
             auto getChildren() const -> const std::vector<Transformable*>&;
 
         protected:
-            math::AABBf _bbox;
+            mutable math::AABBf _bbox;
             math::Point2f _pos;
             math::Vec2f _scale;
             float _rotation;
             std::vector<Transformable*> _objs;
+            mutable bool _dirty; // set by children, marks if bounding box needs to be recalculated
     };
 }
 

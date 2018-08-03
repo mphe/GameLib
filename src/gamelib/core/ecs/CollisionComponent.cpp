@@ -42,13 +42,6 @@ namespace gamelib
     void CollisionComponent::writeToJson(Json::Value& node)
     {
         Component::writeToJson(node);
-
-        // if (getEntity())
-        //     *this -= getEntity()->getTransform();
-
         gamelib::writeToJson(node["transform"], *static_cast<Transformable*>(this));
-
-        // if (getEntity())
-        //     *this += getEntity()->getTransform();
     }
 }

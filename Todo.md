@@ -28,11 +28,8 @@
   * loadFromJson fix overrides by tmp saving overrides and applying afterwards (again)
 
 * Transformable
-  * Add parent reference to update parent bbox on transformation
   * Consider removing GroupTransform and instead give all Transformables a vector of children
   * Origin
-  * store position, scaling, rotation relative to parent
-    * add 2 functions to GroupTransform one to add as absolute and one to add relative
 
 * InputSystem
   * map["shoot"] = { Space, Enter, ... }
@@ -114,4 +111,4 @@
     * notzero
 
 
-<!--- vim: tabstop=2 shiftwidth=2 --->
+<!-- vim: tabstop=2 shiftwidth=2 -->

@@ -6,8 +6,12 @@
 
 namespace gamelib
 {
+    class GroupTransform;
+
     class Transformable
     {
+        friend class GroupTransform;
+
         public:
             constexpr static unsigned int movable = 1;
             constexpr static unsigned int rotatable = 1 << 1;
@@ -16,8 +20,6 @@ namespace gamelib
         public:
             Transformable(unsigned int supported = 0);
             virtual ~Transformable() {};
-
-            auto getSupportedOps() const -> unsigned int;
 
             virtual auto move(const math::Vec2f& rel)    -> void;
             virtual auto scale(const math::Vec2f& scale) -> void;
@@ -39,11 +41,20 @@ namespace gamelib
 
             auto reset() -> void;
 
+            auto getParent() const       -> GroupTransform*;
+            auto getSupportedOps() const -> unsigned int;
+
+            // Tell parent to update its bounding box
+            auto markDirty() const -> void;
+
             auto operator-=(const Transformable& rhs) -> Transformable&;
             auto operator+=(const Transformable& rhs) -> Transformable&;
 
         protected:
             unsigned int _supported;
+
+        private:
+            GroupTransform* _parent; // Set by GroupTransform on adding
     };
 }
 
