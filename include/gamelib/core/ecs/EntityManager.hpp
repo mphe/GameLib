@@ -11,7 +11,8 @@ namespace gamelib
     class EntityManager : public Subsystem<EntityManager>
     {
         public:
-            typedef SlotMapShort<Entity>::Handle Handle;
+            typedef SlotMapDequeShort<Entity> Container;
+            typedef Container::Handle Handle;
 
             constexpr static const char* name = "EntityManager";
 
@@ -28,13 +29,13 @@ namespace gamelib
             auto find(const std::string& name) const -> const Entity*;
             auto find(const std::string& name)       -> Entity*;
 
-            auto begin() const -> gamelib::SlotMapShort<Entity>::const_iterator;
-            auto begin()       -> gamelib::SlotMapShort<Entity>::iterator;
-            auto end() const   -> gamelib::SlotMapShort<Entity>::const_iterator;
-            auto end()         -> gamelib::SlotMapShort<Entity>::iterator;
+            auto begin() const -> Container::const_iterator;
+            auto begin()       -> Container::iterator;
+            auto end() const   -> Container::const_iterator;
+            auto end()         -> Container::iterator;
 
         private:
-            gamelib::SlotMapShort<Entity> _entities;
+            Container _entities;
     };
 }
 

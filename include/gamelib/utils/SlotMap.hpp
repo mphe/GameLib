@@ -2,11 +2,25 @@
 #define GAMELIB_SLOTMAP_HPP
 
 #include <vector>
+#include <deque>
 
 /*
  * A very simple Object Pool implementation.
- * It uses an std::vector internally to store objects, which allows
- * dynamically growing rather than having a fixed size.
+ * It uses std::vector or std::deque internally to store objects, which
+ * allows dynamically growing rather than having a fixed size.
+ *
+ * It guarantees that all handles (not pointers!) to objects stay valid
+ * when adding or removing elements.
+ * Pointers to elements are only guaranteed to stay valid, if the
+ * underlying container guarantees to keep pointers/iterators valid
+ * after adding elements to the end.
+ * If the underlying container is a vector, this is not the case.
+ * If the underlying container is a deque, this is the case.
+ *
+ * The underlying container can be changed by specifying either
+ * slotmap_container_vector or slotmap_container_deque as template
+ * argument.
+ * Default is slotmap_container_vector.
  *
  * Calling acquire() will return a key to the next free slot. This key can
  * be used to access the object in this slot.
@@ -44,6 +58,10 @@
 
 namespace gamelib
 {
+    constexpr int slotmap_container_vector = 0;
+    constexpr int slotmap_container_deque = 1;
+
+
     template <typename IndexType = unsigned int, typename VersionType = unsigned int>
     struct SlotKey
     {
@@ -70,6 +88,7 @@ namespace gamelib
             return index != rhs.index || version != rhs.version;
         }
     };
+
 
     // T is the vector to iterate over, IndexType is the same as in SlotMap.
     template <typename T, typename IndexType, typename ValueType>
@@ -101,7 +120,40 @@ namespace gamelib
             T* _vec;
     };
 
-    template <typename T, typename IndexType = unsigned int, typename VersionType = unsigned int>
+
+    namespace detail
+    {
+        template <typename T, int Container>
+        struct container_helper
+        {
+            static_assert(Container <= 1, "Container type not supported");
+        };
+
+        template <typename T>
+        struct container_helper<T, slotmap_container_deque>
+        {
+            typedef std::deque<T> type;
+
+            static void reserve(type& c, decltype(T::nextempty) size)
+            {
+                c.resize(size);
+            }
+        };
+
+        template <typename T>
+        struct container_helper<T, slotmap_container_vector>
+        {
+            typedef std::vector<T> type;
+
+            static void reserve(type& c, decltype(T::nextempty) size)
+            {
+                c.reserve(size);
+            }
+        };
+    }
+
+
+    template <typename T, typename IndexType = unsigned int, typename VersionType = unsigned int, int Container = slotmap_container_vector>
     class SlotMap
     {
         private:
@@ -117,13 +169,15 @@ namespace gamelib
         public:
             typedef SlotMap<T, IndexType, VersionType> selftype;
             typedef SlotKey<IndexType, VersionType> Handle;
+            typedef detail::container_helper<DataField, Container> ContainerHelper;
+            typedef typename ContainerHelper::type ContainerType;
 
             typedef std::ptrdiff_t difference_type;
             typedef IndexType size_type;
             typedef T value_type;
             typedef T* pointer;
             typedef T& reference;
-            typedef SlotMapIterator<std::vector<DataField>, IndexType, T> iterator;
+            typedef SlotMapIterator<ContainerType, IndexType, T> iterator;
             typedef typename iterator::const_iterator const_iterator;
 
         public:
@@ -146,13 +200,19 @@ namespace gamelib
 
         private:
             IndexType _firstempty;
-            std::vector<DataField> _data;
+            ContainerType _data;
     };
 
     template <typename T>
     using SlotMapShort = SlotMap<T, unsigned short, unsigned short>;
 
     using SlotKeyShort = SlotKey<unsigned short, unsigned short>;
+
+    template <typename T>
+    using SlotMapDequeShort = SlotMap<T, unsigned short, unsigned short, slotmap_container_deque>;
+
+    template <typename T>
+    using SlotMapDeque = SlotMap<T, unsigned int, unsigned int, slotmap_container_deque>;
 }
 
 #include "SlotMap.inl"

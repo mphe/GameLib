@@ -74,22 +74,22 @@ namespace gamelib
     }
 
 
-    SlotMapShort<Entity>::const_iterator EntityManager::begin() const
+    EntityManager::Container::const_iterator EntityManager::begin() const
     {
         return _entities.begin();
     }
 
-    SlotMapShort<Entity>::iterator EntityManager::begin()
+    EntityManager::Container::iterator EntityManager::begin()
     {
         return _entities.begin();
     }
 
-    SlotMapShort<Entity>::const_iterator EntityManager::end() const
+    EntityManager::Container::const_iterator EntityManager::end() const
     {
         return _entities.end();
     }
 
-    SlotMapShort<Entity>::iterator EntityManager::end()
+    EntityManager::Container::iterator EntityManager::end()
     {
         return _entities.end();
     }
