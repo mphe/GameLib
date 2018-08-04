@@ -21,7 +21,6 @@ include_directories(
 )
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/test)
-
 gen_test(factorytest factory.cpp)
 gen_test(logtest log.cpp)
 gen_test(stablevector_test stablevector_test.cpp)
@@ -36,3 +35,10 @@ gen_test_full(properties properties.cpp)
 # gen_test(tilemap_collider_test legacy/tilemap_collider.cpp)
 # gen_test_full(statictilemap legacy/statictilemap.cpp)
 # gen_test_full(static_dataset_tilemap legacy/static_dataset_tilemap.cpp)
+
+if (GAMELIB_BUILD_TOOLS)
+    find_program(BASH_PROGRAM bash)
+    if (BASH_PROGRAM)
+        add_test(checkentities ${BASH_PROGRAM} ${PROJECT_SOURCE_DIR}/checkentities.sh)
+    endif()
+endif()

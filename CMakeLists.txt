@@ -59,11 +59,11 @@ endif()
 add_subdirectory(extlib)
 add_subdirectory(src/gamelib)
 
-if(GAMELIB_BUILD_EXAMPLES)
+if (GAMELIB_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-if(GAMELIB_BUILD_TESTS)
+if (GAMELIB_BUILD_TESTS)
     enable_testing()
     add_subdirectory(test)
 endif()
