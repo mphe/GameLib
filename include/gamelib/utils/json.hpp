@@ -6,6 +6,12 @@
 #include "math/geometry/Vector.hpp"
 #include "gamelib/utils/log.hpp"
 
+/*
+ * Various functions for writing and loading data to/from json.
+ * Default values are always the given values: if there's no entry in the
+ * json, the corresponding value will not be changed.
+ */
+
 namespace gamelib
 {
     class Transformable;
@@ -13,12 +19,16 @@ namespace gamelib
     bool loadJsonFromFile(const std::string& fname, Json::Value& node);
     bool writeJsonToFile(const std::string& fname, const Json::Value& node);
 
-    // TODO: implement Vec2i serialization
     bool loadFromJson(const Json::Value& node, Transformable& trans);
+    bool loadFromJson(const Json::Value& node, math::Point2f* pos, math::Vec2f* scale, float* angle, bool clear);
+
+    // TODO: implement Vec2i serialization
     bool loadFromJson(const Json::Value& node, math::Point2f& p);
     bool loadFromJson(const Json::Value& node, sf::Vector2f& vec);
 
     void writeToJson(Json::Value& node, const Transformable& trans);
+    void writeToJson(Json::Value& node, const math::Point2f& pos, const math::Vec2f& scale, float angle);
+
     void writeToJson(Json::Value& node, const math::Point2f& p);
     void writeToJson(Json::Value& node, const sf::Vector2f& vec);
 

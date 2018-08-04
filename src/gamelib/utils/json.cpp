@@ -37,27 +37,54 @@ namespace gamelib
 
     bool loadFromJson(const Json::Value& node, Transformable& transform)
     {
-        if (!node.isObject())
-            return false;
         math::Point2f pos;
-        math::Vec2f scale(1, 1);
-        loadFromJson(node["pos"], pos);
-        loadFromJson(node["scale"], scale);
+        math::Vec2f scale;
+        float angle;
+
+        if (!loadFromJson(node, &pos, &scale, &angle, true))
+            return false;
 
         if (transform.getParent())
         {
             transform.move(pos.asVector());
             transform.scale(scale);
-            transform.rotate(node.get("angle", 0).asFloat());
+            transform.rotate(angle);
         }
         else
         {
             transform.setPosition(pos);
             transform.setScale(scale);
-            transform.setRotation(node.get("angle", 0).asFloat());
+            transform.setRotation(angle);
         }
         return true;
     }
+
+    bool loadFromJson(const Json::Value& node, math::Point2f* pos, math::Vec2f* scale, float* angle, bool clear)
+    {
+        if (clear)
+        {
+            if (pos)
+                pos->x = pos->y = 0;
+            if (scale)
+                scale->fill(1);
+            if (angle)
+                *angle = 0;
+        }
+
+        // NOTE: It can't load but uses default, so no fail
+        // if (!node.isObject())
+        //     return false;
+
+        if (pos)
+            loadFromJson(node["pos"], *pos);
+        if (scale)
+            loadFromJson(node["scale"], *scale);
+        if (angle)
+            *angle = node.get("angle", *angle).asFloat();
+
+        return true;
+    }
+
 
     bool loadFromJson(const Json::Value& node, math::Point2f& p)
     {
@@ -87,10 +114,16 @@ namespace gamelib
             angle -= parent->getRotation();
         }
 
+        writeToJson(node, pos, scale, angle);
+    }
+
+    void writeToJson(Json::Value& node, const math::Point2f& pos, const math::Vec2f& scale, float angle)
+    {
         writeToJson(node["pos"], pos);
         writeToJson(node["scale"], scale);
         node["angle"] = angle;
     }
+
 
     void writeToJson(Json::Value& node, const math::Point2f& p)
     {

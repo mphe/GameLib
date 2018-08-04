@@ -3,18 +3,94 @@
 
 namespace gamelib
 {
-    void _parseName(std::string* name, unsigned int* id)
+    // Extracts the id and removes the id part from the string
+    unsigned int extractID(std::string* name)
     {
         size_t split = name->find_last_of('#');
-        *id = 1;    // 1 indexed. See also Entity::add() implementation.
+        unsigned int id = 1;    // 1 indexed. See also Entity::add() implementation.
 
         if (split != std::string::npos)
         {
-            *id = fromString<unsigned int>((name->substr(split + 1)), 1);
+            id = fromString<unsigned int>((name->substr(split + 1)), 1);
             name->erase(split);
         }
+        return id;
     }
 
+    std::string generateName(const std::string& name, unsigned int id)
+    {
+        return join(name, "#", id);
+    }
+
+    bool normalizeConfig(const Json::Value& node, Json::Value* out_)
+    {
+        auto& out = *out_;
+        bool good = true;
+
+        if (!node.isMember("name"))
+        {
+            LOG_ERROR("No entity name specified");
+            out["name"] = "";
+            good = false;
+        }
+
+        out["flags"] = node.get("flags", 0);
+
+        { // Transform
+            math::Point2f pos;
+            math::Vec2f scale;
+            float angle;
+
+            loadFromJson(node["transform"], &pos, &scale, &angle, true);
+            writeToJson(out["transform"], pos, scale, angle);
+        }
+
+        if (node.isMember("components"))
+        {
+            auto& comps = node["components"];
+
+            if (!comps.isObject())
+            {
+                LOG_ERROR("Invalid component list");
+                return false;
+            }
+
+            auto& outcomps = out["components"];
+
+            for (auto it = comps.begin(), end = comps.end(); it != end; ++it)
+            {
+                std::string name = it.key().asString();
+                unsigned int id = extractID(&name);
+                auto cleanname = generateName(name, id);
+
+                if (name.empty())
+                {
+                    LOG_ERROR("Empty component name");
+                    good = false;
+                    continue;
+                }
+
+                if (outcomps.isMember(cleanname))
+                {
+                    LOG_WARN("Multiple definitions of the same component ", cleanname, " -> Skipping ", it.key().asString());
+                    good = false;
+                    continue;
+                }
+
+                if (it->isObject())
+                    outcomps[cleanname] = *it;
+                else
+                {
+                    // Can be tolerated and treated as a component without config.
+                    LOG_WARN("Invalid config entry for component ", it.key().asString(), " -> Treating as empty config");
+                    good = false;
+                    outcomps[cleanname] = Json::objectValue;
+                }
+            }
+        }
+
+        return good;
+    }
 
 
     bool loadFromJson(const Json::Value& node, Entity& ent)
@@ -29,20 +105,7 @@ namespace gamelib
         ent.flags = node.get("flags", ent.flags).asUInt();
 
         if (node.isMember("transform"))
-        {
-            const auto& trans = node["transform"];
-            math::Vec2f tmp;
-
-            tmp.asPoint() = ent.getTransform().getPosition();
-            loadFromJson(trans["pos"], tmp);
-            ent.getTransform().setPosition(tmp.asPoint());
-
-            tmp = ent.getTransform().getScale();
-            loadFromJson(trans["scale"], tmp);
-            ent.getTransform().setScale(tmp);
-
-            ent.getTransform().setRotation(trans.get("angle", ent.getTransform().getRotation()).asFloat());
-        }
+            loadFromJson(node["transform"], ent.getTransform());
 
         if (node.isMember("components"))
         {
@@ -64,8 +127,7 @@ namespace gamelib
                 }
 
                 std::string name = it.key().asString();
-                unsigned int id;
-                _parseName(&name, &id);
+                unsigned int id = extractID(&name);
 
                 if (name.empty())
                 {

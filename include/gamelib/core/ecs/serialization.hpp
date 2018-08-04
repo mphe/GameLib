@@ -33,19 +33,27 @@
 namespace gamelib
 {
     // Clears the entity and recreates directly from json (like state loading)
-    bool loadFromJson(const Json::Value& node, Entity& ent);
+    auto loadFromJson(const Json::Value& node, Entity& ent) -> bool;
 
     // Keeps the entity and overwrites from json.
     // If createMissing is set, missing components will be created.
-    bool extendFromJson(const Json::Value& node, Entity& ent, bool createMissing = false);
+    auto extendFromJson(const Json::Value& node, Entity& ent, bool createMissing = false) -> bool;
 
-    void writeToJson(Json::Value& node, const Entity& ent);
+    auto writeToJson(Json::Value& node, const Entity& ent) -> void;
+
+    // Extracts the id and removes the id part from the string
+    auto extractID(std::string* name)                               -> unsigned int;
+    auto generateName(const std::string& name, unsigned int id)     -> std::string;
+
+    // Returns true if the config has no errors / warnings, otherwise false.
+    // This does not mean that the given config equals the normalized config!
+    auto normalizeConfig(const Json::Value& node, Json::Value* out) -> bool;
 
     // Calls a callback for each component about to be serialized.
     // The callback handles the serialization (or not).
     // Signature: bool(Json::Value&, Component&)
     template <typename F>
-    void writeToJson(Json::Value& node, const Entity& ent, F callback)
+    auto writeToJson(Json::Value& node, const Entity& ent, F callback) -> void
     {
         node["name"] = ent.getName();
         node["flags"] = ent.flags;
@@ -61,7 +69,7 @@ namespace gamelib
                 Json::Value comp;
                 callback(comp, *i.ptr);
                 if (!comp.isNull())
-                    comps[join(i.ptr->getName(), "#", i.id)] = comp;
+                    comps[generateName(i.ptr->getName(), i.id)] = comp;
             }
         }
     }
