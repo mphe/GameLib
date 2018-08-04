@@ -1,24 +1,28 @@
 cmake_minimum_required(VERSION 3.0)
 project(GameLib)
 
-# Options {{{ -
-option(GAMELIB_DISABLE_LOGGING "Disable logging completely" OFF)
-option(GAMELIB_DEBUG_LOG_RELEASE "Show debug log entries in release build" OFF)
-option(GAMELIB_DEBUG_LOG_DEBUG "Show debug log entries in debug build" ON)
-option(GAMELIB_BUILD_TESTS "Build tests" OFF)
-option(GAMELIB_BUILD_EXAMPLES "Build examples" OFF)
-option(GAMELIB_BUILD_EDITOR "Build the level editor" ON)
-option(GAMELIB_USE_CCACHE "Use ccache if available" ON)
-set(SFML_DIR "" CACHE PATH "SFML library directory (optional)")
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+# Options {{{
 
 # Set default build type to Debug
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
+option(GAMELIB_DISABLE_LOGGING "Disable logging completely" OFF)
+option(GAMELIB_DEBUG_LOG_RELEASE "Show debug log entries in release build" OFF)
+option(GAMELIB_DEBUG_LOG_DEBUG "Show debug log entries in debug build" ON)
+option(GAMELIB_BUILD_TESTS "Build tests" OFF)
+option(GAMELIB_BUILD_EXAMPLES "Build examples" OFF)
+option(GAMELIB_BUILD_EDITOR "Build the level editor" ON)
+option(GAMELIB_BUILD_TOOLS "Build engine related tools" ON)
+option(GAMELIB_USE_CCACHE "Use ccache if available" ON)
+set(SFML_DIR "" CACHE PATH "SFML library directory (optional)")
+
+# }}}
+
+# Build config {{{
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 if (CMAKE_COMPILER_IS_GNUCC)
     add_definitions(-Wall -Wno-switch -Wno-sign-compare -Wno-parentheses -fdiagnostics-color=always)
@@ -49,7 +53,7 @@ if(GAMELIB_USE_CCACHE)
     endif()
 endif()
 
-# }}} Options -
+# }}}
 
 
 add_subdirectory(extlib)

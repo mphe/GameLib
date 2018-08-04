@@ -2,6 +2,13 @@ set(CXX_STANDARD_REQUIRED ON)
 
 find_package(SFML 2.4 COMPONENTS system window graphics REQUIRED)
 
+macro(gen_binary BINNAME SOURCE)
+    add_executable(${BINNAME} ${SOURCE} ${ARGN})
+    target_link_libraries(${BINNAME} ${PROJECT_NAME})
+    set_property(TARGET ${BINNAME} PROPERTY CXX_STANDARD 11)
+endmacro()
+
+
 set(EXT_LIBRARIES
     sfml-graphics
     sfml-window
@@ -110,7 +117,7 @@ if(GAMELIB_BUILD_EDITOR)
         ${EDITOR_SOURCES}
     )
 
-    source_group(editor FILES ${EDITOR_SOURCES} editor/main.cpp)
+    source_group(editor FILES ${EDITOR_SOURCES} main/editormain.cpp)
 
     include_directories(
         ${PROJECT_SOURCE_DIR}/extlib/imgui
@@ -118,15 +125,19 @@ if(GAMELIB_BUILD_EDITOR)
         ${PROJECT_SOURCE_DIR}/extlib/imguifilesystem
     )
 
-    add_executable(editor editor/main.cpp)
-    target_link_libraries(editor ${PROJECT_NAME})
-    set_property(TARGET editor PROPERTY CXX_STANDARD 11)
+    gen_binary(editor main/editormain.cpp)
 
     add_custom_target(run
         COMMAND editor assets/testmap.json
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         )
 endif()
+
+if (GAMELIB_BUILD_TOOLS)
+    source_group(tools FILES main/checkentcfg.cpp)
+    gen_binary(checkentcfg main/checkentcfg.cpp)
+endif()
+
 
 add_library(${PROJECT_NAME} ${GAMELIB_SOURCES})
 target_link_libraries(${PROJECT_NAME} ${EXT_LIBRARIES})
