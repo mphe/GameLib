@@ -3,6 +3,8 @@
 
 namespace gamelib
 {
+    Component::ComponentFactory Component::_compfactory;
+
     Component::Component() :
         _entptr(nullptr)
     { }
@@ -41,9 +43,25 @@ namespace gamelib
 
     void Component::writeToJson(Json::Value& node)
     {
-        // node["name"] = getName();
         _props.writeToJson(node);
     }
+
+    void Component::registerComponent(const std::string& name, ComponentFactory::CreatorFunction callback)
+    {
+        _compfactory.add(name, callback);
+        LOG_DEBUG("Registered component ", name);
+    }
+
+    void Component::unregisterComponent(const std::string& name)
+    {
+        _compfactory.remove(name);
+    }
+
+    Component::ComponentFactory& Component::getFactory()
+    {
+        return _compfactory;
+    }
+
 
     bool Component::_init()
     {
