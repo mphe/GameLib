@@ -12,20 +12,25 @@
 
 namespace gamelib
 {
+    void registerComponents(EntityFactory& factory)
+    {
+        factory.addComponent<Polygon>(Polygon::name);
+        factory.addComponent<AABB>(AABB::name);
+        factory.addComponent<PixelCollision>(PixelCollision::name);
+        factory.addComponent<QPhysics>(QPhysics::name);
+        factory.addComponent<QConfig>(QConfig::name);
+        factory.addComponent<QController>(QController::name);
+        factory.addComponent<SpriteComponent>(SpriteComponent::name);
+        factory.addComponent<CameraTracker>(CameraTracker::name);
+        factory.addComponent<PolygonShape>(PolygonShape::name);
+    }
+
+
     Engine::Engine(bool printstatus) :
         _game(nullptr),
         _printstatus(printstatus)
     {
-        entfactory.addComponent<Polygon>(Polygon::name);
-        entfactory.addComponent<AABB>(AABB::name);
-        entfactory.addComponent<PixelCollision>(PixelCollision::name);
-        entfactory.addComponent<QPhysics>(QPhysics::name);
-        entfactory.addComponent<QConfig>(QConfig::name);
-        entfactory.addComponent<QController>(QController::name);
-        entfactory.addComponent<SpriteComponent>(SpriteComponent::name);
-        entfactory.addComponent<CameraTracker>(CameraTracker::name);
-        entfactory.addComponent<PolygonShape>(PolygonShape::name);
-
+        registerComponents(entfactory);
         registerPredefLoaders(resmgr);
     }
 

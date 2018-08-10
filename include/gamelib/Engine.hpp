@@ -13,6 +13,8 @@
 
 namespace gamelib
 {
+    void registerComponents(EntityFactory& factory);
+
     class Engine : public GameState
     {
         public:
