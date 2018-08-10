@@ -34,7 +34,12 @@ namespace gamelib
                 Stuck
             };
 
-            struct GroundData;
+            struct GroundData
+            {
+                CollisionComponent* hull;
+                math::Vec2f normal;
+                float slope;
+            };
 
         public:
             QPhysics(int interval = 1);
@@ -93,12 +98,7 @@ namespace gamelib
             const math::AABBf* _bbox;
             Collidable* _self;
             State _state;
-
-            struct GroundData {
-                CollisionComponent* hull;
-                math::Vec2f normal;
-                float slope;
-            } _ground;
+            GroundData _ground;
     };
 
 }
