@@ -82,7 +82,7 @@ namespace gamelib
     {
         CollisionComponent::loadFromJson(node);
         polygon.clear();
-        polygon.type = static_cast<math::PolygonType>(node.get("type", math::TriangleStrip).asInt());
+        polygon.type = static_cast<math::PolygonType>(node.get("type", polygon.type).asInt());
         if (node.isMember("vertices"))
         {
             auto& vertices = node["vertices"];
