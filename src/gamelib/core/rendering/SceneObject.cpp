@@ -75,6 +75,8 @@ namespace gamelib
         SceneData::loadFromJson(node);
 
         auto scene = _scene ? _scene : getSubsystem<Scene>();
+        assert(scene && "There must be a Scene to load this component");
+
         auto layer = scene->getLayer(node["layer"].asString());
         if (!layer.isNull())
             setLayer(layer);
@@ -90,9 +92,12 @@ namespace gamelib
         SceneData::writeToJson(node);
 
         auto scene = _scene ? _scene : getSubsystem<Scene>();
-        auto layer = scene->getLayer(getLayer());
-        if (layer)
-            node["layer"] = layer->getName();
+        if (scene)
+        {
+            auto layer = scene->getLayer(getLayer());
+            if (layer)
+                node["layer"] = layer->getName();
+        }
 
         gamelib::writeToJson(node["transform"], *static_cast<Transformable*>(this));
         gamelib::writeToJson(node["origin"], _origin);
