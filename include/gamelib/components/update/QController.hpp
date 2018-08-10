@@ -27,9 +27,11 @@ namespace gamelib
             float jumpspeed;
             float jumpDecelerate;
             QPhysics* phys;
+            bool slopejumps;
 
         private:
             bool _canjump;
+            bool _jumping;
     };
 }
 

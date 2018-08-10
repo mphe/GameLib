@@ -13,13 +13,16 @@ namespace gamelib
         jumpspeed(100),
         jumpDecelerate(500),
         phys(nullptr),
-        _canjump(true)
+        slopejumps(true),
+        _canjump(true),
+        _jumping(false)
     {
         _props.registerProperty("accelerate", accelerate);
         _props.registerProperty("airAccelerate", airAccelerate);
         _props.registerProperty("maxspeed", maxspeed);
         _props.registerProperty("jumpspeed", jumpspeed);
         _props.registerProperty("jumpDecelerate", jumpDecelerate);
+        _props.registerProperty("slopejumps", slopejumps);
     }
 
     void QController::update(float elapsed)
@@ -35,6 +38,7 @@ namespace gamelib
             {
                 wishdir = phys->getGround().normal.right();
                 phys->airFriction = false;
+                _jumping = false;
             }
 
             if (input->isKeyDown(sf::Keyboard::A))
@@ -53,12 +57,18 @@ namespace gamelib
             if (_canjump && onground && input->isKeyDown(sf::Keyboard::W))
             {
                 _canjump = false;
-                phys->vel.y = -jumpspeed;
+                _jumping = true;
+
+                if (!slopejumps || phys->vel.y > 0)
+                    phys->vel.y = -jumpspeed;
+                else
+                    phys->vel.y -= jumpspeed;
+
                 if (phys->basevel.y > 0)
                     phys->basevel.y = 0;
             }
 
-            if (!onground && !input->isKeyDown(sf::Keyboard::W))
+            if (_jumping && !input->isKeyDown(sf::Keyboard::W))
                 phys->vel.y += jumpDecelerate * elapsed;
         }
     }
