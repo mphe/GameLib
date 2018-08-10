@@ -51,61 +51,61 @@ namespace gamelib
 
     bool PropertyContainer::loadFromJson(const Json::Value& node)
     {
-        for (auto& i : _properties)
+        for (auto it = node.begin(), end = node.end(); it != end; ++it)
         {
-            if (!node.isMember(i.first))
+            auto prop = find(it.key().asCString());
+
+            if (!prop)
             {
-                LOG_WARN("Missing property: ", i.first);
+                LOG_DEBUG_WARN("Property has no effect: ", it.key().asCString());
                 continue;
             }
 
-            const auto& propnode = node[i.first];
-
-            switch (i.second.type)
+            switch (prop->type)
             {
                 case PropInt:
-                    i.second.set<int>(propnode.asInt());
+                    prop->set<int>(it->asInt());
                     break;
                 case PropBitflags:
-                    i.second.set<unsigned int>(propnode.asUInt());
+                    prop->set<unsigned int>(it->asUInt());
                     break;
                 case PropFloat:
-                    i.second.set<float>(propnode.asFloat());
+                    prop->set<float>(it->asFloat());
                     break;
                 case PropString:
-                    i.second.set<std::string>(propnode.asString());
+                    prop->set<std::string>(it->asString());
                     break;
                 case PropBool:
-                    i.second.set<bool>(propnode.asBool());
+                    prop->set<bool>(it->asBool());
                     break;
                 case PropVec2i:
                     {
                         // TODO: Vec2i serialization is not implemented, so just use floats for now
                         // TODO: implement Vec2i serialization
                         math::Vec2f tmpvec;
-                        gamelib::loadFromJson(propnode, tmpvec);
-                        i.second.set<math::Vec2i>(tmpvec);
+                        gamelib::loadFromJson(*it, tmpvec);
+                        prop->set<math::Vec2i>(tmpvec);
                         break;
                     }
                 case PropVec2f:
                     {
                         math::Vec2f tmpvec;
-                        gamelib::loadFromJson(propnode, tmpvec);
-                        i.second.set<math::Vec2f>(tmpvec);
+                        gamelib::loadFromJson(*it, tmpvec);
+                        prop->set<math::Vec2f>(tmpvec);
                     }
                     break;
                 case PropColor:
                     {
                         math::Vec4f tmpvec;
-                        gamelib::loadFromJson(propnode, tmpvec);
-                        i.second.set<sf::Color>(sf::Color(tmpvec.r, tmpvec.g, tmpvec.b, tmpvec.a));
+                        gamelib::loadFromJson(*it, tmpvec);
+                        prop->set<sf::Color>(sf::Color(tmpvec.r, tmpvec.g, tmpvec.b, tmpvec.a));
                     }
                     break;
                 case PropResource:
-                    i.second.set<BaseResourceHandle>(getSubsystem<ResourceManager>()->get(propnode.asString()));
+                    prop->set<BaseResourceHandle>(getSubsystem<ResourceManager>()->get(it->asString()));
                     break;
                 case PropUnknown:
-                    LOG_WARN("Can't read unknown property: ", i.first);
+                    LOG_WARN("Can't read unknown property: ", it.key().asCString());
                     break;
             }
         }
