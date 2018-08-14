@@ -7,7 +7,6 @@
         },
         "AABBCollision": {
             "flags": 11,
-            "pos": [0, 0],
             "size": [32, 32]
         }
     }
