@@ -48,8 +48,6 @@ namespace gamelib
 
     // Based on http://stackoverflow.com/a/32489730/4778400
     // Check if a class is derived from Identifier.
-    // TODO: This is getting ridiculous...
-    //       How about a less sucking approach to identifiables (without templates)?
     template <typename Derived>
     struct isIdentifiable
     {

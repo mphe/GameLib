@@ -31,7 +31,7 @@ Component* find(Entity& ent, const std::string& name, unsigned int id)
 
 int main()
 {
-    auto res = JsonResource::create();
+    Json::Value res;
     Json::Reader().parse("{\
             \"name\": \"testentity\",\
             \"components\": {\
@@ -48,9 +48,9 @@ int main()
                     \"x\": 42\
                 }\
             }\
-        }", *res);
+        }", res);
 
-    auto res2 = JsonResource::create();
+    Json::Value res2;
     Json::Reader().parse("{\
             \"name\": \"testentity\",\
             \"components\": {\
@@ -64,7 +64,7 @@ int main()
                     \"x\": 42\
                 }\
             }\
-        }", *res2);
+        }", res2);
 
 
 

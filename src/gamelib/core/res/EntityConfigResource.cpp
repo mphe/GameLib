@@ -16,7 +16,7 @@ namespace gamelib
 
         auto factory = getSubsystem<EntityFactory>();
         if (factory)
-            factory->add(res.as<JsonResource>());
+            factory->add(*res.as<JsonResource>());
 
         return res;
     }

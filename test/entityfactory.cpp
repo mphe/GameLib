@@ -39,7 +39,7 @@ void testEntity(Entity& entity)
 
 int main()
 {
-    auto res = JsonResource::create();
+    Json::Value res;
     Json::Reader().parse("{\
             \"name\": \"testentity\",\
             \"transform\": {\
@@ -54,9 +54,9 @@ int main()
                     \"x\": 42\
                 }\
             }\
-        }", *res);
+        }", res);
 
-    auto shortenedres = JsonResource::create();
+    Json::Value shortenedres;
     Json::Reader().parse("{\
             \"name\": \"testentity\",\
             \"components\": {\
@@ -66,9 +66,9 @@ int main()
                     \"x\": 42\
                 }\
             }\
-        }", *shortenedres);
+        }", shortenedres);
 
-    auto shortenedres2 = JsonResource::create();
+    Json::Value shortenedres2;
     Json::Reader().parse("{\
             \"name\": \"testentity\",\
             \"transform\": {\
@@ -81,7 +81,7 @@ int main()
                     \"x\": 42\
                 }\
             }\
-        }", *shortenedres2);
+        }", shortenedres2);
 
 
     EntityFactory factory;
@@ -96,15 +96,15 @@ int main()
     factory.removeEntity("testentity");
 
     entity.destroy();
-    factory.createFromJson(*res, &entity);
+    factory.createFromJson(res, &entity);
     testEntity(entity);
 
     entity.destroy();
-    factory.createFromJson(*shortenedres, &entity);
+    factory.createFromJson(shortenedres, &entity);
     // no special tests, just to see if it handles incomplete configs correctly
 
     entity.destroy();
-    factory.createFromJson(*shortenedres2, &entity);
+    factory.createFromJson(shortenedres2, &entity);
     // no special tests, just to see if it handles incomplete configs correctly
 
     return 0;

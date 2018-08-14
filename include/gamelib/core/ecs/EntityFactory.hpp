@@ -8,9 +8,6 @@
 #include "Entity.hpp"
 #include "json/json.h"
 
-// TODO: Maybe don't store JsonResource::Handle but Json::Value
-//       (by making a copy).
-
 namespace gamelib
 {
     auto createEntity(const std::string& name)                   -> Entity::Handle;
@@ -31,13 +28,13 @@ namespace gamelib
             auto createWithDelta(const std::string& name, const Json::Value& node, Entity* ent) -> void;
             auto createFromJson(const Json::Value& node)              -> Entity::Handle;
             auto createFromJson(const Json::Value& node, Entity* ent) -> void;
-            auto create(const std::string& name)                  -> Entity::Handle;
-            auto create(const std::string& name, Entity* ent)     -> void;
-            auto createComponent(const std::string& name)         -> ComponentPtr;
+            auto create(const std::string& name)                      -> Entity::Handle;
+            auto create(const std::string& name, Entity* ent)         -> void;
+            auto createComponent(const std::string& name)             -> ComponentPtr;
             auto createComponentFromJson(const std::string& name, const Json::Value& node) -> ComponentPtr;
 
-            auto add(JsonResource::Handle res)                          -> void;
-            auto add(const std::string& name, JsonResource::Handle res) -> void;
+            auto add(const Json::Value& cfg)                          -> void;
+            auto add(const std::string& name, const Json::Value& cfg) -> void;
             auto addComponent(const std::string& name, ComponentFactory::CreatorFunction callback) -> void;
 
             auto removeEntity(const std::string& name)    -> void;
@@ -63,7 +60,7 @@ namespace gamelib
             }
 
         private:
-            std::unordered_map<std::string, JsonResource::Handle> _entdata;
+            std::unordered_map<std::string, Json::Value> _entdata;
             ComponentFactory _compfactory;
     };
 }

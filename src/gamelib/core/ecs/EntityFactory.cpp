@@ -43,7 +43,7 @@ namespace gamelib
     Entity::Handle EntityFactory::create(const std::string& name)
     {
         assert(_entdata.find(name) != _entdata.end());
-        return createFromJson(*_entdata.find(name)->second);
+        return createFromJson(_entdata.find(name)->second);
     }
 
     Entity::Handle EntityFactory::createFromJson(const Json::Value& node)
@@ -61,7 +61,7 @@ namespace gamelib
     void EntityFactory::create(const std::string& name, Entity* ent)
     {
         assert(_entdata.find(name) != _entdata.end());
-        createFromJson(*_entdata.find(name)->second, ent);
+        createFromJson(_entdata.find(name)->second, ent);
     }
 
     void EntityFactory::createFromJson(const Json::Value& node, Entity* ent)
@@ -88,14 +88,20 @@ namespace gamelib
     }
 
 
-    void EntityFactory::add(JsonResource::Handle res)
+    void EntityFactory::add(const Json::Value& cfg)
     {
-        add((*res)["name"].asString(), res);
+        add(cfg["name"].asString(), cfg);
     }
 
-    void EntityFactory::add(const std::string& name, JsonResource::Handle res)
+    void EntityFactory::add(const std::string& name, const Json::Value& cfg)
     {
-        _entdata[name] = res;
+        if (name.empty())
+        {
+            LOG_ERROR("Entity name must not be empty");
+            return;
+        }
+
+        _entdata[name] = cfg;
         LOG_DEBUG("Registered entity ", name);
     }
 
