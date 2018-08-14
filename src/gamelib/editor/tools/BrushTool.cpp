@@ -1,14 +1,14 @@
-#include "gamelib/editor/editor/tools/BrushTool.hpp"
+#include "gamelib/editor/tools/BrushTool.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
-#include "editor/components/BrushComponent.hpp"
+#include "gamelib/components/editor/BrushComponent.hpp"
 #include "gamelib/components/rendering/PolygonShape.hpp"
-#include "gamelib/editor/editor/tools/SelectTool.hpp"
-#include "gamelib/editor/editor/tools/ToolUtils.hpp"
-#include "gamelib/editor/editor/ui/resources.hpp"
-#include "gamelib/editor/editor/EditorShared.hpp"
+#include "gamelib/editor/tools/SelectTool.hpp"
+#include "gamelib/editor/tools/ToolUtils.hpp"
+#include "gamelib/editor/ui/resources.hpp"
+#include "gamelib/editor/EditorShared.hpp"
 
 namespace gamelib
 {

@@ -22,6 +22,7 @@ set(GAMELIB_SOURCES
     components/geometry/PixelCollision.cpp
     components/rendering/PolygonShape.cpp
     components/rendering/SpriteComponent.cpp
+    components/editor/BrushComponent.cpp
 
     utils/SpriteBatch.cpp
     utils/DebugGui.cpp
@@ -78,24 +79,23 @@ if(GAMELIB_BUILD_EDITOR)
     find_package(OpenGL)
 
     set(EDITOR_SOURCES
-        editor/components/BrushComponent.cpp
-        editor/editor/Editor.cpp
-        editor/editor/EditorShared.cpp
-        editor/editor/tools/SelectTool.cpp
-        editor/editor/tools/SpriteTool.cpp
-        editor/editor/tools/BrushTool.cpp
-        editor/editor/tools/VertexTool.cpp
-        editor/editor/tools/EntityTool.cpp
-        editor/editor/tools/ToolUtils.cpp
-        editor/editor/ui/resources.cpp
-        editor/editor/ui/LayerUI.cpp
-        editor/editor/ui/Grid.cpp
-        editor/editor/ui/JsonView.cpp
-        editor/editor/ui/ResourceViewer.cpp
-        editor/editor/ui/EntityList.cpp
-        editor/editor/ui/GlobalGameConfig.cpp
-        editor/editor/ui/inputs.cpp
-        editor/editor/EntityDesigner.cpp
+        editor/Editor.cpp
+        editor/EditorShared.cpp
+        editor/tools/SelectTool.cpp
+        editor/tools/SpriteTool.cpp
+        editor/tools/BrushTool.cpp
+        editor/tools/VertexTool.cpp
+        editor/tools/EntityTool.cpp
+        editor/tools/ToolUtils.cpp
+        editor/ui/resources.cpp
+        editor/ui/LayerUI.cpp
+        editor/ui/Grid.cpp
+        editor/ui/JsonView.cpp
+        editor/ui/ResourceViewer.cpp
+        editor/ui/EntityList.cpp
+        editor/ui/GlobalGameConfig.cpp
+        editor/ui/inputs.cpp
+        editor/EntityDesigner.cpp
         editor/events/OnSelect.cpp
     )
 
@@ -116,7 +116,6 @@ if(GAMELIB_BUILD_EDITOR)
         ${PROJECT_SOURCE_DIR}/extlib/imgui
         ${PROJECT_SOURCE_DIR}/extlib/imgui-sfml
         ${PROJECT_SOURCE_DIR}/extlib/imguifilesystem
-        ${PROJECT_SOURCE_DIR}/include/gamelib
     )
 
     add_executable(editor editor/main.cpp)

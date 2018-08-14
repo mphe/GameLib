@@ -9,6 +9,7 @@
 #include "gamelib/components/rendering/SpriteComponent.hpp"
 #include "gamelib/components/update/CameraTracker.hpp"
 #include "gamelib/components/rendering/PolygonShape.hpp"
+#include "gamelib/components/editor/BrushComponent.hpp"
 
 namespace gamelib
 {
@@ -23,6 +24,7 @@ namespace gamelib
         factory.addComponent<SpriteComponent>(SpriteComponent::name);
         factory.addComponent<CameraTracker>(CameraTracker::name);
         factory.addComponent<PolygonShape>(PolygonShape::name);
+        factory.addComponent<BrushComponent>(BrushComponent::name);
     }
 
 

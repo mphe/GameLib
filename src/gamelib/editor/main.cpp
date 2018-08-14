@@ -1,9 +1,7 @@
 #include "gamelib/Engine.hpp"
 #include "gamelib/core/Game.hpp"
-#include "gamelib/editor/editor/Editor.hpp"
+#include "gamelib/editor/Editor.hpp"
 #include <cstring>
-
-#include "gamelib/editor/components/BrushComponent.hpp"
 
 using namespace gamelib;
 
@@ -12,8 +10,6 @@ int main(int argc, char *argv[])
     Game game;
     GameStatePtr engineState(new Engine(false));
     auto engine = static_cast<Engine*>(engineState.get());
-
-    engine->entfactory.addComponent<BrushComponent>(BrushComponent::name);
 
     engine->resmgr.loadFromFile("assets/res.json");
 

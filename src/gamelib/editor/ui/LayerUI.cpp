@@ -1,5 +1,5 @@
-#include "editor/editor/ui/LayerUI.hpp"
-#include "editor/editor/ui/inputs.hpp"
+#include "gamelib/editor/ui/LayerUI.hpp"
+#include "gamelib/editor/ui/inputs.hpp"
 #include "gamelib/utils/string.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/rendering/flags.hpp"

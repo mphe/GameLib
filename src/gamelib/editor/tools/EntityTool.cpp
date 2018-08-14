@@ -1,7 +1,7 @@
-#include "gamelib/editor/editor/tools/EntityTool.hpp"
-#include "gamelib/editor/editor/tools/SelectTool.hpp"
-#include "gamelib/editor/editor/tools/ToolUtils.hpp"
-#include "gamelib/editor/editor/EditorShared.hpp"
+#include "gamelib/editor/tools/EntityTool.hpp"
+#include "gamelib/editor/tools/SelectTool.hpp"
+#include "gamelib/editor/tools/ToolUtils.hpp"
+#include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
 #include "imgui.h"
 

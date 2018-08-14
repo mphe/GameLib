@@ -1,10 +1,10 @@
-#include "gamelib/editor/editor/tools/ToolUtils.hpp"
-#include "gamelib/editor/editor/EditorShared.hpp"
+#include "gamelib/editor/tools/ToolUtils.hpp"
+#include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/geometry/flags.hpp"
 #include "gamelib/utils/conversions.hpp"
 #include "gamelib/components/geometry/AABB.hpp"
-#include "editor/components/BrushComponent.hpp"
+#include "gamelib/components/editor/BrushComponent.hpp"
 
 namespace gamelib
 {

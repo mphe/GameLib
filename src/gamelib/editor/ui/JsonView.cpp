@@ -1,12 +1,12 @@
-#include "editor/editor/ui/JsonView.hpp"
+#include "gamelib/editor/ui/JsonView.hpp"
 #include "imgui.h"
 #include "imguifilesystem.h"
 #include "json/json.h"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
-#include "editor/editor/EditorShared.hpp"
-#include "editor/editor/tools/SelectTool.hpp"
+#include "gamelib/editor/EditorShared.hpp"
+#include "gamelib/editor/tools/SelectTool.hpp"
 #include <string>
 
 namespace gamelib

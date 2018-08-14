@@ -1,4 +1,4 @@
-#include "editor/events/OnSelect.hpp"
+#include "gamelib/editor/events/OnSelect.hpp"
 
 namespace gamelib
 {

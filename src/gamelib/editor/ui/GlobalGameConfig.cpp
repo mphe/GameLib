@@ -1,5 +1,5 @@
-#include "editor/editor/ui/GlobalGameConfig.hpp"
-#include "editor/editor/ui/inputs.hpp"
+#include "gamelib/editor/ui/GlobalGameConfig.hpp"
+#include "gamelib/editor/ui/inputs.hpp"
 #include "gamelib/core/Game.hpp"
 
 namespace gamelib

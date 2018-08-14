@@ -1,12 +1,12 @@
-#include "gamelib/editor/editor/tools/VertexTool.hpp"
+#include "gamelib/editor/tools/VertexTool.hpp"
 #include <SFML/Graphics.hpp>
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "gamelib/core/ecs/Entity.hpp"
-#include "gamelib/editor/editor/tools/SelectTool.hpp"
-#include "gamelib/editor/editor/tools/ToolUtils.hpp"
-#include "gamelib/editor/editor/EditorShared.hpp"
-#include "editor/components/BrushComponent.hpp"
+#include "gamelib/editor/tools/SelectTool.hpp"
+#include "gamelib/editor/tools/ToolUtils.hpp"
+#include "gamelib/editor/EditorShared.hpp"
+#include "gamelib/components/editor/BrushComponent.hpp"
 
 namespace gamelib
 {

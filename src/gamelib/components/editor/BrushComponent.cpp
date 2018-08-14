@@ -1,4 +1,4 @@
-#include "gamelib/editor/components/BrushComponent.hpp"
+#include "gamelib/components/editor/BrushComponent.hpp"
 #include "gamelib/components/rendering/PolygonShape.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/CollisionComponent.hpp"

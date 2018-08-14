@@ -1,5 +1,5 @@
-#include "gamelib/editor/editor/EditorShared.hpp"
-#include "gamelib/editor/editor/Editor.hpp"
+#include "gamelib/editor/EditorShared.hpp"
+#include "gamelib/editor/Editor.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
 
 namespace gamelib

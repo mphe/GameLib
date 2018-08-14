@@ -1,9 +1,8 @@
-#include "editor/editor/EntityDesigner.hpp"
-
+#include "gamelib/editor/EntityDesigner.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
-#include "gamelib/editor/editor/ui/inputs.hpp"
+#include "gamelib/editor/ui/inputs.hpp"
 #include "imgui.h"
 
 namespace gamelib
