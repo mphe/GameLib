@@ -1,13 +1,12 @@
 #include "gamelib/editor/ui/JsonView.hpp"
-#include "imgui.h"
-#include "imguifilesystem.h"
-#include "json/json.h"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/editor/tools/SelectTool.hpp"
-#include <string>
+#include "gamelib/editor/ui/FileDialog.hpp"
+#include "imgui.h"
+#include "json/json.h"
 
 namespace gamelib
 {
@@ -56,8 +55,7 @@ namespace gamelib
         static Json::Value node;
         static std::string jsonstring;
         static int selected = 0;
-        static ImGuiFs::Dialog savedlg;
-        bool choosesave = false;
+        static FileDialog savedlg(FileDialog::Save);
 
         if (ImGui::Begin("Json Viewer", isopen, ImVec2(300, 300)))
         {
@@ -89,12 +87,12 @@ namespace gamelib
 
                     ImGui::SameLine();
                     if (ImGui::Button("Save as"))
-                        choosesave = true;
+                        savedlg.open();
                     ImGui::EndChild();
                 }
 
-                if (strlen(savedlg.saveFileDialog(choosesave, savedlg.getLastDirectory())) > 0)
-                    writeJsonToFile(savedlg.getChosenPath(), node);
+                if (savedlg.process())
+                    writeJsonToFile(savedlg.getPath(), node);
 
                 ImGui::EndGroup();
             }

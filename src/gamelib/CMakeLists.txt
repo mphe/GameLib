@@ -102,6 +102,7 @@ if(GAMELIB_BUILD_EDITOR)
         editor/ui/EntityList.cpp
         editor/ui/GlobalGameConfig.cpp
         editor/ui/inputs.cpp
+        editor/ui/FileDialog.cpp
         editor/EntityDesigner.cpp
         editor/events/OnSelect.cpp
     )

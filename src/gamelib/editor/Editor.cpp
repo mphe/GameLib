@@ -20,10 +20,10 @@
 #include "gamelib/editor/ui/LayerUI.hpp"
 #include "gamelib/editor/ui/EntityList.hpp"
 #include "gamelib/editor/ui/GlobalGameConfig.hpp"
+#include "gamelib/editor/ui/FileDialog.hpp"
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/components/editor/BrushComponent.hpp"
 #include "imgui-SFML.h"
-#include "imguifilesystem.h"
 
 namespace gamelib
 {
@@ -217,13 +217,9 @@ namespace gamelib
         static bool entprops = true;
         static bool entlist = true;
         static bool gamecfg = false;
-        static ImGuiFs::Dialog loaddlg;
-        static ImGuiFs::Dialog savedlg;
-        static ImGuiFs::Dialog exportdlg;
-
-        bool chooseload = false;
-        bool choosesave = false;
-        bool chooseexport = false;
+        static FileDialog loaddlg(FileDialog::Load);
+        static FileDialog savedlg;
+        static FileDialog exportdlg;
 
         auto selected = getSelectTool().getSelected();
         auto input = getSubsystem<InputSystem>();
@@ -236,16 +232,16 @@ namespace gamelib
                     save();
 
                 if (ImGui::MenuItem("Save as"))
-                    choosesave = true;
+                    savedlg.open();
 
                 if (ImGui::MenuItem("Load"))
-                    chooseload = true;
+                    loaddlg.open();
 
                 if (ImGui::MenuItem("Reload"))
                     load();
 
                 if (ImGui::MenuItem("Export"))
-                    chooseexport = true;
+                    exportdlg.open();
 
                 if (ImGui::MenuItem("Quit"))
                     getSubsystem<Game>()->close();
@@ -298,14 +294,14 @@ namespace gamelib
         }
 
         { // Loading / Saving
-            if (strlen(loaddlg.chooseFileDialog(chooseload, loaddlg.getLastDirectory())) > 0)
-                load(loaddlg.getChosenPath());
+            if (loaddlg.process())
+                load(loaddlg.getPath());
 
-            if (strlen(savedlg.saveFileDialog(choosesave, savedlg.getLastDirectory())) > 0)
-                this->save(savedlg.getChosenPath());
+            if (savedlg.process())
+                this->save(savedlg.getPath());
 
-            if (strlen(exportdlg.saveFileDialog(chooseexport, exportdlg.getLastDirectory())) > 0)
-                _exportcallback(exportdlg.getChosenPath());
+            if (exportdlg.process())
+                _exportcallback(exportdlg.getPath());
         }
 
         if (ImGui::BeginPopupContextVoid("Context Menu", sf::Mouse::Right))
