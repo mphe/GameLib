@@ -16,6 +16,9 @@ namespace gamelib
 {
     class Transformable;
 
+    // Compares node against compare and writes everything non-existent or different in compare to out.
+    bool diffJson(const Json::Value& node, const Json::Value& compare, Json::Value* out_);
+
     bool loadJsonFromFile(const std::string& fname, Json::Value& node);
     bool writeJsonToFile(const std::string& fname, const Json::Value& node);
 
