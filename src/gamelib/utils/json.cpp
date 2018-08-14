@@ -97,25 +97,31 @@ namespace gamelib
 
     bool loadFromJson(const Json::Value& node, Transformable& transform)
     {
-        math::Point2f pos;
-        math::Vec2f scale;
-        float angle;
+        math::Point2f pos = transform.getPosition();
+        math::Vec2f scale = transform.getScale();
+        float angle = transform.getRotation();
+        auto parent = transform.getParent();
 
-        if (!loadFromJson(node, &pos, &scale, &angle, true))
+        if (parent)
+        {
+            pos -= parent->getPosition().asVector();
+            scale /= parent->getScale();
+            angle -= parent->getRotation();
+        }
+
+        if (!loadFromJson(node, &pos, &scale, &angle, false))
             return false;
 
-        if (transform.getParent())
+        if (parent)
         {
-            transform.move(pos.asVector());
-            transform.scale(scale);
-            transform.rotate(angle);
+            pos += parent->getPosition().asVector();
+            scale *= parent->getScale();
+            angle += parent->getRotation();
         }
-        else
-        {
-            transform.setPosition(pos);
-            transform.setScale(scale);
-            transform.setRotation(angle);
-        }
+
+        transform.setPosition(pos);
+        transform.setScale(scale);
+        transform.setRotation(angle);
         return true;
     }
 
