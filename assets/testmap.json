@@ -2,18 +2,29 @@
    "entmgr" : [
       {
          "components" : {
+            "AABBCollision#1" : {
+               "flags" : 26,
+               "size" : [ 32, 31 ]
+            },
+            "QController#1" : {
+               "jumpspeed" : 356
+            },
+            "SpriteComponent#1" : {
+               "depth" : -1
+            }
+         },
+         "name" : "player",
+         "transform" : {
+            "pos" : [ 1215.3463134765625, 288.9451904296875 ]
+         }
+      },
+      {
+         "components" : {
             "BrushComponent#1" : {
                "linewidth" : 64
             },
             "PolygonCollision#1" : {
                "Normals" : 0,
-               "flags" : 2,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 1,
                "vertices" : [
                   [ 0, 0 ],
                   [ 0, 64 ],
@@ -28,17 +39,7 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "texoffset" : [ 0, 0 ],
                "texture" : "tex/dirt2.png",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
                "vertices" : [
                   [
                      [ 0, 0 ],
@@ -83,12 +84,9 @@
                ]
             }
          },
-         "flags" : 0,
          "name" : "brush_polygon",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 480, 320 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 480, 320 ]
          }
       },
       {
@@ -97,14 +95,7 @@
                "linewidth" : 64
             },
             "PolygonCollision#1" : {
-               "Normals" : 1,
                "flags" : 1,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 0,
                "vertices" : [
                   [ 0, 0 ],
                   [ 96, -32 ],
@@ -120,13 +111,6 @@
             },
             "PolygonCollision#2" : {
                "Normals" : 0,
-               "flags" : 2,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 1,
                "vertices" : [
                   [ -10.119293212890625, -30.357879638671875 ],
                   [ 10.119293212890625, 30.357879638671875 ],
@@ -167,17 +151,7 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "texoffset" : [ 0, 0 ],
                "texture" : "tex/grass.png",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
                "vertices" : [
                   [
                      [ -10.119293212890625, -30.357879638671875 ],
@@ -326,75 +300,28 @@
                ]
             }
          },
-         "flags" : 0,
          "name" : "brush_line",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 480, 320 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 480, 320 ]
          }
       },
       {
          "components" : {
-            "AABBCollision#1" : {
-               "flags" : 11,
-               "size" : [ 32, 32 ],
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               }
-            },
             "QPhysicsComponent#1" : {
-               "Snap distance" : 10,
-               "airFriction" : false,
-               "basevel" : [ 0, 0 ],
-               "friction multiplier" : 1,
                "gravity multiplier" : 0,
-               "hook" : 2,
-               "interval" : 1,
-               "keepMomentum" : true,
-               "maxSlope" : 0.5,
                "overbounce" : 2,
                "vel" : [ -150, 0 ]
-            },
-            "SpriteComponent#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "sprite" : "spr/box.spr",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               }
             }
          },
-         "flags" : 0,
          "name" : "box",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 938.3228759765625, 352 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 938.3228759765625, 352 ]
          }
       },
       {
-         "components" : {
-            "QConfig#1" : {
-               "friction" : 10,
-               "gravity" : 700,
-               "gravityDirection" : [ 0, 1 ],
-               "stopFriction" : 10,
-               "stopSpeed" : 70
-            }
-         },
-         "flags" : 0,
          "name" : "globalconfig",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 480, 128 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 480, 128 ]
          }
       },
       {
@@ -405,12 +332,6 @@
             "PolygonCollision#1" : {
                "Normals" : 0,
                "flags" : 7,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 1,
                "vertices" : [
                   [ 0, 0 ],
                   [ 0, 96 ],
@@ -419,17 +340,7 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "texoffset" : [ 0, 0 ],
                "texture" : "tex/block.png",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
                "vertices" : [
                   [
                      [ 0, 0 ],
@@ -450,12 +361,9 @@
                ]
             }
          },
-         "flags" : 0,
          "name" : "brush_polygon",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 1184, 320 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1184, 320 ]
          }
       },
       {
@@ -466,12 +374,6 @@
             "PolygonCollision#1" : {
                "Normals" : 0,
                "flags" : 7,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 1,
                "vertices" : [
                   [ 0, -32 ],
                   [ 0, 96 ],
@@ -480,17 +382,7 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "texoffset" : [ 0, 0 ],
                "texture" : "tex/block.png",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
                "vertices" : [
                   [
                      [ 0, -32 ],
@@ -511,28 +403,15 @@
                ]
             }
          },
-         "flags" : 0,
          "name" : "brush_polygon",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 864, 352 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 864, 352 ]
          }
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "linewidth" : 32
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
-               "flags" : 0,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 0,
                "vertices" : [
                   [ 0, 0 ],
                   [ 352, 0 ]
@@ -541,12 +420,6 @@
             "PolygonCollision#2" : {
                "Normals" : 0,
                "flags" : 7,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 1,
                "vertices" : [
                   [ 0, -16 ],
                   [ 0, 16 ],
@@ -555,17 +428,7 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "texoffset" : [ 0, 0 ],
                "texture" : "tex/block.png",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
                "vertices" : [
                   [
                      [ 0, -16 ],
@@ -586,88 +449,15 @@
                ]
             }
          },
-         "flags" : 0,
          "name" : "brush_line",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 1088, 416 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1088, 416 ]
          }
       },
       {
          "components" : {
-            "AABBCollision#1" : {
-               "flags" : 26,
-               "size" : [ 32, 31 ],
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               }
-            },
-            "CameraTracker#1" : {
-               "camera" : 0,
-               "hook" : 2,
-               "interval" : 1,
-               "shakeradius" : 5
-            },
-            "QController#1" : {
-               "accelerate" : 25,
-               "airAccelerate" : 25,
-               "hook" : 2,
-               "interval" : 1,
-               "jumpDecelerate" : 500,
-               "jumpspeed" : 356,
-               "maxspeed" : 140
-            },
-            "QPhysicsComponent#1" : {
-               "Snap distance" : 10,
-               "airFriction" : false,
-               "basevel" : [ 0, 0 ],
-               "friction multiplier" : 1,
-               "gravity multiplier" : 1,
-               "hook" : 2,
-               "interval" : 1,
-               "keepMomentum" : true,
-               "maxSlope" : 0.5,
-               "overbounce" : 1,
-               "vel" : [ 0, 0 ]
-            },
-            "SpriteComponent#1" : {
-               "depth" : -1,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "sprite" : "spr/player_walk.spr",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               }
-            }
-         },
-         "flags" : 0,
-         "name" : "player",
-         "transform" : {
-            "angle" : 0,
-            "pos" : [ 1215.3463134765625, 288.9451904296875 ],
-            "scale" : [ 1, 1 ]
-         }
-      },
-      {
-         "components" : {
-            "BrushComponent#1" : {
-               "linewidth" : 32
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
-               "flags" : 0,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 0,
                "vertices" : [
                   [ 0, 0 ],
                   [ 640, 0 ]
@@ -676,12 +466,6 @@
             "PolygonCollision#2" : {
                "Normals" : 0,
                "flags" : 7,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 1,
                "vertices" : [
                   [ 0, -16 ],
                   [ 0, 16 ],
@@ -690,17 +474,7 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "texoffset" : [ 0, 0 ],
                "texture" : "tex/block.png",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
                "vertices" : [
                   [
                      [ 0, -16 ],
@@ -721,28 +495,15 @@
                ]
             }
          },
-         "flags" : 0,
          "name" : "brush_line",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 976, 480 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 976, 480 ]
          }
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "linewidth" : 32
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
-               "flags" : 0,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 0,
                "vertices" : [
                   [ 0, 48 ],
                   [ 0, -352 ],
@@ -752,12 +513,6 @@
             "PolygonCollision#2" : {
                "Normals" : 0,
                "flags" : 7,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 1,
                "vertices" : [
                   [ -16, 48 ],
                   [ 16, 48 ],
@@ -766,17 +521,7 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "texoffset" : [ 0, 0 ],
                "texture" : "tex/block.png",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
                "vertices" : [
                   [
                      [ -16, 48 ],
@@ -797,28 +542,15 @@
                ]
             }
          },
-         "flags" : 0,
          "name" : "brush_line",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 1600, 448 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1600, 448 ]
          }
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "linewidth" : 32
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
-               "flags" : 0,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 0,
                "vertices" : [
                   [ 0, 0 ],
                   [ -128, 0 ]
@@ -827,12 +559,6 @@
             "PolygonCollision#2" : {
                "Normals" : 0,
                "flags" : 7,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 1,
                "vertices" : [
                   [ 0, 16 ],
                   [ 0, -16 ],
@@ -841,17 +567,7 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "texoffset" : [ 0, 0 ],
                "texture" : "tex/block.png",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
                "vertices" : [
                   [
                      [ 0, 16 ],
@@ -872,73 +588,29 @@
                ]
             }
          },
-         "flags" : 0,
          "name" : "brush_line",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 1472, 256 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1472, 256 ]
          }
       },
       {
          "components" : {
-            "AABBCollision#1" : {
-               "flags" : 11,
-               "size" : [ 32, 32 ],
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               }
-            },
             "QPhysicsComponent#1" : {
-               "Snap distance" : 10,
-               "airFriction" : false,
-               "basevel" : [ 0, 0 ],
                "friction multiplier" : 0,
                "gravity multiplier" : 0,
-               "hook" : 2,
-               "interval" : 1,
-               "keepMomentum" : true,
-               "maxSlope" : 0.5,
                "overbounce" : 2,
                "vel" : [ 0, 200 ]
-            },
-            "SpriteComponent#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "sprite" : "spr/box.spr",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               }
             }
          },
-         "flags" : 0,
          "name" : "box",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 1536, 163.29995727539062 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1536, 163.29995727539062 ]
          }
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "linewidth" : 32
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
-               "flags" : 0,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 0,
                "vertices" : [
                   [ 0, 0 ],
                   [ -160, 0 ]
@@ -947,12 +619,6 @@
             "PolygonCollision#2" : {
                "Normals" : 0,
                "flags" : 7,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 1,
                "vertices" : [
                   [ 0, 16 ],
                   [ 0, -16 ],
@@ -961,17 +627,7 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "texoffset" : [ 0, 0 ],
                "texture" : "tex/block.png",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
                "vertices" : [
                   [
                      [ 0, 16 ],
@@ -992,28 +648,15 @@
                ]
             }
          },
-         "flags" : 0,
          "name" : "brush_line",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 1616, 96 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1616, 96 ]
          }
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "linewidth" : 32
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
-               "flags" : 0,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 0,
                "vertices" : [
                   [ 0, 0 ],
                   [ -1120, 0 ]
@@ -1022,12 +665,6 @@
             "PolygonCollision#2" : {
                "Normals" : 0,
                "flags" : 7,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 1,
                "vertices" : [
                   [ 0, 16 ],
                   [ 0, -16 ],
@@ -1036,17 +673,7 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "texoffset" : [ 0, 0 ],
                "texture" : "tex/block.png",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
                "vertices" : [
                   [
                      [ 0, 16 ],
@@ -1067,57 +694,23 @@
                ]
             }
          },
-         "flags" : 0,
          "name" : "brush_line",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 448, 320 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 448, 320 ]
          }
       },
       {
          "components" : {
-            "AABBCollision#1" : {
-               "flags" : 11,
-               "size" : [ 32, 32 ],
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               }
-            },
             "QPhysicsComponent#1" : {
-               "Snap distance" : 10,
-               "airFriction" : false,
-               "basevel" : [ 0, 0 ],
                "friction multiplier" : 0,
                "gravity multiplier" : 0,
-               "hook" : 2,
-               "interval" : 1,
-               "keepMomentum" : true,
-               "maxSlope" : 0.5,
                "overbounce" : 2,
                "vel" : [ -1000, 0 ]
-            },
-            "SpriteComponent#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "sprite" : "spr/box.spr",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               }
             }
          },
-         "flags" : 0,
          "name" : "box",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ -416.5, 260 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ -416.5, 260 ]
          }
       },
       {
@@ -1128,12 +721,6 @@
             "PolygonCollision#1" : {
                "Normals" : 0,
                "flags" : 7,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 1,
                "vertices" : [
                   [ 0, 0 ],
                   [ 0, 144 ],
@@ -1142,17 +729,7 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "texoffset" : [ 0, 0 ],
                "texture" : "tex/block.png",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
                "vertices" : [
                   [
                      [ 0, 0 ],
@@ -1173,12 +750,9 @@
                ]
             }
          },
-         "flags" : 0,
          "name" : "brush_polygon",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ -672, 176 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ -672, 176 ]
          }
       },
       {
@@ -1189,12 +763,6 @@
             "PolygonCollision#1" : {
                "Normals" : 0,
                "flags" : 7,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 1,
                "vertices" : [
                   [ 0, 0 ],
                   [ 0, 24 ],
@@ -1203,17 +771,7 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "texoffset" : [ 0, 0 ],
                "texture" : "tex/block.png",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
                "vertices" : [
                   [
                      [ 0, 0 ],
@@ -1234,12 +792,9 @@
                ]
             }
          },
-         "flags" : 0,
          "name" : "brush_polygon",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ -288, 288 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ -288, 288 ]
          }
       },
       {
@@ -1248,14 +803,7 @@
                "linewidth" : 64
             },
             "PolygonCollision#1" : {
-               "Normals" : 1,
                "flags" : 1,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 0,
                "vertices" : [
                   [ -160, -288 ],
                   [ 96, -192 ],
@@ -1267,13 +815,6 @@
             },
             "PolygonCollision#2" : {
                "Normals" : 0,
-               "flags" : 2,
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
-               "type" : 1,
                "vertices" : [
                   [ -148.7640380859375, -317.9625244140625 ],
                   [ -171.2359619140625, -258.0374755859375 ],
@@ -1298,17 +839,7 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 0,
-               "flags" : 0,
-               "origin" : [ 0, 0 ],
-               "parallax" : 1,
-               "texoffset" : [ 0, 0 ],
                "texture" : "tex/grass.png",
-               "transform" : {
-                  "angle" : 0,
-                  "pos" : [ 0, 0 ],
-                  "scale" : [ 1, 1 ]
-               },
                "vertices" : [
                   [
                      [ -148.7640380859375, -317.9625244140625 ],
@@ -1393,26 +924,23 @@
                ]
             }
          },
-         "flags" : 0,
          "name" : "brush_line",
          "transform" : {
-            "angle" : 0,
-            "pos" : [ 448, 704 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 448, 704 ]
          }
       }
    ],
    "scene" : {
       "cameras" : [
          {
-            "pos" : [ 591.3463134765625, -55.0548095703125 ],
+            "pos" : [ 620.23138427734375, -44.141307830810547 ],
             "size" : [ 1280, 720 ],
             "velocity" : [ 0, 0 ],
             "viewport" : {
                "pos" : [ 0, 0 ],
                "size" : [ 1, 1 ]
             },
-            "zoom" : 0.74500036239624023
+            "zoom" : 0.84500038623809814
          }
       ],
       "defaultcam" : 0,

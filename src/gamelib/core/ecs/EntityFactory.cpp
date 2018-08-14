@@ -133,4 +133,12 @@ namespace gamelib
     {
         return _entdata.size();
     }
+
+    const Json::Value* EntityFactory::findEntity(const std::string& name)
+    {
+        auto it = _entdata.find(name);
+        if (it != _entdata.end())
+            return &it->second;
+        return nullptr;
+    }
 }

@@ -1,5 +1,4 @@
 #include "gamelib/export.hpp"
-#include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
 
 namespace gamelib

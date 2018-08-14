@@ -42,6 +42,8 @@ namespace gamelib
             auto clear()       -> void;
             auto size() const  -> size_t;
 
+            auto findEntity(const std::string& name) -> const Json::Value*;
+
             template <typename T>
             void addComponent(const std::string& name)
             {
