@@ -30,7 +30,7 @@ namespace gamelib
         Component::loadFromJson(node);
         interval = node.get("interval", interval).asInt();
 
-        auto hook = static_cast<UpdateSystem::HookType>(node.get("hook", UpdateSystem::Frame).asInt());
+        auto hook = static_cast<UpdateSystem::HookType>(node.get("hook", _hook).asInt());
         if (!_handle.isNull() && _hook != hook)
         {
             _quit();
