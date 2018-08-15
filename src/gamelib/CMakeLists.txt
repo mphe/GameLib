@@ -30,6 +30,7 @@ set(GAMELIB_SOURCES
     components/rendering/PolygonShape.cpp
     components/rendering/SpriteComponent.cpp
     components/editor/BrushComponent.cpp
+    components/editor/LineBrushComponent.cpp
 
     utils/SpriteBatch.cpp
     utils/DebugGui.cpp

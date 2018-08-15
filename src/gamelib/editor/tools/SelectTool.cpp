@@ -75,7 +75,7 @@ namespace gamelib
             {
                 ent->findAllByName<Polygon>([&](Polygon* pol) {
                         if (pol->flags & collision_solid)
-                            drawNormals(target, pol->polygon);
+                            drawNormals(target, pol->getPolygon());
                         return false;
                     });
             }

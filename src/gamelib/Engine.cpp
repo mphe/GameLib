@@ -10,21 +10,25 @@
 #include "gamelib/components/update/CameraTracker.hpp"
 #include "gamelib/components/rendering/PolygonShape.hpp"
 #include "gamelib/components/editor/BrushComponent.hpp"
+#include "gamelib/components/editor/LineBrushComponent.hpp"
 
 namespace gamelib
 {
     void registerComponents(EntityFactory& factory)
     {
-        factory.addComponent<Polygon>(Polygon::name);
-        factory.addComponent<AABB>(AABB::name);
-        factory.addComponent<PixelCollision>(PixelCollision::name);
-        factory.addComponent<QPhysics>(QPhysics::name);
-        factory.addComponent<QConfig>(QConfig::name);
-        factory.addComponent<QController>(QController::name);
-        factory.addComponent<SpriteComponent>(SpriteComponent::name);
-        factory.addComponent<CameraTracker>(CameraTracker::name);
-        factory.addComponent<PolygonShape>(PolygonShape::name);
-        factory.addComponent<BrushComponent>(BrushComponent::name);
+#define _REGISTER_COMPONENT(c) factory.addComponent<c>(c::name);
+        _REGISTER_COMPONENT(Polygon);
+        _REGISTER_COMPONENT(AABB);
+        _REGISTER_COMPONENT(PixelCollision);
+        _REGISTER_COMPONENT(QPhysics);
+        _REGISTER_COMPONENT(QConfig);
+        _REGISTER_COMPONENT(QController);
+        _REGISTER_COMPONENT(SpriteComponent);
+        _REGISTER_COMPONENT(CameraTracker);
+        _REGISTER_COMPONENT(PolygonShape);
+        _REGISTER_COMPONENT(BrushComponent);
+        _REGISTER_COMPONENT(LineBrushComponent);
+#undef _REGISTER_COMPONENT
     }
 
 

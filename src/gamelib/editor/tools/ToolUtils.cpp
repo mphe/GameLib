@@ -4,6 +4,7 @@
 #include "gamelib/core/geometry/flags.hpp"
 #include "gamelib/utils/conversions.hpp"
 #include "gamelib/components/geometry/AABB.hpp"
+#include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/components/editor/BrushComponent.hpp"
 
 namespace gamelib
@@ -90,7 +91,7 @@ namespace gamelib
                     if (comp->getName() == Polygon::name && !(comp->flags & collision_noprecise))
                     {
                         auto pol = static_cast<Polygon*>(comp);
-                        pol->polygon.foreachSegment([&](const math::Line2f seg) {
+                        pol->getPolygon().foreachSegment([&](const math::Line2f seg) {
                                 vertices.append(sf::Vertex(sf::Vector2f(seg.p.x, seg.p.y), col));
                                 vertices.append(sf::Vertex(sf::Vector2f(seg.p.x + seg.d.x, seg.p.y + seg.d.y), col));
                                 return false;

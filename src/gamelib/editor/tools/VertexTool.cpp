@@ -7,6 +7,7 @@
 #include "gamelib/editor/tools/ToolUtils.hpp"
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/components/editor/BrushComponent.hpp"
+#include "gamelib/components/geometry/Polygon.hpp"
 
 namespace gamelib
 {
@@ -27,7 +28,7 @@ namespace gamelib
 
             for (size_t i = 0; i < pol.size(); ++i)
             {
-                if (drag_rect.contains(EditorShared::getMouse() - pol.get(i).asVector()))
+                if (drag_rect.contains(EditorShared::getMouse() - pol.getPolygon().get(i).asVector()))
                 {
                     _selected = i;
                     break;
@@ -46,7 +47,7 @@ namespace gamelib
         if (brush && _selected != (size_t)-1)
         {
             if (_snappoint)
-                brush->edit(_selected, snap(*brush->getBrushPolygon(), EditorShared::getMouse(), _selected));
+                brush->edit(_selected, snap(brush->getBrushPolygon()->getPolygon(), EditorShared::getMouse(), _selected));
             else
                 brush->edit(_selected, EditorShared::getMouseSnapped());
         }
@@ -61,6 +62,6 @@ namespace gamelib
     {
         auto brush = getIfBrush(EditorShared::getSelectTool().getSelected());
         if (brush)
-            drawDragBoxes(target, *brush->getBrushPolygon(), _selected);
+            drawDragBoxes(target, brush->getBrushPolygon()->getPolygon(), _selected);
     }
 }

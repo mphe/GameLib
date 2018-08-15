@@ -14,7 +14,6 @@ namespace gamelib
         public:
             Polygon(unsigned int flags = 0);
             Polygon(math::PolygonType type, unsigned int flags = 0);
-
             virtual ~Polygon() {}
 
             auto intersect(const math::Point2f& point) const -> bool;
@@ -30,14 +29,17 @@ namespace gamelib
             auto getScale() const    -> const math::Vec2f&;
             auto getBBox() const     -> const math::AABBf&;
 
-            auto getPolygon() const  -> const math::Polygon<float>&;
-
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
 
-        public:
-            // TODO: make this private
-            math::Polygon<float> polygon;
+            auto add(const math::Point2f& point)        -> void;
+            auto edit(size_t i, const math::Point2f& p) -> void;
+            auto clear()            -> void;
+            auto size() const       -> size_t;
+            auto getPolygon() const -> const math::Polygon<float>&;
+
+        protected:
+            math::Polygon<float> _polygon;
     };
 }
 

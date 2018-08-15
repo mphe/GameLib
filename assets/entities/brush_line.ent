@@ -13,8 +13,6 @@
             "flags": 2,
             "Normals": 1
         },
-        "BrushComponent": {
-            "linewidth": 32
-        }
+        "LineBrushComponent": { }
     }
 }

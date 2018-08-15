@@ -21,6 +21,8 @@ namespace gamelib
         NumMappingMethods
     };
 
+    constexpr const char* mapping_strings[] = { "World", "Line", "Instance", "Fit", "Stretch" };
+
     class PolygonShape : public RenderComponent
     {
         public:

@@ -3,7 +3,9 @@
 #include "imgui-SFML.h"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
-#include "gamelib/components/editor/BrushComponent.hpp"
+#include "gamelib/core/input/InputSystem.hpp"
+#include "gamelib/components/editor/LineBrushComponent.hpp"
+#include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/components/rendering/PolygonShape.hpp"
 #include "gamelib/editor/tools/SelectTool.hpp"
 #include "gamelib/editor/tools/ToolUtils.hpp"
@@ -40,7 +42,7 @@ namespace gamelib
             math::Point2f p;
 
             if (_snappoint)
-                p = snap(*selected->getBrushPolygon(), EditorShared::getMouse());
+                p = snap(selected->getBrushPolygon()->getPolygon(), EditorShared::getMouse());
             else
                 p = EditorShared::getMouseSnapped();
 
@@ -49,13 +51,14 @@ namespace gamelib
         }
         else
         {
-            auto handle = createEntity(brushEntities[_type]);
-            auto brush = getEntity(handle);
-
+            auto brush = getEntity(createEntity(brushEntities[_type]));
             selected = brush->findByType<BrushComponent>();
-            selected->setWidth(_linewidth);
             selected->getBrushShape()->texture = _tex;
             selected->getBrushShape()->setTexOffset(_offset);
+
+            if (_type == Line)
+                static_cast<LineBrushComponent*>(selected)->setWidth(_linewidth);
+
             brush->getTransform().setPosition(EditorShared::getMouseSnapped());
             EditorShared::getSelectTool().select(brush);
             onMousePressed();
@@ -66,32 +69,33 @@ namespace gamelib
     {
         math::Point2f mouse = EditorShared::getMouseSnapped();
         auto selected = _getIfSame();
+        auto input = getSubsystem<InputSystem>();
 
         if (selected)
         {
-            auto pol = selected->getBrushPolygon();
+            auto& pol = selected->getBrushPolygon()->getPolygon();
 
-            if (!ImGui::GetIO().WantCaptureMouse)
+            if (!input->isMouseConsumed())
             {
                 if (_snappoint)
-                    mouse = snap(*pol, EditorShared::getMouse());
+                    mouse = snap(pol, EditorShared::getMouse());
 
-                if (_type == Polygon && pol->size() > 1)
+                if (_type == Polygon && pol.size() > 1)
                 {
-                    drawLine(target, pol->get(-1), mouse);
-                    drawLine(target, pol->get(-2), mouse);
+                    drawLine(target, pol.get(-1), mouse);
+                    drawLine(target, pol.get(-2), mouse);
                 }
-                else if ((_type == Line || _type == Polygon) && pol->size() > 0)
+                else if ((_type == Line || _type == Polygon) && pol.size() > 0)
                 {
-                    drawLine(target, pol->get(-1), mouse);
+                    drawLine(target, pol.get(-1), mouse);
                 }
             }
 
             if (_showdraggers)
-                drawDragBoxes(target, *pol);
+                drawDragBoxes(target, pol);
         }
 
-        if (_showdraggers && !ImGui::GetIO().WantCaptureMouse)
+        if (_showdraggers && !input->isMouseConsumed())
             drawDragBox(target, mouse);
     }
 
@@ -125,7 +129,8 @@ namespace gamelib
         auto brush = _getIfSame();
         if (brush && ImGui::Button("Apply"))
         {
-            brush->setWidth(_linewidth);
+            if (_type == Line)
+                static_cast<LineBrushComponent*>(brush)->setWidth(_linewidth);
             brush->getBrushShape()->texture = _tex;
             brush->getBrushShape()->setTexOffset(_offset);
         }
