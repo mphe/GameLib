@@ -3,7 +3,6 @@
 * FPS scaling
 * Render parent like GroupTransform but for RenderComponents
 * Give resources a type name member
-* ResourceManager: load all files from a folder
 * Automatically adapt (render size and) aspect ratio on window resize
 * ScopedIterator
 * move utils in a separate git repo
@@ -14,7 +13,13 @@
 * inputBitflags() exclude list
 * loadFromJson update bool to differentiate between load and update from json
 * MaskComponent
-* json diff
+
+* ResourceManager:
+  * load all files from a folder
+  * recursively load-once resource files
+  * write loaders for various config files
+
+* remove callbacks in export code because they became redundant when diffs where introduced
 
 * Split Updatable in Updatable and BaseUpdatable
   * BaseUpdatable <- Updatable
@@ -36,8 +41,7 @@
   * functions for checking multiple inputs at once with "all pressed" or "any pressed"
 
 * components
-  * Automatically register components to factory
-    * component factory as static Component member
+  * TransformableComponent
   * migrate components to property system
     * UpdateComponent
     * RenderComponent
