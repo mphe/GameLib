@@ -443,12 +443,8 @@ namespace gamelib
 
     void defaultExport(const std::string& fname)
     {
-        save(fname, [](Json::Value& node, Entity& ent) {
-                writeToJson(node, ent, [](Json::Value& compnode, Component& comp) {
-                        if (comp.getID() != BrushComponent::id)
-                            comp.writeToJson(compnode);
-                    });
-            });
+        // TODO: strip BrushComponent
+        save(fname);
         LOG("Map exported to ", fname);
     }
 }

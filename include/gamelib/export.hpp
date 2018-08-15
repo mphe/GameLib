@@ -13,15 +13,14 @@ namespace gamelib
     bool save(const std::string& fname);
     bool saveToJson(Json::Value& node);
 
-    // Calls a callback for each entity about to be serialized.
-    // The callback handles the serialization (or not).
-    // Signature: void(Json::Value&, Entity&)
+    // Same as saveToJson() but save to a file
     template <typename F>
     bool save(const std::string& fname, F callback);
 
     // Calls a callback for each entity about to be serialized.
-    // The callback handles the serialization (or not).
-    // Signature: void(Json::Value&, Entity&)
+    // The callback modifies the generated json data (or not).
+    // If it returns false, the entity will be skipped completely.
+    // Signature: bool(Json::Value&, Entity&)
     template <typename F>
     bool saveToJson(Json::Value& node, F callback);
 
@@ -57,31 +56,30 @@ namespace gamelib
             for (auto& i : *entmgr)
             {
                 Json::Value ent;
-                callback(ent, i);
-                if (!ent.isNull())
+                writeToJson(ent, i);
+                auto it = norments.find(i.getName());
+
+                if (it == norments.end())
                 {
-                    auto it = norments.find(i.getName());
-
-                    if (it == norments.end())
+                    auto ent = factory->findEntity(i.getName());
+                    if (ent)
                     {
-                        auto ent = factory->findEntity(i.getName());
-                        if (ent)
-                        {
-                            it = norments.insert(std::make_pair(i.getName(), Json::Value())).first;
-                            normalizeConfig(*ent, &it->second, *factory);
-                        }
+                        it = norments.insert(std::make_pair(i.getName(), Json::Value())).first;
+                        normalizeConfig(*ent, &it->second, *factory);
                     }
-
-                    if (it != norments.end())
-                    {
-                        Json::Value diff;
-                        diffJson(ent, it->second, &diff);
-                        diff["name"] = i.getName();
-                        mgrnode.append(diff);
-                    }
-                    else
-                        mgrnode.append(ent);
                 }
+
+                if (it != norments.end())
+                {
+                    Json::Value diff;
+                    diffJson(ent, it->second, &diff);
+                    diff["name"] = i.getName();
+                    ent = std::move(diff);
+                }
+
+                if (callback(ent, i) && !ent.isNull())
+                    mgrnode.append(ent);
+
             }
         }
 

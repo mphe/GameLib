@@ -5,16 +5,12 @@ namespace gamelib
 {
     bool save(const std::string& fname)
     {
-        return save(fname, [](Json::Value& node, Entity& ent) {
-                writeToJson(node, ent);
-            });
+        return save(fname, [](Json::Value&, Entity&) { return true; });
     }
 
     bool saveToJson(Json::Value& node)
     {
-        return saveToJson(node, [](Json::Value& node, Entity& ent) {
-                writeToJson(node, ent);
-            });
+        return saveToJson(node, [](Json::Value&, Entity&) { return true; });
     }
 
 

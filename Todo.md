@@ -19,8 +19,6 @@
   * recursively load-once resource files
   * write loaders for various config files
 
-* remove callbacks in export code because they became redundant when diffs where introduced
-
 * Split Updatable in Updatable and BaseUpdatable
   * BaseUpdatable <- Updatable
   * BaseUpdatable <- PhysicsComponent
@@ -115,4 +113,5 @@
     * notzero
 
 
-<!-- vim: tabstop=2 shiftwidth=2 -->
+<!-- vim: tabstop=2 shiftwidth=2 
+-->
