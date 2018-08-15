@@ -216,6 +216,7 @@ namespace gamelib
         static bool layerbox = true;
         static bool entprops = true;
         static bool entlist = true;
+        static bool entfac = false;
         static bool gamecfg = false;
         static FileDialog loaddlg(FileDialog::Load);
         static FileDialog savedlg;
@@ -269,14 +270,16 @@ namespace gamelib
             }
             if (ImGui::BeginMenu("Tools"))
             {
-                if (ImGui::MenuItem("Resource Viewer"))
-                    _resviewer.open();
                 ImGui::MenuItem("Toolbox", nullptr, &toolbox);
                 ImGui::MenuItem("Entity properties", nullptr, &entprops);
                 ImGui::MenuItem("Entity list", nullptr, &entlist);
                 ImGui::MenuItem("Layer settings", nullptr, &layerbox);
-                ImGui::MenuItem("Json viewer", nullptr, &jsonwindow);
                 ImGui::MenuItem("Global game config", nullptr, &gamecfg);
+                ImGui::Separator();
+                ImGui::MenuItem("Json viewer", nullptr, &jsonwindow);
+                ImGui::MenuItem("Entity Factory", nullptr, &entfac);
+                if (ImGui::MenuItem("Resource Viewer"))
+                    _resviewer.open();
                 ImGui::Separator();
                 ImGui::MenuItem("Test window", nullptr, &testwindow);
                 ImGui::EndMenu();
@@ -323,6 +326,9 @@ namespace gamelib
 
             if (entlist)
                 drawEntityList(&entlist);
+
+            if (entfac)
+                drawEntityFactory(&entfac);
 
             if (_entsearch)
                 drawSearchPopup(&_entsearch);
