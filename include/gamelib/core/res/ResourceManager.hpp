@@ -38,6 +38,12 @@
 //         ],
 //         ...
 //     }
+//
+//     # Files to load but without caching them.
+//     # Useful for config files that are only applied once
+//     "once": {
+//         # same structure as "preload"
+//     }
 // }
 
 
@@ -48,7 +54,7 @@ namespace gamelib
     class ResourceManager : public JsonSerializer, public Subsystem<ResourceManager>
     {
         public:
-            typedef BaseResourceHandle(*LoaderCallback)(const std::string&, ResourceManager* resmgr);
+            typedef BaseResourceHandle(*LoaderCallback)(const std::string& fname, ResourceManager* resmgr);
 
             constexpr static const char* name = "ResourceManager";
 

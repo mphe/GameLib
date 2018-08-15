@@ -52,6 +52,27 @@ namespace gamelib
             }
         }
 
+        if (node.isMember("once"))
+        {
+            auto& once = node["once"];
+            for (Json::Value::const_iterator it = once.begin(); it != once.end(); ++it)
+            {
+                if (it->empty())
+                    continue;
+
+                std::string subfolder = it.key().asString();
+                if (!subfolder.empty())
+                    assureDelimiter(&subfolder);
+
+                if (reload)
+                    for (auto& fname : *it)
+                        loadOnce(subfolder + fname.asString());
+                else
+                    for (auto& fname : *it)
+                        getOnce(subfolder + fname.asString());
+            }
+        }
+
         return true;
     }
 
