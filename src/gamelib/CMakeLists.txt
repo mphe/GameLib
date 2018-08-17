@@ -83,10 +83,22 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/extlib/jsoncpp/include
 )
 
+add_library(${PROJECT_NAME} ${GAMELIB_SOURCES})
+target_link_libraries(${PROJECT_NAME} ${EXT_LIBRARIES})
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
+
+
+if (GAMELIB_BUILD_TOOLS)
+    source_group(tools FILES main/checkentcfg.cpp)
+    gen_binary(checkentcfg main/checkentcfg.cpp)
+endif()
+
+
 if(GAMELIB_BUILD_EDITOR)
     find_package(OpenGL)
 
     set(EDITOR_SOURCES
+        main/editormain.cpp
         editor/Editor.cpp
         editor/EditorShared.cpp
         editor/tools/SelectTool.cpp
@@ -108,18 +120,12 @@ if(GAMELIB_BUILD_EDITOR)
         editor/events/OnSelect.cpp
     )
 
-    set(EXT_LIBRARIES
-        ${EXT_LIBRARIES}
+    source_group(editor FILES ${EDITOR_SOURCES} main/editormain.cpp)
+
+    set(EXT_EDITOR_LIBRARIES
         ${OPENGL_LIBRARIES}
         imgui
     )
-
-    set(GAMELIB_SOURCES
-        ${GAMELIB_SOURCES}
-        ${EDITOR_SOURCES}
-    )
-
-    source_group(editor FILES ${EDITOR_SOURCES} main/editormain.cpp)
 
     include_directories(
         ${PROJECT_SOURCE_DIR}/extlib/imgui
@@ -127,20 +133,11 @@ if(GAMELIB_BUILD_EDITOR)
         ${PROJECT_SOURCE_DIR}/extlib/imguifilesystem
     )
 
-    gen_binary(editor main/editormain.cpp)
+    gen_binary(editor ${EDITOR_SOURCES})
+    target_link_libraries(editor ${EXT_EDITOR_LIBRARIES})
 
     add_custom_target(run
         COMMAND editor assets/testmap.json
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        )
+    )
 endif()
-
-if (GAMELIB_BUILD_TOOLS)
-    source_group(tools FILES main/checkentcfg.cpp)
-    gen_binary(checkentcfg main/checkentcfg.cpp)
-endif()
-
-
-add_library(${PROJECT_NAME} ${GAMELIB_SOURCES})
-target_link_libraries(${PROJECT_NAME} ${EXT_LIBRARIES})
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
