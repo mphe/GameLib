@@ -336,6 +336,7 @@ namespace gamelib
                     ImGui::SameLine();
                 else
                     w = ImGui::GetContentRegionAvailWidth();
+                return false;
                 }, id);
 
         ImGui::NewLine();
@@ -357,6 +358,7 @@ namespace gamelib
                     selected = true;
                 }
                 ++i;
+                return false;
         }, id);
 
         return selected;

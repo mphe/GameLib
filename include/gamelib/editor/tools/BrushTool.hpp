@@ -28,10 +28,12 @@ namespace gamelib
 
         private:
             BrushComponent* _getIfSame() const;
+            void _apply(BrushComponent* brush) const;
 
         private:
             bool _showdraggers;
             bool _snappoint;
+            bool _solid;
             math::Vec2f _offset;
             int _linewidth;
 

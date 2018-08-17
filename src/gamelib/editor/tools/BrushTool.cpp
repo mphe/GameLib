@@ -28,10 +28,17 @@ namespace gamelib
     BrushTool::BrushTool() :
         _showdraggers(true),
         _snappoint(true),
+        _solid(false),
         _linewidth(32),
         _type(Polygon),
         _tex(nullptr)
-    { }
+    {
+        getSubsystem<ResourceManager>()->foreach([&](const std::string&, BaseResourceHandle res) {
+                _tex = res.as<TextureResource>();
+                _linewidth = _tex->getSize().y;
+                return true;
+            }, TextureResource::id);
+    }
 
     void BrushTool::onMousePressed()
     {
@@ -52,13 +59,7 @@ namespace gamelib
         else
         {
             auto brush = getEntity(createEntity(brushEntities[_type]));
-            selected = brush->findByType<BrushComponent>();
-            selected->getBrushShape()->texture = _tex;
-            selected->getBrushShape()->setTexOffset(_offset);
-
-            if (_type == Line)
-                static_cast<LineBrushComponent*>(selected)->setWidth(_linewidth);
-
+            _apply(brush->findByType<BrushComponent>());
             brush->getTransform().setPosition(EditorShared::getMouseSnapped());
             EditorShared::getSelectTool().select(brush);
             onMousePressed();
@@ -85,7 +86,7 @@ namespace gamelib
                     drawLine(target, pol.get(-1), mouse);
                     drawLine(target, pol.get(-2), mouse);
                 }
-                else if ((_type == Line || _type == Polygon) && pol.size() > 0)
+                else if (pol.size() > 0)
                 {
                     drawLine(target, pol.get(-1), mouse);
                 }
@@ -120,6 +121,7 @@ namespace gamelib
 
         ImGui::InputFloat2("Texture offset", &_offset[0], 2);
 
+        ImGui::Checkbox("Solid", &_solid);
         ImGui::Checkbox("Snap to points", &_snappoint);
         ImGui::Checkbox("Show drag boxes", &_showdraggers);
 
@@ -128,12 +130,21 @@ namespace gamelib
 
         auto brush = _getIfSame();
         if (brush && ImGui::Button("Apply"))
-        {
-            if (_type == Line)
-                static_cast<LineBrushComponent*>(brush)->setWidth(_linewidth);
-            brush->getBrushShape()->texture = _tex;
-            brush->getBrushShape()->setTexOffset(_offset);
-        }
+            _apply(brush);
+    }
+
+    void BrushTool::_apply(BrushComponent* brush) const
+    {
+        if (_type == Line)
+            static_cast<LineBrushComponent*>(brush)->setWidth(_linewidth);
+
+        brush->getBrushShape()->texture = _tex;
+        brush->getBrushShape()->setTexOffset(_offset);
+
+        if (_solid)
+            ADDFLAG(brush->getBrushPolygon()->flags, collision_solid);
+        else
+            RMFLAG(brush->getBrushPolygon()->flags, collision_solid);
     }
 
     BrushComponent* BrushTool::_getIfSame() const

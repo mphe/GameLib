@@ -98,13 +98,15 @@ namespace gamelib
             auto destroy() -> void;
 
             // Calls a callback for each resource (of the given type).
-            // Callback format: callback(const std::string&, BaseResourceHandle)
+            // Loop breaks when the callback returns true.
+            // Callback signature: bool(const std::string&, BaseResourceHandle)
             template <typename F>
             auto foreach(F callback, ID type = invalidID) -> void
             {
                 for (auto it = _res.begin(); it != _res.end(); ++it)
                     if (type == invalidID || it->second.getResource()->getID() == type)
-                        callback(it->first, it->second);
+                        if (callback(it->first, it->second))
+                            return;
             }
 
         private:

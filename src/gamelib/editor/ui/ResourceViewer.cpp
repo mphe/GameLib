@@ -80,7 +80,7 @@ namespace gamelib
         if (!resmgr)
             return;
 
-        resmgr->foreach ([&](const std::string& fname, BaseResourceHandle res) {
+        resmgr->foreach([&](const std::string& fname, BaseResourceHandle res) {
                 auto id = res.getResource()->getID();
                 if (std::find_if(_cache.begin(), _cache.end(), [id](const CacheEntry& entry) {
                             return entry.id == id;
@@ -90,6 +90,7 @@ namespace gamelib
                     _cache.back().id = id;
                     getResourceMeta(id, &_cache.back().name, nullptr, nullptr);
                 }
+                return false;
         });
     }
 }
