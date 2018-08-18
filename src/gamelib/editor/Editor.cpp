@@ -264,6 +264,7 @@ namespace gamelib
                     ImGui::MenuItem("Show solids", nullptr, &_overlay.renderSolid);
                     ImGui::MenuItem("Show solid normals", nullptr, &_overlay.renderNormals);
                     ImGui::MenuItem("Show velocity", nullptr, &_overlay.renderVel);
+                    ImGui::MenuItem("Show wireframe", nullptr, &_overlay.wireframe);
                     ImGui::EndMenu();
                 }
 

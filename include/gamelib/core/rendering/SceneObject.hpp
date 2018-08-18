@@ -44,7 +44,8 @@ namespace gamelib
             virtual auto getBBox() const     -> const math::AABBf&;
 
             auto getLocalBounds() const -> math::AABBf;
-            auto getTransform() const -> const sf::Transform&;
+            auto getTransform() const   -> const sf::Transform&;
+            auto getVertices() const    -> const sf::VertexArray&;
 
         private:
             auto _updateTransform(bool force = false) const -> void;

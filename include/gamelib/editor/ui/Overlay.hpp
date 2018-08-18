@@ -17,6 +17,7 @@ namespace gamelib
             bool renderNormals;
             bool renderVel;
             bool showCoords;
+            bool wireframe;
     };
 }
 

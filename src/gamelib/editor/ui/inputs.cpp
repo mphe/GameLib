@@ -131,12 +131,10 @@ namespace gamelib
 
     void inputSceneData(SceneData& sd)
     {
-        static constexpr const char* renderFlags[] { "Invisible", "Disable parallax", "Wireframe", "Hidden", "Draw hidden" };
-
         int depth = sd.getDepth();
         float parallax = sd.getParallax();
 
-        inputBitflags(&sd.flags, 5, renderFlags);
+        inputBitflags(&sd.flags, num_renderflags, str_renderflags);
 
         if (ImGui::InputInt("Depth", &depth, 1, 100))
             sd.setDepth(depth);

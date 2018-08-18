@@ -189,4 +189,9 @@ namespace gamelib
         _updateTransform();
         return _trans;
     }
+
+    const sf::VertexArray& SceneObject::getVertices() const
+    {
+        return _vertices;
+    }
 }
