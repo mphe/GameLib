@@ -1,5 +1,6 @@
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/editor/Editor.hpp"
+#include "gamelib/editor/tools/SelectTool.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
 
 namespace gamelib
@@ -29,6 +30,11 @@ namespace gamelib
     SelectTool& EditorShared::getSelectTool()
     {
         return _editor->getSelectTool();
+    }
+
+    Entity* EditorShared::getSelected()
+    {
+        return getSelectTool().getSelected();
     }
 
 

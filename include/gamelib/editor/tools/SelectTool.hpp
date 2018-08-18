@@ -25,13 +25,13 @@ namespace gamelib
             auto getSelected() const -> const Entity*;
             auto getSelected()       -> Entity*;
 
+        public:
+            bool renderBBox;
+            bool renderAllBoxes;
+
         private:
             Entity::Handle _selected;
             math::Vec2f _dragoffset;
-            bool _renderSolid;
-            bool _renderAllBoxes;
-            bool _renderVel;
-            bool _renderNormals;
     };
 }
 

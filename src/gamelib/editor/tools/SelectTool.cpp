@@ -1,25 +1,19 @@
 #include "gamelib/editor/tools/SelectTool.hpp"
-#include "gamelib/utils/log.hpp"
 #include "gamelib/core/event/EventManager.hpp"
 #include "gamelib/core/ecs/RenderComponent.hpp"
 #include "gamelib/core/ecs/CollisionComponent.hpp"
-#include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/geometry/CollisionSystem.hpp"
-#include "gamelib/editor/tools/ToolUtils.hpp"
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/editor/events/OnSelect.hpp"
-#include "gamelib/components/update/QPhysics.hpp"
-#include "gamelib/components/geometry/Polygon.hpp"
+#include "gamelib/editor/tools/ToolUtils.hpp"
 #include "imgui.h"
 
 namespace gamelib
 {
     SelectTool::SelectTool() :
-        _renderSolid(true),
-        _renderAllBoxes(false),
-        _renderVel(true),
-        _renderNormals(true)
+        renderBBox(true),
+        renderAllBoxes(false)
     { }
 
     void SelectTool::onMousePressed()
@@ -42,60 +36,34 @@ namespace gamelib
     void SelectTool::render(sf::RenderTarget& target)
     {
         auto* ent = getSelected();
-        if (ent)
+        if (!ent)
+            return;
+
+        if (renderBBox)
         {
-            if (_renderAllBoxes)
-            {
-                math::AABBf box = ent->getTransform().getBBox();
-                box.extend(math::AABBf(0, 0, 1, 1));
-                drawRectOutline(target, box);
-            }
-            else
-                drawRectOutline(target, ent->getTransform().getBBox());
-
-            if (_renderAllBoxes)
-                for (auto& i : ent->getTransform().getChildren())
-                    drawRectOutline(target, i->getBBox(), sf::Color::Green);
-
-            if (_renderSolid)
-                drawCollisions(target, *ent, collision_solid);
-
-            if (_renderVel)
-            {
-                auto phys = ent->findByName<QPhysics>();
-                if (phys && phys->getHull() && phys->vel != math::Vec2f())
-                {
-                    auto start = phys->getHull()->getCenter();
-                    auto end = start + phys->vel;
-                    drawArrow(target, start.x, start.y, end.x, end.y, sf::Color::Cyan);
-                }
-            }
-
-            if (_renderNormals)
-            {
-                ent->findAllByName<Polygon>([&](Polygon* pol) {
-                        if (pol->flags & collision_solid)
-                            drawNormals(target, pol->getPolygon());
-                        return false;
-                    });
-            }
-
-            auto& pos = ent->getTransform().getPosition();
-            sf::Vertex cross[4];
-            cross[0] = sf::Vertex(sf::Vector2f(pos.x - 2, pos.y - 2), sf::Color::Red);
-            cross[1] = sf::Vertex(sf::Vector2f(pos.x + 2, pos.y + 2), sf::Color::Red);
-            cross[2] = sf::Vertex(sf::Vector2f(pos.x + 2, pos.y - 2), sf::Color::Red);
-            cross[3] = sf::Vertex(sf::Vector2f(pos.x - 2, pos.y + 2), sf::Color::Red);
-            target.draw(cross, 4, sf::Lines);
+            auto box = ent->getTransform().getBBox();
+            if (renderAllBoxes)
+                box.extend(math::AABBf(0, 0, 0.5, 0.5));
+            drawRectOutline(target, box);
         }
+
+        if (renderAllBoxes)
+            for (auto& i : ent->getTransform().getChildren())
+                drawRectOutline(target, i->getBBox(), sf::Color::Green);
+
+        auto& pos = ent->getTransform().getPosition();
+        sf::Vertex cross[4];
+        cross[0] = sf::Vertex(sf::Vector2f(pos.x - 2, pos.y - 2), sf::Color::Red);
+        cross[1] = sf::Vertex(sf::Vector2f(pos.x + 2, pos.y + 2), sf::Color::Red);
+        cross[2] = sf::Vertex(sf::Vector2f(pos.x + 2, pos.y - 2), sf::Color::Red);
+        cross[3] = sf::Vertex(sf::Vector2f(pos.x - 2, pos.y + 2), sf::Color::Red);
+        target.draw(cross, 4, sf::Lines);
     }
 
     void SelectTool::drawGui()
     {
-        ImGui::Checkbox("Show solid", &_renderSolid);
-        ImGui::Checkbox("Show child transforms", &_renderAllBoxes);
-        ImGui::Checkbox("Show velocity", &_renderVel);
-        ImGui::Checkbox("Show solid polygon normals", &_renderNormals);
+        ImGui::Checkbox("Show bounding box", &renderBBox);
+        ImGui::Checkbox("Show child bounding boxes", &renderAllBoxes);
     }
 
     void SelectTool::select(Entity::Handle enthandle)

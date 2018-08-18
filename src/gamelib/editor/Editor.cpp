@@ -30,7 +30,7 @@ namespace gamelib
     constexpr const char* buttonStrings[] = {
         "Select Tool",
         "Sprite Tool",
-        "Polygon Tool",
+        "Brush Tool",
         "Vertex Tool",
         "Entity Tool"
     };
@@ -129,6 +129,8 @@ namespace gamelib
 
         if (_currenttool)
             _currenttool->render(target);
+
+        _overlay.render(target);
 
         ImGui::Render();
     }
@@ -257,6 +259,13 @@ namespace gamelib
             }
             if (ImGui::BeginMenu("View"))
             {
+                if (ImGui::BeginMenu("Selected entity"))
+                {
+                    for (size_t i = 0; i < sizeof(_overlay.flags); ++i)
+                        ImGui::MenuItem(overlay_strings[i], nullptr, &_overlay.flags[i]);
+                    ImGui::EndMenu();
+                }
+
                 auto scene = getSubsystem<Scene>();
                 if (ImGui::MenuItem("Show hidden", nullptr, scene->flags & render_drawhidden))
                     TOGGLEFLAG(scene->flags, render_drawhidden);
@@ -444,6 +453,7 @@ namespace gamelib
     void defaultExport(const std::string& fname)
     {
         // TODO: strip BrushComponent
+        // TODO: export as entity
         save(fname);
         LOG("Map exported to ", fname);
     }

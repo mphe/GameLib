@@ -126,7 +126,6 @@ namespace gamelib
         ImGui::Checkbox("Show drag boxes", &_showdraggers);
 
         ImGui::PopItemWidth();
-        ImGui::Separator();
 
         auto brush = _getIfSame();
         if (brush && ImGui::Button("Apply"))

@@ -9,6 +9,7 @@
 #include "gamelib/core/event/Event.hpp"
 #include "ui/Grid.hpp"
 #include "ui/ResourceViewer.hpp"
+#include "gamelib/editor/ui/Overlay.hpp"
 
 namespace gamelib
 {
@@ -68,6 +69,7 @@ namespace gamelib
 
             FreeCam _camctrl;
             ResourceViewer _resviewer;
+            Overlay _overlay;
             bool _entsearch;
 
             math::Point2f _mouseSnapped;

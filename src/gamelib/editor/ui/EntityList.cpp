@@ -71,11 +71,6 @@ namespace gamelib
         {
             static char buf[256] = { 0 };
 
-            ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() * 0.5);
-            ImGui::InputText("Filter", buf, sizeof(buf));
-            ImGui::PopItemWidth();
-
-            ImGui::SameLine();
             if (okButton("Select"))
                 selectfirst = true;
             ImGui::SameLine();
@@ -84,6 +79,11 @@ namespace gamelib
                 memset(buf, 0, sizeof(buf));
                 ImGui::SetKeyboardFocusHere(-1);
             }
+
+            ImGui::SameLine();
+            ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+            ImGui::InputText("Filter", buf, sizeof(buf));
+            ImGui::PopItemWidth();
 
             if (ImGui::ListBoxHeader("##entities", ImVec2(-1, -1)))
             {

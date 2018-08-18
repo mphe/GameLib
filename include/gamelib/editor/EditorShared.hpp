@@ -7,6 +7,7 @@ namespace gamelib
 {
     class Editor;
     class SelectTool;
+    class Entity;
 
     class EditorShared
     {
@@ -20,6 +21,7 @@ namespace gamelib
             static auto snap(const math::Point2f& p) -> math::Point2f;
 
             static auto getSelectTool() -> SelectTool&;
+            static auto getSelected()   -> Entity*;
 
         private:
             static Editor* _editor; // Set by Editor
