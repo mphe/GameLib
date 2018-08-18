@@ -49,15 +49,15 @@ namespace gamelib
             _scene->remove(this);
     }
 
+
     void SceneObject::render(sf::RenderTarget& target) const
     {
         render(target, sf::RenderStates());
     }
 
-    void SceneObject::render(sf::RenderTarget& target, const sf::RenderStates& states_) const
+    void SceneObject::render(sf::RenderTarget& target, sf::RenderStates states) const
     {
-        sf::RenderStates states(states_);
-        states.transform.combine(getTransform());
+        states.transform *= getTransform();
         target.draw(_vertices, states);
     }
 
@@ -67,6 +67,18 @@ namespace gamelib
         auto bounds = getTransform().transformRect(_vertices.getBounds());
         _bbox = math::AABBf(bounds.left, bounds.top, bounds.width, bounds.height);
         markDirty();
+    }
+
+    void SceneObject::_updateTransform(bool force) const
+    {
+        if (!force && !_transDirty)
+            return;
+
+        _trans = sf::Transform::Identity;
+        _trans.translate(_pos.x - _origin.x, _pos.y - _origin.y);
+        _trans.rotate(_rotation, _origin.x, _origin.y);
+        _trans.scale(_scale.x, _scale.y, _origin.x, _origin.y);
+        _transDirty = false;
     }
 
 
@@ -83,6 +95,7 @@ namespace gamelib
 
         gamelib::loadFromJson(node["transform"], *static_cast<Transformable*>(this));
         gamelib::loadFromJson(node["origin"], _origin);
+        _transDirty = true;
 
         return true;
     }
@@ -109,6 +122,7 @@ namespace gamelib
         _bbox.pos += rel;
         _pos += rel;
         _updateBBox();
+        _transDirty = true;
         Transformable::move(rel);
     }
 
@@ -117,6 +131,7 @@ namespace gamelib
         _bbox.size *= scale;
         _scale *= scale;
         _updateBBox();
+        _transDirty = true;
         Transformable::scale(scale);
     }
 
@@ -124,13 +139,18 @@ namespace gamelib
     {
         _rotation += angle;
         _updateBBox();
+        _transDirty = true;
         Transformable::rotate(angle);
     }
 
     void SceneObject::setOrigin(const math::Point2f& origin)
     {
         _origin = origin;
+        _updateBBox();
+        _transDirty = true;
+        markDirty();
     }
+
 
     const math::Point2f& SceneObject::getOrigin() const
     {
@@ -157,18 +177,16 @@ namespace gamelib
         return _bbox;
     }
 
+
     math::AABBf SceneObject::getLocalBounds() const
     {
         auto bounds = _vertices.getBounds();
         return math::AABBf(bounds.left, bounds.top, bounds.width, bounds.height);
     }
 
-    sf::Transform SceneObject::getTransform() const
+    const sf::Transform& SceneObject::getTransform() const
     {
-        sf::Transform trans;
-        trans.translate(_pos.x - _origin.x, _pos.y - _origin.y);
-        trans.rotate(_rotation, _origin.x, _origin.y);
-        trans.scale(_scale.x, _scale.y, _origin.x, _origin.y);
-        return trans;
+        _updateTransform();
+        return _trans;
     }
 }

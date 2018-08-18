@@ -78,7 +78,7 @@
   * render offset shader
   * render repeat shader (for texture regions)
   * Scene force redraw
-  * SceneObject should not render itself
+  * Consider SceneObject to not not render itself
     * contains vertices, texture, shader, transform, ...
     * rendered by scene
     * optionally static render function to render outside of a scene

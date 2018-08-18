@@ -25,7 +25,7 @@ namespace gamelib
             auto unregister() -> void;
 
             auto render(sf::RenderTarget& target) const -> void;
-            virtual auto render(sf::RenderTarget& target, const sf::RenderStates& states) const -> void;
+            virtual auto render(sf::RenderTarget& target, sf::RenderStates states) const -> void;
 
             virtual auto loadFromJson(const Json::Value& node) -> bool;
             virtual auto writeToJson(Json::Value& node)        -> void;
@@ -44,7 +44,10 @@ namespace gamelib
             virtual auto getBBox() const     -> const math::AABBf&;
 
             auto getLocalBounds() const -> math::AABBf;
-            auto getTransform() const -> sf::Transform;
+            auto getTransform() const -> const sf::Transform&;
+
+        private:
+            auto _updateTransform(bool force = false) const -> void;
 
         protected:
             // Should be called by parents whenever the vertex list changes
@@ -54,12 +57,14 @@ namespace gamelib
             sf::VertexArray _vertices;
 
         private:
-            Layer::Handle _layer;   // TODO: Could be turned into a parent when Scene supports it
+            Layer::Handle _layer;
             math::AABBf _bbox;
             math::Point2f _pos;
             math::Vec2f _scale;
             math::Point2f _origin;
             float _rotation;
+            mutable sf::Transform _trans;
+            mutable bool _transDirty;
     };
 }
 

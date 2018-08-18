@@ -124,16 +124,10 @@ namespace gamelib
         return _vertices.getVertexCount();
     }
 
-    void PolygonShape::render(sf::RenderTarget& target, const sf::RenderStates& states_) const
+    void PolygonShape::render(sf::RenderTarget& target, sf::RenderStates states) const
     {
-        if (!states_.texture)
-        {
-            sf::RenderStates states(states_);
-            states.texture = texture.get();
-            SceneObject::render(target, states);
-        }
-        else
-            SceneObject::render(target, states_);
+        states.texture = texture.get();
+        SceneObject::render(target, states);
 
         // TODO: could be done more efficient, but this is just for testing anyways
         if (flags & render_wireframe && _vertices.getVertexCount() > 2)
@@ -141,14 +135,14 @@ namespace gamelib
             sf::Vertex line[3];
             line[0] = sf::Vertex(_vertices[0].position);
             line[1] = sf::Vertex(_vertices[1].position);
-            target.draw(line, 2, sf::LineStrip, states_);
+            target.draw(line, 2, sf::LineStrip, getTransform());
 
             for (size_t i = 2; i < _vertices.getVertexCount(); ++i)
             {
                 line[0] = sf::Vertex(_vertices[i - 2].position);
                 line[1] = sf::Vertex(_vertices[i].position);
                 line[2] = sf::Vertex(_vertices[i - 1].position);
-                target.draw(line, 3, sf::LineStrip, states_);
+                target.draw(line, 3, sf::LineStrip, getTransform());
             }
         }
     }

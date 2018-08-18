@@ -90,6 +90,7 @@ namespace gamelib
         for (auto& o : _renderQueue)
         {
             // Skip if outside of view
+            // TODO: honor parallax
             if (!o->getBBox().intersect(vbox))
             {
                 if (o->getBBox().w == 0 || o->getBBox().h == 0)

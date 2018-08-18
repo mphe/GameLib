@@ -41,7 +41,7 @@ namespace gamelib
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
 
-            auto render(sf::RenderTarget& target, const sf::RenderStates& states_) const -> void;
+            auto render(sf::RenderTarget& target, sf::RenderStates states_) const -> void;
 
         protected:
             auto _init()    -> bool;

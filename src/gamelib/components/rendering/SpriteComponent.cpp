@@ -97,16 +97,10 @@ namespace gamelib
         return _sprite.getResource()->getPath();
     }
 
-    void SpriteComponent::render(sf::RenderTarget& target, const sf::RenderStates& states_) const
+    void SpriteComponent::render(sf::RenderTarget& target, sf::RenderStates states) const
     {
-        if (!states_.texture)
-        {
-            sf::RenderStates states(states_);
-            states.texture = _sprite->tex.get();
-            SceneObject::render(target, states);
-        }
-        else
-            SceneObject::render(target, states_);
+        states.texture = _sprite->tex.get();
+        SceneObject::render(target, states);
     }
 
 

@@ -46,7 +46,7 @@ namespace gamelib
 
             auto size() const -> size_t;
 
-            auto render(sf::RenderTarget& target, const sf::RenderStates& states) const -> void;
+            auto render(sf::RenderTarget& target, sf::RenderStates states) const -> void;
 
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
