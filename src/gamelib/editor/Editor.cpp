@@ -261,10 +261,13 @@ namespace gamelib
             {
                 if (ImGui::BeginMenu("Selected entity"))
                 {
-                    for (size_t i = 0; i < sizeof(_overlay.flags); ++i)
-                        ImGui::MenuItem(overlay_strings[i], nullptr, &_overlay.flags[i]);
+                    ImGui::MenuItem("Show solids", nullptr, &_overlay.renderSolid);
+                    ImGui::MenuItem("Show solid normals", nullptr, &_overlay.renderNormals);
+                    ImGui::MenuItem("Show velocity", nullptr, &_overlay.renderVel);
                     ImGui::EndMenu();
                 }
+
+                ImGui::MenuItem("Show mouse coordinates", nullptr, &_overlay.showCoords);
 
                 auto scene = getSubsystem<Scene>();
                 if (ImGui::MenuItem("Show hidden", nullptr, scene->flags & render_drawhidden))

@@ -67,6 +67,7 @@
     * averaging normals might not be the best solution
   * add a non-gravity version
   * fix sharp corners (<90°)
+  * if there's no collision component assigned, don't to clip checking, but don't disable all physics
 
 * collisions
   * Remove Collidable and merge it into CollisionComponent
@@ -84,7 +85,6 @@
 
 * editor
   * grid numbers
-  * mouse coordinates
   * automatically add sprite and mask to entities without rendering
   * toolbox class
   * custom entities
@@ -93,7 +93,6 @@
   * PhysicsBrush
   * copy entity
   * fix behaviour in negative coord space
-  * BrushTool solid option
 
 * make Engine a Subsystem
   * makes a backup of an existing active Engine

@@ -3,19 +3,31 @@
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/geometry/flags.hpp"
+#include "gamelib/core/input/InputSystem.hpp"
 #include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/components/update/QPhysics.hpp"
+#include "imgui.h"
 
 namespace gamelib
 {
     Overlay::Overlay() :
         renderSolid(true),
         renderNormals(true),
-        renderVel(true)
+        renderVel(true),
+        showCoords(false)
     { }
 
     void Overlay::render(sf::RenderTarget& target)
     {
+        auto input = getSubsystem<InputSystem>();
+        if (!input->isMouseConsumed() && showCoords)
+        {
+            auto mouse = EditorShared::isSnapEnabled() ? EditorShared::getMouseSnapped() : EditorShared::getMouse();
+            ImGui::BeginTooltip();
+            ImGui::SetTooltip("%i, %i", (int)mouse.x, (int)mouse.y);
+            ImGui::EndTooltip();
+        }
+
         auto* ent = EditorShared::getSelected();
         if (!ent)
             return;

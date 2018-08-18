@@ -5,12 +5,6 @@
 
 namespace gamelib
 {
-    constexpr const char* overlay_strings[] = {
-        "Show solids",
-        "Show solid normals",
-        "Show velocity",
-    };
-
     class Overlay
     {
         public:
@@ -19,14 +13,10 @@ namespace gamelib
             auto render(sf::RenderTarget& target) -> void;
 
         public:
-            union {
-                bool flags[3];
-                struct {
-                    bool renderSolid;
-                    bool renderNormals;
-                    bool renderVel;
-                };
-            };
+            bool renderSolid;
+            bool renderNormals;
+            bool renderVel;
+            bool showCoords;
     };
 }
 
