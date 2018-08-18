@@ -33,11 +33,7 @@ namespace gamelib
         _type(Polygon),
         _tex(nullptr)
     {
-        getSubsystem<ResourceManager>()->foreach([&](const std::string&, BaseResourceHandle res) {
-                _tex = res.as<TextureResource>();
-                _linewidth = _tex->getSize().y;
-                return true;
-            }, TextureResource::id);
+        _tex = getSubsystem<ResourceManager>()->find<TextureResource>();
     }
 
     void BrushTool::onMousePressed()

@@ -83,6 +83,16 @@ namespace gamelib
             // Check if the resource exists and return a (null)pointer to it.
             auto find(const std::string& fname) -> BaseResourceHandle;
 
+            // Returns the first resource of the given type (if any).
+            // If the type is InvalidID the first resource of any type is returned.
+            auto find(ID type) -> BaseResourceHandle;
+
+            template <typename T>
+            auto find() -> typename T::Handle
+            {
+                return find(T::id).template as<T>();
+            }
+
             // Link a file extension to a loader-callback
             auto registerFileType(const std::string& ext, LoaderCallback cb) -> void;
 

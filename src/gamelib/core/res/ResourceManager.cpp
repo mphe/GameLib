@@ -176,6 +176,16 @@ namespace gamelib
         return it->second;
     }
 
+    BaseResourceHandle ResourceManager::find(ID type)
+    {
+        BaseResourceHandle res;
+        foreach([&](const std::string&, BaseResourceHandle res_) {
+                res = res_;
+                return true;
+            }, type);
+        return res;
+    }
+
     void ResourceManager::registerFileType(const std::string& ext, LoaderCallback cb)
     {
         _typemap[ext] = cb;
