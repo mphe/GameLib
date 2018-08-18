@@ -17,11 +17,13 @@ namespace gamelib
     static const char* brushEntities[] = {
         "brush_polygon",
         "brush_line",
+        "brush_rect",
     };
 
     static const char* brushNames[] = {
         "Polygon",
         "Line",
+        "Rectangle",
     };
 
 
@@ -42,14 +44,24 @@ namespace gamelib
 
         if (selected)
         {
+            auto& pol = selected->getBrushPolygon()->getPolygon();
             math::Point2f p;
 
             if (_snappoint)
-                p = snap(selected->getBrushPolygon()->getPolygon(), EditorShared::getMouse());
+                p = snap(pol, EditorShared::getMouse());
             else
                 p = EditorShared::getMouseSnapped();
 
-            LOG_DEBUG("Creating Vertex at (", p.x, ", ", p.y, ")");
+            if (_type == Rect && pol.size() == 1)
+            {
+                auto start = pol.get(0);
+                // auto diff = p.asVector() - start.asVector();
+                selected->add(math::Point2f(start.x, p.y));
+                selected->add(math::Point2f(p.x, start.y));
+                // selected->add(math::Point2f(start.x, start.y + diff.y));
+                // selected->add(math::Point2f(start.x + diff.x, start.y));
+                // selected->add(start + diff);
+            }
             selected->add(p);
         }
         else
@@ -77,7 +89,11 @@ namespace gamelib
                 if (_snappoint)
                     mouse = snap(pol, EditorShared::getMouse());
 
-                if (_type == Polygon && pol.size() > 1)
+                if (_type == Rect && pol.size() == 1)
+                {
+                    drawRectOutline(target, math::AABBf(pol.get(0).asVector(), mouse.asVector() - pol.get(0).asVector()), sf::Color::White);
+                }
+                else if (_type == Polygon && pol.size() > 1)
                 {
                     drawLine(target, pol.get(-1), mouse);
                     drawLine(target, pol.get(-2), mouse);
@@ -123,14 +139,14 @@ namespace gamelib
 
         ImGui::PopItemWidth();
 
-        auto brush = _getIfSame();
+        auto brush = getIfBrush(EditorShared::getSelected());
         if (brush && ImGui::Button("Apply"))
             _apply(brush);
     }
 
     void BrushTool::_apply(BrushComponent* brush) const
     {
-        if (_type == Line)
+        if (brush->getEntity()->getName() == brushEntities[Line])
             static_cast<LineBrushComponent*>(brush)->setWidth(_linewidth);
 
         brush->getBrushShape()->texture = _tex;
@@ -144,11 +160,14 @@ namespace gamelib
 
     BrushComponent* BrushTool::_getIfSame() const
     {
-        auto selected = getIfBrush(EditorShared::getSelectTool().getSelected());
-        bool linebrush = selected && selected->getEntity()->getName() == brushEntities[Line];
-
-        if (((_type == Line) ^ linebrush))
-            return nullptr;
-        return selected;
+        auto selected = getIfBrush(EditorShared::getSelected());
+        if (selected && brushEntities[_type] == selected->getEntity()->getName())
+        {
+            if (_type == Rect && selected->getBrushPolygon()->size() > 1)
+                return nullptr;
+            else
+                return selected;
+        }
+        return nullptr;
     }
 }

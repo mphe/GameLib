@@ -16,6 +16,7 @@ namespace gamelib
             enum BrushType {
                 Polygon,
                 Line,
+                Rect,
                 NumBrushTypes
             };
 

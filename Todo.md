@@ -89,7 +89,6 @@
   * toolbox class
   * custom entities
     * entity flag to load an entity from savefile directly
-  * RectBrush
   * PhysicsBrush
   * copy entity
   * fix behaviour in negative coord space

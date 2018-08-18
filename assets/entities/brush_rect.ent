@@ -1,0 +1,12 @@
+{
+    "name": "brush_rect",
+    "components": {
+        "PolygonCollision": {
+            "type": 1,
+            "flags": 6,
+            "Normals": 1
+        },
+        "PolygonShape": { },
+        "BrushComponent": { }
+    }
+}

@@ -20,9 +20,6 @@
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "linewidth" : 64
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -326,9 +323,6 @@
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "linewidth" : 32
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "flags" : 7,
@@ -368,9 +362,6 @@
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "linewidth" : 32
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "flags" : 7,
@@ -410,6 +401,9 @@
       },
       {
          "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -456,6 +450,9 @@
       },
       {
          "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -502,6 +499,9 @@
       },
       {
          "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -549,6 +549,9 @@
       },
       {
          "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -609,6 +612,9 @@
       },
       {
          "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -655,6 +661,9 @@
       },
       {
          "components" : {
+            "BrushComponent#1" : {
+               "linewidth" : 32
+            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -715,9 +724,6 @@
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "linewidth" : 32
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "flags" : 7,
@@ -757,9 +763,6 @@
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "linewidth" : 32
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "flags" : 7,
@@ -928,19 +931,57 @@
          "transform" : {
             "pos" : [ 448, 704 ]
          }
+      },
+      {
+         "components" : {
+            "PolygonCollision#1" : {
+               "vertices" : [
+                  [ 0, 0 ],
+                  [ 0, -368 ],
+                  [ -608, 0 ],
+                  [ -608, -368 ]
+               ]
+            },
+            "PolygonShape#1" : {
+               "depth" : 3,
+               "texture" : "tex/bg.png",
+               "vertices" : [
+                  [
+                     [ 0, 0 ],
+                     [ 1600, 480 ]
+                  ],
+                  [
+                     [ 0, -368 ],
+                     [ 1600, 112 ]
+                  ],
+                  [
+                     [ -608, 0 ],
+                     [ 992, 480 ]
+                  ],
+                  [
+                     [ -608, -368 ],
+                     [ 992, 112 ]
+                  ]
+               ]
+            }
+         },
+         "name" : "brush_rect",
+         "transform" : {
+            "pos" : [ 1600, 480 ]
+         }
       }
    ],
    "scene" : {
       "cameras" : [
          {
-            "pos" : [ 620.23138427734375, -44.141307830810547 ],
+            "pos" : [ 597.88214111328125, -45.568992614746094 ],
             "size" : [ 1280, 720 ],
             "velocity" : [ 0, 0 ],
             "viewport" : {
                "pos" : [ 0, 0 ],
                "size" : [ 1, 1 ]
             },
-            "zoom" : 0.84500038623809814
+            "zoom" : 1.045000433921814
          }
       ],
       "defaultcam" : 0,
