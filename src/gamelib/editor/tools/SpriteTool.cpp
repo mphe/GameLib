@@ -11,6 +11,14 @@
 
 namespace gamelib
 {
+    SpriteTool::SpriteTool()
+    {
+        getSubsystem<ResourceManager>()->foreach([&](const std::string&, BaseResourceHandle res) {
+                _sprite = res.as<SpriteResource>();
+                return true;
+            }, SpriteResource::id);
+    }
+
     void SpriteTool::onMousePressed()
     {
         if (_sprite)

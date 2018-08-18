@@ -11,6 +11,8 @@ namespace gamelib
     class SpriteTool : public Tool
     {
         public:
+            SpriteTool();
+
             auto onMousePressed()                 -> void;
             auto drawGui()                        -> void;
             auto render(sf::RenderTarget& target) -> void;
