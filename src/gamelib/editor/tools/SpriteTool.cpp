@@ -27,7 +27,6 @@ namespace gamelib
             auto col = getEntity(handle)->findByName<AABB>();
             auto size = sprite->getLocalBounds().size;
             col->setSize(size);
-            col->move(-size / 2);
             EditorShared::getSelectTool().select(handle);
         }
     }
