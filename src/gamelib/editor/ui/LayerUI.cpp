@@ -18,10 +18,13 @@ namespace gamelib
             Scene& scene = *Scene::getActive();
             Layer* layer = nullptr;
 
+            ImGui::Columns(2);
+
             // Layer listbox with checkboxes to toggle visibility
             // TODO: Maybe open an issue on imgui's github page related to
             //       proper scaling when a listbox contains not only text
-            if (ImGui::ListBoxHeader("##Layers", -1, 7))
+            ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+            if (ImGui::ListBoxHeader("##Layers", ImVec2(0, -ImGui::GetItemsLineHeightWithSpacing())))
             {
                 scene.foreachLayer([&](Layer::Handle handle, Layer& layer) {
                         ImGui::PushID(layer.getName().c_str());
@@ -31,13 +34,14 @@ namespace gamelib
 
                         ImGui::SameLine();
 
-                        if (ImGui::Selectable(layer.getName().c_str(), (handle == current)))
+                        if (ImGui::Selectable(layer.getName().c_str(), (handle == current)) || current.isNull())
                             current = handle;
 
                         ImGui::PopID();
                     });
                 ImGui::ListBoxFooter();
             }
+            ImGui::PopItemWidth();
 
             if (ImGui::Button("New Layer"))
             {
@@ -54,7 +58,8 @@ namespace gamelib
                 current = Layer::Handle();
             }
 
-            ImGui::Separator();
+            // ImGui::Separator();
+            ImGui::NextColumn();
 
             // Layer properties
             layer = scene.getLayer(current);
@@ -63,6 +68,8 @@ namespace gamelib
                 // ImGui::Text("Name: %s", layer->getName().c_str());
                 inputSceneData(*layer);
             }
+
+            ImGui::Columns(1);
 
             if (ImGui::BeginPopupModal("Create new layer", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
             {
