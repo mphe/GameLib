@@ -100,12 +100,13 @@ namespace gamelib
             _updateRunFlags();
         }
 
+        ImGui::SFML::Update(getSubsystem<Game>()->getWindow(), sf::seconds(elapsed));
+        _overlay.drawDebugOverlay();
+
         if (!_run || !_hidegui)
         {
             input->markConsumed(ImGui::GetIO().WantCaptureKeyboard,
                     ImGui::GetIO().WantCaptureMouse);
-
-            ImGui::SFML::Update(getSubsystem<Game>()->getWindow(), sf::seconds(elapsed));
             _drawGui();
         }
 
@@ -118,19 +119,22 @@ namespace gamelib
 
     void Editor::render(sf::RenderTarget& target)
     {
-        if (_run && _hidegui)
-            return;
+        // if (_run && _hidegui)
+        //     return;
 
         // necessary, otherwise things will disappear randomly
         getSubsystem<Game>()->getWindow().resetGLStates();
 
-        if (_snap)
-            _grid.render(target);
+        if (!_run || !_hidegui)
+        {
+            if (_snap)
+                _grid.render(target);
 
-        if (_currenttool)
-            _currenttool->render(target);
+            if (_currenttool)
+                _currenttool->render(target);
 
-        _overlay.render(target);
+            _overlay.render(target);
+        }
 
         ImGui::Render();
     }
@@ -215,7 +219,7 @@ namespace gamelib
         static bool testwindow = false;
         static bool jsonwindow = false;
         static bool toolbox = true;
-        static bool layerbox = true;
+        static bool layerbox = false;
         static bool entprops = true;
         static bool entlist = true;
         static bool entfac = false;
@@ -350,6 +354,7 @@ namespace gamelib
                 drawGameConfig(&gamecfg);
 
             _resviewer.draw();
+            _overlay.drawGui();
 
             if (toolbox)
             {

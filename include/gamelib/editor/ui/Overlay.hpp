@@ -10,6 +10,8 @@ namespace gamelib
         public:
             Overlay();
 
+            auto drawDebugOverlay() -> void;
+            auto drawGui() -> void;
             auto render(sf::RenderTarget& target) -> void;
 
         public:
@@ -18,6 +20,8 @@ namespace gamelib
             bool renderVel;
             bool showCoords;
             bool wireframe;
+            bool debugOverlay;
+            bool debugOverlayMovable;
     };
 }
 

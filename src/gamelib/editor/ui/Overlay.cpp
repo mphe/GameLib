@@ -5,6 +5,8 @@
 #include "gamelib/core/ecs/RenderComponent.hpp"
 #include "gamelib/core/geometry/flags.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
+#include "gamelib/core/Game.hpp"
+#include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/components/update/QPhysics.hpp"
 #include "imgui.h"
@@ -16,10 +18,31 @@ namespace gamelib
         renderNormals(true),
         renderVel(true),
         showCoords(false),
-        wireframe(false)
+        wireframe(false),
+        debugOverlay(true),
+        debugOverlayMovable(true)
     { }
 
-    void Overlay::render(sf::RenderTarget& target)
+    void Overlay::drawDebugOverlay()
+    {
+        if (debugOverlay)
+        {
+            if (!debugOverlayMovable)
+                ImGui::SetNextWindowPos(ImVec2(0, 16));
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+            if (ImGui::Begin("Stats overlay", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                auto frametime = getSubsystem<Game>()->getFrametime();
+                ImGui::Text("FPS: %i", (int)(frametime != 0 ? 1.0 / frametime : 0));
+                ImGui::Text("Frametime: %i ms", (int)(frametime * 1000));
+                ImGui::Text("Objects rendered: %lu", getSubsystem<Scene>()->getNumObjectsRendered());
+            }
+            ImGui::End();
+            ImGui::PopStyleColor();
+        }
+    }
+
+    void Overlay::drawGui()
     {
         auto input = getSubsystem<InputSystem>();
         if (!input->isMouseConsumed() && showCoords)
@@ -29,7 +52,10 @@ namespace gamelib
             ImGui::SetTooltip("%i, %i", (int)mouse.x, (int)mouse.y);
             ImGui::EndTooltip();
         }
+    }
 
+    void Overlay::render(sf::RenderTarget& target)
+    {
         auto* ent = EditorShared::getSelected();
         if (!ent)
             return;

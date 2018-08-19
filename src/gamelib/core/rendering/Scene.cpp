@@ -316,4 +316,9 @@ namespace gamelib
             _dirty = false;
         }
     }
+
+    size_t Scene::getNumObjectsRendered() const
+    {
+        return _numrendered;
+    }
 }

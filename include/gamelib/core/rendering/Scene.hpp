@@ -80,6 +80,7 @@ namespace gamelib
             auto getCurrentCamera() const -> const Camera*;
 
             auto getCameraCount() const -> size_t;
+            auto getNumObjectsRendered() const -> size_t;
 
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
@@ -105,6 +106,7 @@ namespace gamelib
             auto _updateQueue() -> void;
 
         private:
+            size_t _numrendered;
             size_t _currentcam;
             size_t _default;
             SlotMapShort<Layer> _layers;

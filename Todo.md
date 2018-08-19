@@ -13,6 +13,7 @@
 * inputBitflags() exclude list
 * loadFromJson update bool to differentiate between load and update from json
 * MaskComponent
+* imgui game state
 
 * ResourceManager:
   * load all files from a folder
@@ -51,6 +52,7 @@
     * child (e.g. SpriteComponent instatiates a child UpdateComponent)
     * hidden (add to entity but hide to the outside (useful for auto generated editor components))
     * transformable
+  * Move default components to gamelib/component folder
 
 * Camera
   * base Camera on sf::View
