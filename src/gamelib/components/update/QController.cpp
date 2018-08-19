@@ -36,7 +36,7 @@ namespace gamelib
 
             if (onground)
             {
-                wishdir = phys->getGround().normal.right();
+                // wishdir = phys->getGround().normal.right();
                 phys->airFriction = false;
                 _jumping = false;
             }

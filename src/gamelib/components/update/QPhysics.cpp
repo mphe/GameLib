@@ -179,6 +179,9 @@ namespace gamelib
 
                         box.pos += framevel * (trace.isec.time - magic_unstuck);
                         timeleft -= timeleft * trace.isec.time;
+
+                        if (isStuck(box))
+                            _nudge(&box);
                     }
                     else
                     {
@@ -209,10 +212,10 @@ namespace gamelib
         _move(box.pos - _bbox->pos);
     }
 
-    bool QPhysics::nudge()
+    bool QPhysics::nudge(float size)
     {
         auto box = *_bbox;
-        if (!_nudge(&box))
+        if (!_nudge(&box, size))
             return false;
         _move(box.pos - _bbox->pos);
         return true;
@@ -361,15 +364,14 @@ namespace gamelib
     }
 
 
-    bool QPhysics::_nudge(math::AABBf* box)
+    bool QPhysics::_nudge(math::AABBf* box, float size)
     {
-        constexpr float nudgesize = 1;
         math::Vec2f alt;
         for (int y : { -1, 0, 1 })
         {
             for (int x : { -1, 0, 1 })
             {
-                auto offset = math::Vec2f(x, y) * nudgesize;
+                auto offset = math::Vec2f(x, y) * size;
                 math::AABBf newbox(*box);
                 newbox.pos += offset;
                 if (!isStuck(newbox))

@@ -56,8 +56,8 @@ namespace gamelib
             auto moveToContact(const math::Vec2f& dist)    -> CollisionComponent*;
             auto moveIfContact(const math::Vec2f& dist)    -> CollisionComponent*;
             auto clipmove(math::Vec2f* vel, float elapsed) -> void;
-            auto clipmove(math::Vec2f* vel)                -> void; // TODO
-            auto nudge()                                   -> bool;
+            auto clipmove(math::Vec2f* vel)                -> void;
+            auto nudge(float size = 0.5)                   -> bool;
 
             auto isStuck(const math::AABBf& box) const -> bool;
             auto isStuck() const   -> bool;
@@ -71,7 +71,7 @@ namespace gamelib
         protected:
             virtual auto _refresh() -> void;
 
-            auto _nudge(math::AABBf* box)       -> bool;
+            auto _nudge(math::AABBf* box, float size = 0.5) -> bool;
             auto _move(const math::Vec2f& dist) -> void;
             auto _snapToMovingGround()          -> void;
 
