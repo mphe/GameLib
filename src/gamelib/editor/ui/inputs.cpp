@@ -286,11 +286,11 @@ namespace gamelib
 
         if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            static int index = 0;
-            static constexpr const char* comps[] { "ComponentA", "ComponentB", "ComponentC" };
-            ImGui::Combo("##newcomp", &index, comps, 3);
-            ImGui::SameLine();
-            ImGui::Button("Add");
+            // static int index = 0;
+            // static constexpr const char* comps[] { "ComponentA", "ComponentB", "ComponentC" };
+            // ImGui::Combo("##newcomp", &index, comps, 3);
+            // ImGui::SameLine();
+            // ImGui::Button("Add");
 
             ImGui::PushItemWidth(0.5 * ImGui::GetWindowContentRegionWidth());
             ent.foreach([](Component* comp) {
