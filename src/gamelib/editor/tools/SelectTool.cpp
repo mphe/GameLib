@@ -2,8 +2,11 @@
 #include "gamelib/core/event/EventManager.hpp"
 #include "gamelib/core/ecs/RenderComponent.hpp"
 #include "gamelib/core/ecs/CollisionComponent.hpp"
+#include "gamelib/core/ecs/EntityManager.hpp"
+#include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/geometry/CollisionSystem.hpp"
+#include "gamelib/core/input/InputSystem.hpp"
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/editor/events/OnSelect.hpp"
 #include "gamelib/editor/tools/ToolUtils.hpp"
@@ -13,8 +16,14 @@ namespace gamelib
 {
     SelectTool::SelectTool() :
         renderBBox(true),
-        renderAllBoxes(false)
+        renderAllBoxes(false),
+        _cloned(false)
     { }
+
+    void SelectTool::onMouseRelease()
+    {
+        _cloned = false;
+    }
 
     void SelectTool::onMousePressed()
     {
@@ -28,9 +37,23 @@ namespace gamelib
     void SelectTool::onDrag()
     {
         auto* ent = getSelected();
-        if (ent)
-            ent->getTransform().setPosition(
-                    EditorShared::snap(EditorShared::getMouse() - _dragoffset));
+        if (!ent)
+            return;
+
+        auto input = getSubsystem<InputSystem>();
+        if (!_cloned && input->isKeyDown(sf::Keyboard::LShift))
+        {
+            Json::Value cfg;
+            writeToJson(cfg, *ent);
+            ent = getEntity(getSubsystem<EntityManager>()->add());
+            if (!loadFromJson(cfg, *ent))
+                LOG_ERROR("Failed to clone entity");
+            select(ent);
+            _cloned = true;
+        }
+
+        ent->getTransform().setPosition(
+                EditorShared::snap(EditorShared::getMouse() - _dragoffset));
     }
 
     void SelectTool::render(sf::RenderTarget& target)

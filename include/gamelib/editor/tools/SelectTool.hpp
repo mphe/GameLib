@@ -13,6 +13,7 @@ namespace gamelib
             SelectTool();
 
             auto onMousePressed() -> void;
+            auto onMouseRelease() -> void;
             auto onDrag()         -> void;
 
             auto render(sf::RenderTarget& target) -> void;
@@ -32,6 +33,7 @@ namespace gamelib
         private:
             Entity::Handle _selected;
             math::Vec2f _dragoffset;
+            bool _cloned;
     };
 }
 
