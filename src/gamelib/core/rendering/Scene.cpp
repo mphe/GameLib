@@ -1,6 +1,7 @@
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/utils/log.hpp"
+#include "gamelib/utils/conversions.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/core/res/JsonResource.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -35,7 +36,7 @@ namespace gamelib
 
     unsigned int Scene::render(sf::RenderTarget& target)
     {
-        unsigned int numrendered = 0;
+        _numrendered = 0;
 
         // This call must be in render(), otherwise new objects won't appear
         // when the update loop is paused.
@@ -43,7 +44,7 @@ namespace gamelib
 
         if (_cams.empty())
         {
-            numrendered = _render(target, target.getView());
+            _numrendered = _render(target, target.getView());
         }
         else
         {
@@ -59,47 +60,36 @@ namespace gamelib
             {
                 _currentcam = i;
                 target.setView(_cams[i].getView());
-                numrendered += _render(target, _cams[i].getView());
+                _numrendered += _render(target, _cams[i].getView());
             }
 
             target.setView(backup); // reset view
             _currentcam = _default;
         }
 
-        return numrendered;
+        return _numrendered;
     }
 
     unsigned int Scene::_render(sf::RenderTarget& target, const sf::View& view)
     {
-        float lastparallax = 1;
         math::AABBf vbox;
         unsigned int numrendered = 0;
 
         { // Calculate view bounding box
-            sf::Vector2f vpos(view.getCenter().x - view.getSize().x / 2,
-                    view.getCenter().y - view.getSize().y / 2);
-
             sf::Transform vtrans;
-            vtrans.translate(vpos.x, vpos.y);
             vtrans.rotate(view.getRotation());
-
-            auto camrect = vtrans.transformRect(sf::FloatRect(sf::Vector2f(0, 0), view.getSize()));
-            vbox = math::AABBf(camrect.left, camrect.top, camrect.width, camrect.height);
+            auto half = convert(view.getSize()) / 2;
+            vbox = convert(vtrans.transformRect(sf::FloatRect(-convert(half), view.getSize())));
+            vbox.pos = convert(view.getCenter()) - half;
         }
 
         for (auto& o : _renderQueue)
         {
-            // Skip if outside of view
-            // TODO: honor parallax
-            if (!o->getBBox().intersect(vbox))
-            {
-                if (o->getBBox().w == 0 || o->getBBox().h == 0)
-                    LOG_WARN("SceneObject bounding box has 0 width or height");
-                continue;
-            }
-
+            sf::Transform trans;
+            math::Vec2f translate;
             unsigned int flags = o->flags | this->flags;
             float parallax = o->getParallax() * getParallax();
+            auto bbox = o->getBBox();
 
             if (_layers.isValid(o->getLayer()))
             {
@@ -113,26 +103,22 @@ namespace gamelib
             if (flags & render_hidden && !(flags & render_drawhidden))
                 continue;
 
-            if (flags & render_noparallax)
+            if (!(flags & render_noparallax) && !math::almostEquals(parallax, 1.0f))
             {
-                if (!math::almostEquals(lastparallax, 1.0f))
-                {
-                    target.setView(view);
-                    lastparallax = 1;
-                }
-            }
-            // else if (!math::almostEquals(lastparallax, parallax))
-            else
-            {
-                auto pos = o->getBBox().getCenter();
-                sf::View paraview = target.getView();
-                paraview.setCenter(view.getCenter().x + (view.getCenter().x - pos.x) * (parallax - 1),
-                                   view.getCenter().y + (view.getCenter().y - pos.y) * (parallax - 1));
-                target.setView(paraview);
-                lastparallax = parallax;
+                translate = (bbox.getCenter() - convert(view.getCenter())) * (parallax - 1);
+                trans.translate(translate.x, translate.y);
+                bbox.pos += translate;
             }
 
-            o->render(target);
+            // Skip if outside of view
+            if (!bbox.intersect(vbox))
+            {
+                if (bbox.w == 0 || bbox.h == 0)
+                    LOG_WARN("SceneObject bounding box has 0 width or height: ", bbox.w, "x", bbox.h);
+                continue;
+            }
+
+            o->render(target, trans);
             ++numrendered;
         }
 
