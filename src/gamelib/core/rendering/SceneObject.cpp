@@ -121,7 +121,6 @@ namespace gamelib
     {
         _bbox.pos += rel;
         _pos += rel;
-        _updateBBox();
         _transDirty = true;
         Transformable::move(rel);
     }
@@ -130,7 +129,6 @@ namespace gamelib
     {
         _bbox.size *= scale;
         _scale *= scale;
-        _updateBBox();
         _transDirty = true;
         Transformable::scale(scale);
     }
@@ -138,16 +136,16 @@ namespace gamelib
     void SceneObject::rotate(float angle)
     {
         _rotation += angle;
-        _updateBBox();
         _transDirty = true;
+        _updateBBox();
         Transformable::rotate(angle);
     }
 
     void SceneObject::setOrigin(const math::Point2f& origin)
     {
         _origin = origin;
-        _updateBBox();
         _transDirty = true;
+        _updateBBox();
         markDirty();
     }
 
