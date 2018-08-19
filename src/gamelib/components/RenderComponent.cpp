@@ -1,4 +1,4 @@
-#include "gamelib/core/ecs/RenderComponent.hpp"
+#include "gamelib/components/RenderComponent.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 

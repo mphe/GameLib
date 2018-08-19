@@ -3,7 +3,7 @@
 #include "gamelib/core/geometry/CollisionSystem.hpp"
 #include "gamelib/core/geometry/flags.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
-#include "gamelib/core/ecs/CollisionComponent.hpp"
+#include "gamelib/components/CollisionComponent.hpp"
 #include "gamelib/core/Game.hpp"
 
 namespace gamelib

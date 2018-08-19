@@ -20,6 +20,9 @@ set(EXT_LIBRARIES
 set(GAMELIB_SOURCES
     events/ResourceReloadEvent.cpp
 
+    components/RenderComponent.cpp
+    components/CollisionComponent.cpp
+    components/UpdateComponent.cpp
     components/update/QPhysics.cpp
     components/update/QController.cpp
     components/update/AnimationComponent.cpp
@@ -65,9 +68,6 @@ set(GAMELIB_SOURCES
     core/ecs/EntityFactory.cpp
     core/ecs/serialization.cpp
     core/ecs/Component.cpp
-    core/ecs/RenderComponent.cpp
-    core/ecs/CollisionComponent.cpp
-    core/ecs/UpdateComponent.cpp
     core/update/UpdateSystem.cpp
     core/update/Updatable.cpp
 

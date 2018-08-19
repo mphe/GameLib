@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "math/geometry/Polygon.hpp"
-#include "gamelib/core/ecs/RenderComponent.hpp"
+#include "gamelib/components/RenderComponent.hpp"
 #include "gamelib/core/res/TextureResource.hpp"
 
 // This seems to become a blob class for all rendering related stuff.

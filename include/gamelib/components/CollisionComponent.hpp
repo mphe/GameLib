@@ -2,7 +2,7 @@
 #define GAMELIB_COLLISIONCOMPONENT_HPP
 
 #include "gamelib/core/Identifier.hpp"
-#include "Component.hpp"
+#include "gamelib/core/ecs/Component.hpp"
 #include "gamelib/core/geometry/Collidable.hpp"
 
 namespace gamelib

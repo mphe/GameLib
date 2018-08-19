@@ -2,7 +2,7 @@
 #include "gamelib/editor/tools/ToolUtils.hpp"
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
-#include "gamelib/core/ecs/RenderComponent.hpp"
+#include "gamelib/components/RenderComponent.hpp"
 #include "gamelib/core/geometry/flags.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
 #include "gamelib/core/Game.hpp"

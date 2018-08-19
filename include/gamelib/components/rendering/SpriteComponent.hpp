@@ -1,7 +1,7 @@
 #ifndef GAMELIB_SPRITE_COMPONENT_HPP
 #define GAMELIB_SPRITE_COMPONENT_HPP
 
-#include "gamelib/core/ecs/RenderComponent.hpp"
+#include "gamelib/components/RenderComponent.hpp"
 #include "gamelib/components/update/AnimationComponent.hpp"
 #include "gamelib/core/res/SpriteResource.hpp"
 

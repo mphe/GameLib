@@ -1,7 +1,7 @@
 #ifndef GAMELIB_POLYGON_COLLISON_HPP
 #define GAMELIB_POLYGON_COLLISON_HPP
 
-#include "gamelib/core/ecs/CollisionComponent.hpp"
+#include "gamelib/components/CollisionComponent.hpp"
 #include "math/geometry/Polygon.hpp"
 
 namespace gamelib

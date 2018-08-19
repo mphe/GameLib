@@ -1,7 +1,7 @@
 #ifndef GAMELIB_QCONTROLLER_HPP
 #define GAMELIB_QCONTROLLER_HPP
 
-#include "gamelib/core/ecs/UpdateComponent.hpp"
+#include "gamelib/components/UpdateComponent.hpp"
 
 namespace gamelib
 {

@@ -1,7 +1,7 @@
 #ifndef GAMELIB_AABB_COLLISON_HPP
 #define GAMELIB_AABB_COLLISON_HPP
 
-#include "gamelib/core/ecs/CollisionComponent.hpp"
+#include "gamelib/components/CollisionComponent.hpp"
 
 namespace gamelib
 {

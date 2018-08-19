@@ -2,7 +2,7 @@
 #define GAMELIB_QPHYSICS_HPP
 
 #include "math/geometry/AABB.hpp"
-#include "gamelib/core/ecs/UpdateComponent.hpp"
+#include "gamelib/components/UpdateComponent.hpp"
 
 namespace gamelib
 {

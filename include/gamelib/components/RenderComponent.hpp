@@ -3,7 +3,7 @@
 
 #include "gamelib/core/rendering/SceneObject.hpp"
 #include "gamelib/core/Identifier.hpp"
-#include "Component.hpp"
+#include "gamelib/core/ecs/Component.hpp"
 
 namespace gamelib
 {

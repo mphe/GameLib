@@ -1,7 +1,7 @@
 #ifndef GAMELIB_ANIMATION_COMPONENT_HPP
 #define GAMELIB_ANIMATION_COMPONENT_HPP
 
-#include "gamelib/core/ecs/UpdateComponent.hpp"
+#include "gamelib/components/UpdateComponent.hpp"
 #include "gamelib/core/sprite/SpriteData.hpp"
 
 // Used in conjunction with SpriteComponent.

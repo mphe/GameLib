@@ -2,7 +2,7 @@
 #define GAMELIB_UPDATE_COMPONENT_HPP
 
 #include "gamelib/core/update/UpdateSystem.hpp"
-#include "Component.hpp"
+#include "gamelib/core/ecs/Component.hpp"
 
 namespace gamelib
 {

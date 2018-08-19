@@ -52,7 +52,6 @@
     * child (e.g. SpriteComponent instatiates a child UpdateComponent)
     * hidden (add to entity but hide to the outside (useful for auto generated editor components))
     * transformable
-  * Move default components to gamelib/component folder
 
 * Camera
   * base Camera on sf::View
@@ -63,13 +62,15 @@
     * allows running functions on any data layouts (vertex buffers, raw point data, ...)
   * Fix pointDirection in cppmath (Vector.angle() works correctly)
   * use inheritance for polygon classes
+  * LineStrip polygon closed flag
 
-* Q-Stuff
+* Physics
   * fix slope corners
     * averaging normals might not be the best solution
   * add a non-gravity version
   * fix sharp corners (<90°)
   * if there's no collision component assigned, don't to clip checking, but don't disable all physics
+  * add option to accelerate towards basevel rather than immediatelly setting it
 
 * collisions
   * Remove Collidable and merge it into CollisionComponent

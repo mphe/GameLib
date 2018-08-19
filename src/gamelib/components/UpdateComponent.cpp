@@ -1,4 +1,4 @@
-#include "gamelib/core/ecs/UpdateComponent.hpp"
+#include "gamelib/components/UpdateComponent.hpp"
 
 namespace gamelib
 {

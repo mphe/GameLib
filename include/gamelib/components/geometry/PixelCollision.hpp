@@ -2,7 +2,7 @@
 #define GAMELIB_PIXEL_COLLISON_HPP
 
 #include <SFML/Graphics.hpp>
-#include "gamelib/core/ecs/CollisionComponent.hpp"
+#include "gamelib/components/CollisionComponent.hpp"
 #include "gamelib/core/res/TextureResource.hpp"
 
 namespace gamelib
