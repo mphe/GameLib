@@ -53,6 +53,8 @@ namespace gamelib
 
     // Calls a callback for each component about to be serialized.
     // The callback handles the serialization (or not).
+    // If the callback returns false or the json node is null, the
+    // component will be skipped.
     // Signature: bool(Json::Value&, Component&)
     template <typename F>
     auto writeToJson(Json::Value& node, const Entity& ent, F callback) -> void
@@ -68,9 +70,8 @@ namespace gamelib
         {
             if (i.ptr)
             {
-                Json::Value comp;
-                callback(comp, *i.ptr);
-                if (!comp.isNull())
+                Json::Value comp(Json::objectValue);
+                if (callback(comp, *i.ptr) && !comp.isNull())
                     comps[generateName(i.ptr->getName(), i.id)] = comp;
             }
         }

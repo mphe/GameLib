@@ -197,6 +197,7 @@ namespace gamelib
     {
         writeToJson(node, ent, [](Json::Value& compnode, Component& comp) {
                 comp.writeToJson(compnode);
+                return true;
             });
     }
 }
