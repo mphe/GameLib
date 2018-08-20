@@ -127,9 +127,9 @@ namespace gamelib
 
     void SceneObject::scale(const math::Vec2f& scale)
     {
-        _bbox.size *= scale;
         _scale *= scale;
         _transDirty = true;
+        _updateBBox();
         Transformable::scale(scale);
     }
 
