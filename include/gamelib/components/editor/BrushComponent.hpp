@@ -17,6 +17,7 @@ namespace gamelib
 
         public:
             BrushComponent();
+            BrushComponent(const std::string& name);
             virtual ~BrushComponent() {};
 
             auto add(const math::Point2f& p) const            -> void;

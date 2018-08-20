@@ -8,6 +8,7 @@ namespace gamelib
     constexpr const char* LineBrushComponent::name;
 
     LineBrushComponent::LineBrushComponent() :
+        BrushComponent(name),
         _line(nullptr),
         _linewidth(32)
     {
@@ -57,7 +58,7 @@ namespace gamelib
 
     void LineBrushComponent::regenerate() const
     {
-        if (!_line || _line->getPolygon().size() == 0)
+        if (!_shape || !_pol || !_line || _line->getPolygon().size() == 0)
             return;
 
         math::Vec2f lastd, dir;
@@ -121,7 +122,6 @@ namespace gamelib
         _pol->add(linepol.get(-1) + dir);
 
         // BrushComponent::regenerate();
-        if (_shape && _pol)
-            _shape->fetch(_pol->getPolygon(), MapLine);
+        _shape->fetch(_pol->getPolygon(), MapLine);
     }
 }

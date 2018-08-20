@@ -8,7 +8,11 @@ namespace gamelib
     constexpr const char* BrushComponent::name;
 
     BrushComponent::BrushComponent() :
-        Identifier(name),
+        BrushComponent(name)
+    { }
+
+    BrushComponent::BrushComponent(const std::string& name_) :
+        Identifier(name_),
         _pol(nullptr),
         _shape(nullptr)
     { }
