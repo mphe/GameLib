@@ -393,7 +393,10 @@ namespace gamelib
                 if (input->isKeyPressed(sf::Keyboard::S))
                     save();
                 else if (input->isKeyPressed(sf::Keyboard::R))
+                {
+                    getSelectTool().select(nullptr);
                     load();
+                }
             }
 
             if (input->isKeyPressed(sf::Keyboard::F))
