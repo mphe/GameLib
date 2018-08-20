@@ -9,7 +9,25 @@
 
 namespace gamelib
 {
-    void drawDragBox(sf::RenderTarget& target, const math::Point2f p, bool selected)
+    bool selectDragBoxes(const math::Polygon<float>& pol, size_t* selected)
+    {
+        *selected = -1;
+        for (size_t i = 0; i < pol.size(); ++i)
+            if (checkDragBox(pol.get(i)))
+            {
+                *selected = i;
+                return true;
+            }
+        return false;
+    }
+
+    bool checkDragBox(const math::Point2f& p)
+    {
+        static const math::AABBf drag_rect(-drag_size, -drag_size, drag_size * 2, drag_size * 2);
+        return drag_rect.contains(EditorShared::getMouse() - p.asVector());
+    }
+
+    void drawDragBox(sf::RenderTarget& target, const math::Point2f& p, bool selected)
     {
         drawDragBox(target, p.x, p.y, selected);
     }
@@ -24,7 +42,7 @@ namespace gamelib
         target.draw(dragger);
     }
 
-    void drawLine(sf::RenderTarget& target, const math::Point2f a, const math::Point2f b, sf::Color color)
+    void drawLine(sf::RenderTarget& target, const math::Point2f& a, const math::Point2f& b, sf::Color color)
     {
         drawLine(target, a.x, a.y, b.x, b.y, color);
     }
@@ -59,14 +77,7 @@ namespace gamelib
     void drawDragBoxes(sf::RenderTarget& target, const math::Polygon<float>& pol, size_t selected)
     {
         for (size_t i = 0; i < pol.size(); ++i)
-        {
-            math::Point2f p(pol.get(i));
-
-            if (i == selected)
-                drawDragBox(target, p, true);
-            else
-                drawDragBox(target, p);
-        }
+            drawDragBox(target, pol.get(i), i == selected);
     }
 
     void drawRectOutline(sf::RenderTarget& target, const math::AABBf& box, sf::Color col)

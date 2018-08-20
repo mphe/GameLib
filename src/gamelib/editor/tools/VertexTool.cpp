@@ -18,23 +18,9 @@ namespace gamelib
 
     void VertexTool::onMousePressed()
     {
-        static const math::AABBf drag_rect(-drag_size, -drag_size, drag_size * 2, drag_size * 2);
-
         auto brush = getIfBrush(EditorShared::getSelectTool().getSelected());
         if (brush)
-        {
-            auto& pol = *brush->getBrushPolygon();
-            _selected = -1;
-
-            for (size_t i = 0; i < pol.size(); ++i)
-            {
-                if (drag_rect.contains(EditorShared::getMouse() - pol.getPolygon().get(i).asVector()))
-                {
-                    _selected = i;
-                    break;
-                }
-            }
-        }
+            selectDragBoxes(brush->getBrushPolygon()->getPolygon(), &_selected);
 
         if (_selected == (size_t)-1)
             EditorShared::getSelectTool().onMousePressed();

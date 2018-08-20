@@ -14,10 +14,13 @@ namespace gamelib
     constexpr int drag_size = 2;
     constexpr int snap_distance = 3;
 
-    void drawDragBox(sf::RenderTarget& target, const math::Point2f p, bool selected = false);
+    bool selectDragBoxes(const math::Polygon<float>& pol, size_t* selected);
+    bool checkDragBox(const math::Point2f& p);
+
+    void drawDragBox(sf::RenderTarget& target, const math::Point2f& p, bool selected = false);
     void drawDragBox(sf::RenderTarget& target, float x, float y, bool selected = false);
 
-    void drawLine(sf::RenderTarget& target, const math::Point2f a, const math::Point2f b, sf::Color color = sf::Color::White);
+    void drawLine(sf::RenderTarget& target, const math::Point2f& a, const math::Point2f& b, sf::Color color = sf::Color::White);
     void drawLine(sf::RenderTarget& target, float x1, float y1, float x2, float y2, sf::Color color = sf::Color::White);
 
     void drawArrow(sf::RenderTarget& target, float x1, float y1, float x2, float y2, sf::Color color = sf::Color::Green);

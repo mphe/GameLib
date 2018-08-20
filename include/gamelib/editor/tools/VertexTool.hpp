@@ -16,7 +16,7 @@ namespace gamelib
             void render(sf::RenderTarget& target);
 
         private:
-            int _selected;
+            size_t _selected;
             bool _snappoint;
     };
 }
