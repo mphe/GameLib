@@ -170,7 +170,7 @@ namespace gamelib
             { // Movement
                 if (trace)
                 {
-                    if (trace.isec.time > 0)
+                    if (trace.isec.time >= 0)
                     {
                         vel = vel - trace.isec.normal * trace.isec.normal.dot(vel) * overbounce;
                         for (size_t i = 0; i < 2; ++i)
@@ -284,6 +284,12 @@ namespace gamelib
         if (_state == Ground)
             _snapToMovingGround();
         categorizePosition();
+
+        // if (isStuck())
+        // {
+        //     LOG_DEBUG("stuckstuck");
+        //     nudge(1);
+        // }
     }
 
 
@@ -324,7 +330,6 @@ namespace gamelib
                 setGround(static_cast<CollisionComponent*>(tr.obj), tr.isec.normal);
             else
                 setGround(nullptr, math::Vec2f());
-
         }
 
         { // Determine base velocity
@@ -379,7 +384,7 @@ namespace gamelib
                     // Prioritize nudges along x or y axis over diagonals
                     if (x == 0 ^ y == 0)
                     {
-                        LOG_DEBUG("nudged by x: ", offset.x, " y: ", offset.y);
+                        // LOG_DEBUG("nudged by x: ", offset.x, " y: ", offset.y);
                         box->pos = newbox.pos;
                         return true;
                     }
@@ -391,11 +396,12 @@ namespace gamelib
 
         if (!alt.isZero())
         {
-            LOG_DEBUG("nudged by x: ", alt.x, " y: ", alt.y);
+            // LOG_DEBUG("nudged by x: ", alt.x, " y: ", alt.y);
             box->pos += alt;
             return true;
         }
 
+        LOG_DEBUG("stuck");
         return false;
     }
 
