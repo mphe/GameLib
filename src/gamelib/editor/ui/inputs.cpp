@@ -109,12 +109,14 @@ namespace gamelib
 
     bool defaultButton(const char* label, int key, const ImVec2& size)
     {
+        if (ImGui::Button(label, size))
+            return true;
         if (ImGui::IsWindowFocused() && ImGui::IsKeyPressed(key))
         {
             ImGui::GetIO().WantCaptureKeyboard = true;
             return true;
         }
-        return ImGui::Button(label, size);
+        return false;
     }
 
 

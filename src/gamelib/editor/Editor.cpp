@@ -373,7 +373,7 @@ namespace gamelib
             auto selected = getSelectTool().getSelected();
             if (entprops && selected)
             {
-                if (ImGui::Begin("Properties"))
+                if (ImGui::Begin("Properties", &entprops))
                     inputEntityProps(*selected);
                 ImGui::End();
             }

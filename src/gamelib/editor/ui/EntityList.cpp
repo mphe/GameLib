@@ -24,8 +24,13 @@ namespace gamelib
             SelectTool& select = EditorShared::getSelectTool();
             auto entmgr = getSubsystem<EntityManager>();
 
-            ImGui::SetKeyboardFocusHere();
+            if (ImGui::IsWindowAppearing())
+                ImGui::SetKeyboardFocusHere();
+
+
             if (ImGui::InputText("Search", buf, sizeof(buf)))
+            {
+                ent = Entity::Handle();
                 if (strlen(buf) > 0)
                     for (auto& i : *entmgr)
                         if (i.getName().find(buf) != std::string::npos)
@@ -33,16 +38,22 @@ namespace gamelib
                             ent = i.getHandle();
                             break;
                         }
+            }
 
             auto entptr = getEntity(ent);
 
             ImGui::SameLine();
 
-            if (okButton("Select") && entptr)
+            if (okButton("Select"))
             {
-                select.select(entptr);
-                if (open)
-                    close();
+                if (entptr)
+                {
+                    select.select(entptr);
+                    if (entptr && open)
+                        close();
+                }
+                else
+                    ImGui::SetKeyboardFocusHere(-1);
             }
 
             ImGui::SameLine();
