@@ -63,10 +63,11 @@ namespace gamelib
 
         math::Vec2f lastd, dir;
         bool start = true;
-        _pol->clear();
 
         auto cb = [&](const math::Line2f& seg) {
             float area = 0;
+            auto norm = seg.d.normalized();
+
             if (start)
             {
                 start = false;
@@ -81,7 +82,7 @@ namespace gamelib
                 auto p3 = seg.p + seg.d;
 
                 // Break if the direction hasn't changed
-                if (lastd.normalized() == seg.d.normalized())
+                if (lastd.normalized() == norm)
                     return false;
 
                 area = (seg.p.x - p1.x) * (seg.p.y + p1.y)
@@ -89,7 +90,7 @@ namespace gamelib
                     + (p1.x - p3.x) * (p1.y + p3.y);
             }
 
-            dir = (seg.d.normalized() + lastd.normalized()).right().normalized();// / 2;
+            dir = (norm + lastd.normalized()).right().normalized();
             dir *= (_linewidth / 2.0) / dir.angle_cos(lastd.right());
 
             _pol->add(seg.p - dir);
@@ -99,14 +100,16 @@ namespace gamelib
             // different vertices have to be added.
             if (area != 0)
             {
+                auto len = norm.right() * _linewidth;
+
                 if (area > 0)   // clockwise
                 {
                     _pol->add(seg.p - dir);
-                    _pol->add(seg.p - dir + seg.d.normalized().right() * _linewidth);
+                    _pol->add(seg.p - dir + len);
                 }
                 else   // counter clockwise
                 {
-                    _pol->add(seg.p + dir - seg.d.normalized().right() * _linewidth);
+                    _pol->add(seg.p + dir - len);
                     _pol->add(seg.p + dir);
                 }
             }
@@ -116,12 +119,16 @@ namespace gamelib
         };
 
         auto& linepol = _line->getPolygon();
-        linepol.foreachSegment(cb);
+        _pol->clear();
+        _pol->setScale(1, 1);
+        _pol->setPosition(0, 0);
+        linepol.foreachSegment(cb, true);
         dir = lastd.right().normalized() * (_linewidth / 2.0);
-        _pol->add(linepol.get(-1) - dir);
-        _pol->add(linepol.get(-1) + dir);
+        _pol->add(linepol.getRaw(-1) - dir);
+        _pol->add(linepol.getRaw(-1) + dir);
+        _pol->setScale(linepol.getScale());
+        _pol->setPosition(linepol.getOffset().asPoint());
 
-        // BrushComponent::regenerate();
-        _shape->fetch(_pol->getPolygon(), MapLine);
+        _shape->fetch(_pol->getPolygon());
     }
 }
