@@ -14,6 +14,16 @@
 * loadFromJson update bool to differentiate between load and update from json
 * MaskComponent
 * imgui game state
+* make JsonSerializer::write\* functions const
+
+* Fix negative scalebox in SelectTool
+
+* problems with lazy entity bounding box calculation
+  * storing the bbox as reference
+  * scale
+  * bbox doesn't adapt, because it's not evaluated
+  * should either return as copy or immediatelly evaluate
+    * optimize through functions that perform multiple transforms at once
 
 * ResourceManager:
   * load all files from a folder
@@ -34,6 +44,14 @@
 * Transformable
   * Consider removing GroupTransform and instead give all Transformables a vector of children
   * Origin
+  * add functions like this:
+    * move(x, y):
+        _move(x, y)
+        markDirty()
+    * scale(x, y):
+        zerocheck()
+        _scale(x, y)
+        markDirty()
 
 * InputSystem
   * map["shoot"] = { Space, Enter, ... }
@@ -95,6 +113,8 @@
   * PhysicsBrush
   * copy entity
   * fix behaviour in negative coord space
+  * EditorShared -> EditorContext
+    * passed to every tool callback
 
 * make Engine a Subsystem
   * makes a backup of an existing active Engine

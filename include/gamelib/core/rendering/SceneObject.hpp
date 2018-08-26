@@ -46,6 +46,7 @@ namespace gamelib
             auto getLocalBounds() const -> math::AABBf;
             auto getTransform() const   -> const sf::Transform&;
             auto getVertices() const    -> const sf::VertexArray&;
+            auto size() const           -> size_t;
 
         private:
             auto _updateTransform(bool force = false) const -> void;

@@ -6,9 +6,6 @@
 #include "gamelib/components/RenderComponent.hpp"
 #include "gamelib/core/res/TextureResource.hpp"
 
-// This seems to become a blob class for all rendering related stuff.
-// Might be not so good...
-
 namespace gamelib
 {
     enum MappingMethod
@@ -32,33 +29,40 @@ namespace gamelib
             PolygonShape();
             virtual ~PolygonShape() {}
 
-            virtual auto fetch(const math::Polygon<float>& pol, MappingMethod mappingMethod = MapWorld) -> void;
-
-            // Maybe rename this
-            // Creates a rect of the given size and uses the position as texture offset
-            virtual auto fetch(const math::AABBf& rect, MappingMethod mappingMethod = MapWorld) -> void;
+            virtual auto fetch(const math::Polygon<float>& pol, bool raw = true) -> void;
+            virtual auto fetch(const math::AABBf& rect)         -> void;
 
             auto adaptToTexture() -> void;
 
-            auto setTexOffset(float x, float y)       -> void;
             auto setTexOffset(const math::Vec2f& vec) -> void;
-            auto getTexOffset()                       -> const math::Vec2f&;
+            auto getTexOffset() const                 -> const math::Vec2f&;
 
-            auto size() const -> size_t;
+            auto setTexScale(const math::Vec2f& vec) -> void;
+            auto getTexScale() const                 -> const math::Vec2f&;
+
+            auto setMappingMethod(MappingMethod m) -> void;
+            auto getMappingMethod() const          -> MappingMethod;
 
             auto render(sf::RenderTarget& target, sf::RenderStates states) const -> void;
 
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
 
+            virtual auto move(const math::Vec2f& rel)    -> void;
+            virtual auto scale(const math::Vec2f& scale) -> void;
+            virtual auto rotate(float angle)             -> void;
+
         protected:
+            auto _mapTexture() -> void;
             virtual auto _mapTexture(MappingMethod mappingMethod) -> void;
 
         public:
             TextureResource::Handle texture;
 
-        protected:
+        private:
             math::Vec2f _texoffset;
+            math::Vec2f _texscale;
+            MappingMethod _mapping;
     };
 }
 

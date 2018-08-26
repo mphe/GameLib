@@ -192,4 +192,9 @@ namespace gamelib
     {
         return _vertices;
     }
+
+    size_t SceneObject::size() const
+    {
+        return _vertices.getVertexCount();
+    }
 }

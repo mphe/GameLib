@@ -6,7 +6,9 @@
             "flags": 2,
             "Normals": 1
         },
-        "PolygonShape": { },
+        "PolygonShape": {
+            "mapping": 0
+        },
         "BrushComponent": { }
     }
 }
