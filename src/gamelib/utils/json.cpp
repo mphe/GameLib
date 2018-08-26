@@ -1,4 +1,5 @@
 #include "gamelib/utils/json.hpp"
+#include "gamelib/utils/conversions.hpp"
 #include "gamelib/core/geometry/GroupTransform.hpp"
 #include <fstream>
 
@@ -149,10 +150,7 @@ namespace gamelib
 
     bool loadFromJson(const Json::Value& node, sf::Vector2f& p, bool clear)
     {
-        math::Vec2f vec(p.x, p.y);
-        bool res = loadFromJson(node, vec, clear);
-        p = sf::Vector2f(vec.x, vec.y);
-        return res;
+        return loadFromJson(node, convert(p), clear);
     }
 
 
@@ -188,6 +186,6 @@ namespace gamelib
 
     void writeToJson(Json::Value& node, const sf::Vector2f& vec)
     {
-        writeToJson(node, math::Vec2f(vec.x, vec.y));
+        writeToJson(node, convert(vec));
     }
 }
