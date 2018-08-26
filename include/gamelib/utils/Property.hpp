@@ -9,6 +9,12 @@
 #include "gamelib/core/res/JsonSerializer.hpp"
 #include "gamelib/utils/log.hpp"
 
+// Helper for registering properties with member function setters that take
+// exactly the new value as argument,
+#define PROP_METHOD(T, F) +[](T*, const T* val, decltype(this) self) { self->F(*val); }
+#define PROP_METHOD_CLASS(T, F, C) +[](T*, const T* val, C* self) { self->F(*val); }
+
+
 namespace gamelib
 {
     enum PropertyType
@@ -150,7 +156,7 @@ namespace gamelib
             template <typename T>
             PropertyType categorizeProperty(const T& prop) const
             {
-                if (std::is_same<T, int>())
+                if (std::is_same<T, int>() || std::is_enum<T>())
                     return PropInt;
                 else if (std::is_same<T, unsigned int>())
                     return PropBitflags;
