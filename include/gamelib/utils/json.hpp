@@ -26,8 +26,8 @@ namespace gamelib
     bool loadFromJson(const Json::Value& node, math::Point2f* pos, math::Vec2f* scale, float* angle, bool clear);
 
     // TODO: implement Vec2i serialization
-    bool loadFromJson(const Json::Value& node, math::Point2f& p);
-    bool loadFromJson(const Json::Value& node, sf::Vector2f& vec);
+    bool loadFromJson(const Json::Value& node, math::Point2f& p, bool clear = false);
+    bool loadFromJson(const Json::Value& node, sf::Vector2f& vec, bool clear = false);
 
     void writeToJson(Json::Value& node, const Transformable& trans);
     void writeToJson(Json::Value& node, const math::Point2f& pos, const math::Vec2f& scale, float angle);
@@ -37,14 +37,14 @@ namespace gamelib
 
 
     template <size_t N>
-    bool loadFromJson(const Json::Value& node, math::Vector<float, N>& vec)
+    bool loadFromJson(const Json::Value& node, math::Vector<float, N>& vec, bool clear = false)
     {
         if (!node.isArray())
             return false;
         if (node.size() != N)
             LOG_WARN("Array size doesn't match expected size: ", node.size(), " != ", N);
         for (Json::ArrayIndex i = 0; i < std::min((size_t)node.size(), N); ++i)
-            vec[i] = node.get(i, vec[i]).asFloat();
+            vec[i] = node.get(i, clear ? 0 : vec[i]).asFloat();
         return true;
     }
 

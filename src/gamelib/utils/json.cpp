@@ -127,40 +127,30 @@ namespace gamelib
 
     bool loadFromJson(const Json::Value& node, math::Point2f* pos, math::Vec2f* scale, float* angle, bool clear)
     {
-        if (clear)
-        {
-            if (pos)
-                pos->x = pos->y = 0;
-            if (scale)
-                scale->fill(1);
-            if (angle)
-                *angle = 0;
-        }
-
         // NOTE: It can't load but uses default, so no fail
         // if (!node.isObject())
         //     return false;
 
         if (pos)
-            loadFromJson(node["pos"], *pos);
+            loadFromJson(node["pos"], pos->asVector(), clear);
         if (scale)
-            loadFromJson(node["scale"], *scale);
+            loadFromJson(node["scale"], *scale, clear);
         if (angle)
-            *angle = node.get("angle", *angle).asFloat();
+            *angle = node.get("angle", clear ? 0 : *angle).asFloat();
 
         return true;
     }
 
 
-    bool loadFromJson(const Json::Value& node, math::Point2f& p)
+    bool loadFromJson(const Json::Value& node, math::Point2f& p, bool clear)
     {
-        return loadFromJson(node, p.asVector());
+        return loadFromJson(node, p.asVector(), clear);
     }
 
-    bool loadFromJson(const Json::Value& node, sf::Vector2f& p)
+    bool loadFromJson(const Json::Value& node, sf::Vector2f& p, bool clear)
     {
         math::Vec2f vec(p.x, p.y);
-        bool res = loadFromJson(node, vec);
+        bool res = loadFromJson(node, vec, clear);
         p = sf::Vector2f(vec.x, vec.y);
         return res;
     }
