@@ -25,6 +25,9 @@ int main(int argc, char *argv[])
     auto res3 = mgr.get("foo.bar");
     assert(res3.getResource() == res2.getResource() && "Objects should be the same");
 
+    assert(res2 == res3 && "Objects should be the same");
+    assert(!(res2 != res3) && "Objects should be the same");
+
     Json::Value val;
     mgr.writeToJson(val);
     std::cout<<val.toStyledString()<<std::endl;

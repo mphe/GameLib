@@ -82,6 +82,19 @@ namespace gamelib
     }
 
     template <typename T>
+    bool ResourceHandle<T>::operator==(const ResourceHandle<T>& rhs) const
+    {
+        return getResource() == rhs.getResource();
+    }
+
+    template <typename T>
+    bool ResourceHandle<T>::operator!=(const ResourceHandle<T>& rhs) const
+    {
+        return !(*this == rhs);
+    }
+
+
+    template <typename T>
     ResourceHandle<T>::operator bool() const
     {
         return (bool)_res;

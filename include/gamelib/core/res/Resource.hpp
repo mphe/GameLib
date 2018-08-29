@@ -51,6 +51,8 @@ namespace gamelib
             auto operator*()        -> WrappedType&;
             auto operator*() const  -> const WrappedType&;
             auto operator->() const -> WrappedType*;
+            auto operator==(const ResourceHandle<T>& rhs) const -> bool;
+            auto operator!=(const ResourceHandle<T>& rhs) const -> bool;
 
             explicit operator bool() const;
 
