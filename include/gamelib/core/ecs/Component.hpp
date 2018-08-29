@@ -37,10 +37,10 @@ namespace gamelib
 
         protected:
             PropertyContainer _props;
+            std::string _name;
 
         private:
             Handle _ent;   // Set by Entity
-            std::string _name;
 
             // Only used when the entity was created outside an EntityManager
             Entity* _entptr; // Set by Entity
