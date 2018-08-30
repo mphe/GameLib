@@ -52,7 +52,8 @@ namespace gamelib
         gravMultiplier(1),
         fricMultiplier(1),
         maxSlope(0.5),
-        movingPlatformSnapDist(10),
+        movingPlatformSnapDist(15),
+        snapDist(5),
         keepMomentum(true),
         airFriction(false),
         _bbox(box),
@@ -64,7 +65,8 @@ namespace gamelib
         _props.registerProperty("gravity multiplier", gravMultiplier);
         _props.registerProperty("friction multiplier", fricMultiplier);
         _props.registerProperty("maxSlope", maxSlope, 0, 1);
-        _props.registerProperty("Snap distance", movingPlatformSnapDist);
+        _props.registerProperty("Moving snap distance", movingPlatformSnapDist);
+        _props.registerProperty("Snap distance", snapDist);
         _props.registerProperty("keepMomentum", keepMomentum);
         _props.registerProperty("airFriction", airFriction);
     }
@@ -144,7 +146,7 @@ namespace gamelib
                     // Add momentum
                     // NOTE: when an object is dragged along this will result
                     //       in jittery movement because the other object now
-                    //       has additional speed, outruns the platform and
+                    //       has additional speed, outruns the platform and gets
                     //       catched again when the friction slows it down again.
                     // NOTE: Not adding momentum provides clean dragging.
                     // TODO: could be fixed using the same snap mechanic used
@@ -172,7 +174,7 @@ namespace gamelib
                 {
                     if (trace.isec.time >= 0)
                     {
-                        vel = vel - trace.isec.normal * trace.isec.normal.dot(vel) * overbounce;
+                        vel -= trace.isec.normal * trace.isec.normal.dot(vel) * overbounce;
                         for (size_t i = 0; i < 2; ++i)
                             if (math::inrange(vel[i], -0.2f, 0.2f))
                                 vel[i] = 0;
@@ -221,6 +223,45 @@ namespace gamelib
         return true;
     }
 
+    void QPhysics::applyFriction(math::Vec2f* vel_, float elapsed, bool novertical)
+    {
+        if (fricMultiplier == 0.f)
+            return;
+
+        auto& vel = *vel_;
+
+        if (novertical)
+        {
+            auto walkdir = gravityDirection.left();
+            float speedproj = vel.dot(walkdir);
+            float speed = std::abs(speedproj);
+            if (speed > 0)
+            {
+                float drop = (speed < stopSpeed) ? stopFriction : (speed * friction * fricMultiplier * elapsed);
+                if (speed - drop < 0)
+                    drop = speed;
+                vel -= walkdir * drop * math::sign(speedproj);
+            }
+        }
+        else
+        {
+            // Friction affecting every direction
+            // Would also affect vertical velocity (jumping/falling), so only use
+            // this when grounded
+            float speed = vel.abs();
+            if (speed > 0)
+            {
+                float drop = (speed < stopSpeed) ? stopFriction : (speed * friction * fricMultiplier * elapsed);
+                vel *= std::max(speed - drop, 0.0f) / speed;
+            }
+        }
+    }
+
+    void QPhysics::applyFriction(math::Vec2f* vel, bool novertical)
+    {
+        applyFriction(vel, getSubsystem<Game>()->getFrametime(), novertical);
+    }
+
     void QPhysics::accelerate(const math::Vec2f& wishdir, float wishspeed, float accel)
     {
         float addspeed = wishspeed - vel.dot(wishdir);
@@ -241,12 +282,14 @@ namespace gamelib
         if (!_bbox)
             return;
 
-        if (_state == Ground)
+        bool hasgravity = !gravityDirection.isZero() && gravMultiplier != 0.f;
+
+        if (_state == Ground && hasgravity)
             _snapToMovingGround();
         categorizePosition();
 
         // Gravity
-        if (_state == Air)  // Apply gravity
+        if (hasgravity && _state == Air)  // Apply gravity
             vel += gravityDirection * (gravity * gravMultiplier * elapsed);
 
         // Movement
@@ -254,36 +297,20 @@ namespace gamelib
         clipmove(&vel, elapsed);
         vel -= basevel;
 
-        {// Friction
-            if ((_state == Ground || airFriction) && fricMultiplier != 0.f)    // Apply friction
-            {
-                auto walkdir = gravityDirection.left();
-                float speedproj = vel.dot(walkdir);
-                float speed = std::abs(speedproj);
-                if (speed > 0)
-                {
-                    float drop = (speed < stopSpeed) ? stopFriction : (speed * friction * fricMultiplier * elapsed);
-                    if (speed - drop < 0)
-                        drop = speed;
-                    vel -= walkdir * drop * math::sign(speedproj);
-                }
-
-                // Friction affecting every direction
-                // Would also affect vertical velocity (jumping/falling) in
-                // the first frame before leaving the ground or when airFriction
-                // is enabled.
-                // float speed = vel.abs();
-                // if (speed > 0)
-                // {
-                //     float drop = (speed < stopSpeed) ? stopFriction : (speed * friction * fricMultiplier * elapsed);
-                //     vel *= std::max(speed - drop, 0.0f) / speed;
-                // }
-            }
-        }
-
-        if (_state == Ground)
-            _snapToMovingGround();
+        // The order of _snapToMovingGround and moveIfContact is important,
+        // because when snapping to a moving ground, the vertical speed has to
+        // be reset.
+        if (_state == Ground && hasgravity)
+            if (!_snapToMovingGround())
+                moveIfContact(gravityDirection * snapDist);
         categorizePosition();
+
+        {// Friction
+            if (_state == Ground)
+                applyFriction(&vel, elapsed, false);
+            else if (airFriction && _state == Air)
+                applyFriction(&vel, elapsed, true);
+        }
 
         // if (isStuck())
         // {
@@ -296,6 +323,13 @@ namespace gamelib
     bool QPhysics::isStuck() const
     {
         return isStuck(*_bbox);
+    }
+
+    bool QPhysics::isStuck(float relx, float rely) const
+    {
+        auto tmp = *_bbox;
+        tmp.pos += math::Vec2f(relx, rely);
+        return isStuck(tmp);
     }
 
     bool QPhysics::isStuck(const math::AABBf& box) const
@@ -410,17 +444,25 @@ namespace gamelib
         getEntity()->getTransform().move(dist);
     }
 
-    void QPhysics::_snapToMovingGround()
+    bool QPhysics::_snapToMovingGround()
     {
         auto colsys = getSubsystem<CollisionSystem>();
         auto dist = gravityDirection * movingPlatformSnapDist;
         TraceResult tr = colsys->trace(*_bbox, dist, _self, collision_solid);
+
         if (!tr || tr.isec.time <= 0)
-            return;
+        {
+#ifndef NLOGDEBUG
+            tr = colsys->trace(*_bbox, math::Vec2f(0, 1000), _self, collision_solid);
+            if (tr && static_cast<CollisionComponent*>(tr.obj)->getEntity()->findByName<QPhysics>())
+                LOG_DEBUG("would snap with dist: ", 1000 * tr.isec.time);
+#endif
+            return false;
+        }
 
         auto phys = static_cast<CollisionComponent*>(tr.obj)->getEntity()->findByName<QPhysics>();
         if (!phys)
-            return;
+            return false;
 
         auto physvel = std::abs((phys->vel + phys->basevel).dot(gravityDirection));
         if (physvel > 0.0001)
@@ -428,7 +470,7 @@ namespace gamelib
             // Allow jumps
             auto selfvel = vel.dot(gravityDirection);
             if (std::abs(selfvel) > physvel)
-                return;
+                return false;
 
             auto box = *_bbox;
             box.pos += dist * (tr.isec.time - magic_unstuck);
@@ -437,8 +479,10 @@ namespace gamelib
                 vel -= gravityDirection * selfvel;
                 _move(box.pos - _bbox->pos);
                 // LOG_DEBUG("snapped ", 10 * tr.isec.time);
+                return true;
             }
         }
+        return false;
     }
 
     void QPhysics::_refresh()

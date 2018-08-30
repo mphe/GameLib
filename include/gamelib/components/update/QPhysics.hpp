@@ -58,9 +58,13 @@ namespace gamelib
             auto clipmove(math::Vec2f* vel, float elapsed) -> void;
             auto clipmove(math::Vec2f* vel)                -> void;
             auto nudge(float size = 0.5)                   -> bool;
+            auto applyFriction(math::Vec2f* vel, float elapsed, bool novertical = false) -> void;
+            auto applyFriction(math::Vec2f* vel, bool novertical = false)                -> void;
 
             auto isStuck(const math::AABBf& box) const -> bool;
-            auto isStuck() const   -> bool;
+            auto isStuck(float relx, float rely) const -> bool;
+            auto isStuck() const                       -> bool;
+
             auto getHull() const   -> const math::AABBf*;
             auto getState() const  -> State;
             auto getGround() const -> const GroundData&;
@@ -73,7 +77,7 @@ namespace gamelib
 
             auto _nudge(math::AABBf* box, float size = 0.5) -> bool;
             auto _move(const math::Vec2f& dist) -> void;
-            auto _snapToMovingGround()          -> void;
+            auto _snapToMovingGround()          -> bool;
 
         public:
             static float gravity;
@@ -90,6 +94,7 @@ namespace gamelib
             float fricMultiplier;
             float maxSlope;
             int movingPlatformSnapDist;
+            int snapDist;
             bool keepMomentum;
             bool airFriction;
             // TODO: flags treated as solid
