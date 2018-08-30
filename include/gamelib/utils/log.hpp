@@ -13,6 +13,7 @@
 #   define LOG_DEBUG_ERROR(...)
 #   define LOG_RAW(...)
 #   define LOG_DEBUG_RAW(...)
+#   define NLOGDEBUG
 #else
 
 #ifdef __linux__
