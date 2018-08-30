@@ -2,8 +2,7 @@
     "name": "player",
     "components": {
         "SpriteComponent": {
-            "sprite": "spr/player_walk.spr",
-            "origin": [0, 0]
+            "sprite": "spr/player_walk.spr"
         },
         "QPhysicsComponent": {
             "overbounce": 1
@@ -17,8 +16,16 @@
         },
         "AABBCollision": {
             "flags": 10,
-            "size": [32, 32]
+            "size": [32, 32],
+            "transform": {
+                "pos": [ -16, -16 ]
+            }
         },
-        "CameraTracker": { }
+        "CameraTracker": { },
+        "ActorComponent": {
+            "stand": "spr/player_stand.spr",
+            "walk": "spr/player_walk.spr",
+            "fall": "spr/player_jump.spr"
+        }
     }
 }

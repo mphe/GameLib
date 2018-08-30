@@ -27,6 +27,7 @@ set(GAMELIB_SOURCES
     components/update/QController.cpp
     components/update/AnimationComponent.cpp
     components/update/CameraTracker.cpp
+    components/update/ActorComponent.cpp
     components/geometry/AABB.cpp
     components/geometry/Polygon.cpp
     components/geometry/PixelCollision.cpp

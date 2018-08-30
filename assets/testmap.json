@@ -10,13 +10,14 @@
                "jumpspeed" : 356
             },
             "SpriteComponent#1" : {
-               "depth" : -1
+               "depth" : -1,
+               "origin" : [ 16, 16 ],
+               "sprite" : "spr/player_stand.spr"
             }
          },
          "name" : "player",
          "transform" : {
-            "pos" : [ 1559.0177001953125, 335.39425659179688 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ -235.96359252929688, 288.84375 ]
          }
       },
       {
@@ -55,8 +56,7 @@
          },
          "name" : "brush_polygon",
          "transform" : {
-            "pos" : [ 480, 320 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 480, 320 ]
          }
       },
       {
@@ -164,8 +164,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 480, 320 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 480, 320 ]
          }
       },
       {
@@ -178,15 +177,13 @@
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ 992.3758544921875, 352 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1023.2763061523438, 352 ]
          }
       },
       {
          "name" : "globalconfig",
          "transform" : {
-            "pos" : [ 480, 128 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 480, 128 ]
          }
       },
       {
@@ -214,8 +211,7 @@
          },
          "name" : "brush_polygon",
          "transform" : {
-            "pos" : [ 1184, 320 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1184, 320 ]
          }
       },
       {
@@ -243,8 +239,7 @@
          },
          "name" : "brush_polygon",
          "transform" : {
-            "pos" : [ 864, 352 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 864, 352 ]
          }
       },
       {
@@ -278,8 +273,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 1088, 416 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1088, 416 ]
          }
       },
       {
@@ -313,8 +307,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 976, 480 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 976, 480 ]
          }
       },
       {
@@ -350,8 +343,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 1600, 448 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1600, 448 ]
          }
       },
       {
@@ -385,8 +377,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 1472, 256 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1472, 256 ]
          }
       },
       {
@@ -395,13 +386,12 @@
                "friction multiplier" : 0,
                "gravity multiplier" : 0,
                "overbounce" : 2,
-               "vel" : [ 0, 200 ]
+               "vel" : [ 0, -200 ]
             }
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ 1536, 404.10031127929688 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1536, 73.49951171875 ]
          }
       },
       {
@@ -474,8 +464,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 1632, 160 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1632, 160 ]
          }
       },
       {
@@ -509,8 +498,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 448, 320 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 448, 320 ]
          }
       },
       {
@@ -519,13 +507,12 @@
                "friction multiplier" : 0,
                "gravity multiplier" : 0,
                "overbounce" : 2,
-               "vel" : [ 1000, 0 ]
+               "vel" : [ -1000, 0 ]
             }
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ -335.5, 258 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ -320.5, 258 ]
          }
       },
       {
@@ -553,8 +540,7 @@
          },
          "name" : "brush_polygon",
          "transform" : {
-            "pos" : [ -672, 176 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ -672, 176 ]
          }
       },
       {
@@ -582,8 +568,7 @@
          },
          "name" : "brush_polygon",
          "transform" : {
-            "pos" : [ -288, 288 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ -288, 288 ]
          }
       },
       {
@@ -655,8 +640,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 448, 704 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 448, 704 ]
          }
       },
       {
@@ -683,8 +667,7 @@
          },
          "name" : "brush_rect",
          "transform" : {
-            "pos" : [ 1600, 480 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1600, 480 ]
          }
       },
       {
@@ -757,8 +740,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 1632, 32 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1632, 32 ]
          }
       },
       {
@@ -831,8 +813,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 1632, 64 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1632, 64 ]
          }
       },
       {
@@ -905,8 +886,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 1632, 96 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1632, 96 ]
          }
       },
       {
@@ -977,8 +957,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 1632, 128 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1632, 128 ]
          }
       },
       {
@@ -1012,8 +991,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 1616, -96 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1616, -96 ]
          }
       },
       {
@@ -1086,8 +1064,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 1632, 192 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1632, 192 ]
          }
       },
       {
@@ -1160,8 +1137,7 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 1632, 224 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1632, 224 ]
          }
       },
       {
@@ -1234,15 +1210,14 @@
          },
          "name" : "brush_line",
          "transform" : {
-            "pos" : [ 1632, 256 ],
-            "scale" : [ 1, 1 ]
+            "pos" : [ 1632, 256 ]
          }
       }
    ],
    "scene" : {
       "cameras" : [
          {
-            "pos" : [ 827.2176513671875, -69.0057373046875 ],
+            "pos" : [ -875.963623046875, -71.15625 ],
             "size" : [ 1280, 720 ],
             "velocity" : [ 0, 0 ],
             "viewport" : {

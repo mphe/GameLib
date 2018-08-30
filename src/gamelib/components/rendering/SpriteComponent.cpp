@@ -92,6 +92,11 @@ namespace gamelib
         RenderComponent::writeToJson(node);
     }
 
+    SpriteResource::Handle SpriteComponent::getSprite() const
+    {
+        return _sprite;
+    }
+
     const std::string& SpriteComponent::getSpriteName() const
     {
         return _sprite.getResource()->getPath();

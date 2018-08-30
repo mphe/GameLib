@@ -6,8 +6,9 @@
 #include "gamelib/components/geometry/PixelCollision.hpp"
 #include "gamelib/components/update/QPhysics.hpp"
 #include "gamelib/components/update/QController.hpp"
-#include "gamelib/components/rendering/SpriteComponent.hpp"
 #include "gamelib/components/update/CameraTracker.hpp"
+#include "gamelib/components/update/ActorComponent.hpp"
+#include "gamelib/components/rendering/SpriteComponent.hpp"
 #include "gamelib/components/rendering/PolygonShape.hpp"
 #include "gamelib/components/editor/BrushComponent.hpp"
 #include "gamelib/components/editor/LineBrushComponent.hpp"
@@ -28,6 +29,7 @@ namespace gamelib
         _REGISTER_COMPONENT(PolygonShape);
         _REGISTER_COMPONENT(BrushComponent);
         _REGISTER_COMPONENT(LineBrushComponent);
+        _REGISTER_COMPONENT(ActorComponent);
 #undef _REGISTER_COMPONENT
     }
 

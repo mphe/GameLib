@@ -1,6 +1,7 @@
 # Todo
 
 * FPS scaling
+* use median frametime to prevent stuttering
 * Render parent like GroupTransform but for RenderComponents
 * Give resources a type name member
 * Automatically adapt (render size and) aspect ratio on window resize
@@ -15,6 +16,8 @@
 * MaskComponent
 * imgui game state
 * make JsonSerializer::write\* functions const
+* replace std::unordered_map with a better implementation
+* return nullptr when dereferencing BaseResource instead of using static_assert
 
 * Fix negative scalebox in SelectTool
 
@@ -56,6 +59,7 @@
 * InputSystem
   * map["shoot"] = { Space, Enter, ... }
   * functions for checking multiple inputs at once with "all pressed" or "any pressed"
+  * isKeyDown/isMouseDown should check directly instead of going through getKeyState()
 
 * components
   * TransformableComponent
@@ -89,6 +93,7 @@
   * fix sharp corners (<90°)
   * if there's no collision component assigned, don't to clip checking, but don't disable all physics
   * add option to accelerate towards basevel rather than immediatelly setting it
+  * move airFriction code to QController
 
 * collisions
   * Remove Collidable and merge it into CollisionComponent
@@ -132,6 +137,7 @@
     * readonly
     * filename
     * notzero
+    * guarantee load first (-> race condition in SpriteComponent)
 
 
 <!-- vim: tabstop=2 shiftwidth=2 

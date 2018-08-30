@@ -34,6 +34,7 @@ namespace gamelib
             auto change(SpriteResource::Handle sprite) -> void;
             auto setIndex(int index)              -> void;
 
+            auto getSprite() const     -> SpriteResource::Handle;
             auto getSpriteName() const -> const std::string&;
             auto getAnimation() const  -> const AnimationComponent&;
             auto getTexture() const    -> TextureResource::Handle;
