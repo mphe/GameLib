@@ -132,10 +132,13 @@ namespace gamelib
         // if (!node.isObject())
         //     return false;
 
+        if (scale && clear)
+            scale->fill(1);
+
         if (pos)
             loadFromJson(node["pos"], pos->asVector(), clear);
         if (scale)
-            loadFromJson(node["scale"], *scale, clear);
+            loadFromJson(node["scale"], *scale, false);
         if (angle)
             *angle = node.get("angle", clear ? 0 : *angle).asFloat();
 
