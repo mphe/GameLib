@@ -128,7 +128,7 @@ namespace gamelib
             }
         }
 
-        if (inputResource(&_tex) && _tex)
+        if (inputResource("Texture", &_tex) && _tex)
             _linewidth = _tex->getSize().y;
 
         ImGui::InputFloat2("Texture offset", &_offset[0], 2);

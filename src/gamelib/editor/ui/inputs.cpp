@@ -74,7 +74,7 @@ namespace gamelib
                         return false;
                     }
                 case PropResource:
-                    return inputResource(static_cast<BaseResourceHandle*>(ptr), handle.id);
+                    return inputResource(name.c_str(), static_cast<BaseResourceHandle*>(ptr), handle.id);
                 case PropUnknown:
                     ImGui::Text("Unknown property");
                     break;

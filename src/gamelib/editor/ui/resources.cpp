@@ -170,21 +170,21 @@ namespace gamelib
     }
 
 
-    bool inputResource(BaseResourceHandle* res, ID id, bool preview_, int size)
+    bool inputResource(const char* name, BaseResourceHandle* res, ID id, bool preview_, int size)
     {
-        const char* name = nullptr;
         ThumbnailFunction thumbgetter = nullptr;
         PreviewFunction preview = nullptr;
 
-        getResourceMeta(id, &name, &thumbgetter, preview_ ? &preview : nullptr);
+        getResourceMeta(id, nullptr, &thumbgetter, preview_ ? &preview : nullptr);
 
-        return inputResource(res, id, name, thumbgetter, preview, size);
+        return inputResource(name, res, id, thumbgetter, preview, size);
     }
 
-    bool inputResource(BaseResourceHandle* res, ID id, const char* name, ThumbnailFunction thumbgetter, PreviewFunction preview, int size)
+    bool inputResource(const char* name, BaseResourceHandle* res, ID id, ThumbnailFunction thumbgetter, PreviewFunction preview, int size)
     {
         static BaseResourceHandle tmphandle; // Don't set anything until OK is pressed if preview is used
 
+        ImGui::PushID(name);
         { // Widget
             bool startSelect = false;
 
@@ -209,6 +209,11 @@ namespace gamelib
             if (ImGui::Button("Change"))
                 startSelect = true;
 
+            ImGui::SameLine();
+
+            if (ImGui::Button("Clear"))
+                res->reset();
+
             if (startSelect)
             {
                 ImGui::OpenPopup("Select Resource");
@@ -221,7 +226,7 @@ namespace gamelib
             bool selected = false;
             bool close = false;
 
-            if (ImGui::BeginPopupModal("Select Resource"))
+            if (*res == tmphandle && ImGui::BeginPopupModal("Select Resource"))
             {
                 selected = drawResourceSelection(preview ? &tmphandle : res, id, thumbgetter, preview, size);
                 if (selected && !preview)
@@ -261,6 +266,8 @@ namespace gamelib
 
                 ImGui::EndPopup();
             }
+
+            ImGui::PopID();
 
             return selected;
         }

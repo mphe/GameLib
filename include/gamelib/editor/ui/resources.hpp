@@ -23,19 +23,18 @@ namespace gamelib
     void previewTexture(BaseResourceHandle res, int imgsize);
     void previewSprite(BaseResourceHandle res, int imgsize);
 
-    bool inputResource(BaseResourceHandle* res, ID id, bool preview = false, int thumbsize = defaultThumbsize);
-    bool inputResource(BaseResourceHandle* res, ID id, const char* name, ThumbnailFunction thumbgetter, PreviewFunction preview, int thumbsize = defaultThumbsize);
+    bool inputResource(const char* name, BaseResourceHandle* res, ID id, bool preview = false, int thumbsize = defaultThumbsize);
+    bool inputResource(const char* name, BaseResourceHandle* res, ID id, ThumbnailFunction thumbgetter, PreviewFunction preview, int thumbsize = defaultThumbsize);
 
     template <typename T>
-    bool inputResource(ResourceHandle<T>* res, bool preview = false, int thumbsize = defaultThumbsize)
+    bool inputResource(const char* name, ResourceHandle<T>* res, bool preview = false, int thumbsize = defaultThumbsize)
     {
         auto handle = res->asBase();
-        if (inputResource(&handle, T::id, preview, thumbsize))
+        if (inputResource(name, &handle, T::id, preview, thumbsize))
         {
             *res = handle;
             return true;
         }
-
         return false;
     }
 

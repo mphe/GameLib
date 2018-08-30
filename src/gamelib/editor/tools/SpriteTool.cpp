@@ -33,7 +33,7 @@ namespace gamelib
 
     void SpriteTool::drawGui()
     {
-        inputResource(&_sprite);
+        inputResource("Sprite", &_sprite);
         if (ImGui::CollapsingHeader("Preview", ImGuiTreeNodeFlags_DefaultOpen))
             previewSprite(_sprite.asBase());
     }
