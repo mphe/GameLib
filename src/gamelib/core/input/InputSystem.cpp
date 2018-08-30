@@ -23,6 +23,7 @@ namespace gamelib
         _states.clear();
         _mouse.wheel = 0;
         _mouse.moved = false;
+        _mouse.world = convert(_window->mapPixelToCoords(sf::Mouse::getPosition(*_window))).asPoint();
         _consumedMouse = _consumedKeyboard = false;
     }
 
@@ -72,7 +73,6 @@ namespace gamelib
                 auto m = sf::Mouse::getPosition(*_window);
                 _mouse.desktop = convert(sf::Mouse::getPosition()).asPoint();
                 _mouse.win = convert(m).asPoint();
-                _mouse.world = convert(_window->mapPixelToCoords(m)).asPoint();
                 _mouse.moved = true;
             }
             else if (ev.type == sf::Event::MouseWheelMoved)
