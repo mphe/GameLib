@@ -184,35 +184,57 @@ namespace gamelib
     {
         static BaseResourceHandle tmphandle; // Don't set anything until OK is pressed if preview is used
 
+        bool selected = false;  // returned value
+
         ImGui::PushID(name);
         { // Widget
             bool startSelect = false;
 
-            ImGui::Text("%s", name);
-
             if (*res)
             {
+                ImGui::BeginGroup();
+                // ImGui::Columns(2, nullptr, false);
+                // ImGui::SetColumnWidth(0, 50);
+
                 if (thumbgetter)
                 {
                     sf::Sprite thumb;
                     thumbgetter(*res, &thumb);
                     if (ImGui::ImageButton(thumb, ImVec2(32, 32)))
                         startSelect = true;
+
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::BeginTooltip();
+                        ImGui::Text("%s", res->getResource()->getPath().c_str());
+                        ImGui::EndTooltip();
+                    }
                 }
                 else
                 {
                     ImGui::Text("%s", res->getResource()->getPath().c_str());
                 }
+
+                ImGui::EndGroup();
                 ImGui::SameLine();
+                // ImGui::NextColumn();
+            }
+            ImGui::BeginGroup();
+            // ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 8);
+            ImGui::TextUnformatted(name);
+
+            if (!*res)
+                ImGui::SameLine();
+
+            if (!*res && ImGui::Button("Change"))
+                startSelect = true;
+            else if (*res && ImGui::Button("Clear"))
+            {
+                res->reset();
+                selected = true;
             }
 
-            if (ImGui::Button("Change"))
-                startSelect = true;
-
-            ImGui::SameLine();
-
-            if (ImGui::Button("Clear"))
-                res->reset();
+            ImGui::EndGroup();
 
             if (startSelect)
             {
@@ -223,9 +245,6 @@ namespace gamelib
         }
 
         { // Selection Popup
-            bool selected = false;
-            bool close = false;
-
             if (*res == tmphandle && ImGui::BeginPopupModal("Select Resource"))
             {
                 selected = drawResourceSelection(preview ? &tmphandle : res, id, thumbgetter, preview, size);
@@ -233,6 +252,7 @@ namespace gamelib
                     ImGui::CloseCurrentPopup();
 
                 { // OK / Cancel
+                    bool close = false;
                     ImGui::PushItemWidth(-140); // Align right
 
                     if (preview)
@@ -263,14 +283,12 @@ namespace gamelib
                         }
                     }
                 }
-
                 ImGui::EndPopup();
             }
-
-            ImGui::PopID();
-
-            return selected;
         }
+
+        ImGui::PopID();
+        return selected;
     }
 
 

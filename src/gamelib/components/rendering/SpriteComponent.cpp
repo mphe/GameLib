@@ -104,8 +104,11 @@ namespace gamelib
 
     void SpriteComponent::render(sf::RenderTarget& target, sf::RenderStates states) const
     {
-        states.texture = _sprite->tex.get();
-        SceneObject::render(target, states);
+        if (_sprite)
+        {
+            states.texture = _sprite->tex.get();
+            SceneObject::render(target, states);
+        }
     }
 
 
