@@ -57,14 +57,14 @@ namespace gamelib
 
     void SceneObject::render(sf::RenderTarget& target, sf::RenderStates states) const
     {
-        states.transform *= getTransform();
+        states.transform *= getMatrix();
         target.draw(_vertices, states);
     }
 
 
     void SceneObject::_updateBBox()
     {
-        auto bounds = getTransform().transformRect(_vertices.getBounds());
+        auto bounds = getMatrix().transformRect(_vertices.getBounds());
         _bbox = math::AABBf(bounds.left, bounds.top, bounds.width, bounds.height);
         markDirty();
     }
@@ -182,7 +182,7 @@ namespace gamelib
         return math::AABBf(bounds.left, bounds.top, bounds.width, bounds.height);
     }
 
-    const sf::Transform& SceneObject::getTransform() const
+    const sf::Transform& SceneObject::getMatrix() const
     {
         _updateTransform();
         return _trans;

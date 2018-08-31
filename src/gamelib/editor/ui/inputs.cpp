@@ -154,22 +154,6 @@ namespace gamelib
             ren.setLayer(handle);
     }
 
-    // void inputBrushComponent(BrushComponent& brush)
-    // {
-    //     PolygonShape* shape = brush->getBrushShape();
-    //     auto offset = shape->getTexOffset();
-    //     auto width = brush->getWidth();
-    //
-    //     drawTextureSelect(&shape->texture);
-    //
-    //     if (ImGui::InputFloat2("Texture offset", &offset[0], 2) && shape)
-    //         shape->setTexOffset(offset);
-    //
-    //     if (ent.getName() == "linebrush")
-    //         if (ImGui::InputInt("Line width", &width, 1, 32))
-    //             brush->setWidth(width);
-    // }
-
     bool inputTransform(Transformable& trans)
     {
         return inputTransform(trans, trans.getSupportedOps());
@@ -299,21 +283,24 @@ namespace gamelib
                 ImGui::PushID(comp);
                 if (ImGui::TreeNode(comp->getName().c_str()))
                 {
-                    ImGui::PushID(comp);
-                    if (comp->getID() == RenderComponent::id)
-                        inputRenderComponent(*static_cast<RenderComponent*>(comp));
-
-                    inputProperties(comp->getProperties());
-
+                    inputComponent(*comp);
                     ImGui::TreePop();
-                    ImGui::PopID();
                 }
-
                 ImGui::PopID();
-
                 return true;
             });
             ImGui::PopItemWidth();
         }
+    }
+
+    void inputComponent(Component& comp)
+    {
+        if (comp.getTransform())
+            inputTransform(*comp.getTransform());
+
+        if (comp.getID() == RenderComponent::id)
+            inputRenderComponent(*static_cast<RenderComponent*>(&comp));
+
+        inputProperties(comp.getProperties());
     }
 }

@@ -34,6 +34,16 @@ namespace gamelib
         return _props;
     }
 
+    Transformable* Component::getTransform()
+    {
+        return nullptr;
+    }
+
+    const Transformable* Component::getTransform() const
+    {
+        return nullptr;
+    }
+
     bool Component::loadFromJson(const Json::Value& node)
     {
         return _props.loadFromJson(node);

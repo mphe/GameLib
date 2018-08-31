@@ -25,6 +25,16 @@ namespace gamelib
         getEntity()->getTransform().remove(this);
     }
 
+    Transformable* RenderComponent::getTransform()
+    {
+        return this;
+    }
+
+    const Transformable* RenderComponent::getTransform() const
+    {
+        return this;
+    }
+
     bool RenderComponent::loadFromJson(const Json::Value& node)
     {
         Component::loadFromJson(node);

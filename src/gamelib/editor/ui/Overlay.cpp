@@ -95,14 +95,14 @@ namespace gamelib
                     sf::Vertex line[3];
                     line[0] = sf::Vertex(mesh[0].position);
                     line[1] = sf::Vertex(mesh[1].position);
-                    target.draw(line, 2, sf::LineStrip, ren->getTransform());
+                    target.draw(line, 2, sf::LineStrip, ren->getMatrix());
 
                     for (size_t i = 2; i < mesh.getVertexCount(); ++i)
                     {
                         line[0] = sf::Vertex(mesh[i - 2].position);
                         line[1] = sf::Vertex(mesh[i].position);
                         line[2] = sf::Vertex(mesh[i - 1].position);
-                        target.draw(line, 3, sf::LineStrip, ren->getTransform());
+                        target.draw(line, 3, sf::LineStrip, ren->getMatrix());
                     }
                 }
                 else if (mesh.getPrimitiveType() == sf::Triangles || mesh.getPrimitiveType() == sf::Quads)
@@ -117,11 +117,11 @@ namespace gamelib
                         for (size_t n = 0; n < num; ++n)
                             line[n] = sf::Vertex(mesh[i + n].position);
                         line[num] = sf::Vertex(mesh[i].position);
-                        target.draw(line, num + 1, sf::LineStrip, ren->getTransform());
+                        target.draw(line, num + 1, sf::LineStrip, ren->getMatrix());
                     }
                 }
                 else
-                    target.draw(&mesh[0], mesh.getVertexCount(), mesh.getPrimitiveType(), ren->getTransform());
+                    target.draw(&mesh[0], mesh.getVertexCount(), mesh.getPrimitiveType(), ren->getMatrix());
 
                 return false;
             };

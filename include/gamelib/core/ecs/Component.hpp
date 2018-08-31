@@ -9,6 +9,7 @@
 namespace gamelib
 {
     class Entity;
+    class Transformable;
 
     class Component : public Identifiable, public JsonSerializer
     {
@@ -25,6 +26,8 @@ namespace gamelib
             auto getEntity() const       -> Entity*;
             auto getEntityHandle() const -> Handle;
             auto getProperties() const   -> const PropertyContainer&;
+            virtual auto getTransform()       -> Transformable*;
+            virtual auto getTransform() const -> const Transformable*;
 
             virtual auto loadFromJson(const Json::Value& node) -> bool;
             virtual auto writeToJson(Json::Value& node)        -> void;

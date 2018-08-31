@@ -32,6 +32,16 @@ namespace gamelib
         getEntity()->getTransform().remove(this);
     }
 
+    Transformable* CollisionComponent::getTransform()
+    {
+        return this;
+    }
+
+    const Transformable* CollisionComponent::getTransform() const
+    {
+        return this;
+    }
+
     bool CollisionComponent::loadFromJson(const Json::Value& node)
     {
         Component::loadFromJson(node);

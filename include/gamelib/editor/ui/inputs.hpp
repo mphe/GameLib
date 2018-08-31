@@ -12,6 +12,7 @@ namespace gamelib
     class PropertyHandle;
     class PropertyContainer;
     class Entity;
+    class Component;
 
     bool okButton(const char* label = "OK", const ImVec2& size = ImVec2(0, 0));
     bool cancelButton(const char* label = "Cancel", const ImVec2& size = ImVec2(0, 0));
@@ -29,6 +30,7 @@ namespace gamelib
     bool inputProperty(const std::string& name, const PropertyHandle& handle);
     void inputEntity(Entity& ent);
     void inputEntityProps(Entity& ent);
+    void inputComponent(Component& comp);
 }
 
 #endif
