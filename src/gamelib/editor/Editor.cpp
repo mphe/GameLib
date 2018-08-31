@@ -166,7 +166,9 @@ namespace gamelib
 
     bool Editor::load()
     {
-        return _savefile.empty() ? false : gamelib::loadSave(_savefile);
+        bool success = _savefile.empty() ? false : gamelib::loadSave(_savefile);
+        setTool(ToolSelect);
+        return success;
     }
 
     bool Editor::load(const std::string& fname)
