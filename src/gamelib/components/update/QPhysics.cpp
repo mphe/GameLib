@@ -151,12 +151,17 @@ namespace gamelib
                     // NOTE: Not adding momentum provides clean dragging.
                     // TODO: could be fixed using the same snap mechanic used
                     //       for sticking to vertical moving platforms.
-                    if (keepMomentum)
+                    if (phys->keepMomentum)
                     {
                         auto addvel = tmpvel;
                         subclamp(&addvel, phys->vel + phys->basevel);
                         phys->vel += addvel;
                     }
+                    // NOTE: if a non-solid object moves a solid object, the speed is
+                    //       slowed down because it collides with the solid even though
+                    //       it is moved afterwards.
+                    // TODO: find a way to fix this (repeating the trace in such a case
+                    //       doesn't work, because it could lead to endless loops)
 
                     // Temporary unflag as physicsdrag (if needed) to prevent
                     // recursive "dragging"
