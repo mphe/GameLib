@@ -28,7 +28,6 @@ namespace gamelib
 
     bool inputProperties(const PropertyContainer& props);
     bool inputProperty(const std::string& name, const PropertyHandle& handle);
-    void inputEntity(Entity& ent);
     void inputEntityProps(Entity& ent);
     void inputComponent(Component& comp);
 }

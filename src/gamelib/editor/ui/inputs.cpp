@@ -240,35 +240,19 @@ namespace gamelib
     }
 
 
-    void inputEntity(Entity& ent)
-    {
-        static constexpr const char* entityFlags[] { "Persistent (Unimplemented)", "Static (Unimplemented)" };
-
-        ImGui::Columns(2, nullptr, false);
-
-        ImGui::Text("Geometry");
-        ImGui::Indent(8);
-        inputTransform(ent.getTransform());
-        ImGui::Unindent(8);
-
-        ImGui::NextColumn();
-
-        ImGui::Text("Flags");
-        ImGui::Indent(8);
-        inputBitflags(&ent.flags, 2, entityFlags);
-        ImGui::Unindent(8);
-
-        ImGui::Columns(1);
-    }
-
     void inputEntityProps(Entity& ent)
     {
-        ImGui::Text("%s", ent.getName().c_str());
+        // static constexpr const char* entityFlags[] { "Persistent (Unimplemented)", "Static (Unimplemented)" };
+
+        ImGui::InputText("name", const_cast<char*>(ent.getName().c_str()), ent.getName().size(), ImGuiInputTextFlags_ReadOnly);
+        // ImGui::Text("%s", ent.getName().c_str());
         ImGui::NewLine();
 
-        inputEntity(ent);
+        if (ImGui::CollapsingHeader("Geometry", ImGuiTreeNodeFlags_DefaultOpen))
+            inputTransform(ent.getTransform());
 
-        ImGui::NewLine();
+        // if (ImGui::CollapsingHeader("Flags"))
+        //     inputBitflags(&ent.flags, 2, entityFlags);
 
         if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen))
         {
