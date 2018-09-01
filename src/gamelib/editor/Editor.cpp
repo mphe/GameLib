@@ -453,7 +453,8 @@ namespace gamelib
                 _currenttool->onMousePressed();
                 _drag = true;
             }
-            else if (input->isMouseReleased(sf::Mouse::Left))
+            else if (!input->isMouseDown(sf::Mouse::Left))
+                // Use !mouseDown because if mouse is consumed, mouseReleased will never be true
             {
                 _currenttool->onMouseRelease();
                 _drag = false;
