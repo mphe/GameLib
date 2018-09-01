@@ -85,6 +85,7 @@
   * Fix pointDirection in cppmath (Vector.angle() works correctly)
   * use inheritance for polygon classes
   * LineStrip polygon closed flag
+  * remove invert support in Polygon as it became obsolete with normal directions
 
 * Physics
   * fix slope corners

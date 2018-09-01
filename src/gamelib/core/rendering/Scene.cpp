@@ -105,9 +105,27 @@ namespace gamelib
 
             if (!(flags & render_noparallax) && !math::almostEquals(parallax, 1.0f))
             {
-                translate = (bbox.getCenter() - convert(view.getCenter())) * (parallax - 1);
-                trans.translate(translate.x, translate.y);
-                bbox.pos += translate;
+                auto vcenter = view.getCenter();
+                translate = (bbox.getCenter() - convert(vcenter)) * (parallax - 1);
+
+                if (flags & render_scaleparallax)
+                {
+                    trans.scale(parallax, parallax, vcenter.x, vcenter.y);
+                    bbox.extend(bbox.size * parallax - bbox.size);
+                    bbox.pos += translate;
+                }
+                else
+                {
+                    trans.translate(translate.x, translate.y);
+                    bbox.pos += translate;
+                }
+
+                // sf::RectangleShape rect(convert(bbox.size));
+                // rect.setFillColor(sf::Color::Transparent);
+                // rect.setOutlineColor(sf::Color::White);
+                // rect.setOutlineThickness(1);
+                // rect.setPosition(convert(bbox.pos));
+                // target.draw(rect);
             }
 
             // Skip if outside of view

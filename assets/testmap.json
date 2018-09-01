@@ -17,7 +17,7 @@
          },
          "name" : "player",
          "transform" : {
-            "pos" : [ -235.96359252929688, 288.84375 ]
+            "pos" : [ 1297.01708984375, 304.84381103515625 ]
          }
       },
       {
@@ -172,12 +172,12 @@
             "QPhysicsComponent#1" : {
                "gravity multiplier" : 0,
                "overbounce" : 2,
-               "vel" : [ 150, 0 ]
+               "vel" : [ -150, 0 ]
             }
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ 1023.2763061523438, 352 ]
+            "pos" : [ 999.973388671875, 352 ]
          }
       },
       {
@@ -391,7 +391,7 @@
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ 1536, 73.49951171875 ]
+            "pos" : [ 1536, 39.49957275390625 ]
          }
       },
       {
@@ -512,7 +512,7 @@
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ -320.5, 258 ]
+            "pos" : [ -512.5, 258 ]
          }
       },
       {
@@ -656,6 +656,8 @@
             },
             "PolygonShape#1" : {
                "depth" : 3,
+               "flags" : 16,
+               "parallax" : 0.96000003814697266,
                "texture" : "tex/bg.png",
                "vertices" : [
                   [ 0, 0 ],
@@ -1217,7 +1219,7 @@
    "scene" : {
       "cameras" : [
          {
-            "pos" : [ -875.963623046875, -71.15625 ],
+            "pos" : [ 636.04754638671875, -86.056221008300781 ],
             "size" : [ 1280, 720 ],
             "velocity" : [ 0, 0 ],
             "viewport" : {
@@ -1229,16 +1231,16 @@
       ],
       "defaultcam" : 0,
       "depth" : 0,
-      "flags" : 26,
+      "flags" : 10,
       "layers" : {
          "bg" : {
             "depth" : 10,
-            "flags" : 0,
+            "flags" : 16,
             "parallax" : 1
          },
          "fg" : {
             "depth" : -10,
-            "flags" : 0,
+            "flags" : 16,
             "parallax" : 1
          }
       },
