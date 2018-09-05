@@ -20,13 +20,17 @@
             "bg.png",
             "block.png",
             "sand.png",
-            "sand2.png"
+            "sand2.png",
+            "bricks.png",
+            "bricks_grayscale.png"
         ],
         "spr": [
             "player_stand.spr",
             "player_walk.spr",
             "player_jump.spr",
-            "box.spr"
+            "box.spr",
+            "tree.spr",
+            "tree2.spr"
         ]
     }
 }

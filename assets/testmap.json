@@ -4,7 +4,10 @@
          "components" : {
             "AABBCollision#1" : {
                "flags" : 26,
-               "size" : [ 32, 31 ]
+               "size" : [ 32, 31 ],
+               "transform" : {
+                  "pos" : [ -15.995361328125, -16.000041961669922 ]
+               }
             },
             "QController#1" : {
                "jumpspeed" : 356
@@ -17,7 +20,7 @@
          },
          "name" : "player",
          "transform" : {
-            "pos" : [ 1297.01708984375, 304.84381103515625 ]
+            "pos" : [ 1614.40380859375, 32.843791961669922 ]
          }
       },
       {
@@ -177,7 +180,7 @@
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ 999.973388671875, 352 ]
+            "pos" : [ 1019.4736328125, 352 ]
          }
       },
       {
@@ -391,7 +394,7 @@
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ 1536, 39.49957275390625 ]
+            "pos" : [ 1536, 14.499630928039551 ]
          }
       },
       {
@@ -512,7 +515,7 @@
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ -512.5, 258 ]
+            "pos" : [ -416.5, 258 ]
          }
       },
       {
@@ -1214,19 +1217,98 @@
          "transform" : {
             "pos" : [ 1632, 256 ]
          }
+      },
+      {
+         "components" : {
+            "AABBCollision#1" : {
+               "size" : [ 206, 216 ]
+            },
+            "BrushComponent#1" : {},
+            "SpriteComponent#1" : {
+               "depth" : 2,
+               "layer" : "bg",
+               "parallax" : 0.89999997615814209,
+               "sprite" : "spr/tree2.spr",
+               "transform" : {
+                  "angle" : 2
+               }
+            }
+         },
+         "name" : "brush_sprite",
+         "transform" : {
+            "pos" : [ 1724.4000244140625, -228.0999755859375 ]
+         }
+      },
+      {
+         "components" : {
+            "AABBCollision#1" : {
+               "size" : [ 206, 216 ],
+               "transform" : {
+                  "angle" : 8
+               }
+            },
+            "BrushComponent#1" : {},
+            "SpriteComponent#1" : {
+               "layer" : "bg",
+               "parallax" : 0.94999998807907104,
+               "sprite" : "spr/tree2.spr"
+            }
+         },
+         "name" : "brush_sprite",
+         "transform" : {
+            "angle" : -8,
+            "pos" : [ 1940.7998046875, -156.5 ]
+         }
+      },
+      {
+         "components" : {
+            "AABBCollision#1" : {
+               "size" : [ 206, 216 ]
+            },
+            "BrushComponent#1" : {},
+            "SpriteComponent#1" : {
+               "depth" : 3,
+               "layer" : "bg",
+               "parallax" : 0.85000002384185791,
+               "sprite" : "spr/tree2.spr"
+            }
+         },
+         "name" : "brush_sprite",
+         "transform" : {
+            "pos" : [ 2272, -224 ]
+         }
+      },
+      {
+         "components" : {
+            "AABBCollision#1" : {
+               "size" : [ 157, 178 ]
+            },
+            "BrushComponent#1" : {},
+            "SpriteComponent#1" : {
+               "depth" : -4,
+               "layer" : "fg",
+               "parallax" : 1.2000000476837158,
+               "sprite" : "spr/tree.spr"
+            }
+         },
+         "name" : "brush_sprite",
+         "transform" : {
+            "pos" : [ 1747.81982421875, -86.7462158203125 ],
+            "scale" : [ 1.5, 1.5 ]
+         }
       }
    ],
    "scene" : {
       "cameras" : [
          {
-            "pos" : [ 636.04754638671875, -86.056221008300781 ],
+            "pos" : [ 1264.1273193359375, -248.95635986328125 ],
             "size" : [ 1280, 720 ],
             "velocity" : [ 0, 0 ],
             "viewport" : {
                "pos" : [ 0, 0 ],
                "size" : [ 1, 1 ]
             },
-            "zoom" : 0.59999990463256836
+            "zoom" : 1.2000000476837158
          }
       ],
       "defaultcam" : 0,
