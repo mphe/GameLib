@@ -1,6 +1,7 @@
 #include "gamelib/core/res/SpriteResource.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/utils/json.hpp"
+#include "gamelib/utils/conversions.hpp"
 
 namespace gamelib
 {
@@ -24,16 +25,14 @@ namespace gamelib
         auto sprite = SpriteResource::create();
         sprite->tex = resmgr->get(node["texture"].asString()).as<TextureResource>();
 
-        math::Vec2f tmp;
+        math::Vec2f pos, size = convert(sprite->tex->getSize());
+        loadFromJson(node["framepos"], pos);
+        loadFromJson(node["framesize"], size);
 
-        if (loadFromJson(node["framepos"], tmp))
-            sprite->rect.pos = tmp;
+        sprite->rect.pos = pos;
+        sprite->rect.size = size;
 
-        if (loadFromJson(node["framesize"], tmp))
-            sprite->rect.size = tmp;
-
-        if (loadFromJson(node["origin"], tmp))
-            sprite->origin = tmp.asPoint();
+        loadFromJson(node["origin"], sprite->origin);
 
         sprite->ani.length = node.get("length", 1).asInt();
         sprite->ani.speed = node.get("speed", 0).asFloat();
