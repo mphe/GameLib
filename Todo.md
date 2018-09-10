@@ -92,7 +92,7 @@
     * averaging normals might not be the best solution
   * add a non-gravity version
   * fix sharp corners (<90°)
-  * if there's no collision component assigned, don't to clip checking, but don't disable all physics
+  * if there's no collision component assigned, don't do clip checking, but don't disable all physics
   * add option to accelerate towards basevel rather than immediatelly setting it
   * move airFriction code to QController
 
@@ -105,10 +105,6 @@
   * render offset shader
   * render repeat shader (for texture regions)
   * Scene force redraw
-  * Consider SceneObject to not not render itself
-    * contains vertices, texture, shader, transform, ...
-    * rendered by scene
-    * optionally static render function to render outside of a scene
 
 * editor
   * grid numbers
@@ -117,7 +113,6 @@
   * custom entities
     * entity flag to load an entity from savefile directly
   * PhysicsBrush
-  * copy entity
   * fix behaviour in negative coord space
   * EditorShared -> EditorContext
     * passed to every tool callback
