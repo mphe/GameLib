@@ -3,58 +3,115 @@
 
 #include "math/geometry/Vector.hpp"
 #include "math/geometry/AABB.hpp"
+#include <SFML/Graphics/Transform.hpp>
 
 namespace gamelib
 {
     class GroupTransform;
+
+    constexpr float zeroscale = 0.0001;
+
+    class TransformData
+    {
+        public:
+            TransformData();
+
+            auto getMatrix() const -> sf::Transform;
+            auto reset()           -> void;
+
+            auto operator-=(const TransformData& rhs) -> TransformData&;
+            auto operator+=(const TransformData& rhs) -> TransformData&;
+
+        public:
+            math::Point2f origin;
+            math::Point2f pos;
+            math::Vec2f scale;
+            float angle;
+    };
+
 
     class Transformable
     {
         friend class GroupTransform;
 
         public:
-            constexpr static unsigned int movable = 1;
-            constexpr static unsigned int rotatable = 1 << 1;
-            constexpr static unsigned int scalable = 1 << 2;
-
-        public:
-            Transformable(unsigned int supported = 0);
+            Transformable();
+            Transformable(bool movable, bool scalable, bool rotatable);
             virtual ~Transformable() {};
 
-            virtual auto move(const math::Vec2f& rel)    -> void;
-            virtual auto scale(const math::Vec2f& scale) -> void;
-            virtual auto rotate(float angle)             -> void;
+            virtual auto getBBox() const -> const math::AABBf& = 0;
 
-            virtual auto getPosition() const -> const math::Point2f&;
-            virtual auto getScale() const    -> const math::Vec2f&;
-            virtual auto getRotation() const -> float;
+            auto setLocalPosition(const math::Point2f& pos)  -> void;
+            auto setLocalScale(const math::Vec2f& scale)     -> void;
+            auto setLocalRotation(float angle)               -> void;
+            auto setLocalTransformation(const TransformData& data) -> void;
 
-            virtual auto getBBox() const     -> const math::AABBf&;
+            auto getLocalPosition() const -> const math::Point2f&;
+            auto getLocalScale() const    -> const math::Vec2f&;
+            auto getLocalRotation() const -> float;
+            auto getLocalTransformation() const -> const TransformData&;
+            auto getLocalMatrix() const -> sf::Transform;
 
-            auto setPosition(const math::Point2f& pos) -> void;
-            auto setPosition(float x, float y)         -> void;
-            auto move(float x, float y)                -> void;
-            auto setScale(const math::Vec2f& scale)    -> void;
-            auto setScale(float x, float y)            -> void;
-            auto scale(float x, float y)               -> void;
-            auto setRotation(float angle)              -> void;
+            auto setPosition(const math::Point2f& pos)  -> void;
+            auto setPosition(float x, float y)          -> void;
+            auto setScale(const math::Vec2f& scale)     -> void;
+            auto setScale(float x, float y)             -> void;
+            auto setRotation(float angle)               -> void;
+            auto setTransformation(const TransformData& data)      -> void;
+
+            auto getPosition() const -> const math::Point2f&;
+            auto getScale() const    -> const math::Vec2f&;
+            auto getRotation() const -> float;
+            auto getTransformation() const -> TransformData;
+            auto getMatrix() const         -> const sf::Transform&;
+
+            auto move(const math::Vec2f& rel)           -> void;
+            auto move(float x, float y)                 -> void;
+            auto scale(const math::Vec2f& scale)        -> void;
+            auto scale(float x, float y)                -> void;
+            auto rotate(float angle)                    -> void;
+
+            auto setOrigin(const math::Point2f& origin) -> void;
+            auto setOrigin(float x, float y)            -> void;
+            auto getOrigin() const   -> const math::Point2f&;
 
             auto reset() -> void;
 
-            auto getParent() const       -> GroupTransform*;
-            auto getSupportedOps() const -> unsigned int;
+            auto getParent() const   -> GroupTransform*;
 
-            // Tell parent to update its bounding box
-            auto markDirty() const -> void;
+            auto isMovable() const   -> bool;
+            auto isScalable() const  -> bool;
+            auto isRotatable() const -> bool;
 
-            auto operator-=(const Transformable& rhs) -> Transformable&;
-            auto operator+=(const Transformable& rhs) -> Transformable&;
+            auto operator-=(const TransformData& rhs) -> Transformable&;
+            auto operator+=(const TransformData& rhs) -> Transformable&;
 
         protected:
-            unsigned int _supported;
+            virtual auto _onChanged(const sf::Transform& old) -> void {};
+
+            // Tell parent to update its bounding box
+            auto _markDirty() const -> void;
+            auto _setSupportedOps(bool movable, bool scalable, bool rotatable) -> void;
 
         private:
-            GroupTransform* _parent; // Set by GroupTransform on adding
+            // Called by GroupTransform on adding
+            auto _setParent(GroupTransform* parent) -> void;
+
+            // Recomputes the matrix. Also called by parents when they changed
+            auto _updateMatrix() -> void;
+
+        private:
+            bool _movable, _scalable, _rotatable;
+            GroupTransform* _parent;
+            TransformData _local;
+            struct _GlobalData {
+                math::Point2f pos;
+                math::Vec2f scale;
+                float angle;
+
+                _GlobalData() : scale(1, 1), angle(0) {}
+            } _global;
+            sf::Transform _matrix;
     };
 }
 

@@ -27,9 +27,7 @@ namespace gamelib
             auto getNormal(float x, float y) const       -> math::Vec2f;
             auto getNormal(const math::Point2f& p) const -> math::Vec2f;
 
-            auto move(const math::Vec2f& rel) -> void;
-            auto getPosition() const          -> const math::Point2f&;
-            auto getBBox() const              -> const math::AABBf&;
+            auto getBBox() const     -> const math::AABBf&;
 
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
@@ -43,6 +41,9 @@ namespace gamelib
             auto getImage()       -> sf::Image&;
 
             auto setMaskColor(sf::Color mask) -> void;
+
+        protected:
+            virtual auto _onChanged(const sf::Transform& old) -> void;
 
         protected:
             sf::Color _mask;

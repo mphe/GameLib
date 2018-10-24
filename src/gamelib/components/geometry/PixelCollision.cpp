@@ -1,6 +1,7 @@
 #include "gamelib/components/geometry/PixelCollision.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/core/res/TextureResource.hpp"
+#include "gamelib/utils/conversions.hpp"
 
 namespace gamelib
 {
@@ -18,7 +19,7 @@ namespace gamelib
         _rect(aabb)
     {
         flags = flags_;
-        _supported = movable;
+        _setSupportedOps(true, false, false);
     }
 
     bool PixelCollision::intersect(const math::Point2f& point) const
@@ -146,15 +147,9 @@ namespace gamelib
     }
 
 
-    void PixelCollision::move(const math::Vec2f& rel)
+    void PixelCollision::_onChanged(const sf::Transform& old)
     {
-        _rect.pos += rel;
-        CollisionComponent::move(rel);
-    }
-
-    const math::Point2f& PixelCollision::getPosition() const
-    {
-        return _rect.pos.asPoint();
+        _rect.pos = convert(getMatrix().transformPoint(0, 0));
     }
 
     const math::AABBf& PixelCollision::getBBox() const
@@ -221,7 +216,7 @@ namespace gamelib
         _img.createMaskFromColor(_mask);
         _texname = fname;
         _rect.size.fill(_img.getSize().x, _img.getSize().y);
-        markDirty();
+        _markDirty();
 
         return true;
     }
@@ -231,7 +226,7 @@ namespace gamelib
         _img = tex.copyToImage();
         _img.createMaskFromColor(_mask);
         _rect.size.fill(_img.getSize().x, _img.getSize().y);
-        markDirty();
+        _markDirty();
     }
 
     void PixelCollision::loadImageFromTexture(TextureResource::Handle tex)

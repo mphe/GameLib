@@ -45,7 +45,7 @@ namespace gamelib
     bool CollisionComponent::loadFromJson(const Json::Value& node)
     {
         Component::loadFromJson(node);
-        gamelib::loadFromJson(node["transform"], *static_cast<Transformable*>(this));
+        gamelib::loadFromJson(node["transform"], *static_cast<Transformable*>(this), false);
         return true;
     }
 

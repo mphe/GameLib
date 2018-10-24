@@ -29,7 +29,7 @@ namespace gamelib
             PolygonShape();
             virtual ~PolygonShape() {}
 
-            virtual auto fetch(const math::Polygon<float>& pol, bool raw = true) -> void;
+            virtual auto fetch(const math::BasePolygon<float>& pol, bool raw = true) -> void;
             virtual auto fetch(const math::AABBf& rect)         -> void;
 
             auto adaptToTexture() -> void;
@@ -48,13 +48,12 @@ namespace gamelib
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
 
-            virtual auto move(const math::Vec2f& rel)    -> void;
-            virtual auto scale(const math::Vec2f& scale) -> void;
-            virtual auto rotate(float angle)             -> void;
-
         protected:
             auto _mapTexture() -> void;
             virtual auto _mapTexture(MappingMethod mappingMethod) -> void;
+
+            // Adapt mapping on transform
+            virtual auto _onChanged(const sf::Transform& old) -> void;
 
         public:
             TextureResource::Handle texture;

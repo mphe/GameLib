@@ -51,6 +51,7 @@ set(GAMELIB_SOURCES
     core/geometry/CollisionSystem.cpp
     core/geometry/Transformable.cpp
     core/geometry/GroupTransform.cpp
+    core/geometry/MatrixPolygon.cpp
     core/movement/Acceleration.cpp
     core/res/JsonSerializer.cpp
     core/res/ResourceManager.cpp

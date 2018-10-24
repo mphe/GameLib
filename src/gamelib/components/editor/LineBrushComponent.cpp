@@ -126,8 +126,6 @@ namespace gamelib
         dir = lastd.right().normalized() * (_linewidth / 2.0);
         _pol->add(linepol.getRaw(-1) - dir);
         _pol->add(linepol.getRaw(-1) + dir);
-        _pol->setScale(linepol.getScale());
-        _pol->setPosition(linepol.getOffset().asPoint());
 
         _shape->fetch(_pol->getPolygon());
     }

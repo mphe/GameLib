@@ -1,6 +1,7 @@
 #include "gamelib/utils/json.hpp"
 #include "gamelib/utils/conversions.hpp"
 #include "gamelib/core/geometry/GroupTransform.hpp"
+#include "gamelib/core/geometry/Transformable.hpp"
 #include <fstream>
 
 namespace gamelib
@@ -99,51 +100,26 @@ namespace gamelib
     }
 
 
-    bool loadFromJson(const Json::Value& node, Transformable& transform)
+    bool loadFromJson(const Json::Value& node, Transformable& transform, bool clear)
     {
-        math::Point2f pos = transform.getPosition();
-        math::Vec2f scale = transform.getScale();
-        float angle = transform.getRotation();
-        auto parent = transform.getParent();
-
-        if (parent)
-        {
-            pos -= parent->getPosition().asVector();
-            scale /= parent->getScale();
-            angle -= parent->getRotation();
-        }
-
-        if (!loadFromJson(node, &pos, &scale, &angle, false))
-            return false;
-
-        if (parent)
-        {
-            pos += parent->getPosition().asVector();
-            scale *= parent->getScale();
-            angle += parent->getRotation();
-        }
-
-        transform.setPosition(pos);
-        transform.setScale(scale);
-        transform.setRotation(angle);
-        return true;
+        TransformData data = transform.getLocalTransformation();
+        bool success = loadFromJson(node, data, clear);
+        transform.setLocalTransformation(data);
+        return success;
     }
 
-    bool loadFromJson(const Json::Value& node, math::Point2f* pos, math::Vec2f* scale, float* angle, bool clear)
+    bool loadFromJson(const Json::Value& node, TransformData& data, bool clear)
     {
-        // NOTE: It can't load but uses default, so no fail
-        // if (!node.isObject())
-        //     return false;
+        if (clear)
+            data.reset();
 
-        if (scale && clear)
-            scale->fill(1);
+        if (!node.isObject())
+            return clear;
 
-        if (pos)
-            loadFromJson(node["pos"], pos->asVector(), clear);
-        if (scale)
-            loadFromJson(node["scale"], *scale, false);
-        if (angle)
-            *angle = node.get("angle", clear ? 0 : *angle).asFloat();
+        loadFromJson(node["pos"], data.pos);
+        loadFromJson(node["scale"], data.scale);
+        loadFromJson(node["origin"], data.origin);
+        data.angle = node.get("angle", data.angle).asFloat();
 
         return true;
     }
@@ -162,26 +138,15 @@ namespace gamelib
 
     void writeToJson(Json::Value& node, const Transformable& transform)
     {
-        auto pos = transform.getPosition();
-        auto scale = transform.getScale();
-        auto angle = transform.getRotation();
-        auto parent = transform.getParent();
-
-        if (parent)
-        {
-            pos -= parent->getPosition().asVector();
-            scale /= parent->getScale();
-            angle -= parent->getRotation();
-        }
-
-        writeToJson(node, pos, scale, angle);
+        writeToJson(node, transform.getLocalTransformation());
     }
 
-    void writeToJson(Json::Value& node, const math::Point2f& pos, const math::Vec2f& scale, float angle)
+    void writeToJson(Json::Value& node, const TransformData& data)
     {
-        writeToJson(node["pos"], pos);
-        writeToJson(node["scale"], scale);
-        node["angle"] = angle;
+        writeToJson(node["pos"], data.pos);
+        writeToJson(node["scale"], data.scale);
+        writeToJson(node["origin"], data.origin);
+        node["angle"] = data.angle;
     }
 
 

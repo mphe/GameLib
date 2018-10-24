@@ -2,7 +2,7 @@
 #define GAMELIB_POLYGON_COLLISON_HPP
 
 #include "gamelib/components/CollisionComponent.hpp"
-#include "math/geometry/Polygon.hpp"
+#include "gamelib/core/geometry/MatrixPolygon.hpp"
 
 namespace gamelib
 {
@@ -22,12 +22,7 @@ namespace gamelib
 
             auto sweep(const math::AABBf& rect, const math::Vec2f& vel) const -> Intersection;
 
-            auto move(const math::Vec2f& rel)    -> void;
-            auto scale(const math::Vec2f& scale) -> void;
-
-            auto getPosition() const -> const math::Point2f&;
-            auto getScale() const    -> const math::Vec2f&;
-            auto getBBox() const     -> const math::AABBf&;
+            auto getBBox() const -> const math::AABBf&;
 
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
@@ -36,10 +31,13 @@ namespace gamelib
             auto edit(size_t i, const math::Point2f& p) -> void;
             auto clear()            -> void;
             auto size() const       -> size_t;
-            auto getPolygon() const -> const math::Polygon<float>&;
+            auto getPolygon() const -> const math::BasePolygon<float>&;
 
         protected:
-            math::Polygon<float> _polygon;
+            virtual auto _onChanged(const sf::Transform& old) -> void;
+
+        protected:
+            MatrixPolygon _polygon;
     };
 }
 

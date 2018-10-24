@@ -11,6 +11,7 @@
 
 // Helper for registering properties with member function setters that take
 // exactly the new value as argument,
+// Usage: props.registerProperty("size", _size, PROP_METHOD(math::Vec2f, setSize), this);
 #define PROP_METHOD(T, F) +[](T*, const T* val, decltype(this) self) { self->F(*val); }
 #define PROP_METHOD_CLASS(T, F, C) +[](T*, const T* val, C* self) { self->F(*val); }
 

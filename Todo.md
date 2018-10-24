@@ -12,14 +12,22 @@
 * imgui dialogues
 * entity tags
 * inputBitflags() exclude list
-* loadFromJson update bool to differentiate between load and update from json
 * MaskComponent
 * imgui game state
-* make JsonSerializer::write\* functions const
 * replace std::unordered_map with a better implementation
 * return nullptr when dereferencing BaseResource instead of using static_assert
+* EntityRef/ComponentRef/EntCompRef class
+* shorten/rename component names
+  * AABBComponent -> AABB
+  * PolygonShape -> BrushRenderer
+* LineRenderer class
 
-* Fix negative scalebox in SelectTool
+* json
+  * loadFromJson update bool to differentiate between load and update from json
+  * make JsonSerializer::write\* functions const
+  * remove clear argument in json functions, except for Transform
+  * add docs to make clear how functions behave in case of wrong json node type and defaults
+  * do Transformable serialization in Component
 
 * problems with lazy entity bounding box calculation
   * storing the bbox as reference
@@ -46,15 +54,6 @@
 
 * Transformable
   * Consider removing GroupTransform and instead give all Transformables a vector of children
-  * Origin
-  * add functions like this:
-    * move(x, y):
-        _move(x, y)
-        markDirty()
-    * scale(x, y):
-        zerocheck()
-        _scale(x, y)
-        markDirty()
 
 * InputSystem
   * map["shoot"] = { Space, Enter, ... }
@@ -62,7 +61,6 @@
   * isKeyDown/isMouseDown should check directly instead of going through getKeyState()
 
 * components
-  * TransformableComponent
   * migrate components to property system
     * UpdateComponent
     * RenderComponent
@@ -84,8 +82,17 @@
     * allows running functions on any data layouts (vertex buffers, raw point data, ...)
   * Fix pointDirection in cppmath (Vector.angle() works correctly)
   * use inheritance for polygon classes
+  * PolygonCollider (interface/abstract)
+    * intersect
+    * foreach
+    * find nearest
+    * derived:
+      * TriangleStripCollider
+      * LineStripCollider
+      * ...
   * LineStrip polygon closed flag
   * remove invert support in Polygon as it became obsolete with normal directions
+  * create AABB from 2 points correctly
 
 * Physics
   * fix slope corners
@@ -105,6 +112,9 @@
   * render offset shader
   * render repeat shader (for texture regions)
   * Scene force redraw
+  * remove json functionality from SceneObject
+    * SceneObject should be a data class
+    * saving/loading transform, layer, etc, but not vertices is not particulary style-consistent
 
 * editor
   * grid numbers
@@ -116,6 +126,9 @@
   * fix behaviour in negative coord space
   * EditorShared -> EditorContext
     * passed to every tool callback
+  * region select
+  * Fix negative scalebox in SelectTool
+  * switch between global and local transform input
 
 * make Engine a Subsystem
   * makes a backup of an existing active Engine
@@ -134,6 +147,7 @@
     * filename
     * notzero
     * guarantee load first (-> race condition in SpriteComponent)
+  * static map with id -> struct { imguicb, jsonwritecb, jsonloadcb }
 
 
 <!-- vim: tabstop=2 shiftwidth=2 

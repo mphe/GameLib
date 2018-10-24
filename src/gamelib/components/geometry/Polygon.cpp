@@ -15,7 +15,7 @@ namespace gamelib
         _polygon(type, math::NormalLeft)
     {
         flags = flags_;
-        _supported = movable | scalable; // TODO: rotation
+        _setSupportedOps(true, true, true);
         _props.registerProperty("Normals", *reinterpret_cast<int*>(&_polygon.normaldir), 0, 3, normaldir_hints);
     }
 
@@ -44,28 +44,9 @@ namespace gamelib
         return rect.sweep(vel, _polygon);
     }
 
-
-    void Polygon::move(const math::Vec2f& rel)
+    void Polygon::_onChanged(const sf::Transform& old)
     {
-        _polygon.move(rel);
-        CollisionComponent::move(rel);
-    }
-
-    void Polygon::scale(const math::Vec2f& scale)
-    {
-        _polygon.setScale(getScale() * scale);
-        CollisionComponent::scale(scale);
-    }
-
-
-    const math::Point2f& Polygon::getPosition() const
-    {
-        return _polygon.getOffset().asPoint();
-    }
-
-    const math::Vec2f& Polygon::getScale() const
-    {
-        return _polygon.getScale();
+        _polygon.setMatrix(getMatrix());
     }
 
     const math::AABBf& Polygon::getBBox() const
@@ -73,7 +54,7 @@ namespace gamelib
         return _polygon.getBBox();
     }
 
-    const math::Polygon<float>& Polygon::getPolygon() const
+    const math::BasePolygon<float>& Polygon::getPolygon() const
     {
         return _polygon;
     }
@@ -83,6 +64,7 @@ namespace gamelib
         CollisionComponent::loadFromJson(node);
         _polygon.clear();
         _polygon.type = static_cast<math::PolygonType>(node.get("type", _polygon.type).asInt());
+
         if (node.isMember("vertices"))
         {
             auto& vertices = node["vertices"];
@@ -111,16 +93,19 @@ namespace gamelib
     void Polygon::add(const math::Point2f& point)
     {
         _polygon.add(point);
+        _markDirty();
     }
 
     void Polygon::edit(size_t i, const math::Point2f& p)
     {
         _polygon.edit(i, p);
+        _markDirty();
     }
 
     void Polygon::clear()
     {
         _polygon.clear();
+        _markDirty();
     }
 
     size_t Polygon::size() const

@@ -1,5 +1,6 @@
 #include "gamelib/components/geometry/AABB.hpp"
 #include "gamelib/utils/json.hpp"
+#include "gamelib/utils/conversions.hpp"
 
 namespace gamelib
 {
@@ -13,22 +14,20 @@ namespace gamelib
 
     AABB::AABB(const math::AABBf& aabb, unsigned int flags_) :
         CollisionComponent(name),
-        _scale(1, 1),
+        _size(aabb.size),
         _rect(aabb)
     {
         flags = flags_;
-        _supported = movable | scalable;
-
-        _props.registerProperty("size", _rect.size, +[](math::Vec2f*, const math::Vec2f* val, AABB* self) {
-                self->setSize(*val);
-            }, this);
+        _setSupportedOps(true, true, false);
+        _props.registerProperty("size", _size, PROP_METHOD(math::Vec2f, setSize), this);
     }
 
 
     void AABB::setSize(const math::Vec2f& size)
     {
-        _rect.size = size * _scale;
-        markDirty();
+        _size = size;
+        _rect.size = _size * getScale();
+        _markDirty();
     }
 
     void AABB::setSize(float w, float h)
@@ -36,6 +35,16 @@ namespace gamelib
         setSize(math::Vec2f(w, h));
     }
 
+    const math::AABBf& AABB::getBBox() const
+    {
+        return _rect;
+    }
+
+    void AABB::_onChanged(const sf::Transform& old)
+    {
+        _rect.pos = convert(getMatrix().transformPoint(0, 0));
+        _rect.size = _size * getScale();
+    }
 
     bool AABB::intersect(const math::Point2f& point) const
     {
@@ -55,42 +64,5 @@ namespace gamelib
     Intersection AABB::sweep(const math::AABBf& rect, const math::Vec2f& vel) const
     {
         return rect.sweep(vel, _rect);
-    }
-
-
-    void AABB::move(const math::Vec2f& rel)
-    {
-        _rect.pos += rel;
-        CollisionComponent::move(rel);
-    }
-
-    void AABB::scale(const math::Vec2f& scale)
-    {
-        _rect.size *= scale;
-        _scale *= scale;
-        CollisionComponent::scale(scale);
-    }
-
-    const math::Point2f& AABB::getPosition() const
-    {
-        return _rect.pos.asPoint();
-    }
-
-    const math::Vec2f& AABB::getScale() const
-    {
-        return _scale;
-    }
-
-    const math::AABBf& AABB::getBBox() const
-    {
-        return _rect;
-    }
-
-    void AABB::writeToJson(Json::Value& node)
-    {
-        // save base size (without scaling)
-        _rect.size /= _scale;
-        CollisionComponent::writeToJson(node);
-        _rect.size *= _scale;
     }
 }

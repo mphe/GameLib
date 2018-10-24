@@ -15,6 +15,7 @@
 namespace gamelib
 {
     class Transformable;
+    class TransformData;
 
     // Compares node against compare and writes everything non-existent or different in compare to out.
     bool diffJson(const Json::Value& node, const Json::Value& compare, Json::Value* out_);
@@ -22,15 +23,15 @@ namespace gamelib
     bool loadJsonFromFile(const std::string& fname, Json::Value& node);
     bool writeJsonToFile(const std::string& fname, const Json::Value& node);
 
-    bool loadFromJson(const Json::Value& node, Transformable& trans);
-    bool loadFromJson(const Json::Value& node, math::Point2f* pos, math::Vec2f* scale, float* angle, bool clear);
+    bool loadFromJson(const Json::Value& node, Transformable& trans, bool clear);
+    bool loadFromJson(const Json::Value& node, TransformData& data, bool clear);
 
     // TODO: implement Vec2i serialization
     bool loadFromJson(const Json::Value& node, math::Point2f& p, bool clear = false);
     bool loadFromJson(const Json::Value& node, sf::Vector2f& vec, bool clear = false);
 
     void writeToJson(Json::Value& node, const Transformable& trans);
-    void writeToJson(Json::Value& node, const math::Point2f& pos, const math::Vec2f& scale, float angle);
+    void writeToJson(Json::Value& node, const TransformData& data);
 
     void writeToJson(Json::Value& node, const math::Point2f& p);
     void writeToJson(Json::Value& node, const sf::Vector2f& vec);

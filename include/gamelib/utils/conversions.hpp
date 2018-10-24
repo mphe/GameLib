@@ -32,6 +32,18 @@ namespace gamelib
         return *reinterpret_cast<const sf::Vector2<T>*>(&vec);
     }
 
+    template <class T>
+    sf::Vector2<T>& convert(math::Point2<T>& vec)
+    {
+        return convert(vec.asVector());
+    }
+
+    template <class T>
+    const sf::Vector2<T>& convert(const math::Point2<T>& vec)
+    {
+        return convert(vec.asVector());
+    }
+
 
     template <class T>
     math::AABB<T>& convert(sf::Rect<T>& rect)

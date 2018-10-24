@@ -24,13 +24,11 @@ namespace gamelib
 
     void _fixTransform(const Json::Value& node, Json::Value* out)
     {
-        math::Point2f pos;
-        math::Vec2f scale;
-        float angle;
+        TransformData data;
 
-        loadFromJson(node, &pos, &scale, &angle, true);
+        loadFromJson(node, data, true);
         out->clear();
-        writeToJson(*out, pos, scale, angle);
+        writeToJson(*out, data);
     }
 
     bool normalizeConfig(const Json::Value& node, Json::Value* out_, EntityFactory& factory)
@@ -128,7 +126,7 @@ namespace gamelib
         ent.flags = node.get("flags", ent.flags).asUInt();
 
         if (node.isMember("transform"))
-            loadFromJson(node["transform"], ent.getTransform());
+            loadFromJson(node["transform"], ent.getTransform(), false);
 
         if (node.isMember("components"))
         {

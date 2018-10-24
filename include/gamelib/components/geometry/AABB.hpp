@@ -25,17 +25,13 @@ namespace gamelib
             auto setSize(const math::Vec2f& size) -> void;
             auto setSize(float w, float h)        -> void;
 
-            auto move(const math::Vec2f& rel)    -> void;
-            auto scale(const math::Vec2f& scale) -> void;
-            auto getPosition() const             -> const math::Point2f&;
-            auto getScale() const                -> const math::Vec2f&;
-
-            auto getBBox() const -> const math::AABBf&;
-
-            virtual auto writeToJson(Json::Value& node) -> void;
+            auto getBBox() const     -> const math::AABBf&;
 
         protected:
-            math::Vec2f _scale;
+            virtual auto _onChanged(const sf::Transform& old) -> void;
+
+        protected:
+            math::Vec2f _size;
             math::AABBf _rect;
     };
 }

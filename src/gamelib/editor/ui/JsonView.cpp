@@ -21,6 +21,8 @@ namespace gamelib
     {
         JsonSerializer* obj = nullptr;
         Entity* ent = nullptr;
+        out->clear();
+        stringout->clear();
 
         switch (selected)
         {
@@ -45,8 +47,6 @@ namespace gamelib
             else
                 obj->writeToJson(*out);
         }
-        else
-            out->clear();
 
         *stringout = out->toStyledString();
     }

@@ -156,43 +156,28 @@ namespace gamelib
 
     bool inputTransform(Transformable& trans)
     {
-        return inputTransform(trans, trans.getSupportedOps());
-    }
+        // TODO: switch between global and local
 
-    bool inputTransform(Transformable& trans, unsigned int transflags)
-    {
-        math::Vec2f tmp;
+        TransformData data = trans.getLocalTransformation();
         bool changed = false;
 
-        if (transflags | Transformable::movable)
-        {
-            tmp = trans.getPosition().asVector();
-            if (ImGui::InputFloat2("Position", &tmp[0], 2))
-            {
-                trans.setPosition(tmp.asPoint());
+        if (trans.isMovable())
+            if (ImGui::InputFloat2("Position", &data.pos[0], 2))
                 changed = true;
-            }
-        }
 
-        if (transflags | Transformable::scalable)
-        {
-            tmp = trans.getScale();
-            if (ImGui::InputFloat2("Scale", &tmp[0], 2))
-            {
-                trans.setScale(tmp);
+        if (trans.isScalable())
+            if (ImGui::InputFloat2("Scale", &data.scale[0], 2))
                 changed = true;
-            }
-        }
 
-        if (transflags | Transformable::rotatable)
-        {
-            float rot = trans.getRotation();
-            if (ImGui::InputFloat("Rotation", &rot, 1, 10, 2))
-            {
-                trans.setRotation(rot);
+        if (trans.isRotatable())
+            if (ImGui::InputFloat("Rotation", &data.angle, 1, 10, 2))
                 changed = true;
-            }
-        }
+
+        if (ImGui::InputFloat2("Origin", &data.origin[0], 2))
+            changed = true;
+
+        if (changed)
+            trans.setLocalTransformation(data);
 
         return changed;
     }

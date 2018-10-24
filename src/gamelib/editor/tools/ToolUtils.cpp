@@ -9,7 +9,7 @@
 
 namespace gamelib
 {
-    bool selectDragBoxes(const math::Polygon<float>& pol, size_t* selected)
+    bool selectDragBoxes(const math::BasePolygon<float>& pol, size_t* selected)
     {
         *selected = -1;
         for (size_t i = 0; i < pol.size(); ++i)
@@ -74,7 +74,7 @@ namespace gamelib
         target.draw(v, 6, sf::Lines, trans);
     }
 
-    void drawDragBoxes(sf::RenderTarget& target, const math::Polygon<float>& pol, size_t selected)
+    void drawDragBoxes(sf::RenderTarget& target, const math::BasePolygon<float>& pol, size_t selected)
     {
         for (size_t i = 0; i < pol.size(); ++i)
             drawDragBox(target, pol.get(i), i == selected);
@@ -130,7 +130,7 @@ namespace gamelib
         target.draw(vertices);
     }
 
-    void drawNormals(sf::RenderTarget& target, const math::Polygon<float>& pol, sf::Color col)
+    void drawNormals(sf::RenderTarget& target, const math::BasePolygon<float>& pol, sf::Color col)
     {
         sf::VertexArray vertices(sf::Lines);
 
@@ -156,7 +156,7 @@ namespace gamelib
         target.draw(vertices);
     }
 
-    math::Point2f snap(const math::Polygon<float>& pol, const math::Point2f& p, size_t ignoreindex)
+    math::Point2f snap(const math::BasePolygon<float>& pol, const math::Point2f& p, size_t ignoreindex)
     {
         for (size_t i = 0; i < pol.size(); ++i)
             if (i != ignoreindex)

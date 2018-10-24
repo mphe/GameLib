@@ -24,7 +24,6 @@ namespace gamelib
     void inputSceneData(SceneData& sd);
 
     bool inputTransform(Transformable& trans);
-    bool inputTransform(Transformable& trans, unsigned int transflags);
 
     bool inputProperties(const PropertyContainer& props);
     bool inputProperty(const std::string& name, const PropertyHandle& handle);

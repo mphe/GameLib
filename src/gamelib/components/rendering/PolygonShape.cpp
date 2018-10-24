@@ -31,7 +31,7 @@ namespace gamelib
         _updateBBox();
     }
 
-    void PolygonShape::fetch(const math::Polygon<float>& pol, bool raw)
+    void PolygonShape::fetch(const math::BasePolygon<float>& pol, bool raw)
     {
         _vertices.resize(pol.size());
 
@@ -177,22 +177,9 @@ namespace gamelib
             convert(_vertices[i].texCoords) /= _texscale;
     }
 
-    void PolygonShape::move(const math::Vec2f& rel)
+    void PolygonShape::_onChanged(const sf::Transform& old)
     {
-        RenderComponent::move(rel);
+        RenderComponent::_onChanged(old);
         _mapTexture();
     }
-
-    void PolygonShape::scale(const math::Vec2f& scale)
-    {
-        RenderComponent::scale(scale);
-        _mapTexture();
-    }
-
-    void PolygonShape::rotate(float angle)
-    {
-        RenderComponent::rotate(angle);
-        _mapTexture();
-    }
-
 }

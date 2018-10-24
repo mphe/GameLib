@@ -11,36 +11,22 @@ namespace gamelib
         friend class Transformable;
 
         public:
-            using Transformable::move;
-            using Transformable::scale;
-            using Transformable::rotate;
-
-        public:
             GroupTransform();
-            GroupTransform(float x, float y);
-            GroupTransform(const math::Point2f& pos);
             virtual ~GroupTransform() {};
 
-            auto add(Transformable* trans, bool relative = true)    -> void;
-            auto remove(Transformable* trans, bool relative = true) -> void;
-
-            auto move(const math::Vec2f& rel)    -> void;
-            auto scale(const math::Vec2f& scale) -> void;
-            auto rotate(float angle)             -> void;
-
-            auto getPosition() const -> const math::Point2f&;
-            auto getScale() const    -> const math::Vec2f&;
-            auto getRotation() const -> float;
-            auto getBBox() const     -> const math::AABBf&;
+            auto add(Transformable* trans)    -> void;
+            auto remove(Transformable* trans) -> void;
 
             auto getChildren() const -> const std::vector<Transformable*>&;
 
+            virtual auto getBBox() const -> const math::AABBf&;
+
         protected:
-            mutable math::AABBf _bbox;
-            math::Point2f _pos;
-            math::Vec2f _scale;
-            float _rotation;
+            virtual auto _onChanged(const sf::Transform& old) -> void;
+
+        protected:
             std::vector<Transformable*> _objs;
+            mutable math::AABBf _bbox;
             mutable bool _dirty; // set by children, marks if bounding box needs to be recalculated
     };
 }

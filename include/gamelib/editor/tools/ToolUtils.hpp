@@ -14,7 +14,7 @@ namespace gamelib
     constexpr int drag_size = 2;
     constexpr int snap_distance = 3;
 
-    bool selectDragBoxes(const math::Polygon<float>& pol, size_t* selected);
+    bool selectDragBoxes(const math::BasePolygon<float>& pol, size_t* selected);
     bool checkDragBox(const math::Point2f& p);
 
     void drawDragBox(sf::RenderTarget& target, const math::Point2f& p, bool selected = false);
@@ -25,15 +25,15 @@ namespace gamelib
 
     void drawArrow(sf::RenderTarget& target, float x1, float y1, float x2, float y2, sf::Color color = sf::Color::Green);
 
-    void drawDragBoxes(sf::RenderTarget& target, const math::Polygon<float>& pol, size_t selected = -1);
+    void drawDragBoxes(sf::RenderTarget& target, const math::BasePolygon<float>& pol, size_t selected = -1);
 
     void drawRectOutline(sf::RenderTarget& target, const math::AABBf& box, sf::Color col = sf::Color::Magenta);
 
     void drawCollisions(sf::RenderTarget& target, const Entity& ent, unsigned int flags, sf::Color col = sf::Color::Red);
-    void drawNormals(sf::RenderTarget& target, const math::Polygon<float>& pol, sf::Color col = sf::Color::Green);
+    void drawNormals(sf::RenderTarget& target, const math::BasePolygon<float>& pol, sf::Color col = sf::Color::Green);
 
     // Returns the snapped vertex or the grid snapped input point in case it wasn't snapped
-    math::Point2f snap(const math::Polygon<float>& pol, const math::Point2f& p, size_t ignoreindex = -1);
+    math::Point2f snap(const math::BasePolygon<float>& pol, const math::Point2f& p, size_t ignoreindex = -1);
 
     BrushComponent* getIfBrush(Entity* ent);
 }
