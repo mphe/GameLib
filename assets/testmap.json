@@ -4,17 +4,13 @@
          "components" : {
             "AABBCollision#1" : {
                "flags" : 26,
-               "size" : [ 32, 31 ],
-               "transform" : {
-                  "pos" : [ -15.995361328125, -16.000041961669922 ]
-               }
+               "size" : [ 16, 31 ]
             },
             "QController#1" : {
                "jumpspeed" : 356
             },
             "SpriteComponent#1" : {
                "depth" : -1,
-               "origin" : [ 16, 16 ],
                "sprite" : "spr/player_stand.spr"
             }
          },

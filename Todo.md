@@ -28,6 +28,9 @@
   * remove clear argument in json functions, except for Transform
   * add docs to make clear how functions behave in case of wrong json node type and defaults
   * do Transformable serialization in Component
+  * load transforms first, then properties
+    * custom values defined by properties (e.g. origin in sprites) can overwrite base value
+
 
 * problems with lazy entity bounding box calculation
   * storing the bbox as reference

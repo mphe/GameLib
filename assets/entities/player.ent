@@ -16,9 +16,9 @@
         },
         "AABBCollision": {
             "flags": 10,
-            "size": [32, 32],
+            "size": [16, 32],
             "transform": {
-                "pos": [ -16, -16 ]
+                "origin": [ 8, 16 ]
             }
         },
         "CameraTracker": { },

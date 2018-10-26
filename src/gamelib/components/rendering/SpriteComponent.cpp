@@ -10,12 +10,7 @@ namespace gamelib
         _vertices.resize(4);
         _vertices.setPrimitiveType(sf::TriangleStrip);
 
-        auto spritesetter = +[](SpriteResource::Handle*, const SpriteResource::Handle* val, SpriteComponent* self)
-        {
-            self->change(*val);
-        };
-
-        _props.registerProperty("sprite", _sprite, spritesetter, this);
+        _props.registerProperty("sprite", _sprite, PROP_METHOD(SpriteResource::Handle, change), this);
 
         // Don't register these properties, because it can't be guaranteed after serializaion
         // that these are loaded _after_ sprite is loaded and therefore overwrite the default
