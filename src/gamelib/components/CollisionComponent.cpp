@@ -21,7 +21,6 @@ namespace gamelib
         if (!sys)
             return false;
 
-        getEntity()->getTransform().add(this);
         sys->add(this);
         return true;
     }
@@ -29,7 +28,6 @@ namespace gamelib
     void CollisionComponent::_quit()
     {
         getSubsystem<CollisionSystem>()->remove(this);
-        getEntity()->getTransform().remove(this);
     }
 
     Transformable* CollisionComponent::getTransform()

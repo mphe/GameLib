@@ -82,10 +82,17 @@ namespace gamelib
         else
             comp->_entptr = this;
 
+        if (comp->getTransform())
+            getTransform().add(comp->getTransform());
+
         if (!comp->_init())
         {
             comp->_ent = Handle();
             comp->_entptr = nullptr;
+
+            if (comp->getTransform())
+                getTransform().remove(comp->getTransform());
+
             LOG_ERROR("Failed to add component ", comp->getName(), " to entity ", _name);
             return nullptr;
         }
@@ -108,10 +115,15 @@ namespace gamelib
             if (it->ptr.get() == comp)
             {
                 it->ptr->_quit();
+
+                if (comp->getTransform())
+                    getTransform().remove(comp->getTransform());
+
                 if (!_quitting)
                     _components.erase(it);
                 else
                     it->ptr.reset();
+
                 _refresh();
                 break;
             }

@@ -14,7 +14,6 @@ namespace gamelib
         if (!scene)
             return false;
 
-        getEntity()->getTransform().add(this);
         scene->add(this);
         return true;
     }
@@ -22,7 +21,6 @@ namespace gamelib
     void RenderComponent::_quit()
     {
         unregister();
-        getEntity()->getTransform().remove(this);
     }
 
     Transformable* RenderComponent::getTransform()

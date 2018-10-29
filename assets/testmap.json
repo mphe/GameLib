@@ -11,12 +11,15 @@
             },
             "SpriteComponent#1" : {
                "depth" : -1,
-               "sprite" : "spr/player_stand.spr"
+               "sprite" : "spr/player_stand.spr",
+               "transform" : {
+                  "origin" : [ 16, 16 ]
+               }
             }
          },
          "name" : "player",
          "transform" : {
-            "pos" : [ 1614.40380859375, 32.843791961669922 ]
+            "pos" : [ 1237.059326171875, 304.84375 ]
          }
       },
       {
@@ -176,7 +179,7 @@
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ 1019.4736328125, 352 ]
+            "pos" : [ 1012.7236328125, 352 ]
          }
       },
       {
@@ -390,7 +393,7 @@
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ 1536, 14.499630928039551 ]
+            "pos" : [ 1536, 300.69949340820312 ]
          }
       },
       {
@@ -506,12 +509,12 @@
                "friction multiplier" : 0,
                "gravity multiplier" : 0,
                "overbounce" : 2,
-               "vel" : [ -1000, 0 ]
+               "vel" : [ 1000, 0 ]
             }
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ -416.5, 258 ]
+            "pos" : [ -575.5, 258 ]
          }
       },
       {
@@ -1238,10 +1241,7 @@
       {
          "components" : {
             "AABBCollision#1" : {
-               "size" : [ 206, 216 ],
-               "transform" : {
-                  "angle" : 8
-               }
+               "size" : [ 206, 216 ]
             },
             "BrushComponent#1" : {},
             "SpriteComponent#1" : {
@@ -1297,14 +1297,14 @@
    "scene" : {
       "cameras" : [
          {
-            "pos" : [ 1264.1273193359375, -248.95635986328125 ],
+            "pos" : [ 597.059326171875, -55.15625 ],
             "size" : [ 1280, 720 ],
             "velocity" : [ 0, 0 ],
             "viewport" : {
                "pos" : [ 0, 0 ],
                "size" : [ 1, 1 ]
             },
-            "zoom" : 1.2000000476837158
+            "zoom" : 0.69999992847442627
          }
       ],
       "defaultcam" : 0,
