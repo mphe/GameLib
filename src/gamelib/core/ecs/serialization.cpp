@@ -90,10 +90,7 @@ namespace gamelib
                     for (auto i = it->begin(), e = it->end(); i != e; ++i)
                         compcfg[i.key().asCString()] = *i;
 
-                    // It technically can't be guaranteed that this is actually a transformable
-                    // and not a custom user config.
-                    // TODO: introduce a TransformableComponent to fix this issue
-                    if (it->isMember("transform"))
+                    if (comp->getTransform() && it->isMember("transform"))
                     {
                         auto& trans = (*it)["transform"];
                         if (trans.isObject())
