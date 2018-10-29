@@ -31,6 +31,7 @@ namespace gamelib
             auto render(sf::RenderTarget& target) const -> void;
             virtual auto render(sf::RenderTarget& target, sf::RenderStates states) const -> void;
 
+            // TODO: consider removing json stuff
             virtual auto loadFromJson(const Json::Value& node) -> bool;
             virtual auto writeToJson(Json::Value& node)        -> void;
 

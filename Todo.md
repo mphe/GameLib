@@ -31,7 +31,6 @@
   * load transforms first, then properties
     * custom values defined by properties (e.g. origin in sprites) can overwrite base value
 
-
 * problems with lazy entity bounding box calculation
   * storing the bbox as reference
   * scale

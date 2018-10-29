@@ -18,9 +18,6 @@ namespace gamelib
             virtual auto getTransform()       -> Transformable*;
             virtual auto getTransform() const -> const Transformable*;
 
-            virtual auto loadFromJson(const Json::Value& node) -> bool;
-            virtual auto writeToJson(Json::Value& node)        -> void;
-
         protected:
             virtual auto _init() -> bool;
             virtual auto _quit() -> void;

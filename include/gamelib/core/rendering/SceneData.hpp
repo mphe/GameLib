@@ -21,6 +21,7 @@ namespace gamelib
             auto setParallax(float parallax) -> void;
             auto getParallax() const         -> float;
 
+            // TODO: consider removing json stuff
             virtual auto loadFromJson(const Json::Value& node) -> bool;
             virtual auto writeToJson(Json::Value& node)        -> void;
 

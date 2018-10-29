@@ -46,12 +46,16 @@ namespace gamelib
 
     bool Component::loadFromJson(const Json::Value& node)
     {
+        if (getTransform())
+            gamelib::loadFromJson(node["transform"], *getTransform(), false);
         return _props.loadFromJson(node);
     }
 
     void Component::writeToJson(Json::Value& node)
     {
         // node["name"] = getName();
+        if (getTransform())
+            gamelib::writeToJson(node["transform"], *getTransform());
         _props.writeToJson(node);
     }
 
