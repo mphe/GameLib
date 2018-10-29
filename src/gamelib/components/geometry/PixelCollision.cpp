@@ -84,7 +84,7 @@ namespace gamelib
 
     Intersection PixelCollision::sweep(const math::AABBf& rect, const math::Vec2f& vel) const
     {
-        math::AABBf rect2(rect.pos + vel, rect.size);
+        math::AABBf rect2(rect.pos.asPoint() + vel, rect.size);
         auto dir = vel.normalized();
         float len = vel.abs();
         int time = ceil(len);

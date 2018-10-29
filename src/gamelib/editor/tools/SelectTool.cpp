@@ -120,12 +120,14 @@ namespace gamelib
                     break;
             }
 
-            math::AABBf scalebox(start.asVector(), end - start);
+            math::AABBf scalebox(start, end);
             if (math::almostEquals(scalebox.w, 0.f))
                 scalebox.w = 0.01;
             if (math::almostEquals(scalebox.h, 0.f))
                 scalebox.h = 0.01;
             auto scale = scalebox.size / bbox.size;
+
+            // TODO: maybe support flipping
 
             // It's important to get the new bbox, as it might have changed during scaling
             // because the origin is not necessarily at the top left.

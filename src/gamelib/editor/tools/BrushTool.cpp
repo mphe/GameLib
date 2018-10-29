@@ -91,7 +91,7 @@ namespace gamelib
 
                 if (_type == Rect && pol.size() == 1)
                 {
-                    drawRectOutline(target, math::AABBf(pol.get(0).asVector(), mouse.asVector() - pol.get(0).asVector()), sf::Color::White);
+                    drawRectOutline(target, math::AABBf(pol.get(0), mouse.asVector() - pol.get(0).asVector()), sf::Color::White);
                 }
                 else if (_type == Polygon && pol.size() > 1)
                 {

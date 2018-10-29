@@ -101,7 +101,7 @@ namespace gamelib
 
     AABBf Camera::getCamRect() const
     {
-        return AABBf(pos + (size - (size * zoom)) / 2, size * zoom);
+        return AABBf(pos.asPoint() + (size - (size * zoom)) / 2, size * zoom);
     }
 
     sf::Transform Camera::getTransform() const

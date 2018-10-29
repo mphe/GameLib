@@ -27,16 +27,12 @@
   * make JsonSerializer::write\* functions const
   * remove clear argument in json functions, except for Transform
   * add docs to make clear how functions behave in case of wrong json node type and defaults
-  * do Transformable serialization in Component
-  * load transforms first, then properties
-    * custom values defined by properties (e.g. origin in sprites) can overwrite base value
 
 * problems with lazy entity bounding box calculation
   * storing the bbox as reference
   * scale
   * bbox doesn't adapt, because it's not evaluated
   * should either return as copy or immediatelly evaluate
-    * optimize through functions that perform multiple transforms at once
 
 * ResourceManager:
   * load all files from a folder
@@ -66,14 +62,14 @@
   * migrate components to property system
     * UpdateComponent
     * RenderComponent
-      * Scene should store and update a string array of layer names that can be used as hints for the layer property
+      * Scene could store and update a string array of layer names that can be used as hints for the layer property
     * BrushComponent
     * ...
   * component flags:
     * unused (strip component in export)
     * child (e.g. SpriteComponent instatiates a child UpdateComponent)
     * hidden (add to entity but hide to the outside (useful for auto generated editor components))
-    * transformable
+    * custom (load component directly from json (useful when adding components in the editor that aren't part of the entity))
 
 * Camera
   * base Camera on sf::View
@@ -94,7 +90,6 @@
       * ...
   * LineStrip polygon closed flag
   * remove invert support in Polygon as it became obsolete with normal directions
-  * create AABB from 2 points correctly
 
 * Physics
   * fix slope corners
@@ -114,16 +109,15 @@
   * render offset shader
   * render repeat shader (for texture regions)
   * Scene force redraw
-  * remove json functionality from SceneObject
+  * remove json functionality from SceneObject and SceneData
     * SceneObject should be a data class
-    * saving/loading transform, layer, etc, but not vertices is not particulary style-consistent
+    * saving/loading transform, layer, etc, but not vertices is not particulary style-consistent as it saves everything else
 
 * editor
   * grid numbers
   * automatically add sprite and mask to entities without rendering
   * toolbox class
-  * custom entities
-    * entity flag to load an entity from savefile directly
+  * add option to add/remove components from entities
   * PhysicsBrush
   * fix behaviour in negative coord space
   * EditorShared -> EditorContext
