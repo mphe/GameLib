@@ -23,6 +23,8 @@ namespace gamelib
     template <typename T>
     class ResourceHandle
     {
+        static_assert(std::is_base_of<BaseResource, T>(), "Type must be a Resource");
+
         private:
             typedef typename T::WrappedType WrappedType;
 
@@ -36,8 +38,7 @@ namespace gamelib
 
         public:
             template <typename U>
-            auto as() const -> ResourceHandle<U>;
-
+            auto as() const     -> ResourceHandle<U>;
             auto asBase() const -> ResourceHandle<BaseResource>;
 
             auto getResource() const -> T*;
