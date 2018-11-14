@@ -6,33 +6,10 @@
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/geometry/flags.hpp"
-#include "imgui-SFML.h"
+#include "imgui.h"
 
 namespace gamelib
 {
-    bool okButton(const char* label, const ImVec2& size)
-    {
-        return defaultButton(label, sf::Keyboard::Return, size);
-    }
-
-    bool cancelButton(const char* label, const ImVec2& size)
-    {
-        return defaultButton(label, sf::Keyboard::Escape, size);
-    }
-
-    bool defaultButton(const char* label, int key, const ImVec2& size)
-    {
-        if (ImGui::Button(label, size))
-            return true;
-        if (ImGui::IsWindowFocused() && ImGui::IsKeyPressed(key))
-        {
-            ImGui::GetIO().WantCaptureKeyboard = true;
-            return true;
-        }
-        return false;
-    }
-
-
     bool inputBitflags(const char* label, unsigned int* flags, int num, const char* const* names)
     {
         bool changed = false;

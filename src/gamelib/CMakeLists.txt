@@ -48,6 +48,7 @@ set(GAMELIB_SOURCES
     properties/basictypes.cpp
 
     imgui/inputs.cpp
+    imgui/buttons.cpp
     imgui/resources.cpp
     imgui/FileDialog.cpp
 

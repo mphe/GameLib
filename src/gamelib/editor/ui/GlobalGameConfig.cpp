@@ -1,6 +1,7 @@
 #include "gamelib/editor/ui/GlobalGameConfig.hpp"
 #include "gamelib/imgui/inputs.hpp"
 #include "gamelib/core/Game.hpp"
+#include "imgui.h"
 
 namespace gamelib
 {

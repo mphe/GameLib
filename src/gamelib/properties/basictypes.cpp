@@ -2,6 +2,7 @@
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/imgui/inputs.hpp"
 #include "gamelib/imgui/resources.hpp"
+#include "imgui.h"
 #include <climits>
 
 namespace gamelib
