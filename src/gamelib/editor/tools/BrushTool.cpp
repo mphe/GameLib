@@ -9,7 +9,7 @@
 #include "gamelib/components/rendering/PolygonShape.hpp"
 #include "gamelib/editor/tools/SelectTool.hpp"
 #include "gamelib/editor/tools/ToolUtils.hpp"
-#include "gamelib/editor/ui/resources.hpp"
+#include "gamelib/imgui/resources.hpp"
 #include "gamelib/editor/EditorShared.hpp"
 
 namespace gamelib

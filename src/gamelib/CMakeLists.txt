@@ -15,6 +15,7 @@ set(EXT_LIBRARIES
     sfml-system
     cppmath
     jsoncpp
+    imgui
 )
 
 set(GAMELIB_SOURCES
@@ -41,6 +42,10 @@ set(GAMELIB_SOURCES
     utils/string.cpp
     utils/json.cpp
     utils/Property.cpp
+
+    imgui/inputs.cpp
+    imgui/resources.cpp
+    imgui/FileDialog.cpp
 
     core/input/InputSystem.cpp
     core/Game.cpp
@@ -109,15 +114,12 @@ if(GAMELIB_BUILD_EDITOR)
         editor/tools/VertexTool.cpp
         editor/tools/EntityTool.cpp
         editor/tools/ToolUtils.cpp
-        editor/ui/resources.cpp
         editor/ui/LayerUI.cpp
         editor/ui/Grid.cpp
         editor/ui/JsonView.cpp
         editor/ui/ResourceViewer.cpp
         editor/ui/EntityList.cpp
         editor/ui/GlobalGameConfig.cpp
-        editor/ui/inputs.cpp
-        editor/ui/FileDialog.cpp
         editor/ui/Overlay.cpp
         editor/EntityDesigner.cpp
         editor/events/OnSelect.cpp

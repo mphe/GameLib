@@ -1,5 +1,5 @@
-#include "gamelib/editor/ui/resources.hpp"
-#include "gamelib/editor/ui/inputs.hpp"
+#include "gamelib/imgui/resources.hpp"
+#include "gamelib/imgui/inputs.hpp"
 #include "gamelib/core/res/SpriteResource.hpp"
 #include "gamelib/core/res/JsonResource.hpp"
 #include "gamelib/core/res/EntityConfigResource.hpp"

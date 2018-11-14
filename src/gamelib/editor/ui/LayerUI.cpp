@@ -1,5 +1,5 @@
 #include "gamelib/editor/ui/LayerUI.hpp"
-#include "gamelib/editor/ui/inputs.hpp"
+#include "gamelib/imgui/inputs.hpp"
 #include "gamelib/utils/string.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/rendering/flags.hpp"
@@ -107,38 +107,5 @@ namespace gamelib
 
         }
         ImGui::End();
-    }
-
-    bool inputLayer(const std::string& label, Layer::Handle* handle)
-    {
-        int selected = 0;
-        auto scene = Scene::getActive();
-        std::vector<Layer::Handle> cache;
-
-        int i = 1;
-        cache.push_back(Layer::Handle());
-        scene->foreachLayer([&](Layer::Handle h, Layer&) {
-                if (handle && h == *handle)
-                    selected = i;
-                cache.push_back(h);
-                ++i;
-            });
-
-        auto itemgetter = [](void* cache_, int index, const char** name) {
-            auto& handles = *static_cast<decltype(cache)*>(cache_);
-            if (handles[index].isNull())
-                *name = "default";
-            else
-                *name = Scene::getActive()->getLayer(handles[index])->getName().c_str();
-            return true;
-        };
-
-        if (ImGui::Combo(label.c_str(), &selected, itemgetter, (void*)&cache, cache.size()))
-        {
-            *handle = cache[selected];
-            return true;
-        }
-
-        return false;
     }
 }

@@ -5,7 +5,7 @@
 #include "gamelib/core/ecs/EntityFactory.hpp"
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/editor/tools/SelectTool.hpp"
-#include "gamelib/editor/ui/FileDialog.hpp"
+#include "gamelib/imgui/FileDialog.hpp"
 #include "imgui.h"
 #include "json/json.h"
 

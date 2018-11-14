@@ -1,8 +1,9 @@
-#ifndef GAMELIB_UI_INPUTS_HPP
-#define GAMELIB_UI_INPUTS_HPP
+#ifndef GAMELIB_IMGUI_INPUTS_HPP
+#define GAMELIB_IMGUI_INPUTS_HPP
 
 #include <string>
 #include "imgui.h"
+#include "gamelib/core/rendering/Layer.hpp"
 
 namespace gamelib
 {
@@ -19,6 +20,8 @@ namespace gamelib
     bool defaultButton(const char* label, int key, const ImVec2& size = ImVec2(0, 0));
 
     bool inputBitflags(unsigned int* flags, int num, const char* const* names);
+
+    bool inputLayer(const std::string& label, Layer::Handle* handle);
 
     void inputRenderComponent(RenderComponent& ren);
     void inputSceneData(SceneData& sd);

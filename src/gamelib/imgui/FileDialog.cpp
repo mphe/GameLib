@@ -1,4 +1,4 @@
-#include "gamelib/editor/ui/FileDialog.hpp"
+#include "gamelib/imgui/FileDialog.hpp"
 
 namespace gamelib
 {

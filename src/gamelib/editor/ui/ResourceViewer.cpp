@@ -1,5 +1,5 @@
 #include "gamelib/editor/ui/ResourceViewer.hpp"
-#include "gamelib/editor/ui/resources.hpp"
+#include "gamelib/imgui/resources.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "imgui.h"
 

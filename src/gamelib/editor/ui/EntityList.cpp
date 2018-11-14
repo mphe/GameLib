@@ -1,5 +1,5 @@
 #include "gamelib/editor/ui/EntityList.hpp"
-#include "gamelib/editor/ui/inputs.hpp"
+#include "gamelib/imgui/inputs.hpp"
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/editor/tools/SelectTool.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"

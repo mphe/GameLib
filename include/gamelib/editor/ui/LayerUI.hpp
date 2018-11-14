@@ -6,7 +6,6 @@
 namespace gamelib
 {
     void drawLayerUI(bool* open = nullptr);
-    bool inputLayer(const std::string& label, Layer::Handle* handle);
 }
 
 #endif
