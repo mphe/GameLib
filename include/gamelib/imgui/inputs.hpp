@@ -19,9 +19,9 @@ namespace gamelib
     bool cancelButton(const char* label = "Cancel", const ImVec2& size = ImVec2(0, 0));
     bool defaultButton(const char* label, int key, const ImVec2& size = ImVec2(0, 0));
 
-    bool inputBitflags(unsigned int* flags, int num, const char* const* names);
+    bool inputBitflags(const char* label, unsigned int* flags, int num, const char* const* names);
 
-    bool inputLayer(const std::string& label, Layer::Handle* handle);
+    bool inputLayer(const char* label, Layer::Handle* handle);
 
     void inputRenderComponent(RenderComponent& ren);
     void inputSceneData(SceneData& sd);

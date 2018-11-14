@@ -3,16 +3,10 @@
 #include "gamelib/properties/Property.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/components/RenderComponent.hpp"
-#include "gamelib/components/CollisionComponent.hpp"
-#include "gamelib/components/editor/BrushComponent.hpp"
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/geometry/flags.hpp"
-// #include "gamelib/editor/EditorShared.hpp"
-// #include "gamelib/editor/ui/LayerUI.hpp"
-#include "imgui.h"
 #include "imgui-SFML.h"
-#include <climits>
 
 namespace gamelib
 {
@@ -39,18 +33,21 @@ namespace gamelib
     }
 
 
-    bool inputBitflags(unsigned int* flags, int num, const char* const* names)
+    bool inputBitflags(const char* label, unsigned int* flags, int num, const char* const* names)
     {
         bool changed = false;
+        ImGui::Text("%s", label);
+        ImGui::Indent(1);
         for (int i = 0; i < num; ++i)
             if (names[i])
                 if (ImGui::CheckboxFlags(names[i], flags, 1 << i))
                     changed = true;
+        ImGui::Unindent(1);
         return changed;
     }
 
 
-    bool inputLayer(const std::string& label, Layer::Handle* handle)
+    bool inputLayer(const char* label, Layer::Handle* handle)
     {
         int selected = 0;
         auto scene = Scene::getActive();
@@ -74,7 +71,7 @@ namespace gamelib
             return true;
         };
 
-        if (ImGui::Combo(label.c_str(), &selected, itemgetter, (void*)&cache, cache.size()))
+        if (ImGui::Combo(label, &selected, itemgetter, (void*)&cache, cache.size()))
         {
             *handle = cache[selected];
             return true;
@@ -89,7 +86,7 @@ namespace gamelib
         int depth = sd.getDepth();
         float parallax = sd.getParallax();
 
-        inputBitflags(&sd.flags, num_renderflags, str_renderflags);
+        inputBitflags("Render flags", &sd.flags, num_renderflags, str_renderflags);
 
         if (ImGui::InputInt("Depth", &depth, 1, 100))
             sd.setDepth(depth);

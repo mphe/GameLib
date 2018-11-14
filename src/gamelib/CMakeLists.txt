@@ -1,6 +1,7 @@
 set(CXX_STANDARD_REQUIRED ON)
 
 find_package(SFML 2.4 COMPONENTS system window graphics REQUIRED)
+find_package(OpenGL)
 
 macro(gen_binary BINNAME SOURCE)
     add_executable(${BINNAME} ${SOURCE} ${ARGN})
@@ -8,13 +9,13 @@ macro(gen_binary BINNAME SOURCE)
     set_property(TARGET ${BINNAME} PROPERTY CXX_STANDARD 11)
 endmacro()
 
-
 set(EXT_LIBRARIES
     sfml-graphics
     sfml-window
     sfml-system
     cppmath
     jsoncpp
+    ${OPENGL_LIBRARIES}
     imgui
 )
 
@@ -41,7 +42,10 @@ set(GAMELIB_SOURCES
     utils/DebugGui.cpp
     utils/string.cpp
     utils/json.cpp
-    utils/Property.cpp
+
+    properties/Property.cpp
+    properties/PropertyHandle.cpp
+    properties/basictypes.cpp
 
     imgui/inputs.cpp
     imgui/resources.cpp
@@ -102,8 +106,6 @@ endif()
 
 
 if(GAMELIB_BUILD_EDITOR)
-    find_package(OpenGL)
-
     set(EDITOR_SOURCES
         main/editormain.cpp
         editor/Editor.cpp
@@ -128,8 +130,6 @@ if(GAMELIB_BUILD_EDITOR)
     source_group(editor FILES ${EDITOR_SOURCES} main/editormain.cpp)
 
     set(EXT_EDITOR_LIBRARIES
-        ${OPENGL_LIBRARIES}
-        imgui
     )
 
     include_directories(

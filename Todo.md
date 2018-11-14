@@ -2,25 +2,33 @@
 
 * FPS scaling
 * use median frametime to prevent stuttering
-* Render parent like GroupTransform but for RenderComponents
 * Give resources a type name member
-* Automatically adapt (render size and) aspect ratio on window resize
-* ScopedIterator
 * move utils in a separate git repo
-* Background entity
 * SlotMap size()
 * imgui dialogues
 * entity tags
 * inputBitflags() exclude list
-* MaskComponent
 * imgui game state
 * replace std::unordered_map with a better implementation
 * return nullptr when dereferencing BaseResource instead of using static_assert
-* EntityRef/ComponentRef/EntCompRef class
 * shorten/rename component names
   * AABBComponent -> AABB
   * PolygonShape -> BrushRenderer
-* LineRenderer class
+* include origin for sprites in ActorComponent
+
+* classes
+  * LineRenderer class
+  * EntityRef/ComponentRef/EntCompRef class
+  * Render parent like GroupTransform but for RenderComponents
+  * ScopedIterator
+  * Background entity
+  * MaskComponent
+
+* Automatically adapt (render size and) aspect ratio on window resize
+  * render resolution
+  * window resolution
+  * render to offscreenbuffer
+  * render osb on window
 
 * json
   * loadFromJson update bool to differentiate between load and update from json
@@ -125,6 +133,7 @@
   * region select
   * Fix negative scalebox in SelectTool
   * switch between global and local transform input
+  * center origin button
 
 * make Engine a Subsystem
   * makes a backup of an existing active Engine
@@ -132,7 +141,6 @@
   * reactivates old Engine on destruction
 
 * Properties
-  * PropIntArray, PropFloatArray, ... instead of PropVec2i, PropVec2f, ...
   * imgui sliders for properties with min-max bounds
   * property docs
   * string hints
@@ -143,7 +151,10 @@
     * filename
     * notzero
     * guarantee load first (-> race condition in SpriteComponent)
-  * static map with id -> struct { imguicb, jsonwritecb, jsonloadcb }
+
+  * ConstPropertyHandle
+    * use in BasePropType loadFromJson, drawGui
+  * remove custom resource related register functions
 
 
 <!-- vim: tabstop=2 shiftwidth=2 

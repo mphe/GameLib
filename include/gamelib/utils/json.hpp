@@ -1,6 +1,7 @@
 #ifndef GAMELIB_JSON_UTILS_HPP
 #define GAMELIB_JSON_UTILS_HPP
 
+#include <cassert>
 #include <SFML/Graphics.hpp>
 #include "json/json.h"
 #include "math/geometry/Vector.hpp"
@@ -37,20 +38,11 @@ namespace gamelib
     void writeToJson(Json::Value& node, const sf::Vector2f& vec);
 
 
-    template <size_t N>
-    bool loadFromJson(const Json::Value& node, math::Vector<float, N>& vec, bool clear = false)
-    {
-        if (!node.isArray())
-            return false;
-        if (node.size() != N)
-            LOG_WARN("Array size doesn't match expected size: ", node.size(), " != ", N);
-        for (Json::ArrayIndex i = 0; i < std::min((size_t)node.size(), N); ++i)
-            vec[i] = node.get(i, clear ? 0 : vec[i]).asFloat();
-        return true;
-    }
+    template <typename T, size_t N>
+    bool loadFromJson(const Json::Value& node, math::Vector<T, N>& vec, bool clear = false);
 
-    template <size_t N>
-    void writeToJson(Json::Value& node, const math::Vector<float, N>& vec)
+    template <typename T, size_t N>
+    void writeToJson(Json::Value& node, const math::Vector<T, N>& vec)
     {
         node.resize(N);
         for (Json::ArrayIndex i = 0; i < N; ++i)
@@ -74,6 +66,36 @@ namespace gamelib
             return false;
         return loadFromJson(json, obj);
     }
+
+
+#define _LOAD_BASIC_OVERLOAD(type, name) \
+    inline bool loadFromJsonBasic(const Json::Value& node, type& obj)  \
+    {   \
+        obj = node.as##name(); \
+        return true;    \
+    }
+
+    _LOAD_BASIC_OVERLOAD(int, Int)
+    _LOAD_BASIC_OVERLOAD(unsigned int, UInt)
+    _LOAD_BASIC_OVERLOAD(bool, Bool)
+    _LOAD_BASIC_OVERLOAD(float, Float)
+    _LOAD_BASIC_OVERLOAD(double, Double)
+    _LOAD_BASIC_OVERLOAD(std::string, String)
+
+#undef _LOAD_BASIC_OVERLOAD
+
+    template <typename T, size_t N>
+    bool loadFromJson(const Json::Value& node, math::Vector<T, N>& vec, bool clear)
+    {
+        if (!node.isArray())
+            return false;
+        if (node.size() != N)
+            LOG_WARN("Array size doesn't match expected size: ", node.size(), " != ", N);
+        for (Json::ArrayIndex i = 0; i < std::min((size_t)node.size(), N); ++i)
+            loadFromJsonBasic(node.get(i, clear ? 0 : vec[i]), vec[i]);
+        return true;
+    }
+
 }
 
 #endif
