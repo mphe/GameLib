@@ -15,13 +15,14 @@ namespace gamelib
     bool inputBitflags(const char* label, unsigned int* flags, int num, const char* const* names)
     {
         bool changed = false;
-        ImGui::Text("%s", label);
-        ImGui::Indent(1);
-        for (int i = 0; i < num; ++i)
-            if (names[i])
-                if (ImGui::CheckboxFlags(names[i], flags, 1 << i))
-                    changed = true;
-        ImGui::Unindent(1);
+        if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            for (int i = 0; i < num; ++i)
+                if (names[i])
+                    if (ImGui::CheckboxFlags(names[i], flags, 1 << i))
+                        changed = true;
+            ImGui::TreePop();
+        }
         return changed;
     }
 
@@ -158,7 +159,6 @@ namespace gamelib
         // static constexpr const char* entityFlags[] { "Persistent (Unimplemented)", "Static (Unimplemented)" };
 
         ImGui::InputText("name", const_cast<char*>(ent.getName().c_str()), ent.getName().size(), ImGuiInputTextFlags_ReadOnly);
-        // ImGui::Text("%s", ent.getName().c_str());
         ImGui::NewLine();
 
         if (ImGui::CollapsingHeader("Geometry", ImGuiTreeNodeFlags_DefaultOpen))
@@ -193,7 +193,11 @@ namespace gamelib
     void inputComponent(Component& comp)
     {
         if (comp.getTransform())
-            inputTransform(*comp.getTransform());
+            if (ImGui::TreeNodeEx("Geometry", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                inputTransform(*comp.getTransform());
+                ImGui::TreePop();
+            }
 
         if (comp.getID() == RenderComponent::id)
             inputRenderComponent(*static_cast<RenderComponent*>(&comp));
