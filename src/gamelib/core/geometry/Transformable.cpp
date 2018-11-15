@@ -1,6 +1,7 @@
 #include "gamelib/core/geometry/Transformable.hpp"
 #include "gamelib/core/geometry/GroupTransform.hpp"
 #include "gamelib/utils/log.hpp"
+#include "gamelib/utils/conversions.hpp"
 
 // TODO:
 
@@ -134,6 +135,11 @@ namespace gamelib
         return _local.getMatrix();
     }
 
+    math::AABBf Transformable::getLocalBBox() const
+    {
+        return convert(getMatrix().getInverse().transformRect(convert(getBBox())));
+    }
+
 
     // --- set global ---
     void Transformable::setPosition(float x, float y)
@@ -161,6 +167,17 @@ namespace gamelib
         rotate(angle - getRotation());
     }
 
+    void Transformable::setTransformation(const TransformData& data)
+    {
+        if (data.pos == _global.pos && data.scale == _global.scale && data.angle == _global.angle)
+            return;
+
+        auto diff = data;
+        diff -= getTransformation();
+        _local += diff;
+        _updateMatrix();
+    }
+
 
     // --- get global ---
     const math::Point2f& Transformable::getPosition() const
@@ -181,6 +198,15 @@ namespace gamelib
     const sf::Transform& Transformable::getMatrix() const
     {
         return _matrix;
+    }
+
+    TransformData Transformable::getTransformation() const
+    {
+        TransformData data;
+        data.pos = _global.pos;
+        data.scale = _global.scale;
+        data.angle = _global.angle;
+        return data;
     }
 
 

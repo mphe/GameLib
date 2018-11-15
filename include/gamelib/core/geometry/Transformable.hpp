@@ -41,6 +41,8 @@ namespace gamelib
 
             virtual auto getBBox() const -> const math::AABBf& = 0;
 
+            auto getLocalBBox() const -> math::AABBf;
+
             auto setLocalPosition(const math::Point2f& pos)  -> void;
             auto setLocalScale(const math::Vec2f& scale)     -> void;
             auto setLocalRotation(float angle)               -> void;
