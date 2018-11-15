@@ -6,7 +6,9 @@
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/geometry/flags.hpp"
+#include "gamelib/utils/conversions.hpp"
 #include "imgui.h"
+#include "imgui_internal.h"
 
 namespace gamelib
 {
@@ -83,10 +85,19 @@ namespace gamelib
 
     bool inputTransform(Transformable& trans)
     {
-        // TODO: switch between global and local
+        static int mode = 0;
 
-        TransformData data = trans.getLocalTransformation();
+        TransformData data;
         bool changed = false;
+
+        ImGui::RadioButton("Local", &mode, 0);
+        ImGui::SameLine();
+        ImGui::RadioButton("Global", &mode, 1);
+
+        if (mode == 0)
+            data = trans.getLocalTransformation();
+        else
+            data = trans.getTransformation();
 
         if (trans.isMovable())
             if (ImGui::InputFloat2("Position", &data.pos[0], 2))
@@ -100,11 +111,26 @@ namespace gamelib
             if (ImGui::InputFloat("Rotation", &data.angle, 1, 10, 2))
                 changed = true;
 
-        if (ImGui::InputFloat2("Origin", &data.origin[0], 2))
-            changed = true;
+        if (mode == 0)
+        {
+            if (ImGui::InputFloat2("Origin", &data.origin[0], 2))
+                changed = true;
+
+            ImGui::SameLine();
+            if (ImGui::Button("Center"))
+            {
+                data.origin = trans.getLocalBBox().getCenter().asPoint();
+                changed = true;
+            }
+        }
 
         if (changed)
-            trans.setLocalTransformation(data);
+        {
+            if (mode == 0)
+                trans.setLocalTransformation(data);
+            else
+                trans.setTransformation(data);
+        }
 
         return changed;
     }

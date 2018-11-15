@@ -5,16 +5,21 @@
 * Give resources a type name member
 * move utils in a separate git repo
 * SlotMap size()
-* imgui dialogues
 * entity tags
 * inputBitflags() exclude list
-* imgui game state
 * replace std::unordered_map with a better implementation
 * return nullptr when dereferencing BaseResource instead of using static_assert
 * shorten/rename component names
   * AABBComponent -> AABB
   * PolygonShape -> BrushRenderer
 * include origin for sprites in ActorComponent
+
+* imgui
+  * imgui game state
+  * imgui dialogues
+  * disabled widgets
+    * update imgui to upstream
+    * https://github.com/ocornut/imgui/issues/1889
 
 * classes
   * LineRenderer class
@@ -23,6 +28,7 @@
   * ScopedIterator
   * Background entity
   * MaskComponent
+  * PhysicsBrush
 
 * Automatically adapt (render size and) aspect ratio on window resize
   * render resolution
@@ -126,14 +132,11 @@
   * automatically add sprite and mask to entities without rendering
   * toolbox class
   * add option to add/remove components from entities
-  * PhysicsBrush
   * fix behaviour in negative coord space
   * EditorShared -> EditorContext
     * passed to every tool callback
   * region select
   * Fix negative scalebox in SelectTool
-  * switch between global and local transform input
-  * center origin button
 
 * make Engine a Subsystem
   * makes a backup of an existing active Engine
