@@ -33,7 +33,7 @@ namespace gamelib
                     int min = 0, int max = 0, const char* const* hints = nullptr);
 
             template <typename T, typename U>
-            void registerProperty(const std::string& name, T& prop, NicePropSetterCallback<T, U> setter, U* self,
+            void registerProperty(const std::string& name, const T& prop, NicePropSetterCallback<T, U> setter, U* self,
                     int min = 0, int max = 0, const char* const* hints = nullptr);
 
             template <typename T>
@@ -41,7 +41,7 @@ namespace gamelib
                     int min = 0, int max = 0, const char* const* hints = nullptr);
 
             template <typename T, typename U>
-            void registerProperty(const std::string& name, T& prop, NicePropSetterCallback<T, U> setter, U* self, const IPropType* type,
+            void registerProperty(const std::string& name, const T& prop, NicePropSetterCallback<T, U> setter, U* self, const IPropType* type,
                     int min = 0, int max = 0, const char* const* hints = nullptr);
 
             // TODO: would be nice to get rid of those resource overloads
@@ -51,7 +51,7 @@ namespace gamelib
                     const char* const* hints = nullptr);
 
             template <typename T, typename U>
-            void registerProperty(const std::string& name, ResourceHandle<T>& prop, NicePropSetterCallback<ResourceHandle<T>, U> setter, U* self,
+            void registerProperty(const std::string& name, const ResourceHandle<T>& prop, NicePropSetterCallback<ResourceHandle<T>, U> setter, U* self,
                     const char* const* hints = nullptr);
 
 
@@ -74,7 +74,7 @@ namespace gamelib
             auto set(const std::string& name, const T& val) const -> void;
 
         private:
-            auto _registerProperty(const std::string& name, void* prop, PropSetterCallback setter, void* self, const IPropType* type, int min, int max, const char* const* hints) -> void;
+            auto _registerProperty(const std::string& name, const void* prop, PropSetterCallback setter, void* self, const IPropType* type, int min, int max, const char* const* hints) -> void;
 
         private:
             PropertyMap _properties;
@@ -107,7 +107,7 @@ namespace gamelib
     }
 
     template <typename T, typename U>
-    void PropertyContainer::registerProperty(const std::string& name, T& prop, NicePropSetterCallback<T, U> setter, U* self, int min, int max, const char* const* hints)
+    void PropertyContainer::registerProperty(const std::string& name, const T& prop, NicePropSetterCallback<T, U> setter, U* self, int min, int max, const char* const* hints)
     {
         _registerProperty(name, &prop, (PropSetterCallback)setter, static_cast<void*>(self), categorizeProperty(prop), min, max, hints);
     }
@@ -119,7 +119,7 @@ namespace gamelib
     }
 
     template <typename T, typename U>
-    void PropertyContainer::registerProperty(const std::string& name, T& prop, NicePropSetterCallback<T, U> setter, U* self, const IPropType* type, int min, int max, const char* const* hints)
+    void PropertyContainer::registerProperty(const std::string& name, const T& prop, NicePropSetterCallback<T, U> setter, U* self, const IPropType* type, int min, int max, const char* const* hints)
     {
         _registerProperty(name, &prop, (PropSetterCallback)setter, static_cast<void*>(self), type, min, max, hints);
     }
@@ -131,7 +131,7 @@ namespace gamelib
     }
 
     template <typename T, typename U>
-    void PropertyContainer::registerProperty(const std::string& name, ResourceHandle<T>& prop, NicePropSetterCallback<ResourceHandle<T>, U> setter, U* self, const char* const* hints)
+    void PropertyContainer::registerProperty(const std::string& name, const ResourceHandle<T>& prop, NicePropSetterCallback<ResourceHandle<T>, U> setter, U* self, const char* const* hints)
     {
         _registerProperty(name, &prop, (PropSetterCallback)setter, static_cast<void*>(self), categorizeProperty(prop), T::id, T::id, hints);
     }

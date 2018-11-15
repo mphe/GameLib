@@ -17,7 +17,8 @@ namespace gamelib
     {
         public:
             PropertyHandle();
-            PropertyHandle(void* var, PropSetterCallback setter, void* self);
+            PropertyHandle(void* var);
+            PropertyHandle(const void* var, PropSetterCallback setter, void* self);
 
             auto isSetter() const    -> bool;
 
@@ -49,7 +50,12 @@ namespace gamelib
             };
 
         private:
-            void* _ptr;                  // Pointer to the variable
+            // Basically const_cast and not particulary nice, but makes things easier
+            union {
+                void* _ptr;              // Pointer to the variable
+                const void* _constptr;   // Const pointer to the variable in case of setter
+            };
+
             PropSetterCallback _setter;  // Setter function if direct access isn't possible
             void* _self;                 // Data pointer that will be passed to the setter
     };

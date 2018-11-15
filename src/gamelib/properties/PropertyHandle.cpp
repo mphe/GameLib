@@ -6,12 +6,16 @@ namespace gamelib
         PropertyHandle(nullptr, nullptr, nullptr)
     { }
 
-    PropertyHandle::PropertyHandle(void* var, PropSetterCallback setter, void* self) :
+    PropertyHandle::PropertyHandle(void* var) :
+        PropertyHandle(var, nullptr, nullptr)
+    { }
+
+    PropertyHandle::PropertyHandle(const void* var, PropSetterCallback setter, void* self) :
         serializer(nullptr),
         hints(nullptr),
         min(0),
         max(0),
-        _ptr(var),
+        _constptr(var), // also sets _ptr (yes, yes, ugly)
         _setter(setter),
         _self(self)
     { }
@@ -23,7 +27,7 @@ namespace gamelib
 
     const void* PropertyHandle::get() const
     {
-        return _ptr;
+        return _constptr;
     }
 
     void* PropertyHandle::getMutableOrNull() const
