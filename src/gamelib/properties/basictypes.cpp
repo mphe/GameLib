@@ -107,12 +107,11 @@ namespace gamelib
 
     bool PropColor::drawGui(const PropertyHandle& prop, const std::string& name, sf::Color* ptr) const
     {
-        auto col = *ptr;
-        auto tmp = math::Vec4f(col.r, col.g, col.b, col.a) / 255.f;
+        auto tmp = math::Vec4f(ptr->r, ptr->g, ptr->b, ptr->a) / 255.f;
         if (ImGui::ColorEdit4(name.c_str(), &tmp.r))
         {
             tmp *= 255;
-            col = sf::Color(tmp.r, tmp.g, tmp.b, tmp.a);
+            *ptr = sf::Color(tmp.r, tmp.g, tmp.b, tmp.a);
             return true;
         }
         return false;
