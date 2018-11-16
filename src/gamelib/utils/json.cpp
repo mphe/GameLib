@@ -8,6 +8,7 @@ namespace gamelib
 {
     bool diffJson(const Json::Value& node, const Json::Value& compare, Json::Value* out_)
     {
+        assert(out_ && "Destination node is null");
         auto& out = *out_;
 
         if (node.isNumeric() && compare.isNumeric())
@@ -66,6 +67,21 @@ namespace gamelib
 
         out = node;
         return true;
+    }
+
+    void mergeJson(const Json::Value& src, Json::Value* dest)
+    {
+        assert(dest && "Destination node is null");
+
+        for (auto it = src.begin(), end = src.end(); it != end; ++it)
+        {
+            auto& out = (*dest)[it.key().asString()];
+
+            if (it->isObject())
+                mergeJson(*it, &out);
+            else
+                out = *it;
+        }
     }
 
 

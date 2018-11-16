@@ -21,6 +21,10 @@ namespace gamelib
     // Compares node against compare and writes everything non-existent or different in compare to out.
     bool diffJson(const Json::Value& node, const Json::Value& compare, Json::Value* out_);
 
+    // Recursively merge the src dict into dest
+    void mergeJson(const Json::Value& src, Json::Value* dest);
+
+
     bool loadJsonFromFile(const std::string& fname, Json::Value& node);
     bool writeJsonToFile(const std::string& fname, const Json::Value& node);
 
@@ -95,7 +99,6 @@ namespace gamelib
             loadFromJsonBasic(node.get(i, clear ? 0 : vec[i]), vec[i]);
         return true;
     }
-
 }
 
 #endif
