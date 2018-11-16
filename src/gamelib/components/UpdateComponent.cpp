@@ -2,11 +2,14 @@
 
 namespace gamelib
 {
-    UpdateComponent::UpdateComponent(const std::string& name, int interval, UpdateSystem::HookType hook) :
+    UpdateComponent::UpdateComponent(const std::string& name, int interval_, UpdateHookType hook) :
         Identifier(name),
-        Updatable(interval),
+        interval(interval_),
         _hook(hook)
-    { }
+    {
+        _props.registerProperty("interval", interval);
+        _props.registerProperty("hook", _hook, PROP_METHOD(UpdateHookType, setHook), this, 0, NumFrameHooks, str_framehooks);
+    }
 
     bool UpdateComponent::_init()
     {
@@ -25,28 +28,20 @@ namespace gamelib
             sys->remove(_handle, _hook);
     }
 
-    bool UpdateComponent::loadFromJson(const Json::Value& node)
+    void UpdateComponent::setHook(UpdateHookType hook)
     {
-        Component::loadFromJson(node);
-        interval = node.get("interval", interval).asInt();
-
-        auto hook = static_cast<UpdateSystem::HookType>(node.get("hook", _hook).asInt());
         if (!_handle.isNull() && _hook != hook)
         {
             _quit();
             _hook = hook;
-            return _init();
+            _init();
         }
         else
             _hook = hook;
-
-        return true;
     }
 
-    void UpdateComponent::writeToJson(Json::Value& node)
+    UpdateHookType UpdateComponent::getHook() const
     {
-        Component::writeToJson(node);
-        node["interval"] = interval;
-        node["hook"] = _hook;
+        return _hook;
     }
 }

@@ -81,7 +81,6 @@ set(GAMELIB_SOURCES
     core/ecs/serialization.cpp
     core/ecs/Component.cpp
     core/update/UpdateSystem.cpp
-    core/update/Updatable.cpp
 
     Engine.cpp
     export.cpp

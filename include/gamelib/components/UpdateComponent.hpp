@@ -2,30 +2,33 @@
 #define GAMELIB_UPDATE_COMPONENT_HPP
 
 #include "gamelib/core/update/UpdateSystem.hpp"
+#include "gamelib/core/update/Updatable.hpp"
 #include "gamelib/core/ecs/Component.hpp"
 
 namespace gamelib
 {
-    class UpdateComponent : public Identifier<0xd0936e0f, Component>,
-                            public Updatable
+    class UpdateComponent : public Identifier<0xd0936e0f, Component>, public Updatable
     {
         public:
             typedef SlotKeyShort Handle;
 
         public:
-            UpdateComponent(const std::string& name, int interval = 1, UpdateSystem::HookType hook = UpdateSystem::Frame);
+            UpdateComponent(const std::string& name, int interval = 1, UpdateHookType hook = Frame);
             virtual ~UpdateComponent() {}
 
-            virtual auto loadFromJson(const Json::Value& node) -> bool;
-            virtual auto writeToJson(Json::Value& node)        -> void;
+            auto setHook(UpdateHookType hook) -> void;
+            auto getHook() const              -> UpdateHookType;
 
         protected:
             virtual auto _init() -> bool;
             virtual auto _quit() -> void;
 
+        public:
+            int interval;
+
         private:
             Handle _handle;
-            UpdateSystem::HookType _hook;
+            UpdateHookType _hook;
     };
 }
 

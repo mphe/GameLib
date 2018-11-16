@@ -6,7 +6,7 @@
 namespace gamelib
 {
     QController::QController() :
-        UpdateComponent(name, 1, UpdateSystem::PreFrame),
+        UpdateComponent(name, 1, PreFrame),
         accelerate(10),
         airAccelerate(10),
         maxspeed(100),

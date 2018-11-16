@@ -1,27 +1,28 @@
 #include "gamelib/core/update/UpdateSystem.hpp"
+#include "gamelib/components/UpdateComponent.hpp"
 #include "gamelib/utils/log.hpp"
 
 namespace gamelib
 {
     constexpr const char* UpdateSystem::name;
 
-    UpdateSystem::Handle UpdateSystem::add(Updatable* obj, HookType hook)
+    UpdateSystem::Handle UpdateSystem::add(UpdateComponent* obj, UpdateHookType hook)
     {
-        assert(obj != nullptr && "Updatable is null");
+        assert(obj != nullptr && "UpdateComponent is null");
 
         auto h = _objs[hook].acquire();
         auto& o = _objs[hook][h];
         o.obj = obj;
         o.nextupdate = obj->interval;
         o.elapsed = 0;
-        LOG_DEBUG("Added Updatable to UpdateSystem");
+        LOG_DEBUG("Added UpdateComponent to UpdateSystem");
         return h;
     }
 
-    void UpdateSystem::remove(Handle handle, HookType hook)
+    void UpdateSystem::remove(Handle handle, UpdateHookType hook)
     {
         _objs[hook].destroy(handle);
-        LOG_DEBUG("Removed Updatable from UpdateSystem");
+        LOG_DEBUG("Removed UpdateComponent from UpdateSystem");
     }
 
     void UpdateSystem::destroy()

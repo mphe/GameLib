@@ -6,33 +6,44 @@
 #include "Updatable.hpp"
 
 /*
- * Updates all registered Updatables in the given intervals.
+ * Updates all registered UpdateComponents in the given intervals.
  * The frametime between individual updates is saved and passed to the object
  * when it's time to update again.
  */
 
 namespace gamelib
 {
+    class UpdateComponent;
+
+    enum UpdateHookType
+    {
+        PrePreFrame,
+        PreFrame,
+        Frame,
+        PostFrame,
+        PostPostFrame,
+        NumFrameHooks
+    };
+
+    constexpr const char* str_framehooks[] = {
+        "PrePreFrame",
+        "PreFrame",
+        "Frame",
+        "PostFrame",
+        "PostPostFrame"
+    };
+
+
     class UpdateSystem : public Updatable, public Subsystem<UpdateSystem>
     {
         public:
-            enum HookType
-            {
-                PrePreFrame,
-                PreFrame,
-                Frame,
-                PostFrame,
-                PostPostFrame,
-                NumFrameHooks
-            };
-
             typedef SlotKeyShort Handle;
 
             constexpr static const char* name = "UpdateSystem";
 
         public:
-            auto add(Updatable* obj, HookType hook)   -> Handle;
-            auto remove(Handle handle, HookType hook) -> void;
+            auto add(UpdateComponent* obj, UpdateHookType hook)   -> Handle;
+            auto remove(Handle handle, UpdateHookType hook) -> void;
             auto destroy()                            -> void;
 
             auto update(float elapsed) -> void;
@@ -40,7 +51,7 @@ namespace gamelib
         private:
             struct Data
             {
-                Updatable* obj;
+                UpdateComponent* obj;
                 int nextupdate;
                 float elapsed;
             };
