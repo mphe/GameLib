@@ -6,7 +6,6 @@
 
 namespace gamelib
 {
-    class RenderComponent;
     class SceneData;
     class Transformable;
     class PropertyHandle;
@@ -17,9 +16,7 @@ namespace gamelib
     bool inputBitflags(const char* label, unsigned int* flags, int num, const char* const* names);
 
     bool inputLayer(const char* label, Layer::Handle* handle);
-
-    void inputRenderComponent(RenderComponent& ren);
-    void inputSceneData(SceneData& sd);
+    bool inputSceneData(SceneData& sd);
 
     bool inputTransform(Transformable& trans);
 

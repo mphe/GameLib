@@ -10,7 +10,9 @@
                "jumpspeed" : 356
             },
             "SpriteComponent#1" : {
-               "depth" : -1,
+               "renderopts" : {
+                  "depth" : -1
+               },
                "sprite" : "spr/player_stand.spr",
                "transform" : {
                   "origin" : [ 16, 16 ]
@@ -333,7 +335,9 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : -1,
+               "renderopts" : {
+                  "depth" : -1
+               },
                "texture" : "tex/block.png",
                "vertices" : [
                   [ -16, 48 ],
@@ -436,9 +440,11 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : -1,
-               "layer" : "fg",
-               "parallax" : 1.0499999523162842,
+               "renderopts" : {
+                  "depth" : -1,
+                  "layer" : "fg",
+                  "parallax" : 1.0499999523162842
+               },
                "texture" : "tex/grass.png",
                "vertices" : [
                   [ -16.4638671875, -27.439773559570312 ],
@@ -657,9 +663,11 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 3,
-               "flags" : 16,
-               "parallax" : 0.96000003814697266,
+               "renderopts" : {
+                  "depth" : 3,
+                  "flags" : 16,
+                  "parallax" : 0.96000003814697266
+               },
                "texture" : "tex/bg.png",
                "vertices" : [
                   [ 0, 0 ],
@@ -714,9 +722,11 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 3,
-               "layer" : "bg",
-               "parallax" : 0.85000014305114746,
+               "renderopts" : {
+                  "depth" : 3,
+                  "layer" : "bg",
+                  "parallax" : 0.85000014305114746
+               },
                "texture" : "tex/grass.png",
                "vertices" : [
                   [ -16.4638671875, -27.43975830078125 ],
@@ -787,9 +797,11 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 2,
-               "layer" : "bg",
-               "parallax" : 0.90000009536743164,
+               "renderopts" : {
+                  "depth" : 2,
+                  "layer" : "bg",
+                  "parallax" : 0.90000009536743164
+               },
                "texture" : "tex/grass.png",
                "vertices" : [
                   [ -16.4638671875, -27.43975830078125 ],
@@ -860,9 +872,11 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : 1,
-               "layer" : "bg",
-               "parallax" : 0.95000004768371582,
+               "renderopts" : {
+                  "depth" : 1,
+                  "layer" : "bg",
+                  "parallax" : 0.95000004768371582
+               },
                "texture" : "tex/grass.png",
                "vertices" : [
                   [ -16.4638671875, -27.4398193359375 ],
@@ -1038,9 +1052,11 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : -2,
-               "layer" : "fg",
-               "parallax" : 1.0999999046325684,
+               "renderopts" : {
+                  "depth" : -2,
+                  "layer" : "fg",
+                  "parallax" : 1.0999999046325684
+               },
                "texture" : "tex/grass.png",
                "vertices" : [
                   [ -16.4638671875, -27.439773559570312 ],
@@ -1111,9 +1127,11 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : -3,
-               "layer" : "fg",
-               "parallax" : 1.1499998569488525,
+               "renderopts" : {
+                  "depth" : -3,
+                  "layer" : "fg",
+                  "parallax" : 1.1499998569488525
+               },
                "texture" : "tex/grass.png",
                "vertices" : [
                   [ -16.4638671875, -27.439773559570312 ],
@@ -1184,9 +1202,11 @@
                ]
             },
             "PolygonShape#1" : {
-               "depth" : -4,
-               "layer" : "fg",
-               "parallax" : 1.1999998092651367,
+               "renderopts" : {
+                  "depth" : -4,
+                  "layer" : "fg",
+                  "parallax" : 1.1999998092651367
+               },
                "texture" : "tex/grass.png",
                "vertices" : [
                   [ -16.4638671875, -27.439773559570312 ],
@@ -1224,9 +1244,11 @@
             },
             "BrushComponent#1" : {},
             "SpriteComponent#1" : {
-               "depth" : 2,
-               "layer" : "bg",
-               "parallax" : 0.89999997615814209,
+               "renderopts" : {
+                  "depth" : 2,
+                  "layer" : "bg",
+                  "parallax" : 0.89999997615814209
+               },
                "sprite" : "spr/tree2.spr",
                "transform" : {
                   "angle" : 2
@@ -1245,8 +1267,10 @@
             },
             "BrushComponent#1" : {},
             "SpriteComponent#1" : {
-               "layer" : "bg",
-               "parallax" : 0.94999998807907104,
+               "renderopts" : {
+                  "layer" : "bg",
+                  "parallax" : 0.94999998807907104
+               },
                "sprite" : "spr/tree2.spr"
             }
          },
@@ -1263,9 +1287,11 @@
             },
             "BrushComponent#1" : {},
             "SpriteComponent#1" : {
-               "depth" : 3,
-               "layer" : "bg",
-               "parallax" : 0.85000002384185791,
+               "renderopts" : {
+                  "depth" : 3,
+                  "layer" : "bg",
+                  "parallax" : 0.85000002384185791
+               },
                "sprite" : "spr/tree2.spr"
             }
          },
@@ -1281,9 +1307,11 @@
             },
             "BrushComponent#1" : {},
             "SpriteComponent#1" : {
-               "depth" : -4,
-               "layer" : "fg",
-               "parallax" : 1.2000000476837158,
+               "renderopts" : {
+                  "depth" : -4,
+                  "layer" : "fg",
+                  "parallax" : 1.2000000476837158
+               },
                "sprite" : "spr/tree.spr"
             }
          },

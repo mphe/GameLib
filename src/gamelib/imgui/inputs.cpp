@@ -61,27 +61,27 @@ namespace gamelib
     }
 
 
-    void inputSceneData(SceneData& sd)
+    bool inputSceneData(SceneData& sd)
     {
         int depth = sd.getDepth();
         float parallax = sd.getParallax();
+        bool changed = false;
 
         inputBitflags("Render flags", &sd.flags, num_renderflags, str_renderflags);
 
         if (ImGui::InputInt("Depth", &depth, 1, 100))
+        {
             sd.setDepth(depth);
+            changed = true;
+        }
 
         if (ImGui::InputFloat("Parallax", &parallax, 0.01, 0.1, 3))
+        {
             sd.setParallax(parallax);
-    }
+            changed = true;
+        }
 
-    void inputRenderComponent(RenderComponent& ren)
-    {
-        inputSceneData(ren);
-
-        Layer::Handle handle = ren.getLayer();
-        if (inputLayer("Layer", &handle))
-            ren.setLayer(handle);
+        return changed;
     }
 
     bool inputTransform(Transformable& trans)
@@ -198,9 +198,6 @@ namespace gamelib
                 inputTransform(*comp.getTransform());
                 ImGui::TreePop();
             }
-
-        if (comp.getID() == RenderComponent::id)
-            inputRenderComponent(*static_cast<RenderComponent*>(&comp));
 
         inputProperties(comp.getProperties());
     }

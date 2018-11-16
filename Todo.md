@@ -13,6 +13,7 @@
   * AABBComponent -> AABB
   * PolygonShape -> BrushRenderer
 * include origin for sprites in ActorComponent
+* actual frametime
 
 * imgui
   * imgui game state
@@ -41,6 +42,8 @@
   * make JsonSerializer::write\* functions const
   * remove clear argument in json functions, except for Transform
   * add docs to make clear how functions behave in case of wrong json node type and defaults
+  * use pointers in all loadFromJson functions instead of references
+  * create a json subfolder and restructure/reorganize files and functions
 
 * problems with lazy entity bounding box calculation
   * storing the bbox as reference
@@ -75,8 +78,6 @@
 * components
   * migrate components to property system
     * UpdateComponent
-    * RenderComponent
-      * Scene could store and update a string array of layer names that can be used as hints for the layer property
     * BrushComponent
     * ...
   * component flags:
@@ -154,10 +155,10 @@
     * filename
     * notzero
     * guarantee load first (-> race condition in SpriteComponent)
-
   * ConstPropertyHandle
     * use in BasePropType loadFromJson, drawGui
   * remove custom resource related register functions
+  * provide pointer in writeToJson for consistency
 
 
 <!-- vim: tabstop=2 shiftwidth=2 
