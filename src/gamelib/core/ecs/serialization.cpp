@@ -22,32 +22,22 @@ namespace gamelib
         return join(name, "#", id);
     }
 
-    void _fixTransform(const Json::Value& node, Json::Value* out)
-    {
-        TransformData data;
-
-        loadFromJson(node, data, true);
-        out->clear();
-        writeToJson(*out, data);
-    }
-
     bool normalizeConfig(const Json::Value& node, Json::Value* out_, EntityFactory& factory)
     {
         auto& out = *out_;
         bool good = true;
 
-        if (!node.isMember("name"))
+        // Create default meta and merge it with custom one
+        Entity ent;
+        writeToJson(out, ent);
+        mergeJson(node, &out);
+        out.removeMember("components"); // components are handled manually
+
+        if (!out.isMember("name") || out["name"].asString().empty())
         {
             LOG_ERROR("No entity name specified");
-            out["name"] = "";
             good = false;
         }
-        else
-            out["name"] = node["name"];
-
-        out["flags"] = node.get("flags", 0);
-
-        _fixTransform(node["transform"], &out["transform"]);
 
         if (node.isMember("components"))
         {
@@ -86,16 +76,7 @@ namespace gamelib
                     auto& compcfg = outcomps[cleanname];
                     auto comp = factory.createComponent(name);
                     comp->writeToJson(compcfg);
-
-                    for (auto i = it->begin(), e = it->end(); i != e; ++i)
-                        compcfg[i.key().asCString()] = *i;
-
-                    if (comp->getTransform() && it->isMember("transform"))
-                    {
-                        auto& trans = (*it)["transform"];
-                        if (trans.isObject())
-                            _fixTransform(trans, &compcfg["transform"]);
-                    }
+                    mergeJson(*it, &compcfg);
                 }
                 else
                 {

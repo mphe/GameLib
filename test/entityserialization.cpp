@@ -5,11 +5,44 @@
 
 using namespace gamelib;
 
+struct SomeStruct
+{
+    int a, b, c;
+};
+
+class PropTest : public PropType<0x4933b918, SomeStruct>
+{
+    public:
+        bool loadFromJson(const PropertyHandle&, SomeStruct* ptr, const Json::Value& node) const
+        {
+            ptr->a = node.get("a", -1).asInt();
+            ptr->b = node.get("b", -1).asInt();
+            ptr->c = node.get("c", -1).asInt();
+            return true;
+        }
+
+        void writeToJson(const PropertyHandle& prop, Json::Value& node) const
+        {
+            auto& s = prop.getAs<SomeStruct>();
+            node["a"] = s.a;
+            node["b"] = s.b;
+            node["c"] = s.c;
+        }
+
+        bool drawGui(const PropertyHandle&, const std::string&, SomeStruct*) const { return false; }
+} propTest;
+
+
 class ComponentA : public Identifier<0x76d44c07, Component>
 {
     public:
-        ComponentA() : Identifier("ComponentA") { _props.registerProperty("x", x); }
+        ComponentA() : Identifier("ComponentA")
+        {
+            _props.registerProperty("x", x);
+            _props.registerProperty("y", y, &propTest);
+        }
         int x;
+        SomeStruct y;
 };
 
 class ComponentB : public Identifier<0x650e189e, Component>
@@ -28,6 +61,14 @@ Component* find(Entity& ent, const std::string& name, unsigned int id)
     return nullptr;
 }
 
+void testSubdict(Entity& ent)
+{
+    auto* s = find(ent, "ComponentA", 1)->getProperties().getAs<SomeStruct>("y");
+    assert(s && "Property missing");
+    assert(s->a == 1 && "Wrong value");
+    assert(s->b == 2 && "Wrong value");
+    assert(s->c == 3 && "Wrong value");
+}
 
 int main()
 {
@@ -36,7 +77,12 @@ int main()
             \"name\": \"testentity\",\
             \"components\": {\
                 \"ComponentA#\": {\
-                    \"x\": 1\
+                    \"x\": 1,\
+                    \"y\": {\
+                        \"a\": 1,\
+                        \"b\": 2,\
+                        \"c\": 3\
+                    }\
                 },\
                 \"ComponentA#2\": {\
                     \"x\": 2\
@@ -89,6 +135,8 @@ int main()
         it->ptr->getProperties().find("x")->set<int>(random());
     }
 
+    testSubdict(entity);
+
     Json::Value out;
     writeToJson(out, entity);
 
@@ -104,11 +152,16 @@ int main()
         assert(*comp->getProperties().getAs<int>("x") == val && "Wrong value");
     }
 
+    testSubdict(ent2);
+
 
     // Test serialization with changing entity/component config
+    ent2.destroy();
     factory.removeEntity("testentity");
     factory.add(res2);
     factory.createWithDelta("testentity", out, &ent2);
+
+    // Should also output warnings that it can't find some extra components that aren't in the entity config
 
     assert(ent2.size() == 3);
     assert(find(ent2, "ComponentA", 1) != nullptr && "Missing component or wrong ID");
@@ -127,6 +180,8 @@ int main()
     assert(b1 == 2 && "Wrong value");
     assert(a == ta && "Wrong value");
     assert(b2 == tb && "Wrong value");
+
+    testSubdict(ent2);
 
     return 0;
 }
