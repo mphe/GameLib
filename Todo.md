@@ -14,6 +14,7 @@
   * PolygonShape -> BrushRenderer
 * include origin for sprites in ActorComponent
 * actual frametime
+* fix scale in ActorComponent to match the actual max scale and not 1
 
 * imgui
   * imgui game state
@@ -31,11 +32,7 @@
   * MaskComponent
   * PhysicsBrush
 
-* Automatically adapt (render size and) aspect ratio on window resize
-  * render resolution
-  * window resolution
-  * render to offscreenbuffer
-  * render osb on window
+* Support rendering to OSB in Game class
 
 * json
   * loadFromJson update bool to differentiate between load and update from json
@@ -77,7 +74,6 @@
 
 * components
   * migrate components to property system
-    * UpdateComponent
     * BrushComponent
     * ...
   * component flags:
@@ -114,6 +110,7 @@
   * if there's no collision component assigned, don't do clip checking, but don't disable all physics
   * add option to accelerate towards basevel rather than immediatelly setting it
   * move airFriction code to QController
+  * make snap distance fps independent
 
 * collisions
   * Remove Collidable and merge it into CollisionComponent

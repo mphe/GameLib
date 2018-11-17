@@ -33,8 +33,10 @@ namespace gamelib
             if (ImGui::Begin("Stats overlay", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize))
             {
                 auto frametime = getSubsystem<Game>()->getFrametime();
+                auto realframetime = getSubsystem<Game>()->getRealFrametime();
                 ImGui::Text("FPS: %i", (int)(frametime != 0 ? 1.0 / frametime : 0));
                 ImGui::Text("Frametime: %i ms", (int)(frametime * 1000));
+                ImGui::Text("Real frametime: %i ms", (int)(realframetime * 1000));
                 ImGui::Text("Objects rendered: %lu", getSubsystem<Scene>()->getNumObjectsRendered());
             }
             ImGui::End();

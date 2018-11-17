@@ -42,9 +42,10 @@ namespace gamelib
             auto popState()                    -> void;
             auto pullState() const             -> GameState*;
 
-            auto getWindow()          -> sf::RenderWindow&;
-            auto getFrametime() const -> float;
-            auto getProperties() const -> const PropertyContainer&;
+            auto getWindow()              -> sf::RenderWindow&;
+            auto getFrametime() const     -> float;
+            auto getRealFrametime() const -> float;
+            auto getProperties() const    -> const PropertyContainer&;
 
             auto resize(const sf::Vector2u& size) -> void;
 
@@ -56,6 +57,7 @@ namespace gamelib
 
         private:
             float _frametime; // TODO: Consider switching to double
+            float _realframetime;
             math::Vec2i _size;
             int _maxfps;
             std::string _title;

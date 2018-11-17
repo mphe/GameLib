@@ -18,6 +18,7 @@ namespace gamelib
         escclose(true),
         unfocusPause(true),
         _frametime(0),
+        _realframetime(0),
         _size(640, 480),
         _maxfps(60),
         _title("Unnamed Game"),
@@ -77,12 +78,13 @@ namespace gamelib
 
     void Game::run()
     {
-        sf::Clock clock;
+        sf::Clock clock, realclock;
         sf::Event ev;
 
         while (_window.isOpen())
         {
             clock.restart();
+            realclock.restart();
 
             auto inputsys = getSubsystem<InputSystem>();
             if (inputsys)
@@ -121,14 +123,28 @@ namespace gamelib
                 }
             }
 
+            if (_vsync)
+                _realframetime = realclock.getElapsedTime().asMilliseconds() / 1000.0f;
+
             _window.resetGLStates(); // without this things start randomly disappearing
             _window.clear(bgcolor);
+
+            if (_vsync)
+                realclock.restart();
+
             for (auto& i : _states)
                 i->render(_window);
+
+            if (!_vsync)
+                _realframetime = realclock.getElapsedTime().asMilliseconds() / 1000.0f;
+
             _window.display();
 
             // Get elapsed time
             _frametime = clock.getElapsedTime().asMilliseconds() / 1000.0f;
+
+            if (_vsync)
+                _realframetime += realclock.getElapsedTime().asMilliseconds() / 1000.0f;
         }
     }
 
@@ -190,6 +206,11 @@ namespace gamelib
     float Game::getFrametime() const
     {
         return _frametime;
+    }
+
+    float Game::getRealFrametime() const
+    {
+        return _realframetime;
     }
 
     sf::RenderWindow& Game::getWindow()
