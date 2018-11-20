@@ -13,8 +13,8 @@
   * AABBComponent -> AABB
   * PolygonShape -> BrushRenderer
 * include origin for sprites in ActorComponent
-* actual frametime
 * fix scale in ActorComponent to match the actual max scale and not 1
+
 
 * imgui
   * imgui game state
@@ -31,6 +31,14 @@
   * Background entity
   * MaskComponent
   * PhysicsBrush
+  * Motion
+    * base class to describe different motions
+    * has an update function
+    * provides geometry (pos, scale, angle) and time
+    * can be passed (as unique_ptr/shared_ptr) to other objects (e.g. Camera)
+    * can be combined with other motion objects to create complexer motions, e.g. SinMotion + LinearMotion
+    * e.g. LinearMotion (move in a direction), TargetMove (move from a to b), ...
+
 
 * Support rendering to OSB in Game class
 
@@ -85,6 +93,7 @@
 * Camera
   * base Camera on sf::View
   * give Camera an active flag
+  * inherit from Transformable
 
 * math
   * Generic polygon functions that accept pointers and offsets to compute polygon stuff

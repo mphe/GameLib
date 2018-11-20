@@ -42,6 +42,7 @@ set(GAMELIB_SOURCES
     utils/DebugGui.cpp
     utils/string.cpp
     utils/json.cpp
+    utils/aspectratio.cpp
 
     properties/Property.cpp
     properties/PropertyHandle.cpp

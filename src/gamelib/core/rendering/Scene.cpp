@@ -54,12 +54,12 @@ namespace gamelib
             if (_default >= _cams.size())
                 backup = target.getView();
             else
-                backup = _cams[_default].getView();
+                backup = _cams[_default].getView(target);
 
             for (size_t i = 0; i < _cams.size(); ++i)
             {
                 _currentcam = i;
-                target.setView(_cams[i].getView());
+                _cams[i].apply(target);
                 _numrendered += _render(target, _cams[i].getView());
             }
 

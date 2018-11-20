@@ -8,13 +8,14 @@ using namespace math;
 namespace gamelib
 {
     Camera::Camera() :
-            zoom(1)
+        Camera(math::Vec2f(), math::Vec2f())
     { }
 
     Camera::Camera(const Vec2f& pos, const Vec2f& size) :
-            zoom(1),
-            pos(pos),
-            size(size)
+        zoom(1),
+        pos(pos),
+        size(size),
+        ratio(Fit)
     { }
 
 
@@ -121,5 +122,19 @@ namespace gamelib
         view.setCenter(pos.x + size.x / 2, pos.y + size.y / 2);
         view.setViewport(sf::FloatRect(viewport.pos.x, viewport.pos.y, viewport.size.x, viewport.size.y));
         return view;
+    }
+
+    sf::View Camera::getView(const sf::RenderTarget& target) const
+    {
+        auto view = getView();
+        view.setSize(size.x, size.y);
+        view = applyAspectRatio(view, target, ratio);
+        view.zoom(zoom);
+        return view;
+    }
+
+    void Camera::apply(sf::RenderTarget& target) const
+    {
+        target.setView(getView(target));
     }
 }
