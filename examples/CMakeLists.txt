@@ -13,6 +13,4 @@ macro(add_example EXNAME SOURCE)
     set_property(TARGET ${EXNAME} PROPERTY CXX_STANDARD 11)
 endmacro()
 
-# add_example(scene_tilemap scene_tilemap/main.cpp scene_tilemap/MainState.hpp scene_tilemap/MainState.cpp)
-# add_example(tilewalker tilewalker/main.cpp tilewalker/MainState.hpp tilewalker/MainState.cpp)
-# add_example(platformer platformer/main.cpp platformer/MainState.hpp platformer/MainState.cpp platformer/Player.cpp)
+# add_example(example_name example/main.cpp example/example.cpp)
