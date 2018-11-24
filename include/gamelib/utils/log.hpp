@@ -29,6 +29,12 @@
 #define LOG_NORMAL_PREFIX ""
 #define LOG_DEBUG_PREFIX "DEBUG: "
 
+#ifdef _WIN32
+#   define FUNC_STRING __FUNCSIG__
+#else
+#   define FUNC_STRING __PRETTY_FUNCTION__
+#endif
+
 // Use like this:
 // int x = 5;
 // LOG("Some log entry");
