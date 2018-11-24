@@ -25,6 +25,7 @@ namespace gamelib
         gamelib::loadFromJson(node["size"], size);
         gamelib::loadFromJson(node["velocity"], vel);
         zoom = node.get("zoom", zoom).asFloat();
+        ratio = static_cast<AspectRatio>(node.get("ratio", ratio).asInt());
 
         if (size.x == 0 || size.y == 0)
             LOG_WARN("Camera size is 0");
@@ -48,6 +49,7 @@ namespace gamelib
         gamelib::writeToJson(node["size"], size);
         gamelib::writeToJson(node["velocity"], vel);
         node["zoom"] = zoom;
+        node["ratio"] = ratio;
 
         auto& vp = node["viewport"];
         gamelib::writeToJson(vp["pos"], viewport.pos);
