@@ -2,20 +2,18 @@
 #define GAMELIB_CAMERA_HPP
 
 #include "math/geometry/AABB.hpp"
-#include "gamelib/core/res/JsonSerializer.hpp"
+#include "gamelib/core/IDCounter.hpp"
 #include "gamelib/core/update/Updatable.hpp"
 #include "gamelib/utils/aspectratio.hpp"
 #include <SFML/Graphics.hpp>
 
-// TODO: Consider using a sf::View internally
-
 namespace gamelib
 {
-    class Camera : public gamelib::JsonSerializer, public gamelib::Updatable
+    class Camera : public Updatable
     {
         public:
-            Camera();
-            Camera(const math::Vec2f& pos, const math::Vec2f& size);
+            Camera(const std::string& name);
+            Camera(const std::string& name, const math::Vec2f& pos, const math::Vec2f& size);
 
             bool loadFromJson(const Json::Value& node);
             void writeToJson(Json::Value& node);
@@ -31,12 +29,13 @@ namespace gamelib
 
             void zoomTowards(float x, float y, float zoom);
 
-            auto getCamRect() const   -> math::AABB<float>;
-            auto getTransform() const -> sf::Transform;
-            auto getView() const                               -> sf::View;
-            auto getView(const sf::RenderTarget& target) const -> sf::View;
+            auto getCamRect() const -> math::AABB<float>;
+            auto getName() const -> const std::string&;
 
-            auto apply(sf::RenderTarget& target) const -> void;
+            sf::View getView() const;
+            sf::View getView(const sf::RenderTarget& target) const;
+
+            void apply(sf::RenderTarget& target) const;
 
         public:
             float zoom;
@@ -45,6 +44,9 @@ namespace gamelib
             math::AABBf viewport;
             math::Vec2f vel;
             AspectRatio ratio;
+
+        private:
+            std::string _name;
     };
 }
 

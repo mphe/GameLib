@@ -13,9 +13,9 @@ int main(int argc, char *argv[])
 
     engine->resmgr.loadFromFile("assets/res.json");
 
-    engine->scene.addCamera();
-    engine->scene.getCamera(0)->loadFromFile("assets/editorcam.json");
-    engine->scene.setDefaultCamera(0);
+    auto& cam = engine->scene.addCamera();
+    cam.loadFromFile("assets/editorcam.json");
+    engine->scene.setDefaultCamera(cam.getID());
 
     game.loadFromFile("assets/editor.json");
     game.init();

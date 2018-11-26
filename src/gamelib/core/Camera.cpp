@@ -2,25 +2,28 @@
 #include "math/math.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/json.hpp"
+#include "gamelib/utils/conversions.hpp"
 
 using namespace math;
 
 namespace gamelib
 {
-    Camera::Camera() :
-        Camera(math::Vec2f(), math::Vec2f())
+    Camera::Camera(const std::string& name) :
+        Camera(name, math::Vec2f(), math::Vec2f())
     { }
 
-    Camera::Camera(const Vec2f& pos, const Vec2f& size) :
+    Camera::Camera(const std::string& name, const Vec2f& pos, const Vec2f& size) :
         zoom(1),
         pos(pos),
         size(size),
-        ratio(Fit)
+        ratio(Fit),
+        _name(name)
     { }
 
 
     bool Camera::loadFromJson(const Json::Value& node)
     {
+        _name =
         gamelib::loadFromJson(node["pos"], pos);
         gamelib::loadFromJson(node["size"], size);
         gamelib::loadFromJson(node["velocity"], vel);
@@ -45,6 +48,8 @@ namespace gamelib
 
     void Camera::writeToJson(Json::Value& node)
     {
+        IDCounter::writeToJson(node);
+
         gamelib::writeToJson(node["pos"], pos);
         gamelib::writeToJson(node["size"], size);
         gamelib::writeToJson(node["velocity"], vel);
@@ -75,21 +80,19 @@ namespace gamelib
         vel.y += math::lengthdirY(speed, dir);
     }
 
-    void Camera::center(const math::Vec2f& pos)
+    void Camera::center(const math::Vec2f& p)
     {
-        center(pos.x, pos.y);
+        pos = p - size / 2;
     }
 
     void Camera::center(float x, float y)
     {
-        pos.x = x - size.x / 2;
-        pos.y = y - size.y / 2;
+        center(math::Vec2f(x, y));
     }
 
     void Camera::move(float x, float y)
     {
-        pos.x += x;
-        pos.y += y;
+        pos += math::Vec2f(x, y);
     }
 
     void Camera::zoomTowards(float x, float y, float zoom_)
@@ -107,22 +110,13 @@ namespace gamelib
         return AABBf(pos.asPoint() + (size - (size * zoom)) / 2, size * zoom);
     }
 
-    sf::Transform Camera::getTransform() const
-    {
-        sf::Transform trans;
-        trans.scale(zoom, zoom);
-        trans.scale(viewport.size.x / size.x, viewport.size.y / size.y);
-        trans.translate(viewport.pos.x - pos.x, viewport.pos.y - pos.y);
-        return trans;
-    }
-
     sf::View Camera::getView() const
     {
         sf::View view;
         view.setSize(size.x, size.y);
         view.zoom(zoom);
-        view.setCenter(pos.x + size.x / 2, pos.y + size.y / 2);
-        view.setViewport(sf::FloatRect(viewport.pos.x, viewport.pos.y, viewport.size.x, viewport.size.y));
+        view.setCenter(convert(pos + size / 2));
+        view.setViewport(convert(viewport));
         return view;
     }
 
@@ -138,5 +132,10 @@ namespace gamelib
     void Camera::apply(sf::RenderTarget& target) const
     {
         target.setView(getView(target));
+    }
+
+    const std::string& Camera::getName() const
+    {
+        return _name;
     }
 }

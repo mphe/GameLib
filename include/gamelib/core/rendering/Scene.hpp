@@ -1,12 +1,15 @@
 #ifndef GAMELIB_SCENE_HPP
 #define GAMELIB_SCENE_HPP
 
+#include <memory>>
 #include <vector>
 #include "SceneObject.hpp"
 #include "Layer.hpp"
 #include "gamelib/core/Camera.hpp"
 #include "gamelib/utils/SlotMap.hpp"
 #include "gamelib/core/Subsystem.hpp"
+
+#warning "UPDATE SCENE DOCS"
 
 /*
  * Scenes are responsible for rendering SceneObjects and keeping track of
@@ -24,7 +27,7 @@
  * Adding a SceneObject requires a render() call for the object being placed
  * at its correct position in the render queue (according to depth).
  * That means, it's fast to add multiple elements at once and then call
- * update() afterwards.
+ * render() afterwards.
  *
  * When calling update() it iterates over all Cameras and update()s them
  * (from front to back (LIFO)). Also, in case of new elements being added
@@ -41,6 +44,8 @@
 
 namespace gamelib
 {
+    typedef std::unique_ptr<Camera> CameraPtr;
+
     class Scene : public SceneData, public Subsystem<Scene>
     {
         friend class SceneObject;
@@ -52,38 +57,35 @@ namespace gamelib
         public:
             Scene();
 
-            // Removes all Renderables and cameras
-            auto destroy() -> void;
-
             auto update(float elapsed) -> void;
             auto render(sf::RenderTarget& target) -> unsigned int;
+            auto getNumObjectsRendered() const -> size_t;
+
+            // Resets everything and removes all SceneObjects and Cameras
+            auto destroy() -> void;
+
+            auto loadFromJson(const Json::Value& node) -> bool;
+            auto writeToJson(Json::Value& node)        -> void;
 
             auto add(SceneObject* obj)    -> SceneObject*;
             auto remove(SceneObject* obj) -> void;
 
-            // Creates a new camera and returns a reference to it.
-            auto addCamera()                  -> Camera&;
-            auto addCamera(const Camera& cam) -> Camera&;
+            auto addCamera(const std::string& name) -> Camera&;
+            auto addCamera(CameraPtr cam)           -> Camera&;
+            auto removeCamera(const Camera& cam)    -> void;
+            auto getNumCameras() const              -> size_t;
+            auto getCamera(size_t i)                -> Camera*;
+            auto getCamera(size_t i) const          -> const Camera*;
+            auto findCamera(const std::string& name)       -> Camera*;
+            auto findCamera(const std::string& name) const -> const Camera*;
 
             // After the render loop ends, reset to view to this camera.
-            // -1 to use the RenderTarget's default view.
-            auto setDefaultCamera(size_t index) -> void;
+            // nullptr to use the RenderTarget's default view.
+            auto setDefaultCamera(const Camera* cam) -> void;
+            auto getDefaultCamera() const            -> const Camera*;
 
-            // Returns the camera at index.
-            // If no camera exists, nullptr is returned
-            auto getCamera(size_t index)       -> Camera*;
-            auto getCamera(size_t index) const -> const Camera*;
-
-            // Returns the camera currently being processed when inside
-            // the render loop, otherwise nullptr.
-            auto getCurrentCamera()       -> Camera*;
+            // Returns the camera currently being processed when inside the render loop, otherwise nullptr.
             auto getCurrentCamera() const -> const Camera*;
-
-            auto getCameraCount() const -> size_t;
-            auto getNumObjectsRendered() const -> size_t;
-
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node)        -> void;
 
             // Creates a new layer or returns an existing one
             auto createLayer(const std::string& name)    -> Layer::Handle;
@@ -102,16 +104,16 @@ namespace gamelib
             }
 
         private:
-            auto _render(sf::RenderTarget& surface, const sf::View& view) -> unsigned int;
+            auto _render(sf::RenderTarget& target) -> unsigned int;
             auto _updateQueue() -> void;
 
         private:
             size_t _numrendered;
-            size_t _currentcam;
-            size_t _default;
+            const Camera* _currentcam;
+            const Camera* _default;
+            std::vector<CameraPtr> _cams;
             SlotMapShort<Layer> _layers;
             std::vector<SceneObject*> _renderQueue;
-            std::vector<Camera> _cams;
             bool _dirty;
     };
 }
