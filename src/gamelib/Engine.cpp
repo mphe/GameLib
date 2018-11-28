@@ -77,7 +77,7 @@ namespace gamelib
         if (_printstatus)
             // Insert blanks after \r for clean overwriting
             LOG_RAW("\rRendered ", numrendered, " objects with ",
-                    scene.getCameraCount(), " camera(s) at ",
+                    scene.getNumCameras(), " camera(s) at ",
                     std::round(1.f / _game->getFrametime()), " FPS");
     }
 }

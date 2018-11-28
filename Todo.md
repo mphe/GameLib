@@ -14,6 +14,7 @@
   * PolygonShape -> BrushRenderer
 * include origin for sprites in ActorComponent
 * fix scale in ActorComponent to match the actual max scale and not 1
+* font resource
 
 
 * imgui
@@ -165,6 +166,10 @@
     * use in BasePropType loadFromJson, drawGui
   * remove custom resource related register functions
   * provide pointer in writeToJson for consistency
+
+* log
+  * warn if null
+  * assert
 
 
 <!-- vim: tabstop=2 shiftwidth=2 

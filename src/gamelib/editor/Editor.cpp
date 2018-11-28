@@ -22,7 +22,6 @@
 #include "gamelib/editor/ui/EntityList.hpp"
 #include "gamelib/editor/ui/GlobalGameConfig.hpp"
 #include "gamelib/editor/EditorShared.hpp"
-#include "gamelib/components/editor/BrushComponent.hpp"
 #include "imgui-SFML.h"
 
 namespace gamelib
@@ -43,6 +42,7 @@ namespace gamelib
         GameState(gamestate_freeze),
         _exportcallback(defaultExport),
         _currenttool(nullptr),
+        _cam("editorcam"),
         _camctrl(getSubsystem<Scene>()),
         _entsearch(false),
         _drag(false),
@@ -71,6 +71,8 @@ namespace gamelib
         _tools[ToolEntity].reset(new EntityTool());
         setTool(ToolBrush);
 
+        _onLoad();
+
         return true;
     }
 
@@ -80,6 +82,8 @@ namespace gamelib
 
         auto evmgr = getSubsystem<EventManager>();
         evmgr->unregCallback<SFMLEvent>(_eventCallback, this);
+
+        getSubsystem<Scene>()->removeCamera(&_cam);
 
         _currenttool = nullptr;
         for (auto& i : _tools)
@@ -168,6 +172,7 @@ namespace gamelib
     {
         bool success = _savefile.empty() ? false : gamelib::loadSave(_savefile);
         setTool(ToolSelect);
+        _onLoad();
         return success;
     }
 
@@ -462,6 +467,14 @@ namespace gamelib
         }
 
         _currenttool = realtool;
+    }
+
+    void Editor::_onLoad()
+    {
+        auto scene = getSubsystem<Scene>();
+        scene->addCamera(&_cam);
+        scene->setDefaultCamera(&_cam);
+        _cam.loadFromFile("assets/editorcam.json");
     }
 
 

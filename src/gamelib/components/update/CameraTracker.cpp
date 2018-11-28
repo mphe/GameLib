@@ -1,6 +1,7 @@
 #include "gamelib/components/update/CameraTracker.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
+#include "gamelib/core/Camera.hpp"
 
 namespace gamelib
 {

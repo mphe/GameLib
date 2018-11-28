@@ -13,10 +13,6 @@ int main(int argc, char *argv[])
 
     engine->resmgr.loadFromFile("assets/res.json");
 
-    engine->scene.addCamera();
-    engine->scene.getCamera(0)->loadFromFile("assets/editorcam.json");
-    engine->scene.setDefaultCamera(0);
-
     game.loadFromFile("assets/editor.json");
     game.init();
     game.pushState(std::move(engineState));

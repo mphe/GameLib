@@ -1,5 +1,6 @@
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/rendering/flags.hpp"
+#include "gamelib/core/Camera.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/conversions.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
@@ -12,8 +13,8 @@ namespace gamelib
     constexpr const char* Scene::name;
 
     Scene::Scene() :
-        _currentcam(-1),
-        _default(-1),
+        _currentcam(nullptr),
+        _default(nullptr),
         _dirty(false)
     {}
 
@@ -21,8 +22,8 @@ namespace gamelib
     {
         _renderQueue.clear();
         _cams.clear();
-        _currentcam = -1;
-        _default = -1;
+        _currentcam = nullptr;
+        _default = nullptr;
         _dirty = false;
         _layers.clear();
         LOG_DEBUG_WARN("Scene destroyed");
@@ -31,7 +32,7 @@ namespace gamelib
     void Scene::update(float elapsed)
     {
         for (auto& i : _cams)
-            i.update(elapsed);
+            i->update(elapsed);
     }
 
     unsigned int Scene::render(sf::RenderTarget& target)
@@ -44,43 +45,39 @@ namespace gamelib
 
         if (_cams.empty())
         {
-            _numrendered = _render(target, target.getView());
+            _numrendered = _render(target);
         }
         else
         {
-            sf::View backup;  // backup view
+            // Choose view that will be restored after rendering
+            sf::View reset = _default ? _default->getView(target) : target.getView();
 
-            // _default is size_t, that means -1 is integer max, therefore it's bigger
-            if (_default >= _cams.size())
-                backup = target.getView();
-            else
-                backup = _cams[_default].getView(target);
-
-            for (size_t i = 0; i < _cams.size(); ++i)
+            for (const auto& i : _cams)
             {
                 _currentcam = i;
-                _cams[i].apply(target);
-                _numrendered += _render(target, _cams[i].getView());
+                i->apply(target);
+                _numrendered += _render(target);
             }
 
-            target.setView(backup); // reset view
-            _currentcam = _default;
+            target.setView(reset); // reset view
+            _currentcam = nullptr;
         }
 
         return _numrendered;
     }
 
-    unsigned int Scene::_render(sf::RenderTarget& target, const sf::View& view)
+    unsigned int Scene::_render(sf::RenderTarget& target)
     {
         math::AABBf vbox;
         unsigned int numrendered = 0;
+        const sf::View& view = target.getView();
 
         { // Calculate view bounding box
             sf::Transform vtrans;
             vtrans.rotate(view.getRotation());
-            auto half = convert(view.getSize()) / 2;
-            vbox = convert(vtrans.transformRect(sf::FloatRect(-convert(half), view.getSize())));
-            vbox.pos = convert(view.getCenter()) - half;
+            auto half = view.getSize() / 2.f;
+            vbox = convert(vtrans.transformRect(sf::FloatRect(-half, view.getSize())));
+            vbox.pos = convert(view.getCenter() - half);
         }
 
         for (auto& o : _renderQueue)
@@ -165,46 +162,59 @@ namespace gamelib
         }
     }
 
-    Camera& Scene::addCamera()
+    Camera& Scene::addCamera(Camera* cam)
     {
-        _cams.emplace_back();
+        assert(cam && "Camera is null");
+        _cams.emplace_back(cam);
         LOG_DEBUG("Added camera to scene");
-        return _cams.back();
+        return *cam;
     }
 
-    Camera& Scene::addCamera(const Camera& cam)
+    void Scene::removeCamera(const Camera* cam)
     {
-        _cams.push_back(cam);
-        LOG_DEBUG("Added camera to scene");
-        return _cams.back();
+        auto it = std::find(_cams.begin(), _cams.end(), cam);
+        if (it != _cams.end())
+        {
+            _cams.erase(it);
+            if (cam == _default)
+                _default = nullptr;
+        }
     }
 
-    void Scene::setDefaultCamera(size_t index)
+    void Scene::setDefaultCamera(const Camera* cam)
     {
-        _default = index;
+        _default = cam;
+    }
+
+    Camera* Scene::findCamera(const std::string& name)
+    {
+        for (auto& i : _cams)
+            if (i->getName() == name)
+                return i;
+        return nullptr;
+    }
+
+    const Camera* Scene::findCamera(const std::string& name) const
+    {
+        return const_cast<Scene*>(this)->findCamera(name);
     }
 
     Camera* Scene::getCamera(size_t index)
     {
-        return (index < _cams.size()) ? &_cams[index] : nullptr;
+        return (index < _cams.size()) ? _cams[index] : nullptr;
     }
 
     const Camera* Scene::getCamera(size_t index) const
     {
-        return (index < _cams.size()) ? &_cams[index] : nullptr;
-    }
-
-    Camera* Scene::getCurrentCamera()
-    {
-        return getCamera(_currentcam);
+        return const_cast<Scene*>(this)->getCamera(index);
     }
 
     const Camera* Scene::getCurrentCamera() const
     {
-        return getCamera(_currentcam);
+        return _currentcam;
     }
 
-    size_t Scene::getCameraCount() const
+    size_t Scene::getNumCameras() const
     {
         return _cams.size();
     }
@@ -265,34 +275,7 @@ namespace gamelib
             }
         }
 
-        if (node.isMember("cameras"))
-        {
-            auto& cams = node["cameras"];
-            for (const auto& i : cams)
-            {
-                auto& cam = addCamera();
-                const Json::Value* cfg = &i;
-                JsonResource::Handle res;
-
-                if (i.isString())
-                {
-                    auto resmgr = getSubsystem<ResourceManager>();
-                    if (resmgr)
-                    {
-                        res = resmgr->getOnce(i.asString());
-                        cfg = &*res;
-                    }
-                }
-
-                if (!cam.loadFromJson(*cfg))
-                    // Don't remove it, because code might rely on the camera count
-                    LOG_WARN("Invalid config for camera ", getCameraCount() - 1);
-            }
-        }
-
-        _default = node.get("defaultcam", 0).asUInt();
-        if (_default >= _cams.size())
-            _default = _cams.size() - 1;
+        _default = findCamera(node["defaultcam"].asString());
 
         _updateQueue();
         return true;
@@ -309,14 +292,8 @@ namespace gamelib
                 i.writeToJson(layers[i.getName()]);
         }
 
-        auto& cams = node["cameras"];
-        for (auto& i : _cams)
-        {
-            auto& data = cams.append(Json::Value());
-            i.writeToJson(data);
-        }
-
-        node["defaultcam"] = (Json::UInt)_default;
+        if (_default)
+            node["defaultcam"] = _default->getName();
     }
 
     void Scene::_updateQueue()

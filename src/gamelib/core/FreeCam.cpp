@@ -1,4 +1,5 @@
 #include "gamelib/core/FreeCam.hpp"
+#include "gamelib/core/Camera.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
 #include <SFML/Window/Keyboard.hpp>
