@@ -1,6 +1,6 @@
 #include "gamelib/core/res/JsonResource.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
-#include "gamelib/utils/json.hpp"
+#include "gamelib/json/json-file.hpp"
 
 namespace gamelib
 {

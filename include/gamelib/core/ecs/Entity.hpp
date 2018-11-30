@@ -7,7 +7,6 @@
 #include "gamelib/utils/SlotMap.hpp"
 #include "gamelib/core/Identifier.hpp"
 #include "gamelib/core/geometry/GroupTransform.hpp"
-#include "gamelib/utils/json.hpp"
 #include "Component.hpp"
 #include "flags.hpp"
 
@@ -36,7 +35,7 @@ namespace gamelib
 
     typedef std::unique_ptr<Component> ComponentPtr;
 
-    class Entity //: public JsonSerializer
+    class Entity
     {
         friend class EntityManager;
 

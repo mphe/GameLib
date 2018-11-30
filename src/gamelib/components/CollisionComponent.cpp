@@ -1,7 +1,5 @@
 #include "gamelib/components/CollisionComponent.hpp"
-#include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/geometry/CollisionSystem.hpp"
-#include "gamelib/utils/json.hpp"
 
 namespace gamelib
 {

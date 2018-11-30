@@ -2,7 +2,7 @@
 #define GAMELIB_ID_COUNTER_HPP
 
 #include "Identifiable.hpp"
-#include "res/JsonSerializer.hpp"
+#include "gamelib/json/JsonSerializer.hpp"
 #include "gamelib/utils/log.hpp"
 
 
@@ -23,11 +23,10 @@ namespace gamelib
             virtual auto loadFromJson(const Json::Value& node) -> bool;
             virtual auto writeToJson(Json::Value& node)        -> void;
 
-            static auto resetCounter() -> void;
-
         protected:
             // Maybe make this public if really needed, but seems dangerous to do so
             auto _invalidateID() -> void;
+            static auto _resetCounter() -> void;
 
         private:
             // Maybe make this public if really needed, but seems dangerous to do so
@@ -90,7 +89,7 @@ namespace gamelib
     }
 
     template <typename T, ID offset>
-    void IDCounter<T, offset>::resetCounter()
+    void IDCounter<T, offset>::_resetCounter()
     {
         _counter = offset;
     }

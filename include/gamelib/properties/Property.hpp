@@ -3,7 +3,7 @@
 
 #include <string>
 #include <unordered_map>
-#include "gamelib/core/res/JsonSerializer.hpp"
+#include "gamelib/json/JsonSerializer.hpp"
 #include "gamelib/utils/log.hpp"
 #include "PropertyHandle.hpp"
 #include "basictypes.hpp"

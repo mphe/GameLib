@@ -1,8 +1,8 @@
 #include "gamelib/core/Camera.hpp"
 #include "math/math.hpp"
 #include "gamelib/utils/log.hpp"
-#include "gamelib/utils/json.hpp"
 #include "gamelib/utils/conversions.hpp"
+#include "gamelib/json/json-vector.hpp"
 
 using namespace math;
 

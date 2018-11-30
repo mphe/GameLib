@@ -3,6 +3,7 @@
 
 #include "Entity.hpp"
 #include "gamelib/utils/string.hpp"
+#include "gamelib/json/json-transformable.hpp"
 
 /*
  * Config file structure:

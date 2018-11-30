@@ -6,7 +6,7 @@
 #include "Resource.hpp"
 #include "gamelib/core/event/EventManager.hpp"
 #include "gamelib/core/Subsystem.hpp"
-#include "JsonSerializer.hpp"
+#include "gamelib/json/JsonSerializer.hpp"
 
 // To prevent possible segfaults after calling clean(), objects should store
 // the corresponding resource handle to keep up the reference count.

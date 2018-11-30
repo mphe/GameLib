@@ -6,8 +6,9 @@
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/editor/tools/SelectTool.hpp"
 #include "gamelib/imgui/FileDialog.hpp"
+#include "gamelib/json/json-file.hpp"
+#include "gamelib/json/json-utils.hpp"
 #include "imgui.h"
-#include "json/json.h"
 
 namespace gamelib
 {

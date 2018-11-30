@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
+#include <functional>
 #include <cassert>
-#include "gamelib/utils/json.hpp"
+#include <algorithm>
+#include "gamelib/json/json-utils.hpp"
 
 using namespace std;
 using namespace gamelib;

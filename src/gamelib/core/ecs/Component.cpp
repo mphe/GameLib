@@ -1,5 +1,6 @@
 #include "gamelib/core/ecs/Component.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
+#include "gamelib/json/json-transformable.hpp"
 
 namespace gamelib
 {

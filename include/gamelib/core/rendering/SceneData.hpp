@@ -1,7 +1,7 @@
 #ifndef GAMELIB_SCENE_DATA_HPP
 #define GAMELIB_SCENE_DATA_HPP
 
-#include "gamelib/core/res/JsonSerializer.hpp"
+#include "gamelib/json/JsonSerializer.hpp"
 
 namespace gamelib
 {

@@ -5,7 +5,7 @@
 #include <memory>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Keyboard.hpp>
-#include "gamelib/core/res/JsonSerializer.hpp"
+#include "gamelib/json/JsonSerializer.hpp"
 #include "gamelib/core/Subsystem.hpp"
 #include "math/geometry/Point2.hpp"
 #include "gamelib/properties/Property.hpp"

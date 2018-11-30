@@ -3,7 +3,7 @@
 
 #include "math/geometry/AABB.hpp"
 #include "gamelib/core/update/Updatable.hpp"
-#include "gamelib/core/res/JsonSerializer.hpp"
+#include "gamelib/json/JsonSerializer.hpp"
 #include "gamelib/utils/aspectratio.hpp"
 #include <SFML/Graphics.hpp>
 

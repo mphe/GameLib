@@ -2,7 +2,8 @@
 #include <cstring>
 #include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/Engine.hpp"
-#include "gamelib/utils/json.hpp"
+#include "gamelib/json/json-file.hpp"
+#include "gamelib/json/json-utils.hpp"
 
 using namespace std;
 

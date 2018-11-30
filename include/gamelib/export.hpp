@@ -2,7 +2,8 @@
 #define GAMELIB_EXPORT_HPP
 
 #include <string>
-#include "utils/json.hpp"
+#include "gamelib/json/json-file.hpp"
+#include "gamelib/json/json-utils.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
 #include "gamelib/core/rendering/Scene.hpp"

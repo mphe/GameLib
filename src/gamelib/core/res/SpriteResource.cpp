@@ -1,7 +1,8 @@
 #include "gamelib/core/res/SpriteResource.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
-#include "gamelib/utils/json.hpp"
 #include "gamelib/utils/conversions.hpp"
+#include "gamelib/json/json-vector.hpp"
+#include "gamelib/json/json-file.hpp"
 
 namespace gamelib
 {

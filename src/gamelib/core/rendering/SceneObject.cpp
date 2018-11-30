@@ -1,8 +1,8 @@
 #include "gamelib/core/rendering/SceneObject.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/rendering/flags.hpp"
-#include "gamelib/utils/json.hpp"
 #include "gamelib/utils/conversions.hpp"
+#include "gamelib/json/json-transformable.hpp"
 #include <cassert>
 
 namespace gamelib

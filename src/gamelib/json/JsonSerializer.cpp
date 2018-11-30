@@ -1,6 +1,6 @@
-#include "gamelib/core/res/JsonSerializer.hpp"
+#include "gamelib/json/JsonSerializer.hpp"
 #include "gamelib/utils/log.hpp"
-#include "gamelib/utils/json.hpp"
+#include "gamelib/json/json-file.hpp"
 #include <fstream>
 
 namespace gamelib

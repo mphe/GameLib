@@ -41,8 +41,13 @@ set(GAMELIB_SOURCES
     utils/SpriteBatch.cpp
     utils/DebugGui.cpp
     utils/string.cpp
-    utils/json.cpp
     utils/aspectratio.cpp
+
+    json/json-file.cpp
+    json/JsonSerializer.cpp
+    json/json-utils.cpp
+    json/json-vector.cpp
+    json/json-transformable.cpp
 
     properties/Property.cpp
     properties/PropertyHandle.cpp
@@ -64,7 +69,6 @@ set(GAMELIB_SOURCES
     core/geometry/GroupTransform.cpp
     core/geometry/MatrixPolygon.cpp
     core/movement/Acceleration.cpp
-    core/res/JsonSerializer.cpp
     core/res/ResourceManager.cpp
     core/res/resources.cpp
     core/res/TextureResource.cpp

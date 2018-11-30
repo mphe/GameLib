@@ -4,7 +4,7 @@
 #include "gamelib/core/Identifiable.hpp"
 #include "gamelib/utils/SlotMap.hpp"
 #include "gamelib/properties/Property.hpp"
-#include "gamelib/core/res/JsonSerializer.hpp"
+#include "gamelib/json/JsonSerializer.hpp"
 
 namespace gamelib
 {

@@ -3,7 +3,8 @@
 
 #include "PropType.hpp"
 #include "gamelib/core/Identifier.hpp"
-#include "gamelib/utils/json.hpp"
+#include "gamelib/json/json-natives.hpp"
+#include "gamelib/json/json-vector.hpp"
 #include "math/geometry/Vector.hpp"
 #include "gamelib/core/res/Resource.hpp"
 #include <SFML/Graphics/Color.hpp>
@@ -18,7 +19,7 @@ namespace gamelib
 
             bool loadFromJson(const PropertyHandle& prop, T* ptr, const Json::Value& node) const
             {
-                loadFromJsonBasic(node, *ptr);
+                gamelib::loadFromJson(node, *ptr);
                 return true;
             }
 

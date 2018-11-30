@@ -1,5 +1,6 @@
 #include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
+#include "gamelib/json/json-utils.hpp"
 
 namespace gamelib
 {

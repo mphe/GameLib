@@ -1,5 +1,4 @@
 #include "gamelib/components/geometry/Polygon.hpp"
-#include "gamelib/utils/json.hpp"
 #include "gamelib/utils/log.hpp"
 
 namespace gamelib
