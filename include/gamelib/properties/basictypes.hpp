@@ -25,24 +25,7 @@ namespace gamelib
 
             void writeToJson(const PropertyHandle& prop, Json::Value& node) const
             {
-                node = prop.getAs<T>();
-            }
-    };
-
-    template <typename T>
-    class VectorSerializer : public BasePropType<T>
-    {
-        public:
-            virtual ~VectorSerializer() {};
-
-            bool loadFromJson(const PropertyHandle& prop, T* ptr, const Json::Value& node) const
-            {
-                gamelib::loadFromJson(node, *ptr);
-                return true;
-            }
-
-            void writeToJson(const PropertyHandle& prop, Json::Value& node) const
-            {
+                // node = prop.getAs<T>();
                 gamelib::writeToJson(node, prop.getAs<T>());
             }
     };
@@ -84,7 +67,6 @@ namespace gamelib
     GENERATE_CATEGORIZER(name, type)
 
 #define GENERATE_BASIC_PROP(name, id, type) GENERATE_PROP(name, id, type, BasicTypeSerializer)
-#define GENERATE_VECTOR_PROP(name, id, type) GENERATE_PROP(name, id, type, VectorSerializer)
 
 
     GENERATE_BASIC_PROP(Int, 0x0b31b24c, int);
@@ -93,15 +75,14 @@ namespace gamelib
     GENERATE_BASIC_PROP(Bool, 0x4d746867, bool);
     GENERATE_BASIC_PROP(String, 0x8e7ae0b1, std::string);
 
-    GENERATE_VECTOR_PROP(Vec2f, 0xf4598369, math::Vec2f);
-    GENERATE_VECTOR_PROP(Vec2i, 0xf55f0d17, math::Vec2i);
+    GENERATE_BASIC_PROP(Vec2f, 0xf4598369, math::Vec2f);
+    GENERATE_BASIC_PROP(Vec2i, 0xf55f0d17, math::Vec2i);
 
     GENERATE_CATEGORIZER(Resource, BaseResourceHandle)
     GENERATE_CATEGORIZER(Color, sf::Color)
 
 #undef GENERATE_CATEGORIZER
 #undef GENERATE_BASIC_PROP
-#undef GENERATE_VECTOR_PROP
 #undef GENERATE_PROP
 
 
