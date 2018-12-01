@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "math/geometry/Point2.hpp"
-#include "gamelib/core/Renderable.hpp"
+#include "gamelib/core/rendering/Renderable.hpp"
 
 namespace gamelib
 {

@@ -43,7 +43,6 @@ namespace gamelib
         _exportcallback(defaultExport),
         _currenttool(nullptr),
         _cam("editorcam"),
-        _camctrl(getSubsystem<Scene>()),
         _entsearch(false),
         _drag(false),
         _grid(32, 32),
@@ -56,6 +55,8 @@ namespace gamelib
     {
         LOG_DEBUG("Init Editor...");
         EditorShared::_editor = this;
+
+        _cam.loadFromFile("assets/editorcam.json");
 
         ImGui::SFML::Init(game->getWindow());
 
@@ -70,8 +71,6 @@ namespace gamelib
         _tools[ToolVertex].reset(new VertexTool());
         _tools[ToolEntity].reset(new EntityTool());
         setTool(ToolBrush);
-
-        _onLoad();
 
         return true;
     }
@@ -117,7 +116,10 @@ namespace gamelib
         if (!_run)
         {
             _handleInput();
-            _camctrl.update(elapsed);
+
+            // Camera must be updated manually, because the Engine state is paused,
+            // resulting in the Scene and therefore cameras not being updated.
+            _cam.update(elapsed);
         }
     }
 
@@ -172,7 +174,7 @@ namespace gamelib
     {
         bool success = _savefile.empty() ? false : gamelib::loadSave(_savefile);
         setTool(ToolSelect);
-        _onLoad();
+        _updateRunFlags();
         return success;
     }
 
@@ -206,11 +208,26 @@ namespace gamelib
         {
             RMFLAG(scene->flags, render_noparallax | render_drawhidden);
             RMFLAG(flags, gamestate_freeze);
+
+            if (scene->getNumCameras() == 1)
+            {
+                LOG_WARN("No cameras registered -> using editor camera");
+                _cam.freeze = true;
+            }
+            else
+                scene->removeCamera(&_cam);
         }
         else
         {
             ADDFLAG(scene->flags, render_noparallax | render_drawhidden);
             ADDFLAG(flags, gamestate_freeze);
+
+            if (!scene->findCamera(_cam.getName()))
+            {
+                scene->addCamera(&_cam);
+                scene->setDefaultCamera(&_cam);
+            }
+            _cam.freeze = false;
         }
     }
 
@@ -468,15 +485,6 @@ namespace gamelib
 
         _currenttool = realtool;
     }
-
-    void Editor::_onLoad()
-    {
-        auto scene = getSubsystem<Scene>();
-        scene->addCamera(&_cam);
-        scene->setDefaultCamera(&_cam);
-        _cam.loadFromFile("assets/editorcam.json");
-    }
-
 
     void defaultExport(const std::string& fname)
     {

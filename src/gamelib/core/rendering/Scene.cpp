@@ -1,6 +1,6 @@
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/rendering/flags.hpp"
-#include "gamelib/core/Camera.hpp"
+#include "gamelib/core/rendering/Camera.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/conversions.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"

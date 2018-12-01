@@ -1,7 +1,7 @@
 #include "gamelib/components/update/CameraTracker.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
-#include "gamelib/core/Camera.hpp"
+#include "gamelib/core/rendering/Camera.hpp"
 
 namespace gamelib
 {
@@ -22,6 +22,8 @@ namespace gamelib
             return;
 
         Camera* cam = getCamera();
+        if (!cam)
+            return;
 
         if (_shake)
         {

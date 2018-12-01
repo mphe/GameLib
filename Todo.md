@@ -16,7 +16,6 @@
 * fix scale in ActorComponent to match the actual max scale and not 1
 * font resource
 
-
 * imgui
   * imgui game state
   * imgui dialogues
@@ -49,7 +48,6 @@
   * remove clear argument in json functions, except for Transform
   * add docs to make clear how functions behave in case of wrong json node type and defaults
   * use pointers in all loadFromJson functions instead of references
-  * create a json subfolder and restructure/reorganize files and functions
 
 * problems with lazy entity bounding box calculation
   * storing the bbox as reference
@@ -121,6 +119,7 @@
   * add option to accelerate towards basevel rather than immediatelly setting it
   * move airFriction code to QController
   * make snap distance fps independent
+    * snap only if speed and gravity point in the same direction
 
 * collisions
   * Remove Collidable and merge it into CollisionComponent

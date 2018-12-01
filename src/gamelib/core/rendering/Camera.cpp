@@ -1,4 +1,4 @@
-#include "gamelib/core/Camera.hpp"
+#include "gamelib/core/rendering/Camera.hpp"
 #include "math/math.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/conversions.hpp"

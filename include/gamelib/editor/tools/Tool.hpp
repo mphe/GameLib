@@ -2,7 +2,7 @@
 #define EDITOR_TOOL_HPP
 
 #include <SFML/Graphics/RenderTarget.hpp>
-#include "gamelib/core/Renderable.hpp"
+#include "gamelib/core/rendering/Renderable.hpp"
 #include "math/geometry/Point2.hpp"
 
 namespace gamelib

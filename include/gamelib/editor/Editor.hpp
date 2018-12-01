@@ -5,8 +5,7 @@
 #include <memory>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "gamelib/core/GameState.hpp"
-#include "gamelib/core/FreeCam.hpp"
-#include "gamelib/core/Camera.hpp"
+#include "gamelib/core/rendering/FreeCam.hpp"
 #include "gamelib/core/event/Event.hpp"
 #include "ui/Grid.hpp"
 #include "ui/ResourceViewer.hpp"
@@ -60,7 +59,6 @@ namespace gamelib
             auto _drawGui() -> void;
             auto _handleInput() -> void;
             auto _updateRunFlags() -> void;
-            auto _onLoad() -> void;
 
         private:
             ExportFunction _exportcallback;
@@ -69,8 +67,7 @@ namespace gamelib
             std::unique_ptr<Tool> _tools[NumTools];
             Tool* _currenttool;
 
-            Camera _cam;
-            FreeCam _camctrl;
+            FreeCam _cam;
 
             ResourceViewer _resviewer;
             Overlay _overlay;

@@ -61,7 +61,6 @@ set(GAMELIB_SOURCES
     core/input/InputSystem.cpp
     core/Game.cpp
     core/event/EventManager.cpp
-    core/Camera.cpp
     core/sprite/AnimatedSprite.cpp
     core/sprite/SpriteData.cpp
     core/geometry/CollisionSystem.cpp
@@ -79,7 +78,8 @@ set(GAMELIB_SOURCES
     core/rendering/SceneData.cpp
     core/rendering/SceneObject.cpp
     core/rendering/Layer.cpp
-    core/FreeCam.cpp
+    core/rendering/Camera.cpp
+    core/rendering/FreeCam.cpp
     core/ecs/Entity.cpp
     core/ecs/EntityManager.cpp
     core/ecs/EntityFactory.cpp

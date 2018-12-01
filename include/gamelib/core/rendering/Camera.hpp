@@ -14,6 +14,7 @@ namespace gamelib
         public:
             Camera(const std::string& name);
             Camera(const std::string& name, const math::Vec2f& pos, const math::Vec2f& size);
+            virtual ~Camera() {}
 
             virtual bool loadFromJson(const Json::Value& node);
             virtual void writeToJson(Json::Value& node);
