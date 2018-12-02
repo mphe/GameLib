@@ -67,6 +67,7 @@ set(GAMELIB_SOURCES
     core/geometry/Transformable.cpp
     core/geometry/GroupTransform.cpp
     core/geometry/MatrixPolygon.cpp
+    core/geometry/TransformableAABB.cpp
     core/movement/Acceleration.cpp
     core/res/ResourceManager.cpp
     core/res/resources.cpp
