@@ -9,7 +9,8 @@
             "brush_rect.ent",
             "player.ent",
             "globalconfig.ent",
-            "box.ent"
+            "box.ent",
+            "camera.ent"
         ]
     },
     "preload": {

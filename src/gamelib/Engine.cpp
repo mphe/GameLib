@@ -1,6 +1,7 @@
 #include "gamelib/Engine.hpp"
 #include "gamelib/core/Game.hpp"
 #include "gamelib/core/res/resources.hpp"
+#include "gamelib/components/CameraComponent.hpp"
 #include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/components/geometry/AABB.hpp"
 #include "gamelib/components/geometry/PixelCollision.hpp"
@@ -30,6 +31,7 @@ namespace gamelib
         _REGISTER_COMPONENT(BrushComponent);
         _REGISTER_COMPONENT(LineBrushComponent);
         _REGISTER_COMPONENT(ActorComponent);
+        _REGISTER_COMPONENT(CameraComponent);
 #undef _REGISTER_COMPONENT
     }
 

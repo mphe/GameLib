@@ -37,6 +37,7 @@ set(GAMELIB_SOURCES
     components/rendering/SpriteComponent.cpp
     components/editor/BrushComponent.cpp
     components/editor/LineBrushComponent.cpp
+    components/CameraComponent.cpp
 
     utils/SpriteBatch.cpp
     utils/DebugGui.cpp
