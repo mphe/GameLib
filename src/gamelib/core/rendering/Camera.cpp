@@ -16,6 +16,7 @@ namespace gamelib
         zoom(1),
         pos(pos),
         size(size),
+        viewport(0, 0, 1, 1),
         ratio(Fit),
         _name(name)
     { }
