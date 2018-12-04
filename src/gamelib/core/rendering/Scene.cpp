@@ -1,6 +1,5 @@
 #include "gamelib/core/rendering/Scene.hpp"
 #include "gamelib/core/rendering/flags.hpp"
-#include "gamelib/core/rendering/Camera.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/conversions.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
@@ -54,7 +53,7 @@ namespace gamelib
 
             for (const auto& i : _cams)
             {
-                _currentcam = i;
+                _currentcam = i.get();
                 i->apply(target);
                 _numrendered += _render(target);
             }
@@ -162,23 +161,30 @@ namespace gamelib
         }
     }
 
-    Camera& Scene::addCamera(Camera* cam)
+    Camera& Scene::createCamera(const std::string& name)
     {
-        assert(cam && "Camera is null");
-        _cams.emplace_back(cam);
+        auto cam = findCamera(name);
+        if (cam)
+        {
+            LOG_WARN("Layer already exists: ", name, " -> using existing one");
+            return *cam;
+        }
+
+        _cams.emplace_back(CameraPtr(new Camera(name)));
         LOG_DEBUG("Added camera to scene");
-        return *cam;
+        return *_cams.back();
     }
 
     void Scene::removeCamera(const Camera* cam)
     {
-        auto it = std::find(_cams.begin(), _cams.end(), cam);
-        if (it != _cams.end())
-        {
-            _cams.erase(it);
-            if (cam == _default)
-                _default = nullptr;
-        }
+        for (auto it = _cams.begin(), end = _cams.end(); it != end; ++it)
+            if (it->get() == cam)
+            {
+                _cams.erase(it);
+                if (cam == _default)
+                    _default = nullptr;
+                return;
+            }
     }
 
     void Scene::setDefaultCamera(const Camera* cam)
@@ -190,7 +196,7 @@ namespace gamelib
     {
         for (auto& i : _cams)
             if (i->getName() == name)
-                return i;
+                return i.get();
         return nullptr;
     }
 
@@ -201,7 +207,7 @@ namespace gamelib
 
     Camera* Scene::getCamera(size_t index)
     {
-        return (index < _cams.size()) ? _cams[index] : nullptr;
+        return (index < _cams.size()) ? _cams[index].get() : nullptr;
     }
 
     const Camera* Scene::getCamera(size_t index) const
@@ -259,6 +265,11 @@ namespace gamelib
 
     bool Scene::loadFromJson(const Json::Value& node)
     {
+        // Quickfix to carry cameras over to avoid segfaults from code relying on those cameras
+        // TODO: kinda ugly, find a better solution, maybe a CameraSystem
+        decltype(_cams) tmpcams;
+        tmpcams = std::move(_cams);
+
         destroy();
 
         SceneData::loadFromJson(node);
@@ -275,7 +286,42 @@ namespace gamelib
             }
         }
 
-        _default = findCamera(node["defaultcam"].asString());
+        if (node.isMember("cameras"))
+        {
+            auto& cams = node["cameras"];
+            for (auto it = cams.begin(), end = cams.end(); it != end; ++it)
+            {
+                auto name = it.key().asString();
+
+                // Carry cameras over
+                for (auto& i : tmpcams)
+                    if (i->getName() == name)
+                    {
+                        _cams.push_back(std::move(i));
+                        break;
+                    }
+
+                auto& cam = createCamera(name);
+                const Json::Value* cfg = &(*it);
+                JsonResource::Handle res;
+
+                if (it->isString())
+                {
+                    auto resmgr = getSubsystem<ResourceManager>();
+                    if (resmgr)
+                    {
+                        res = resmgr->getOnce(it->asString());
+                        cfg = &*res;
+                    }
+                }
+
+                if (!cam.loadFromJson(*cfg))
+                    // Don't remove it, because code might rely on the camera count
+                    LOG_WARN("Invalid config for camera ", name);
+            }
+        }
+
+        _default = getCamera(node["defaultcam"].asUInt());
 
         _updateQueue();
         return true;
@@ -292,8 +338,17 @@ namespace gamelib
                 i.writeToJson(layers[i.getName()]);
         }
 
+        auto& cams = node["cameras"];
+        for (auto& i : _cams)
+            i->writeToJson(cams[i->getName()]);
+
         if (_default)
-            node["defaultcam"] = _default->getName();
+            for (size_t i = 0; i < _cams.size(); ++i)
+                if (_cams[i].get() == _default)
+                {
+                    node["defaultcam"] = (Json::UInt)i;
+                    break;
+                }
     }
 
     void Scene::_updateQueue()

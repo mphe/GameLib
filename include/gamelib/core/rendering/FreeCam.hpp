@@ -1,7 +1,7 @@
 #ifndef GAMELIB_FREE_CAM_HPP
 #define GAMELIB_FREE_CAM_HPP
 
-#include "Camera.hpp"
+#include "gamelib/core/update/Updatable.hpp"
 
 /*
  * Allows moving and zooming the camera around.
@@ -9,16 +9,17 @@
 
 namespace gamelib
 {
-    class FreeCam : public Camera
+    class Camera;
+
+    class FreeCamController : public Updatable
     {
         public:
-            FreeCam(const std::string& name, float speed = 400);
-            FreeCam(const std::string& name, const math::Vec2f& pos, const math::Vec2f& size, float speed = 400);
-            virtual ~FreeCam() {}
+            FreeCamController(Camera* cam, float speed = 400);
 
-            virtual void update(float elapsed);
+            void update(float elapsed);
 
         public:
+            Camera* cam;
             float speed;
             bool freeze;
     };

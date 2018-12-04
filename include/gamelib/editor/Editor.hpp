@@ -67,7 +67,7 @@ namespace gamelib
             std::unique_ptr<Tool> _tools[NumTools];
             Tool* _currenttool;
 
-            FreeCam _cam;
+            FreeCamController _camctrl;
 
             ResourceViewer _resviewer;
             Overlay _overlay;

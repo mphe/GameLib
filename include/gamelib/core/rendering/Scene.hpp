@@ -2,8 +2,10 @@
 #define GAMELIB_SCENE_HPP
 
 #include <vector>
+#include <memory>
 #include "SceneObject.hpp"
 #include "Layer.hpp"
+#include "Camera.hpp"
 #include "gamelib/utils/SlotMap.hpp"
 #include "gamelib/core/Subsystem.hpp"
 
@@ -39,12 +41,12 @@
 
 namespace gamelib
 {
-    class Camera;
-
     class Scene : public SceneData, public Subsystem<Scene>
     {
         friend class SceneObject;
         friend class SceneData;
+
+        typedef std::unique_ptr<Camera> CameraPtr;
 
         public:
             constexpr static const char* name = "Scene";
@@ -65,11 +67,11 @@ namespace gamelib
             auto add(SceneObject* obj)    -> SceneObject*;
             auto remove(SceneObject* obj) -> void;
 
-            auto addCamera(Camera* cam)          -> Camera&;
-            auto removeCamera(const Camera* cam) -> void;
-            auto getCamera(size_t i)             -> Camera*;
-            auto getCamera(size_t i) const       -> const Camera*;
-            auto getNumCameras() const           -> size_t;
+            auto createCamera(const std::string& name) -> Camera&;
+            auto removeCamera(const Camera* cam)       -> void;
+            auto getCamera(size_t i)                   -> Camera*;
+            auto getCamera(size_t i) const             -> const Camera*;
+            auto getNumCameras() const                 -> size_t;
             auto findCamera(const std::string& name)       -> Camera*;
             auto findCamera(const std::string& name) const -> const Camera*;
 
@@ -106,7 +108,7 @@ namespace gamelib
             const Camera* _default;
             SlotMapShort<Layer> _layers;
             std::vector<SceneObject*> _renderQueue;
-            std::vector<Camera*> _cams;
+            std::vector<CameraPtr> _cams;
             bool _dirty;
     };
 }
@@ -117,6 +119,13 @@ namespace gamelib
  *     "layers": {
  *         "<layername>": {
  *             <scenedata>
+ *         },
+ *         ...
+ *     },
+ *     "cameras": {
+ *         "<cameraname>": "path/to/camera.json",
+ *         "<cameraname>": {
+ *             <cameraconfig>
  *         },
  *         ...
  *     }

@@ -5,6 +5,7 @@
 #include "gamelib/utils/string.hpp"
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
+#include "gamelib/core/rendering/Camera.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
@@ -42,7 +43,7 @@ namespace gamelib
         GameState(gamestate_freeze),
         _exportcallback(defaultExport),
         _currenttool(nullptr),
-        _cam("editorcam"),
+        _camctrl(nullptr),
         _entsearch(false),
         _drag(false),
         _grid(32, 32),
@@ -56,7 +57,11 @@ namespace gamelib
         LOG_DEBUG("Init Editor...");
         EditorShared::_editor = this;
 
-        _cam.loadFromFile("assets/editorcam.json");
+        auto scene = getSubsystem<Scene>();
+        auto cam = &scene->createCamera("editorcam");
+        cam->loadFromFile("assets/editorcam.json");
+        scene->setDefaultCamera(cam);
+        _camctrl.cam = cam;
 
         ImGui::SFML::Init(game->getWindow());
 
@@ -82,7 +87,8 @@ namespace gamelib
         auto evmgr = getSubsystem<EventManager>();
         evmgr->unregCallback<SFMLEvent>(_eventCallback, this);
 
-        getSubsystem<Scene>()->removeCamera(&_cam);
+        getSubsystem<Scene>()->removeCamera(_camctrl.cam);
+        _camctrl.cam = nullptr;
 
         _currenttool = nullptr;
         for (auto& i : _tools)
@@ -116,10 +122,7 @@ namespace gamelib
         if (!_run)
         {
             _handleInput();
-
-            // Camera must be updated manually, because the Engine state is paused,
-            // resulting in the Scene and therefore cameras not being updated.
-            _cam.update(elapsed);
+            _camctrl.update(elapsed);
         }
     }
 
@@ -208,26 +211,11 @@ namespace gamelib
         {
             RMFLAG(scene->flags, render_noparallax | render_drawhidden);
             RMFLAG(flags, gamestate_freeze);
-
-            if (scene->getNumCameras() == 1)
-            {
-                LOG_WARN("No cameras registered -> using editor camera");
-                _cam.freeze = true;
-            }
-            else
-                scene->removeCamera(&_cam);
         }
         else
         {
             ADDFLAG(scene->flags, render_noparallax | render_drawhidden);
             ADDFLAG(flags, gamestate_freeze);
-
-            if (!scene->findCamera(_cam.getName()))
-            {
-                scene->addCamera(&_cam);
-                scene->setDefaultCamera(&_cam);
-            }
-            _cam.freeze = false;
         }
     }
 
