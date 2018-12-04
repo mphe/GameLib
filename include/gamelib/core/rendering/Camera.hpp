@@ -45,6 +45,7 @@ namespace gamelib
             math::AABBf viewport;
             math::Vec2f vel;
             AspectRatio ratio;
+            bool active;
 
         private:
             std::string _name;

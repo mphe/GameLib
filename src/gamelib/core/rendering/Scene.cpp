@@ -56,6 +56,9 @@ namespace gamelib
 
             for (const auto& i : _cams)
             {
+                if (!i->active)
+                    continue;
+
                 _currentcam = i.get();
                 i->apply(target);
                 _numrendered += renderDirect(target);

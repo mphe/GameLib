@@ -18,6 +18,7 @@ namespace gamelib
         size(size),
         viewport(0, 0, 1, 1),
         ratio(Fit),
+        active(true),
         _name(name)
     { }
 
@@ -29,6 +30,7 @@ namespace gamelib
         gamelib::loadFromJson(node["velocity"], vel);
         zoom = node.get("zoom", zoom).asFloat();
         ratio = static_cast<AspectRatio>(node.get("ratio", ratio).asInt());
+        active = node.get("active", active).asBool();
         _name = node.get("name", _name).asString();
 
         if (size.x == 0 || size.y == 0)
@@ -54,6 +56,7 @@ namespace gamelib
         gamelib::writeToJson(node["velocity"], vel);
         node["zoom"] = zoom;
         node["ratio"] = ratio;
+        node["active"] = active;
         node["name"] = getName();
 
         auto& vp = node["viewport"];
