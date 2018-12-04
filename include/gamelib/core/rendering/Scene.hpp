@@ -58,6 +58,9 @@ namespace gamelib
             auto render(sf::RenderTarget& target) -> unsigned int;
             auto getNumObjectsRendered() const -> size_t;
 
+            // Renders the scene only for the current view, not for all cameras
+            auto renderDirect(sf::RenderTarget& target) -> unsigned int;
+
             // Resets everything and removes all SceneObjects and Cameras
             auto destroy() -> void;
 
@@ -99,7 +102,6 @@ namespace gamelib
             }
 
         private:
-            auto _render(sf::RenderTarget& target) -> unsigned int;
             auto _updateQueue() -> void;
 
         private:

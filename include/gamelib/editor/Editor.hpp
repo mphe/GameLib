@@ -6,6 +6,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "gamelib/core/GameState.hpp"
 #include "gamelib/core/rendering/FreeCam.hpp"
+#include "gamelib/core/rendering/Camera.hpp"
 #include "gamelib/core/event/Event.hpp"
 #include "ui/Grid.hpp"
 #include "ui/ResourceViewer.hpp"
@@ -67,6 +68,7 @@ namespace gamelib
             std::unique_ptr<Tool> _tools[NumTools];
             Tool* _currenttool;
 
+            Camera _cam;
             FreeCamController _camctrl;
 
             ResourceViewer _resviewer;

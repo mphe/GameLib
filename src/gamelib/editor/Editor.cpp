@@ -5,7 +5,6 @@
 #include "gamelib/utils/string.hpp"
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
-#include "gamelib/core/rendering/Camera.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
@@ -43,7 +42,8 @@ namespace gamelib
         GameState(gamestate_freeze),
         _exportcallback(defaultExport),
         _currenttool(nullptr),
-        _camctrl(nullptr),
+        _cam("editorcam"),
+        _camctrl(&_cam),
         _entsearch(false),
         _drag(false),
         _grid(32, 32),
@@ -57,11 +57,11 @@ namespace gamelib
         LOG_DEBUG("Init Editor...");
         EditorShared::_editor = this;
 
-        auto scene = getSubsystem<Scene>();
-        auto cam = &scene->createCamera("editorcam");
-        cam->loadFromFile("assets/editorcam.json");
-        scene->setDefaultCamera(cam);
-        _camctrl.cam = cam;
+        // auto scene = getSubsystem<Scene>();
+        // auto cam = &scene->createCamera("editorcam");
+        _cam.loadFromFile("assets/editorcam.json");
+        // scene->setDefaultCamera(cam);
+        // _camctrl.cam = cam;
 
         ImGui::SFML::Init(game->getWindow());
 
@@ -87,8 +87,8 @@ namespace gamelib
         auto evmgr = getSubsystem<EventManager>();
         evmgr->unregCallback<SFMLEvent>(_eventCallback, this);
 
-        getSubsystem<Scene>()->removeCamera(_camctrl.cam);
-        _camctrl.cam = nullptr;
+        // getSubsystem<Scene>()->removeCamera(_camctrl.cam);
+        // _camctrl.cam = nullptr;
 
         _currenttool = nullptr;
         for (auto& i : _tools)
@@ -100,8 +100,13 @@ namespace gamelib
 
     void Editor::update(float elapsed)
     {
+        auto scene = getSubsystem<Scene>();
         auto input = getSubsystem<InputSystem>();
         _mouseSnapped = EditorShared::snap(input->getMouse().world);
+
+        // Temporary set Scene to visible, so that visible checks in SelectTool work
+        if (!_run)
+            RMFLAG(scene->flags, render_invisible);
 
         if (input->isKeyPressed(sf::Keyboard::F5))
         {
@@ -115,7 +120,7 @@ namespace gamelib
         if (!_run || !_hidegui)
         {
             input->markConsumed(ImGui::GetIO().WantCaptureKeyboard,
-                    ImGui::GetIO().WantCaptureMouse);
+                                ImGui::GetIO().WantCaptureMouse);
             _drawGui();
         }
 
@@ -123,6 +128,7 @@ namespace gamelib
         {
             _handleInput();
             _camctrl.update(elapsed);
+            ADDFLAG(scene->flags, render_invisible);
         }
     }
 
@@ -130,6 +136,15 @@ namespace gamelib
     {
         // if (_run && _hidegui)
         //     return;
+
+        if (!_run)
+        {
+            auto scene = getSubsystem<Scene>();
+            _cam.apply(target);
+            RMFLAG(scene->flags, render_invisible);
+            getSubsystem<Scene>()->renderDirect(target);
+            ADDFLAG(scene->flags, render_invisible);
+        }
 
         // necessary, otherwise things will disappear randomly
         getSubsystem<Game>()->getWindow().resetGLStates();
@@ -211,11 +226,16 @@ namespace gamelib
         {
             RMFLAG(scene->flags, render_noparallax | render_drawhidden);
             RMFLAG(flags, gamestate_freeze);
+
+            RMFLAG(scene->flags, render_invisible);
         }
         else
         {
             ADDFLAG(scene->flags, render_noparallax | render_drawhidden);
             ADDFLAG(flags, gamestate_freeze);
+
+            // Hack to prevent Scene from rendering so the editor can render it manually with its own camera
+            ADDFLAG(scene->flags, render_invisible);
         }
     }
 
@@ -434,9 +454,8 @@ namespace gamelib
                 auto selected = getSelectTool().getSelected();
                 if (selected)
                 {
-                    auto cam = getSubsystem<Scene>()->getCamera(0);
-                    cam->center(selected->getTransform().getPosition().asVector());
-                    cam->zoom = 1;
+                    _cam.center(selected->getTransform().getPosition().asVector());
+                    _cam.zoom = 1;
                 }
             }
         }
@@ -455,7 +474,7 @@ namespace gamelib
                 }
 
                 if (mouse.wheel)
-                    getSubsystem<Scene>()->getCamera(0)->zoomTowards(mouse.world.x, mouse.world.y, mouse.wheel / -10.0);
+                    _cam.zoomTowards(mouse.world.x, mouse.world.y, mouse.wheel / -10.0);
             }
 
             if (input->isMousePressed(sf::Mouse::Left))

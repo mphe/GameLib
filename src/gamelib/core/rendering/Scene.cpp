@@ -42,9 +42,12 @@ namespace gamelib
         // when the update loop is paused.
         _updateQueue();
 
+        if (flags & render_invisible)
+            return _numrendered;
+
         if (_cams.empty())
         {
-            _numrendered = _render(target);
+            _numrendered = renderDirect(target);
         }
         else
         {
@@ -55,7 +58,7 @@ namespace gamelib
             {
                 _currentcam = i.get();
                 i->apply(target);
-                _numrendered += _render(target);
+                _numrendered += renderDirect(target);
             }
 
             target.setView(reset); // reset view
@@ -65,8 +68,11 @@ namespace gamelib
         return _numrendered;
     }
 
-    unsigned int Scene::_render(sf::RenderTarget& target)
+    unsigned int Scene::renderDirect(sf::RenderTarget& target)
     {
+        if (flags & render_invisible)
+            return 0;
+
         math::AABBf vbox;
         unsigned int numrendered = 0;
         const sf::View& view = target.getView();
