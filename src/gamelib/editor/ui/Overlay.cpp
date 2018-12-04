@@ -32,11 +32,13 @@ namespace gamelib
             ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
             if (ImGui::Begin("Stats overlay", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize))
             {
-                auto frametime = getSubsystem<Game>()->getFrametime();
-                auto realframetime = getSubsystem<Game>()->getRealFrametime();
+                auto game = getSubsystem<Game>();
+                auto frametime = game->getFrametime();
                 ImGui::Text("FPS: %i", (int)(frametime != 0 ? 1.0 / frametime : 0));
                 ImGui::Text("Frametime: %i ms", (int)(frametime * 1000));
-                ImGui::Text("Real frametime: %i ms", (int)(realframetime * 1000));
+                ImGui::Text("Real frametime: %i ms", (int)(game->getRealFrametime() * 1000));
+                ImGui::Text("Render time: %f ms", game->getRenderTime() * 1000);
+                ImGui::Text("Update time: %f ms", game->getUpdateTime() * 1000);
                 ImGui::Text("Objects rendered: %lu", getSubsystem<Scene>()->getNumObjectsRendered());
             }
             ImGui::End();

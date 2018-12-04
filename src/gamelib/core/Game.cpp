@@ -17,7 +17,8 @@ namespace gamelib
         escclose(true),
         unfocusPause(true),
         _frametime(0),
-        _realframetime(0),
+        _rendertime(0),
+        _updatetime(0),
         _size(640, 480),
         _maxfps(60),
         _title("Unnamed Game"),
@@ -77,13 +78,13 @@ namespace gamelib
 
     void Game::run()
     {
-        sf::Clock clock, realclock;
+        sf::Clock clock, detailclock;
         sf::Event ev;
 
         while (_window.isOpen())
         {
             clock.restart();
-            realclock.restart();
+            detailclock.restart();
 
             auto inputsys = getSubsystem<InputSystem>();
             if (inputsys)
@@ -122,28 +123,30 @@ namespace gamelib
                 }
             }
 
-            if (_vsync)
-                _realframetime = realclock.getElapsedTime().asMilliseconds() / 1000.0f;
+            _updatetime = detailclock.getElapsedTime().asMilliseconds() / 1000.f;
+            detailclock.restart();
 
             _window.resetGLStates(); // without this things start randomly disappearing
             _window.clear(bgcolor);
 
             if (_vsync)
-                realclock.restart();
+                detailclock.restart();
 
             for (auto& i : _states)
                 i->render(_window);
 
+            // TODO: implement own fps capping.
+            // SFML caps inside window.display(), so it's impossible to get the exact render time
             if (!_vsync)
-                _realframetime = realclock.getElapsedTime().asMilliseconds() / 1000.0f;
+                _rendertime = detailclock.getElapsedTime().asMilliseconds() / 1000.0f;
 
             _window.display();
 
+            if (_vsync)
+                _rendertime = detailclock.getElapsedTime().asMilliseconds() / 1000.0f;
+
             // Get elapsed time
             _frametime = clock.getElapsedTime().asMilliseconds() / 1000.0f;
-
-            if (_vsync)
-                _realframetime += realclock.getElapsedTime().asMilliseconds() / 1000.0f;
         }
     }
 
@@ -209,7 +212,17 @@ namespace gamelib
 
     float Game::getRealFrametime() const
     {
-        return _realframetime;
+        return _rendertime + _updatetime;
+    }
+
+    float Game::getRenderTime() const
+    {
+        return _rendertime;
+    }
+
+    float Game::getUpdateTime() const
+    {
+        return _updatetime;
     }
 
     sf::RenderWindow& Game::getWindow()

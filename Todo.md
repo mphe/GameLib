@@ -15,6 +15,25 @@
 * include origin for sprites in ActorComponent
 * fix scale in ActorComponent to match the actual max scale and not 1
 * font resource
+* implement own frame capping mechanic to allow better time measurement
+
+* Camera rewrite
+  * base Camera on sf::View
+  * give Camera an active flag
+  * inherit from Transformable
+  * rename to View to make clear it needs a controller to control its movement
+  * https://www.reddit.com/r/gamedev/comments/4o7w59/how_do_you_managing_scenes_with_a_dod_approach/d4aip2m/
+
+  * RenderSystem
+    * stores cameras
+    * uses render hierachy from Scene
+    * determines visibility
+    * renders for each camera
+    * Scene
+      * no longer renders
+      * keeps track of objects to be rendered
+      * manages hierachy (layers, depth)
+
 
 * imgui
   * imgui game state
@@ -38,13 +57,6 @@
     * can be passed (as unique_ptr/shared_ptr) to other objects (e.g. Camera)
     * can be combined with other motion objects to create complexer motions, e.g. SinMotion + LinearMotion
     * e.g. LinearMotion (move in a direction), TargetMove (move from a to b), ...
-  * CameraSystem
-    * to consider
-    * manages cameras
-    * is either a rendering system or just for storing cameras
-      * renders Scene for each camera
-      * or Scene uses cameras from there
-    * can be used to specify cameras at a global level
 
 * Support rendering to OSB in Game class
 
@@ -96,11 +108,6 @@
     * child (e.g. SpriteComponent instatiates a child UpdateComponent)
     * hidden (add to entity but hide to the outside (useful for auto generated editor components))
     * custom (load component directly from json (useful when adding components in the editor that aren't part of the entity))
-
-* Camera
-  * base Camera on sf::View
-  * give Camera an active flag
-  * inherit from Transformable
 
 * math
   * Generic polygon functions that accept pointers and offsets to compute polygon stuff
