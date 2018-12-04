@@ -38,7 +38,13 @@
     * can be passed (as unique_ptr/shared_ptr) to other objects (e.g. Camera)
     * can be combined with other motion objects to create complexer motions, e.g. SinMotion + LinearMotion
     * e.g. LinearMotion (move in a direction), TargetMove (move from a to b), ...
-
+  * CameraSystem
+    * to consider
+    * manages cameras
+    * is either a rendering system or just for storing cameras
+      * renders Scene for each camera
+      * or Scene uses cameras from there
+    * can be used to specify cameras at a global level
 
 * Support rendering to OSB in Game class
 
@@ -48,6 +54,8 @@
   * remove clear argument in json functions, except for Transform
   * add docs to make clear how functions behave in case of wrong json node type and defaults
   * use pointers in all loadFromJson functions instead of references
+  * improve camera serialization
+    * should be done by Camera not Scene
 
 * problems with lazy entity bounding box calculation
   * storing the bbox as reference
