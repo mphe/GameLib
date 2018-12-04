@@ -122,6 +122,7 @@ if(GAMELIB_BUILD_EDITOR)
         editor/tools/EntityTool.cpp
         editor/tools/ToolUtils.cpp
         editor/ui/LayerUI.cpp
+        editor/ui/CameraUI.cpp
         editor/ui/Grid.cpp
         editor/ui/JsonView.cpp
         editor/ui/ResourceViewer.cpp

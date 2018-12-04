@@ -8,10 +8,12 @@
 
 namespace gamelib
 {
+    // Basically the same code as CameraUI.
+    // If you make changes here, do it also in CameraUI.cpp.
     void drawLayerUI(bool* open)
     {
         static Layer::Handle current;
-        static char newlayerbuf[256];
+        static char namebuf[256];
         static bool exists = false;
 
         if (ImGui::Begin("Layers", open, ImVec2(250, 285)))
@@ -47,7 +49,7 @@ namespace gamelib
             if (ImGui::Button("New Layer"))
             {
                 ImGui::OpenPopup("Create new layer");
-                memset(newlayerbuf, 0, sizeof(newlayerbuf));
+                memset(namebuf, 0, sizeof(namebuf));
                 exists = false;
             }
 
@@ -77,11 +79,11 @@ namespace gamelib
                 if (!ImGui::IsAnyItemActive())
                     ImGui::SetKeyboardFocusHere();
 
-                if (ImGui::InputText("Name", newlayerbuf, sizeof(newlayerbuf)))
+                if (ImGui::InputText("Name", namebuf, sizeof(namebuf)))
                 {
                     exists = false;
                     scene.foreachLayer([&](Layer::Handle, Layer& layer) {
-                            if (layer.getName() == newlayerbuf)
+                            if (layer.getName() == namebuf)
                                 exists = true;
                         });
                 }
@@ -91,9 +93,9 @@ namespace gamelib
 
                 ImGui::Columns(2, nullptr, false);
 
-                if (okButton("Create") && strlen(newlayerbuf) > 0 && !exists)
+                if (okButton("Create") && strlen(namebuf) > 0 && !exists)
                 {
-                    scene.createLayer(std::string(newlayerbuf));
+                    scene.createLayer(std::string(namebuf));
                     ImGui::CloseCurrentPopup();
                 }
 

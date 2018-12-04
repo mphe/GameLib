@@ -6,22 +6,30 @@
                "flags" : 26,
                "size" : [ 16, 31 ]
             },
+            "ActorComponent#1" : {
+               "state" : 2
+            },
             "QController#1" : {
                "jumpspeed" : 356
+            },
+            "QPhysicsComponent#1" : {
+               "airFriction" : true,
+               "vel" : [ -64.698097229003906, 43.132061004638672 ]
             },
             "SpriteComponent#1" : {
                "renderopts" : {
                   "depth" : -1
                },
-               "sprite" : "spr/player_stand.spr",
+               "sprite" : "spr/player_jump.spr",
                "transform" : {
-                  "origin" : [ 16, 16 ]
+                  "origin" : [ 16, 16 ],
+                  "scale" : [ -1, 1 ]
                }
             }
          },
          "name" : "player",
          "transform" : {
-            "pos" : [ 1237.059326171875, 304.84375 ]
+            "pos" : [ 2162.617431640625, -11.495122909545898 ]
          }
       },
       {
@@ -181,7 +189,7 @@
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ 1012.7236328125, 352 ]
+            "pos" : [ 1082.3243408203125, 352 ]
          }
       },
       {
@@ -392,12 +400,12 @@
                "friction multiplier" : 0,
                "gravity multiplier" : 0,
                "overbounce" : 2,
-               "vel" : [ 0, -200 ]
+               "vel" : [ 0, 200 ]
             }
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ 1536, 300.69949340820312 ]
+            "pos" : [ 1536, -44.700000762939453 ]
          }
       },
       {
@@ -515,12 +523,12 @@
                "friction multiplier" : 0,
                "gravity multiplier" : 0,
                "overbounce" : 2,
-               "vel" : [ 1000, 0 ]
+               "vel" : [ -1000, 0 ]
             }
          },
          "name" : "box",
          "transform" : {
-            "pos" : [ -575.5, 258 ]
+            "pos" : [ -474.6875, 258 ]
          }
       },
       {
@@ -1324,8 +1332,11 @@
    ],
    "scene" : {
       "cameras" : {
-         "editorcam": {
-            "pos" : [ 597.059326171875, -55.15625 ],
+         "editorcam" : {
+            "active" : true,
+            "name" : "editorcam",
+            "pos" : [ 1523.069580078125, -373.40371704101562 ],
+            "ratio" : 1,
             "size" : [ 1280, 720 ],
             "velocity" : [ 0, 0 ],
             "viewport" : {
@@ -1333,6 +1344,19 @@
                "size" : [ 1, 1 ]
             },
             "zoom" : 0.69999992847442627
+         },
+         "minimap" : {
+            "active" : true,
+            "name" : "minimap",
+            "pos" : [ -750, -160 ],
+            "ratio" : 1,
+            "size" : [ 3300, 1000 ],
+            "velocity" : [ 0, 0 ],
+            "viewport" : {
+               "pos" : [ 0.80000001192092896, 0.80000001192092896 ],
+               "size" : [ 1, 1 ]
+            },
+            "zoom" : 1
          }
       },
       "defaultcam" : 0,

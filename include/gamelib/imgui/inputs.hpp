@@ -7,6 +7,7 @@
 namespace gamelib
 {
     class SceneData;
+    class Camera;
     class Transformable;
     class PropertyHandle;
     class PropertyContainer;
@@ -17,6 +18,7 @@ namespace gamelib
 
     bool inputLayer(const char* label, Layer::Handle* handle);
     bool inputSceneData(SceneData& sd);
+    void inputCamera(Camera& cam);
 
     bool inputTransform(Transformable& trans);
 

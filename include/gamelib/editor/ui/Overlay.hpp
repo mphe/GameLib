@@ -22,6 +22,7 @@ namespace gamelib
             bool wireframe;
             bool debugOverlay;
             bool debugOverlayMovable;
+            bool renderCams;
     };
 }
 

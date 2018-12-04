@@ -84,6 +84,19 @@ namespace gamelib
         return changed;
     }
 
+    void inputCamera(Camera& cam)
+    {
+        ImGui::InputFloat2("Pos", &cam.pos.x, 2);
+        ImGui::InputFloat2("Size", &cam.size.x, 2);
+        ImGui::InputFloat("Zoom", &cam.zoom, 0.5, 1, 2);
+        ImGui::Combo("Aspect Ratio", (int*)(&cam.ratio), str_aspectratios, NumRatios);
+        ImGui::NewLine();
+        ImGui::InputFloat2("Velocity", &cam.vel.x, 2);
+        ImGui::NewLine();
+        ImGui::InputFloat2("Viewport Start", &cam.viewport.x, 2);
+        ImGui::InputFloat2("Viewport Stop", &cam.viewport.w, 2);
+    }
+
     bool inputTransform(Transformable& trans)
     {
         static int mode = 0;

@@ -19,6 +19,7 @@
 #include "gamelib/imgui/inputs.hpp"
 #include "gamelib/imgui/FileDialog.hpp"
 #include "gamelib/editor/ui/LayerUI.hpp"
+#include "gamelib/editor/ui/CameraUI.hpp"
 #include "gamelib/editor/ui/EntityList.hpp"
 #include "gamelib/editor/ui/GlobalGameConfig.hpp"
 #include "gamelib/editor/EditorShared.hpp"
@@ -252,6 +253,7 @@ namespace gamelib
         static bool jsonwindow = false;
         static bool toolbox = true;
         static bool layerbox = false;
+        static bool cambox = false;
         static bool entprops = true;
         static bool entlist = true;
         static bool entfac = false;
@@ -305,6 +307,7 @@ namespace gamelib
                 }
 
                 ImGui::MenuItem("Show mouse coordinates", nullptr, &_overlay.showCoords);
+                ImGui::MenuItem("Show cameras", nullptr, &_overlay.renderCams);
 
                 auto scene = getSubsystem<Scene>();
                 if (ImGui::MenuItem("Show hidden", nullptr, scene->flags & render_drawhidden))
@@ -323,6 +326,7 @@ namespace gamelib
                 ImGui::MenuItem("Entity properties", nullptr, &entprops);
                 ImGui::MenuItem("Entity list", nullptr, &entlist);
                 ImGui::MenuItem("Layer settings", nullptr, &layerbox);
+                ImGui::MenuItem("Camera settings", nullptr, &cambox);
                 ImGui::MenuItem("Global game config", nullptr, &gamecfg);
                 ImGui::Separator();
                 ImGui::MenuItem("Json viewer", nullptr, &jsonwindow);
@@ -372,6 +376,9 @@ namespace gamelib
 
             if (layerbox)
                 drawLayerUI(&layerbox);
+
+            if (cambox)
+                drawCameraUI(&cambox);
 
             if (entlist)
                 drawEntityList(&entlist);

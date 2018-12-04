@@ -20,7 +20,8 @@ namespace gamelib
         showCoords(false),
         wireframe(false),
         debugOverlay(true),
-        debugOverlayMovable(true)
+        debugOverlayMovable(true),
+        renderCams(true)
     { }
 
     void Overlay::drawDebugOverlay()
@@ -60,6 +61,29 @@ namespace gamelib
 
     void Overlay::render(sf::RenderTarget& target)
     {
+        if (renderCams)
+        {
+            auto scene = getSubsystem<Scene>();
+            sf::Color col = sf::Color::Green;
+
+            for (size_t i = 0; i < scene->getNumCameras(); ++i)
+            {
+                auto cam = scene->getCamera(i);
+                math::AABBf baserect(cam->pos.asPoint(), cam->size);
+                drawRectOutline(target, baserect, col);
+
+                if (!math::almostEquals(cam->zoom, 1.f))
+                {
+                    math::AABBf rect = cam->getCamRect();
+                    drawRectOutline(target, rect, col);
+                    drawLine(target, rect.pos.asPoint(), baserect.pos.asPoint(), col);
+                    drawLine(target, math::Point2f(rect.x + rect.w, rect.y), math::Point2f(baserect.x + baserect.w, baserect.y), col);
+                    drawLine(target, math::Point2f(rect.x, rect.y + rect.h), math::Point2f(baserect.x, baserect.y + baserect.h), col);
+                    drawLine(target, rect.pos.asPoint() + rect.size, baserect.pos.asPoint() + baserect.size, col);
+                }
+            }
+        }
+
         auto* ent = EditorShared::getSelected();
         if (!ent)
             return;
