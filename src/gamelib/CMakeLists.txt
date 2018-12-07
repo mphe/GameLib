@@ -2,6 +2,7 @@ set(CXX_STANDARD_REQUIRED ON)
 
 find_package(SFML 2.4 COMPONENTS system window graphics REQUIRED)
 find_package(OpenGL)
+find_package(Boost COMPONENTS system filesystem REQUIRED)
 
 macro(gen_binary BINNAME SOURCE)
     add_executable(${BINNAME} ${SOURCE} ${ARGN})
@@ -17,6 +18,8 @@ set(EXT_LIBRARIES
     jsoncpp
     ${OPENGL_LIBRARIES}
     imgui
+    ${Boost_FILESYSTEM_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY}
 )
 
 set(GAMELIB_SOURCES

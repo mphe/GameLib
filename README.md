@@ -4,6 +4,7 @@
 - [git](https://git-scm.com/)
 - [SFML 2.4 libraries](http://www.sfml-dev.org/)
 - C++ environment with C++11 support (on Windows at least Visual Studio 2015)
+- Boost filesystem
 
 ## Building
 1. Open a terminal in a directory where you want to download the repository and type:

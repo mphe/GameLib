@@ -97,6 +97,7 @@ namespace gamelib
             auto registerFileType(const std::string& ext, LoaderCallback cb) -> void;
 
             auto setSearchpath(const std::string& path) -> void;
+            auto getSearchpath() const                  -> const std::string&;
 
             // Free all resources that aren't referenced anywhere else
             auto clean() -> void;
@@ -118,6 +119,9 @@ namespace gamelib
                         if (callback(it->first, it->second))
                             return;
             }
+
+        private:
+            auto _preparePath(const std::string& fname) const -> std::string;
 
         private:
             std::unordered_map<std::string, BaseResourceHandle> _res;

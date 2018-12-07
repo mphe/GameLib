@@ -2,6 +2,7 @@
 #include "gamelib/events/ResourceReloadEvent.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/string.hpp"
+#include <boost/filesystem.hpp>
 
 namespace gamelib
 {
@@ -87,23 +88,27 @@ namespace gamelib
 
         Json::ArrayIndex i = 0;
         for (auto& it : _res)
-            files[i++] = it.first;
+            files[i++] = boost::filesystem::relative(it.first, _searchpath).string();
     }
 
     BaseResourceHandle ResourceManager::load(const std::string& fname)
     {
         auto res = loadOnce(fname);
+        if (!res)
+            return nullptr;
+
+        auto path = res.getResource()->getPath();
 
         // Fire a reload event if the resource was reloaded
         auto evmgr = getSubsystem<EventManager>();
         if (evmgr)
         {
-            auto oldres = find(fname);
+            auto oldres = find(path);
             if (oldres && oldres.use_count() > 1)
-                evmgr->queueEvent(ResourceReloadEvent::create(fname, res));
+                evmgr->queueEvent(ResourceReloadEvent::create(path, res));
         }
 
-        _res[fname] = res;
+        _res[path] = res;
         return res;
     }
 
@@ -126,8 +131,7 @@ namespace gamelib
             return nullptr;
         }
 
-        auto path = _searchpath + fname;
-        adaptPath(&path);
+        std::string path = _preparePath(fname);
 
         // Call the associated loader
         auto res = it->second(path, this);
@@ -137,13 +141,14 @@ namespace gamelib
             return nullptr;
         }
 
-        res.getResource()->_path = path.data() + _searchpath.size();
+        // res.getResource()->_path = path.data() + _searchpath.size();
+        res.getResource()->_path = path;
         return res;
     }
 
     void ResourceManager::free(const std::string& fname)
     {
-        auto it = _res.find(fname);
+        auto it = _res.find(_preparePath(fname));
         if (it != _res.end())
             if (it->second.use_count() == 1)
             {
@@ -170,7 +175,7 @@ namespace gamelib
 
     BaseResourceHandle ResourceManager::find(const std::string& fname)
     {
-        auto it = _res.find(fname);
+        auto it = _res.find(_preparePath(fname));
         if (it == _res.end())
             return nullptr;
         return it->second;
@@ -197,6 +202,11 @@ namespace gamelib
         _searchpath = path;
         adaptPath(&_searchpath);
         assureDelimiter(&_searchpath);
+    }
+
+    const std::string& ResourceManager::getSearchpath() const
+    {
+        return _searchpath;
     }
 
     void ResourceManager::clean()
@@ -237,5 +247,16 @@ namespace gamelib
         _typemap.clear();
         _searchpath.clear();
         LOG_DEBUG_WARN("ResourceManager destroyed");
+    }
+
+    std::string ResourceManager::_preparePath(const std::string& fname) const
+    {
+        std::string path;
+        if (boost::filesystem::path(fname).is_absolute())
+            path = _searchpath + boost::filesystem::relative(fname, _searchpath).string();
+        else
+            path = _searchpath + fname;
+        adaptPath(&path);
+        return path;
     }
 }
