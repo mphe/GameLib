@@ -331,7 +331,7 @@ namespace gamelib
                 ImGui::Separator();
                 ImGui::MenuItem("Json viewer", nullptr, &jsonwindow);
                 ImGui::MenuItem("Entity Factory", nullptr, &entfac);
-                if (ImGui::MenuItem("Resource Viewer"))
+                if (ImGui::MenuItem("Resource Manager"))
                     _resviewer.open();
                 ImGui::Separator();
                 ImGui::MenuItem("Test window", nullptr, &testwindow);

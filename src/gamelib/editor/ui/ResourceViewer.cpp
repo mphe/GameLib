@@ -2,12 +2,14 @@
 #include "gamelib/imgui/resources.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "imgui.h"
+#include <boost/filesystem.hpp>
 
 namespace gamelib
 {
     ResourceViewer::ResourceViewer() :
         _open(false),
-        _category(0)
+        _category(0),
+        _dialog(FileDialog::Load)
     { }
 
     ResourceViewer::~ResourceViewer()
@@ -39,8 +41,19 @@ namespace gamelib
         if (!_open)
             return;
 
-        if (ImGui::Begin("Resource Viewer", &_open))
+        if (_dialog.process())
+            if (getSubsystem<ResourceManager>()->load(_dialog.getPath()))
+                _refresh();
+
+        if (ImGui::Begin("Resource Manager", &_open))
         {
+            if (ImGui::Button("Load"))
+                _dialog.open(getSubsystem<ResourceManager>()->getSearchpath().c_str());
+
+            ImGui::SameLine();
+            ImGui::Spacing();
+            ImGui::SameLine();
+
             if (ImGui::Button("Refresh"))
                 _refresh();
 
@@ -55,7 +68,7 @@ namespace gamelib
                         *name = cache[index].name;
                         return true;
                     }, &_cache, _cache.size()))
-            _selected.reset();
+                _selected.reset();
 
             ImGui::NewLine();
             drawResourceSelection(&_selected, _cache[_category].id, true);

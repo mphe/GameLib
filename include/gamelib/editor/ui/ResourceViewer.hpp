@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "gamelib/core/res/Resource.hpp"
+#include "gamelib/imgui/FileDialog.hpp"
 
 namespace gamelib
 {
@@ -31,6 +32,7 @@ namespace gamelib
             int _category;
             std::vector<CacheEntry> _cache;
             BaseResourceHandle _selected;
+            FileDialog _dialog;
     };
 }
 
