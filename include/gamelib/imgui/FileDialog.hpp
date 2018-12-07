@@ -18,8 +18,8 @@ namespace gamelib
             FileDialog();
             FileDialog(Type type_);
 
-            auto open()          -> void;
-            auto process()       -> bool;
+            auto open(const char* dir = nullptr) -> void;
+            auto process() -> bool;
             auto getPath() const -> const char*;
 
         public:
@@ -28,6 +28,7 @@ namespace gamelib
 
         private:
             bool _isopen;
+            const char* _workingdir;
     };
 }
 

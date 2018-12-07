@@ -8,26 +8,30 @@ namespace gamelib
 
     FileDialog::FileDialog(Type type_) :
         type(type_),
-        _isopen(false)
+        _isopen(false),
+        _workingdir(nullptr)
     {}
 
-    void FileDialog::open()
+    void FileDialog::open(const char* dir)
     {
         _isopen = true;
+        _workingdir = dir;
     }
 
     bool FileDialog::process()
     {
         // TODO: default keys
 
+        auto dir = _workingdir ? _workingdir : dialog.getLastDirectory();
+
         if (type == Save)
         {
-            if (strlen(dialog.saveFileDialog(_isopen, dialog.getLastDirectory())) > 0)
+            if (strlen(dialog.saveFileDialog(_isopen, dir)) > 0)
                 return true;
         }
         else
         {
-            if (strlen(dialog.chooseFileDialog(_isopen, dialog.getLastDirectory())) > 0)
+            if (strlen(dialog.chooseFileDialog(_isopen, dir)) > 0)
                 return true;
         }
 
