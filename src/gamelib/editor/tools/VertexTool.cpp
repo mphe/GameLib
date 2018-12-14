@@ -23,7 +23,7 @@ namespace gamelib
             selectDragBoxes(brush->getBrushPolygon()->getPolygon(), &_selected);
 
         if (_selected == (size_t)-1)
-            EditorShared::getSelectTool().onMousePressed();
+            EditorShared::getSelectTool().select(EditorShared::getMouse().x, EditorShared::getMouse().y);
     }
 
     void VertexTool::onDrag()
