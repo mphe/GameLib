@@ -48,7 +48,7 @@ namespace gamelib
         return true;
     }
 
-    void SceneData::writeToJson(Json::Value& node)
+    void SceneData::writeToJson(Json::Value& node) const
     {
         node["parallax"] = getParallax();
         node["depth"] = getDepth();

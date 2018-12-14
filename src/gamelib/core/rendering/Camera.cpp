@@ -49,7 +49,7 @@ namespace gamelib
         return true;
     }
 
-    void Camera::writeToJson(Json::Value& node)
+    void Camera::writeToJson(Json::Value& node) const
     {
         gamelib::writeToJson(node["pos"], pos);
         gamelib::writeToJson(node["size"], size);

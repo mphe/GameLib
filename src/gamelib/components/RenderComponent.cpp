@@ -15,7 +15,7 @@ namespace gamelib
 
             void writeToJson(const PropertyHandle& prop, const SceneObject* ptr, Json::Value& node) const
             {
-                static_cast<SceneObject*>(prop.getMutableOrNull())->SceneObject::writeToJson(node);
+                ptr->SceneObject::writeToJson(node);
                 node.removeMember("transform");
             }
 

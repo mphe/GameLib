@@ -24,7 +24,7 @@ namespace gamelib
 
         public:
             auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node)        -> void;
+            auto writeToJson(Json::Value& node) const  -> void;
 
             auto unregisterProperty(const std::string& name) -> void;
 

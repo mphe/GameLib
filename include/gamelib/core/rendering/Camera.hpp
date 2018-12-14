@@ -17,7 +17,7 @@ namespace gamelib
             virtual ~Camera() {}
 
             virtual bool loadFromJson(const Json::Value& node);
-            virtual void writeToJson(Json::Value& node);
+            virtual void writeToJson(Json::Value& node) const;
 
             virtual void update(float elapsed);
 

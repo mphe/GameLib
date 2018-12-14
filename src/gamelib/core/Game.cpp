@@ -177,7 +177,7 @@ namespace gamelib
         return _props.loadFromJson(node);
     }
 
-    void Game::writeToJson(Json::Value& node)
+    void Game::writeToJson(Json::Value& node) const
     {
         _props.writeToJson(node);
     }

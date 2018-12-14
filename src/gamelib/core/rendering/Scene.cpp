@@ -336,7 +336,7 @@ namespace gamelib
         return true;
     }
 
-    void Scene::writeToJson(Json::Value& node)
+    void Scene::writeToJson(Json::Value& node) const
     {
         SceneData::writeToJson(node);
 

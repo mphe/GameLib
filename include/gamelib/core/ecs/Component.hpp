@@ -30,7 +30,7 @@ namespace gamelib
             virtual auto getTransform() const -> const Transformable*;
 
             virtual auto loadFromJson(const Json::Value& node) -> bool;
-            virtual auto writeToJson(Json::Value& node)        -> void;
+            virtual auto writeToJson(Json::Value& node) const  -> void;
 
         protected:
             // Those are called by Entity

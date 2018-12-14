@@ -15,7 +15,7 @@ namespace gamelib
         return false;
     }
 
-    bool JsonSerializer::writeToFile(const std::string& fname, bool usefname)
+    bool JsonSerializer::writeToFile(const std::string& fname, bool usefname) const
     {
         if (usefname)
             _fname = fname;
@@ -32,23 +32,11 @@ namespace gamelib
         return false;
     }
 
-    void JsonSerializer::write()
+    void JsonSerializer::write() const
     {
         if (!_fname.empty())
             writeToFile(_fname);
         else
             LOG_ERROR("No filename given: must load from file before rewriting");
-    }
-
-
-    bool JsonSerializer::loadFromJson(const Json::Value& node)
-    {
-        LOG_ERROR("Not implemented");
-        return false;
-    }
-
-    void JsonSerializer::writeToJson(Json::Value& node)
-    {
-        LOG_ERROR("Not implemented");
     }
 }

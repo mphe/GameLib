@@ -62,7 +62,6 @@
 
 * json
   * loadFromJson update bool to differentiate between load and update from json
-  * make JsonSerializer::write\* functions const
   * remove clear argument in json functions, except for Transform
   * add docs to make clear how functions behave in case of wrong json node type and defaults
   * use pointers in all loadFromJson functions instead of references

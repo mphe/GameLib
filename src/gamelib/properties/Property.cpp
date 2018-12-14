@@ -26,7 +26,7 @@ namespace gamelib
         return true;
     }
 
-    void PropertyContainer::writeToJson(Json::Value& node)
+    void PropertyContainer::writeToJson(Json::Value& node) const
     {
         for (auto& i : _properties)
             if (i.second.serializer)

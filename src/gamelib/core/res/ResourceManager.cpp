@@ -77,7 +77,7 @@ namespace gamelib
         return true;
     }
 
-    void ResourceManager::writeToJson(Json::Value& node)
+    void ResourceManager::writeToJson(Json::Value& node) const
     {
         node["searchpath"] = _searchpath;
         node["forcereload"] = false;

@@ -84,7 +84,7 @@ namespace gamelib
         return true;
     }
 
-    void SceneObject::writeToJson(Json::Value& node)
+    void SceneObject::writeToJson(Json::Value& node) const
     {
         SceneData::writeToJson(node);
 
@@ -96,7 +96,7 @@ namespace gamelib
                 node["layer"] = layer->getName();
         }
 
-        gamelib::writeToJson(node["transform"], *static_cast<Transformable*>(this));
+        gamelib::writeToJson(node["transform"], *static_cast<const Transformable*>(this));
     }
 
 

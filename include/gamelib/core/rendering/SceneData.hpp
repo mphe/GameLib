@@ -23,7 +23,7 @@ namespace gamelib
 
             // TODO: consider removing json stuff
             virtual auto loadFromJson(const Json::Value& node) -> bool;
-            virtual auto writeToJson(Json::Value& node)        -> void;
+            virtual auto writeToJson(Json::Value& node) const  -> void;
 
         public:
             unsigned int flags;

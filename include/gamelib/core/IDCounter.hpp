@@ -21,7 +21,7 @@ namespace gamelib
             auto getID() const -> ID;
 
             virtual auto loadFromJson(const Json::Value& node) -> bool;
-            virtual auto writeToJson(Json::Value& node)        -> void;
+            virtual auto writeToJson(Json::Value& node) const  -> void;
 
         protected:
             // Maybe make this public if really needed, but seems dangerous to do so
@@ -83,7 +83,7 @@ namespace gamelib
     }
 
     template <typename T, ID offset>
-    void IDCounter<T, offset>::writeToJson(Json::Value& node)
+    void IDCounter<T, offset>::writeToJson(Json::Value& node) const
     {
         node["uid"] = getID();
     }
