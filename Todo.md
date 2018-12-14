@@ -177,7 +177,6 @@
   * ConstPropertyHandle
     * use in BasePropType loadFromJson, drawGui
   * remove custom resource related register functions
-  * provide pointer in writeToJson for consistency
 
 * log
   * warn if null

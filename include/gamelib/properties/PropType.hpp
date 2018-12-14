@@ -19,9 +19,9 @@ namespace gamelib
         public:
             virtual ~IPropType() {};
 
-            virtual auto loadFromJson(const PropertyHandle& prop, const Json::Value& node) const -> bool = 0;
-            virtual auto writeToJson(const PropertyHandle& prop, Json::Value& node)        const -> void = 0;
-            virtual auto drawGui(const PropertyHandle& prop, const std::string& name)      const -> bool = 0;
+            virtual bool loadFromJson(const PropertyHandle& prop, const Json::Value& node) const = 0;
+            virtual void writeToJson(const PropertyHandle& prop, Json::Value& node)        const = 0;
+            virtual bool drawGui(const PropertyHandle& prop, const std::string& name)      const = 0;
     };
 
 
@@ -34,13 +34,14 @@ namespace gamelib
         public:
             virtual ~BasePropType() {};
 
-            virtual auto loadFromJson(const PropertyHandle& prop, T* ptr, const Json::Value& node) const -> bool = 0;
-            virtual auto writeToJson(const PropertyHandle& prop, Json::Value& node)                const -> void = 0;
-            virtual auto drawGui(const PropertyHandle& prop, const std::string& name, T* ptr)      const -> bool = 0;
+            virtual bool loadFromJson(const PropertyHandle& prop, T* ptr, const Json::Value& node) const = 0;
+            virtual void writeToJson(const PropertyHandle& prop, const T* ptr, Json::Value& node) const = 0;
+            virtual bool drawGui(const PropertyHandle& prop, const std::string& name, T* ptr) const = 0;
 
         private:
-            virtual auto loadFromJson(const PropertyHandle& prop, const Json::Value& node) const -> bool;
-            virtual auto drawGui(const PropertyHandle& prop, const std::string& name) const -> bool;
+            bool loadFromJson(const PropertyHandle& prop, const Json::Value& node) const;
+            void writeToJson(const PropertyHandle& prop, Json::Value& node) const;
+            bool drawGui(const PropertyHandle& prop, const std::string& name) const;
     };
 
 
@@ -96,6 +97,12 @@ namespace gamelib
             return true;
         }
         return false;
+    }
+
+    template <typename T>
+    void BasePropType<T>::writeToJson(const PropertyHandle& prop, Json::Value& node) const
+    {
+        writeToJson(prop, &prop.getAs<T>(), node);
     }
 }
 

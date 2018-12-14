@@ -29,7 +29,7 @@ struct SomeClassSerializer : public PropType<0x13a51995, SomeClass>
         return true;
     }
 
-    auto writeToJson(const PropertyHandle& prop, Json::Value& node) const -> void
+    auto writeToJson(const PropertyHandle& prop, const SomeClass* ptr, Json::Value& node) const -> void
     {
         node["x"] = prop.getAs<int>();
         node["y"] = prop.getAs<int>();

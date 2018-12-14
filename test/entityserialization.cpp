@@ -21,12 +21,11 @@ class PropTest : public PropType<0x4933b918, SomeStruct>
             return true;
         }
 
-        void writeToJson(const PropertyHandle& prop, Json::Value& node) const
+        void writeToJson(const PropertyHandle& prop, const SomeStruct* ptr, Json::Value& node) const
         {
-            auto& s = prop.getAs<SomeStruct>();
-            node["a"] = s.a;
-            node["b"] = s.b;
-            node["c"] = s.c;
+            node["a"] = ptr->a;
+            node["b"] = ptr->b;
+            node["c"] = ptr->c;
         }
 
         bool drawGui(const PropertyHandle&, const std::string&, SomeStruct*) const { return false; }

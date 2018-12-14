@@ -78,11 +78,10 @@ namespace gamelib
         return true;
     }
 
-    void PropResource::writeToJson(const PropertyHandle& prop, Json::Value& node)   const
+    void PropResource::writeToJson(const PropertyHandle& prop, const BaseResourceHandle* ptr, Json::Value& node)   const
     {
-        auto handle = prop.getAs<BaseResourceHandle>();
-        if (handle)
-            node = handle.getResource()->getPath();
+        if (*ptr)
+            node = ptr->getResource()->getPath();
     }
 
     bool PropResource::drawGui(const PropertyHandle& prop, const std::string& name, BaseResourceHandle* ptr) const
@@ -99,10 +98,9 @@ namespace gamelib
         return true;
     }
 
-    void PropColor::writeToJson(const PropertyHandle& prop, Json::Value& node)   const
+    void PropColor::writeToJson(const PropertyHandle& prop, const sf::Color* ptr, Json::Value& node)   const
     {
-        auto& col = prop.getAs<sf::Color>();
-        gamelib::writeToJson(node, math::Vec4f(col.r, col.g, col.b, col.a));
+        gamelib::writeToJson(node, math::Vec4f(ptr->r, ptr->g, ptr->b, ptr->a));
     }
 
     bool PropColor::drawGui(const PropertyHandle& prop, const std::string& name, sf::Color* ptr) const
