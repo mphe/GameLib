@@ -9,9 +9,9 @@ BaseResourceHandle barLoader(const std::string& fname, ResourceManager* resmgr);
 
 typedef Resource<int, 0x312601c1> TestResource;
 
-int main(int argc, char *argv[])
+int main()
 {
-    ResourceManager mgr("assets");
+    ResourceManager mgr("testassets");
     mgr.registerFileType("test", testLoader);
     mgr.registerFileType("bar", barLoader);
 
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 
     Json::Value val;
     mgr.writeToJson(val);
-    std::cout<<val.toStyledString()<<std::endl;
+    LOG(val.toStyledString());
 
     res.reset();
     mgr.clean();
@@ -52,8 +52,10 @@ int main(int argc, char *argv[])
 
 BaseResourceHandle testLoader(const std::string& fname, ResourceManager* resmgr)
 {
-    std::string testpath = "assets/foo.test";
+    std::string testpath = "testassets/foo.test";
     adaptPath(&testpath);
+    LOG("fname ", fname);
+    LOG("testpath ", testpath);
 
     assert(fname == testpath && "Wrong path");
     return TestResource::create(42).as<BaseResource>();
@@ -61,9 +63,11 @@ BaseResourceHandle testLoader(const std::string& fname, ResourceManager* resmgr)
 
 BaseResourceHandle barLoader(const std::string& fname, ResourceManager* resmgr)
 {
-    std::string testpath = "assets/foo.bar";
+    std::string testpath = "testassets/foo.bar";
     adaptPath(&testpath);
+    LOG("fname ", fname);
+    LOG("testpath ", testpath);
 
     assert(fname == testpath && "Wrong path");
-        return TestResource::create(13).as<BaseResource>();
+    return TestResource::create(13).as<BaseResource>();
 }

@@ -256,7 +256,13 @@ namespace gamelib
             path = _searchpath + boost::filesystem::relative(fname, _searchpath).string();
         else
             path = _searchpath + fname;
+
+        path = boost::filesystem::path(path).lexically_normal().string();
         adaptPath(&path);
+
+        if (!boost::filesystem::exists(path))
+            LOG_WARN("File does not exist locally: ", path);
+
         return path;
     }
 }
