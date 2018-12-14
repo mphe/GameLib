@@ -80,6 +80,7 @@ namespace gamelib
 
             Grid _grid;
             bool _snap;
+            bool _gridontop;
 
             bool _run;
             bool _hidegui;

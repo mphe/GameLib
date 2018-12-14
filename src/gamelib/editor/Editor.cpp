@@ -49,6 +49,7 @@ namespace gamelib
         _drag(false),
         _grid(32, 32),
         _snap(true),
+        _gridontop(false),
         _run(false),
         _hidegui(true)
     { }
@@ -140,21 +141,26 @@ namespace gamelib
 
         if (!_run)
         {
+            if (_snap && !_gridontop)
+                _grid.render(target);
+
             auto scene = getSubsystem<Scene>();
             _cam.apply(target);
             RMFLAG(scene->flags, render_invisible);
             getSubsystem<Scene>()->renderDirect(target);
             ADDFLAG(scene->flags, render_invisible);
+
+            if (_snap && _gridontop)
+                _grid.render(target);
         }
+        else if (!_hidegui)
+            _grid.render(target);
 
         // necessary, otherwise things will disappear randomly
-        getSubsystem<Game>()->getWindow().resetGLStates();
+        // getSubsystem<Game>()->getWindow().resetGLStates();
 
         if (!_run || !_hidegui)
         {
-            if (_snap)
-                _grid.render(target);
-
             if (_currenttool)
                 _currenttool->render(target);
 
@@ -340,6 +346,7 @@ namespace gamelib
             if (ImGui::BeginMenu("Grid"))
             {
                 ImGui::MenuItem("Snap to grid", "G", &_snap);
+                ImGui::MenuItem("Grid on top", nullptr, &_gridontop);
                 if (ImGui::MenuItem("Increase", "Q"))
                     _grid.increase();
                 if (ImGui::MenuItem("Decrease", "E"))
