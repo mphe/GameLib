@@ -89,15 +89,21 @@ namespace gamelib
             gamelib::writeToJson(vertices[Json::ArrayIndex(i)], _polygon.getRaw(i));
     }
 
-    void Polygon::add(const math::Point2f& point)
+    void Polygon::add(const math::Point2f& point, bool raw)
     {
-        _polygon.add(point);
+        if (raw)
+            _polygon.addRaw(point);
+        else
+            _polygon.add(point);
         _markDirty();
     }
 
-    void Polygon::edit(size_t i, const math::Point2f& p)
+    void Polygon::edit(size_t i, const math::Point2f& p, bool raw)
     {
-        _polygon.edit(i, p);
+        if (raw)
+            _polygon.editRaw(i, p);
+        else
+            _polygon.edit(i, p);
         _markDirty();
     }
 

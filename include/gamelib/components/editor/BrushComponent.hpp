@@ -20,8 +20,8 @@ namespace gamelib
             BrushComponent(const std::string& name);
             virtual ~BrushComponent() {};
 
-            auto add(const math::Point2f& p) const            -> void;
-            auto edit(size_t i, const math::Point2f& p) const -> void;
+            auto add(const math::Point2f& p, bool raw = true) const            -> void;
+            auto edit(size_t i, const math::Point2f& p, bool raw = true) const -> void;
             auto remove(size_t i) const                       -> void;
 
             // Not very ECSy but saves a bunch of lines and makes working with

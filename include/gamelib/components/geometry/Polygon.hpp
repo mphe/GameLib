@@ -27,8 +27,8 @@ namespace gamelib
             auto loadFromJson(const Json::Value& node) -> bool;
             auto writeToJson(Json::Value& node)        -> void;
 
-            auto add(const math::Point2f& point)        -> void;
-            auto edit(size_t i, const math::Point2f& p) -> void;
+            auto add(const math::Point2f& point, bool raw = true) -> void;
+            auto edit(size_t i, const math::Point2f& p, bool raw = true) -> void;
             auto clear()            -> void;
             auto size() const       -> size_t;
             auto getPolygon() const -> const math::BasePolygon<float>&;

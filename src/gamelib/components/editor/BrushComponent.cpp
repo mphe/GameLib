@@ -17,17 +17,17 @@ namespace gamelib
         _shape(nullptr)
     { }
 
-    void BrushComponent::add(const math::Point2f& p) const
+    void BrushComponent::add(const math::Point2f& p, bool raw) const
     {
-        if (getBrushPolygon()->size() == 0)
-            getBrushPolygon()->setPosition(p);
-        getBrushPolygon()->add(p);
+        // if (getBrushPolygon()->size() == 0)
+        //     getBrushPolygon()->setPosition(p);
+        getBrushPolygon()->add(p, raw);
         regenerate();
     }
 
-    void BrushComponent::edit(size_t i, const math::Point2f& p) const
+    void BrushComponent::edit(size_t i, const math::Point2f& p, bool raw) const
     {
-        getBrushPolygon()->edit(i, p);
+        getBrushPolygon()->edit(i, p, raw);
         regenerate();
     }
 

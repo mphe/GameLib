@@ -33,9 +33,9 @@ namespace gamelib
         if (brush && _selected != (size_t)-1)
         {
             if (_snappoint)
-                brush->edit(_selected, snap(brush->getBrushPolygon()->getPolygon(), EditorShared::getMouse(), _selected));
+                brush->edit(_selected, snap(brush->getBrushPolygon()->getPolygon(), EditorShared::getMouse(), _selected), false);
             else
-                brush->edit(_selected, EditorShared::getMouseSnapped());
+                brush->edit(_selected, EditorShared::getMouseSnapped(), false);
         }
     }
 

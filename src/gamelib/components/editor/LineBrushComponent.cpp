@@ -12,9 +12,7 @@ namespace gamelib
         _line(nullptr),
         _linewidth(32)
     {
-        auto widthSetter = +[](int*, const int* val, LineBrushComponent* self) { self->setWidth(*val); };
-
-        _props.registerProperty("linewidth", _linewidth, widthSetter, this);
+        _props.registerProperty("linewidth", _linewidth, PROP_METHOD(int, setWidth), this);
     }
 
     void LineBrushComponent::setWidth(int width)
@@ -120,13 +118,13 @@ namespace gamelib
 
         auto& linepol = _line->getPolygon();
         _pol->clear();
-        _pol->setScale(1, 1);
-        _pol->setPosition(0, 0);
+        // _pol->setScale(1, 1);
+        // _pol->setPosition(0, 0);
         linepol.foreachSegment(cb, true);
         dir = lastd.right().normalized() * (_linewidth / 2.0);
         _pol->add(linepol.getRaw(-1) - dir);
         _pol->add(linepol.getRaw(-1) + dir);
 
-        _shape->fetch(_pol->getPolygon());
+        _shape->fetch(_pol->getPolygon(), true);
     }
 }

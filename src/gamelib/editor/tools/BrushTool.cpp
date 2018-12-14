@@ -41,34 +41,25 @@ namespace gamelib
     void BrushTool::onMousePressed()
     {
         auto selected = _getIfSame();
+        auto& snapped = EditorShared::getMouseSnapped();
 
         if (selected)
         {
             auto& pol = selected->getBrushPolygon()->getPolygon();
-            math::Point2f p;
-
-            if (_snappoint)
-                p = snap(pol, EditorShared::getMouse());
-            else
-                p = EditorShared::getMouseSnapped();
+            math::Point2f p = _snappoint ? snap(pol, EditorShared::getMouse()) : snapped;
 
             if (_type == Rect && pol.size() == 1)
             {
                 auto start = pol.get(0);
-                // auto diff = p.asVector() - start.asVector();
-                selected->add(math::Point2f(start.x, p.y));
-                selected->add(math::Point2f(p.x, start.y));
-                // selected->add(math::Point2f(start.x, start.y + diff.y));
-                // selected->add(math::Point2f(start.x + diff.x, start.y));
-                // selected->add(start + diff);
+                selected->add(math::Point2f(start.x, p.y), false);
+                selected->add(math::Point2f(p.x, start.y), false);
             }
-            selected->add(p);
+            selected->add(p, false);
         }
         else
         {
-            auto brush = getEntity(createEntity(brushEntities[_type]));
+            auto brush = getEntity(createEntity(brushEntities[_type], snapped.x, snapped.y));
             _apply(brush->findByType<BrushComponent>());
-            brush->getTransform().setPosition(EditorShared::getMouseSnapped());
             EditorShared::getSelectTool().select(brush);
             onMousePressed();
         }
