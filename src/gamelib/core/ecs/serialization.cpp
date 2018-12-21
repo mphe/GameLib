@@ -109,8 +109,15 @@ namespace gamelib
 
         if (node.isMember("components"))
         {
+            struct Tmp
+            {
+                Component* comp;
+                const Json::Value* node;
+            };
+
             auto& comps = node["components"];
             auto factory = getSubsystem<EntityFactory>();
+            std::vector<Tmp> loadlist;
 
             if (!comps.isObject())
             {
@@ -135,12 +142,21 @@ namespace gamelib
                     continue;
                 }
 
+                // Collect component pointers and their json nodes.
+                // Since components might need their entity or other components during load time,
+                // one can not load them immediately after finding/creating in this loop.
+                // Instead we first collect component pointers and their respective json nodes,
+                // creating new components if necessary.
+                // In a second step, we loop through the collected data and call loadFromJson()
+                // for each component.
+                // This assures that the whole component list is present and an entity is assigned
+                // when a component is loaded.
+
                 bool found = false;
-                for (auto& i : ent._components)
+                for (auto& i : ent)
                     if (i.ptr->getName() == name && i.id == id)
                     {
-                        if (!i.ptr->loadFromJson(*it))
-                            LOG_ERROR("Failed to load config in entity ", ent.getName(), " for component ", it.key().asString());
+                        loadlist.push_back({ i.ptr.get(), &(*it) });
                         found = true;
                         break;
                     }
@@ -154,17 +170,29 @@ namespace gamelib
                         auto comp = factory->createComponent(name);
                         if (comp)
                         {
-                            if (comp->loadFromJson(*it))
+                            if (ent.add(std::move(comp)))
                             {
-                                ent.add(std::move(comp));
                                 ent._components.back().id = id;
+                                loadlist.push_back({ ent._components.back().ptr.get(), &(*it) });
                             }
-                            else
-                                LOG_ERROR("Failed to load component ", comp->getName());
                         }
+                        else
+                            LOG_ERROR("Failed to create component ", comp->getName());
                     }
                 }
             }
+
+            // Load configs
+            // Don't remove components whose load failed, because code might rely on them
+            for (auto& i : loadlist)
+                if (!i.comp->loadFromJson(*i.node))
+                    LOG_ERROR("Failed to load config in entity ", ent.getName(), " for component ", i.comp->getName());
+
+            // Do another refresh after all components have their configs loaded.
+            // Makes sure that components that search (in their _refresh function)
+            // for another component that fits certain criteria will find it even
+            // if the criteria is met after loading.
+            ent._refresh();
         }
 
         return true;
