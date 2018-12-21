@@ -6,8 +6,8 @@ namespace gamelib
         PropertyHandle(nullptr, nullptr, nullptr)
     { }
 
-    PropertyHandle::PropertyHandle(void* var) :
-        PropertyHandle(var, nullptr, nullptr)
+    PropertyHandle::PropertyHandle(void* var, void* data) :
+        PropertyHandle(var, nullptr, data)
     { }
 
     PropertyHandle::PropertyHandle(const void* var, PropSetterCallback setter, void* self) :
@@ -33,5 +33,10 @@ namespace gamelib
     void* PropertyHandle::getMutableOrNull() const
     {
         return isSetter() ? nullptr : _ptr;
+    }
+
+    void* PropertyHandle::getData() const
+    {
+        return _self;
     }
 }

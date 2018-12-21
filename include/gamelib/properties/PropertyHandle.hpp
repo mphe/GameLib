@@ -17,13 +17,14 @@ namespace gamelib
     {
         public:
             PropertyHandle();
-            PropertyHandle(void* var);
+            PropertyHandle(void* var, void* data = nullptr);
             PropertyHandle(const void* var, PropSetterCallback setter, void* self);
 
             auto isSetter() const    -> bool;
 
             auto get() const              -> const void*;
             auto getMutableOrNull() const -> void*;
+            auto getData() const          -> void*;
 
             template <typename T>
             auto getAs() const -> const T&

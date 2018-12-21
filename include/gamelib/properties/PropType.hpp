@@ -63,7 +63,7 @@ namespace gamelib
         // Make a temporary value and handle to provide a pointer that can be accessed without
         // worrying if the property needs a setter.
         T tmp = prop.getAs<T>();
-        PropertyHandle tmphandle(&tmp, nullptr, nullptr);
+        PropertyHandle tmphandle(&tmp, prop.getData());
         tmphandle.hints = prop.hints;
         tmphandle.serializer = prop.serializer;
         tmphandle.min = prop.min;
@@ -85,7 +85,7 @@ namespace gamelib
 
         // Same as in loadFromJson
         T tmp = prop.getAs<T>();
-        PropertyHandle tmphandle(&tmp, nullptr, nullptr);
+        PropertyHandle tmphandle(&tmp, prop.getData());
         tmphandle.hints = prop.hints;
         tmphandle.serializer = prop.serializer;
         tmphandle.min = prop.min;

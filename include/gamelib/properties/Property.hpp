@@ -28,17 +28,17 @@ namespace gamelib
 
             auto unregisterProperty(const std::string& name) -> void;
 
-            template <typename T>
+            template <typename T, typename U = void>
             void registerProperty(const std::string& name, T& prop,
-                    int min = 0, int max = 0, const char* const* hints = nullptr);
+                    int min = 0, int max = 0, const char* const* hints = nullptr, U* data = nullptr);
 
             template <typename T, typename U>
             void registerProperty(const std::string& name, const T& prop, NicePropSetterCallback<T, U> setter, U* self,
                     int min = 0, int max = 0, const char* const* hints = nullptr);
 
-            template <typename T>
+            template <typename T, typename U = void>
             void registerProperty(const std::string& name, T& prop, const IPropType* type,
-                    int min = 0, int max = 0, const char* const* hints = nullptr);
+                    int min = 0, int max = 0, const char* const* hints = nullptr, U* data = nullptr);
 
             template <typename T, typename U>
             void registerProperty(const std::string& name, const T& prop, NicePropSetterCallback<T, U> setter, U* self, const IPropType* type,
@@ -100,10 +100,10 @@ namespace gamelib
             LOG_WARN("Unknown property: ", name);
     }
 
-    template <typename T>
-    void PropertyContainer::registerProperty(const std::string& name, T& prop, int min, int max, const char* const* hints)
+    template <typename T, typename U>
+    void PropertyContainer::registerProperty(const std::string& name, T& prop, int min, int max, const char* const* hints, U* data)
     {
-        _registerProperty(name, &prop, nullptr, nullptr, categorizeProperty(prop), min, max, hints);
+        _registerProperty(name, &prop, nullptr, data, categorizeProperty(prop), min, max, hints);
     }
 
     template <typename T, typename U>
@@ -112,10 +112,10 @@ namespace gamelib
         _registerProperty(name, &prop, (PropSetterCallback)setter, static_cast<void*>(self), categorizeProperty(prop), min, max, hints);
     }
 
-    template <typename T>
-    void PropertyContainer::registerProperty(const std::string& name, T& prop, const IPropType* type, int min, int max, const char* const* hints)
+    template <typename T, typename U>
+    void PropertyContainer::registerProperty(const std::string& name, T& prop, const IPropType* type, int min, int max, const char* const* hints, U* data)
     {
-        _registerProperty(name, &prop, nullptr, nullptr, type, min, max, hints);
+        _registerProperty(name, &prop, nullptr, data, type, min, max, hints);
     }
 
     template <typename T, typename U>
