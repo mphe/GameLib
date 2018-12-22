@@ -9,13 +9,26 @@
 * inputBitflags() exclude list
 * replace std::unordered_map with a better implementation
 * return nullptr when dereferencing BaseResource instead of using static_assert
-* shorten/rename component names
-  * AABBComponent -> AABB
-  * PolygonShape -> BrushRenderer
-* include origin for sprites in ActorComponent
-* fix scale in ActorComponent to match the actual max scale and not 1
 * font resource
 * implement own frame capping mechanic to allow better time measurement
+* option to specify base entity in entity configs
+
+* serialization of resource handles yield paths relative to cwd rather than searchpath
+
+* find a way to inform references about component removal
+  1. somewhere a pointer to a component is stored
+  2. the component gets deleted
+  3. the reference holder segfaults on next access
+  * could be done by a weak_ptr equivalent for unique_ptr
+    * store components as shared_ptr?
+  * check validity in \_refresh()
+    * wouldn't work if the reference is not held by a component or it references a component from another entity
+  * use a ComponentRemoved event
+    * callback handler + pointer to property
+
+* correct default values
+  * camera tracker
+    * interval -> post post frame
 
 * Camera rewrite
   * base Camera on sf::View
@@ -57,6 +70,9 @@
     * can be passed (as unique_ptr/shared_ptr) to other objects (e.g. Camera)
     * can be combined with other motion objects to create complexer motions, e.g. SinMotion + LinearMotion
     * e.g. LinearMotion (move in a direction), TargetMove (move from a to b), ...
+  * Split Updatable in Updatable and BaseUpdatable
+    * BaseUpdatable <- Updatable
+    * BaseUpdatable <- PhysicsComponent
 
 * Support rendering to OSB in Game class
 
@@ -79,10 +95,6 @@
   * recursively load-once resource files
   * write loaders for various config files
 
-* Split Updatable in Updatable and BaseUpdatable
-  * BaseUpdatable <- Updatable
-  * BaseUpdatable <- PhysicsComponent
-
 * EntityFactory
   * handle json return values
   * query ResourceManager if entity name not found
@@ -99,14 +111,16 @@
   * isKeyDown/isMouseDown should check directly instead of going through getKeyState()
 
 * components
-  * migrate components to property system
-    * BrushComponent
-    * ...
   * component flags:
     * unused (strip component in export)
     * child (e.g. SpriteComponent instatiates a child UpdateComponent)
     * hidden (add to entity but hide to the outside (useful for auto generated editor components))
     * custom (load component directly from json (useful when adding components in the editor that aren't part of the entity))
+  * shorten/rename component names
+    * AABBComponent -> AABB
+    * PolygonShape -> BrushRenderer
+  * include origin for sprites in ActorComponent
+  * fix scale in ActorComponent to match the actual max scale and not 1
 
 * math
   * Generic polygon functions that accept pointers and offsets to compute polygon stuff
@@ -176,6 +190,7 @@
   * ConstPropertyHandle
     * use in BasePropType loadFromJson, drawGui
   * remove custom resource related register functions
+  * rename Property.hpp/cpp to PropertyContainer.hpp/cpp
 
 * log
   * warn if null
