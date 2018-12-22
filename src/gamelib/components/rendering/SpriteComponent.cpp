@@ -82,7 +82,7 @@ namespace gamelib
         return success;
     }
 
-    void SpriteComponent::writeToJson(Json::Value& node)
+    void SpriteComponent::writeToJson(Json::Value& node) const
     {
         RenderComponent::writeToJson(node);
     }

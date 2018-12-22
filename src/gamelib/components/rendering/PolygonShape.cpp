@@ -110,7 +110,7 @@ namespace gamelib
         return true;
     }
 
-    void PolygonShape::writeToJson(Json::Value& node)
+    void PolygonShape::writeToJson(Json::Value& node) const
     {
         RenderComponent::writeToJson(node);
 

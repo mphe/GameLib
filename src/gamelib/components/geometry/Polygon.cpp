@@ -79,7 +79,7 @@ namespace gamelib
         return true;
     }
 
-    void Polygon::writeToJson(Json::Value& node)
+    void Polygon::writeToJson(Json::Value& node) const
     {
         CollisionComponent::writeToJson(node);
         node["type"] = _polygon.type;

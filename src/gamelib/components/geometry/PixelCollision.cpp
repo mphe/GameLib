@@ -179,7 +179,7 @@ namespace gamelib
         return true;
     }
 
-    void PixelCollision::writeToJson(Json::Value& node)
+    void PixelCollision::writeToJson(Json::Value& node) const
     {
         CollisionComponent::writeToJson(node);
 

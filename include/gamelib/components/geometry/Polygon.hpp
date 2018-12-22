@@ -25,7 +25,7 @@ namespace gamelib
             auto getBBox() const -> const math::AABBf&;
 
             auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node)        -> void;
+            auto writeToJson(Json::Value& node) const  -> void;
 
             auto add(const math::Point2f& point, bool raw = true) -> void;
             auto edit(size_t i, const math::Point2f& p, bool raw = true) -> void;

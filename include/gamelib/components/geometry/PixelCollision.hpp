@@ -30,7 +30,7 @@ namespace gamelib
             auto getBBox() const     -> const math::AABBf&;
 
             auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node)        -> void;
+            auto writeToJson(Json::Value& node) const  -> void;
 
             // Queries the ResourceManager or falls back to normal loading
             auto loadImageFromFile(const std::string& fname)       -> bool;

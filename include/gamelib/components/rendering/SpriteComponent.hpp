@@ -40,7 +40,7 @@ namespace gamelib
             auto getTexture() const    -> TextureResource::Handle;
 
             auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node)        -> void;
+            auto writeToJson(Json::Value& node) const  -> void;
 
             auto render(sf::RenderTarget& target, sf::RenderStates states_) const -> void;
 
