@@ -55,6 +55,7 @@ set(GAMELIB_SOURCES
     properties/Property.cpp
     properties/PropertyHandle.cpp
     properties/basictypes.cpp
+    properties/PropComponent.cpp
 
     imgui/inputs.cpp
     imgui/buttons.cpp
