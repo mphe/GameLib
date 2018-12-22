@@ -175,7 +175,7 @@ namespace gamelib
         auto cam = findCamera(name);
         if (cam)
         {
-            LOG_WARN("Layer already exists: ", name, " -> using existing one");
+            LOG_WARN("Camera already exists: ", name, " -> using existing one");
             return *cam;
         }
 
@@ -304,7 +304,7 @@ namespace gamelib
 
                 // Carry cameras over
                 for (auto& i : tmpcams)
-                    if (i->getName() == name)
+                    if (i && i->getName() == name)
                     {
                         _cams.push_back(std::move(i));
                         break;
