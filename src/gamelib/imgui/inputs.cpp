@@ -2,6 +2,7 @@
 #include "gamelib/imgui/resources.hpp"
 #include "gamelib/properties/Property.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
+#include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/components/RenderComponent.hpp"
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/core/rendering/Scene.hpp"
@@ -213,5 +214,57 @@ namespace gamelib
             }
 
         inputProperties(comp.getProperties());
+    }
+
+    bool inputComponentSelect(const std::string& name, Component** ptr, const Entity& ent, unsigned int filter, int numfilters, const char* const* namefilters)
+    {
+        struct Cache
+        {
+            Component* ptr;
+            std::string name;
+        };
+
+        std::vector<Cache> cache;
+        int current = -1;
+
+        for (auto& i : ent)
+        {
+            if (filter != 0 && i.ptr->getID() != filter)
+                continue;
+
+            if (numfilters > 0 && namefilters)
+            {
+                bool skip = true;
+                for (int f = 0; f < numfilters; ++f)
+                    if (i.ptr->getName() == namefilters[f])
+                    {
+                        skip = false;
+                        break;
+                    }
+
+                if (skip)
+                    continue;
+            }
+
+            if (i.ptr.get() == *ptr)
+                current = cache.size();
+            cache.push_back({ i.ptr.get(), generateName(i.ptr->getName(), i.id) });
+        }
+
+        auto getter = [](void* data, int index, const char** str) {
+            auto& cache_ = (*static_cast<decltype(cache)*>(data));
+            if (index < 0 || index >= cache_.size())
+                return false;
+            *str = cache_[index].name.c_str();
+            return true;
+        };
+
+        if (ImGui::Combo(name.c_str(), &current, getter, &cache, cache.size()))
+        {
+            *ptr = cache[current].ptr;
+            return true;
+        }
+
+        return false;
     }
 }
