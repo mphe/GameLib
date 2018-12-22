@@ -9,6 +9,9 @@
         "PolygonShape": {
             "mapping": 0
         },
-        "BrushComponent": { }
+        "BrushComponent": {
+            "polygon": "PolygonCollision",
+            "shape": "PolygonShape"
+        }
     }
 }

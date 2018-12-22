@@ -2,6 +2,7 @@
 #include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/components/rendering/PolygonShape.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
+#include "gamelib/properties/PropComponent.hpp"
 
 namespace gamelib
 {
@@ -12,7 +13,13 @@ namespace gamelib
         _line(nullptr),
         _linewidth(32)
     {
+        auto cb = +[](Polygon** var, Polygon* const* val, LineBrushComponent* self) {
+            *var = *val;
+            self->regenerate();
+        };
+
         _props.registerProperty("linewidth", _linewidth, PROP_METHOD(int, setWidth), this);
+        registerProperty(_props, "line", _line, *this, cb);
     }
 
     void LineBrushComponent::setWidth(int width)
@@ -36,27 +43,27 @@ namespace gamelib
 
     void LineBrushComponent::_refresh()
     {
-        BrushComponent::_refresh();
-
-        _line = nullptr;
-        getEntity()->findAllByName<Polygon>([&](Polygon* pol) {
-                if (pol->getPolygon().type == math::LineStrip)
-                {
-                    if (_line != pol)
-                    {
-                        _line = pol;
-                        regenerate();
-                    }
-                    return true;
-                }
-                return false;
-            });
-
+        // BrushComponent::_refresh();
+        //
+        // _line = nullptr;
+        // getEntity()->findAllByName<Polygon>([&](Polygon* pol) {
+        //         if (pol->getPolygon().type == math::LineStrip)
+        //         {
+        //             if (_line != pol)
+        //             {
+        //                 _line = pol;
+        //                 regenerate();
+        //             }
+        //             return true;
+        //         }
+        //         return false;
+        //     });
+        //
     }
 
     void LineBrushComponent::regenerate() const
     {
-        if (!_shape || !_pol || !_line || _line->getPolygon().size() == 0)
+        if (!_shape || !_pol || !_line || _line->size() == 0)
             return;
 
         math::Vec2f lastd, dir;

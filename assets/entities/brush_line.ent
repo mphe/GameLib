@@ -13,6 +13,10 @@
             "flags": 2,
             "Normals": 1
         },
-        "LineBrushComponent": { }
+        "LineBrushComponent": {
+            "polygon": "PolygonCollision#2",
+            "shape": "PolygonShape",
+            "line": "PolygonCollision#1"
+        }
     }
 }
