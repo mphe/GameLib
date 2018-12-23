@@ -24,9 +24,6 @@ namespace gamelib
             auto handle = createEntity("brush_sprite", pos.x, pos.y);
             auto sprite = getEntity(handle)->findByName<SpriteComponent>();
             sprite->change(_sprite);
-            auto col = getEntity(handle)->findByName<AABB>();
-            auto size = sprite->getLocalBounds().size;
-            col->setSize(size);
             EditorShared::getSelectTool().select(handle);
         }
     }

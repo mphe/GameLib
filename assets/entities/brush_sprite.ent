@@ -1,10 +1,10 @@
 {
     "name": "brush_sprite",
     "components": {
-        "AABBCollision": {
-            "flags": 2
-        },
         "SpriteComponent": { },
-        "BrushComponent": { }
+        "AABBMask": {
+            "component": "SpriteComponent",
+            "flags": 2
+        }
     }
 }
