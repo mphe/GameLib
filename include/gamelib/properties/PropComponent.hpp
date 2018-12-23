@@ -26,28 +26,49 @@ namespace gamelib
 
     namespace detail
     {
-        template <typename T, typename = int>
-        struct has_name : std::false_type { };
+        class general_ {};
+        class special_ : public general_ {};
 
         template <typename T>
-        struct has_name<T, decltype((void) T::name, 0)> : std::true_type { };
+        constexpr bool has_name(general_) { return false; };
+
+        template <typename T, typename = decltype(T::name)>
+        constexpr bool has_name(special_) { return true; };
+
+        template <typename T>
+        constexpr bool has_name() { return has_name<T>(special_()); }
+
+        template <typename T>
+        constexpr bool has_id(general_) { return false; };
+
+        template <typename T, typename = decltype(T::id)>
+        constexpr bool has_id(special_) { return true; };
+
+        template <typename T>
+        constexpr bool has_id() { return has_id<T>(special_()); }
     }
 
 
     template <typename T, typename U>
-    void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, ComponentPropSetter<T, U> setter, unsigned int filter, int max = 0, const char* const* filternames = nullptr);
+    void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, NicePropSetterCallback<T*, U> setter, unsigned int filter, int max = 0, const char* const* filternames = nullptr);
 
-    template <typename T, typename U, typename std::enable_if<detail::has_name<T>::value, int>::type = 0>
-    void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, ComponentPropSetter<T, U> setter = nullptr)
+    template <typename T, typename U, typename std::enable_if<detail::has_name<T>(), int>::type = 0>
+    void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, NicePropSetterCallback<T*, U> setter = nullptr)
     {
         static constexpr const char* hints[] = { T::name };
         registerProperty(props, name, prop, self, setter, 0, 1, hints);
     }
 
-    template <typename T, typename U, typename std::enable_if<!detail::has_name<T>::value, int>::type = 0>
-    void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, ComponentPropSetter<T, U> setter = nullptr)
+    template <typename T, typename U, typename std::enable_if<!detail::has_name<T>() && detail::has_id<T>(), int>::type = 0>
+    void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, NicePropSetterCallback<T*, U> setter = nullptr)
     {
         registerProperty(props, name, prop, self, setter, T::id);
+    }
+
+    template <typename T, typename U, typename std::enable_if<!detail::has_id<T>(), int>::type = 0>
+    void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, NicePropSetterCallback<T*, U> setter = nullptr)
+    {
+        registerProperty(props, name, prop, self, setter, 0);
     }
 }
 
@@ -56,7 +77,7 @@ namespace gamelib
 namespace gamelib
 {
     template <typename T, typename U>
-    void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, ComponentPropSetter<T, U> setter, unsigned int filter, int max, const char* const* filternames)
+    void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, NicePropSetterCallback<T*, U> setter, unsigned int filter, int max, const char* const* filternames)
     {
         static_assert(std::is_base_of<Component, T>(), "Not a component");
         static_assert(std::is_base_of<Component, U>(), "Callback data must be the calling component or the component to search in");
