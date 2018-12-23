@@ -25,10 +25,6 @@
   * use a ComponentRemoved event
     * callback handler + pointer to property
 
-* correct default values
-  * camera tracker
-    * interval -> post post frame
-
 * Camera rewrite
   * base Camera on sf::View
   * give Camera an active flag
