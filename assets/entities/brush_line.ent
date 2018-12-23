@@ -15,7 +15,7 @@
         },
         "LineBrushComponent": {
             "polygon": "PolygonCollision#2",
-            "shape": "PolygonShape",
+            "shape": "PolygonShape#1",
             "line": "PolygonCollision#1"
         }
     }

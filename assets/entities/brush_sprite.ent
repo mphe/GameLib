@@ -3,7 +3,7 @@
     "components": {
         "SpriteComponent": { },
         "AABBMask": {
-            "component": "SpriteComponent",
+            "component": "SpriteComponent#1",
             "flags": 2
         }
     }

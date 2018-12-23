@@ -10,8 +10,8 @@
             "mapping": 0
         },
         "BrushComponent": {
-            "polygon": "PolygonCollision",
-            "shape": "PolygonShape"
+            "polygon": "PolygonCollision#1",
+            "shape": "PolygonShape#1"
         }
     }
 }

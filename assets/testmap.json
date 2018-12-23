@@ -34,10 +34,6 @@
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "polygon" : "PolygonCollision#1",
-               "shape" : "PolygonShape#1"
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -77,8 +73,7 @@
       {
          "components" : {
             "LineBrushComponent#1" : {
-               "linewidth" : 64,
-               "shape" : "PolygonShape#1"
+               "linewidth" : 64
             },
             "PolygonCollision#1" : {
                "flags" : 1,
@@ -204,10 +199,6 @@
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "polygon" : "PolygonCollision#1",
-               "shape" : "PolygonShape#1"
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "flags" : 7,
@@ -235,10 +226,6 @@
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "polygon" : "PolygonCollision#1",
-               "shape" : "PolygonShape#1"
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "flags" : 7,
@@ -266,9 +253,6 @@
       },
       {
          "components" : {
-            "LineBrushComponent#1" : {
-               "shape" : "PolygonShape#1"
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -303,9 +287,6 @@
       },
       {
          "components" : {
-            "LineBrushComponent#1" : {
-               "shape" : "PolygonShape#1"
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -340,9 +321,6 @@
       },
       {
          "components" : {
-            "LineBrushComponent#1" : {
-               "shape" : "PolygonShape#1"
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -381,9 +359,6 @@
       },
       {
          "components" : {
-            "LineBrushComponent#1" : {
-               "shape" : "PolygonShape#1"
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -433,8 +408,7 @@
       {
          "components" : {
             "LineBrushComponent#1" : {
-               "linewidth" : 64,
-               "shape" : "PolygonShape#1"
+               "linewidth" : 64
             },
             "PolygonCollision#1" : {
                "vertices" : [
@@ -508,9 +482,6 @@
       },
       {
          "components" : {
-            "LineBrushComponent#1" : {
-               "shape" : "PolygonShape#1"
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -559,10 +530,6 @@
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "polygon" : "PolygonCollision#1",
-               "shape" : "PolygonShape#1"
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "flags" : 7,
@@ -590,10 +557,6 @@
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "polygon" : "PolygonCollision#1",
-               "shape" : "PolygonShape#1"
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "flags" : 7,
@@ -622,8 +585,7 @@
       {
          "components" : {
             "LineBrushComponent#1" : {
-               "linewidth" : 64,
-               "shape" : "PolygonShape#1"
+               "linewidth" : 64
             },
             "PolygonCollision#1" : {
                "flags" : 1,
@@ -694,10 +656,6 @@
       },
       {
          "components" : {
-            "BrushComponent#1" : {
-               "polygon" : "PolygonCollision#1",
-               "shape" : "PolygonShape#1"
-            },
             "PolygonCollision#1" : {
                "vertices" : [
                   [ 0, 0 ],
@@ -729,8 +687,7 @@
       {
          "components" : {
             "LineBrushComponent#1" : {
-               "linewidth" : 64,
-               "shape" : "PolygonShape#1"
+               "linewidth" : 64
             },
             "PolygonCollision#1" : {
                "vertices" : [
@@ -805,8 +762,7 @@
       {
          "components" : {
             "LineBrushComponent#1" : {
-               "linewidth" : 64,
-               "shape" : "PolygonShape#1"
+               "linewidth" : 64
             },
             "PolygonCollision#1" : {
                "vertices" : [
@@ -881,8 +837,7 @@
       {
          "components" : {
             "LineBrushComponent#1" : {
-               "linewidth" : 64,
-               "shape" : "PolygonShape#1"
+               "linewidth" : 64
             },
             "PolygonCollision#1" : {
                "vertices" : [
@@ -957,8 +912,7 @@
       {
          "components" : {
             "LineBrushComponent#1" : {
-               "linewidth" : 64,
-               "shape" : "PolygonShape#1"
+               "linewidth" : 64
             },
             "PolygonCollision#1" : {
                "flags" : 1,
@@ -1028,9 +982,6 @@
       },
       {
          "components" : {
-            "LineBrushComponent#1" : {
-               "shape" : "PolygonShape#1"
-            },
             "PolygonCollision#1" : {
                "Normals" : 0,
                "vertices" : [
@@ -1066,8 +1017,7 @@
       {
          "components" : {
             "LineBrushComponent#1" : {
-               "linewidth" : 64,
-               "shape" : "PolygonShape#1"
+               "linewidth" : 64
             },
             "PolygonCollision#1" : {
                "vertices" : [
@@ -1142,8 +1092,7 @@
       {
          "components" : {
             "LineBrushComponent#1" : {
-               "linewidth" : 64,
-               "shape" : "PolygonShape#1"
+               "linewidth" : 64
             },
             "PolygonCollision#1" : {
                "vertices" : [
@@ -1218,8 +1167,7 @@
       {
          "components" : {
             "LineBrushComponent#1" : {
-               "linewidth" : 64,
-               "shape" : "PolygonShape#1"
+               "linewidth" : 64
             },
             "PolygonCollision#1" : {
                "vertices" : [
@@ -1293,9 +1241,6 @@
       },
       {
          "components" : {
-            "AABBCollision#1" : {
-               "size" : [ 206, 216 ]
-            },
             "SpriteComponent#1" : {
                "renderopts" : {
                   "depth" : 2,
@@ -1315,9 +1260,6 @@
       },
       {
          "components" : {
-            "AABBCollision#1" : {
-               "size" : [ 206, 216 ]
-            },
             "SpriteComponent#1" : {
                "renderopts" : {
                   "layer" : "bg",
@@ -1334,9 +1276,6 @@
       },
       {
          "components" : {
-            "AABBCollision#1" : {
-               "size" : [ 206, 216 ]
-            },
             "SpriteComponent#1" : {
                "renderopts" : {
                   "depth" : 3,
@@ -1353,9 +1292,6 @@
       },
       {
          "components" : {
-            "AABBCollision#1" : {
-               "size" : [ 157, 178 ]
-            },
             "SpriteComponent#1" : {
                "renderopts" : {
                   "depth" : -4,

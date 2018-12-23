@@ -24,6 +24,8 @@ namespace gamelib
         if (node.isString())
         {
             name = node.asString();
+            if (name.find('#') == std::string::npos)
+                LOG_WARN("Every component reference should have an ID, otherwise diffing might not work as expected!");
             id = extractID(&name);
         }
         else if (node.isArray() && node.size() >= 1)

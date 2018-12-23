@@ -14,6 +14,25 @@
 * option to specify base entity in entity configs
 * use override keyword
 
+* remove ambiguous component referencing
+  1. use a component (A) with PropComponent
+  2. use another component (B)
+  3. in the entity cfg, reference B in A by using "B" instead of "B#1"
+  4. save game
+  5. the output contains the reference, eventhough nothing changed
+
+  * Component#1 == Component
+  * but during diffing or normalizing phase, they are treated as different
+  * this leads to incorrect diffing or normalizing configs, because it can't normalize the user written part
+  * results in the reference (Component#1) being written to json because it differs from user config (Component)
+
+  * possible solutions
+    * introduce another virtual function to IPropType to normalize a given json
+      * json normalize function calls the IPropType::normalize function if possible to normalize the user part
+    * force usage of Component#ID notation and drop support for short notation
+    * use a new naming scheme for components that removes ambiguity
+
+
 * find a way to inform references about component removal
   1. somewhere a pointer to a component is stored
   2. the component gets deleted
@@ -192,5 +211,5 @@
   * assert
 
 
-<!-- vim: tabstop=2 shiftwidth=2 
+<!-- vim: tabstop=2 shiftwidth=2 wrap
 -->
