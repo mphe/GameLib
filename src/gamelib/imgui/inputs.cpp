@@ -102,6 +102,11 @@ namespace gamelib
     {
         static int mode = 0;
 
+        bool any = trans.isMovable() || trans.isScalable() || trans.isRotatable();
+
+        if (!any)
+            return false;
+
         TransformData data;
         bool changed = false;
 

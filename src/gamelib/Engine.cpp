@@ -4,6 +4,7 @@
 #include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/components/geometry/AABB.hpp"
 #include "gamelib/components/geometry/PixelCollision.hpp"
+#include "gamelib/components/geometry/AABBMask.hpp"
 #include "gamelib/components/update/QPhysics.hpp"
 #include "gamelib/components/update/QController.hpp"
 #include "gamelib/components/update/CameraTracker.hpp"
@@ -21,6 +22,7 @@ namespace gamelib
         _REGISTER_COMPONENT(Polygon);
         _REGISTER_COMPONENT(AABB);
         _REGISTER_COMPONENT(PixelCollision);
+        _REGISTER_COMPONENT(AABBMask);
         _REGISTER_COMPONENT(QPhysics);
         _REGISTER_COMPONENT(QConfig);
         _REGISTER_COMPONENT(QController);

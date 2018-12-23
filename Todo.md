@@ -56,7 +56,6 @@
   * Render parent like GroupTransform but for RenderComponents
   * ScopedIterator
   * Background entity
-  * MaskComponent
   * PhysicsBrush
   * Motion
     * base class to describe different motions
