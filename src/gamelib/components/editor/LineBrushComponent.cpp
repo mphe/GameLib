@@ -18,7 +18,7 @@ namespace gamelib
             self->regenerate();
         };
 
-        _props.registerProperty("linewidth", _linewidth, PROP_METHOD(int, setWidth), this);
+        _props.registerProperty("linewidth", _linewidth, PROP_METHOD(_linewidth, setWidth), this);
         registerProperty(_props, "line", _line, *this, cb);
     }
 

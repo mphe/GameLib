@@ -15,9 +15,9 @@ namespace gamelib
         _vertices.setPrimitiveType(sf::TriangleStrip);
 
         _props.registerProperty("texture", texture);
-        _props.registerProperty("texoffset", _texoffset, PROP_METHOD(math::Vec2f, setTexOffset), this);
-        _props.registerProperty("texscale", _texscale, PROP_METHOD(math::Vec2f, setTexScale), this);
-        _props.registerProperty("mapping", _mapping, PROP_METHOD(MappingMethod, setMappingMethod), this, 0, NumMappingMethods, mapping_strings);
+        _props.registerProperty("texoffset", _texoffset, PROP_METHOD(_texoffset, setTexOffset), this);
+        _props.registerProperty("texscale", _texscale, PROP_METHOD(_texscale, setTexScale), this);
+        _props.registerProperty("mapping", _mapping, PROP_METHOD(_mapping, setMappingMethod), this, 0, NumMappingMethods, mapping_strings);
         registerDummyProperty(_props, "vertices");
     }
 

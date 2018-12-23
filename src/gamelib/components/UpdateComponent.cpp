@@ -8,7 +8,7 @@ namespace gamelib
         _hook(hook)
     {
         _props.registerProperty("interval", interval);
-        _props.registerProperty("hook", _hook, PROP_METHOD(UpdateHookType, setHook), this, 0, NumFrameHooks, str_framehooks);
+        _props.registerProperty("hook", _hook, PROP_METHOD(_hook, setHook), this, 0, NumFrameHooks, str_framehooks);
     }
 
     bool UpdateComponent::_init()

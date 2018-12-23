@@ -23,7 +23,7 @@ namespace gamelib
         _props.registerProperty("stand", _states[Stand]);
         _props.registerProperty("walk", _states[Walk]);
         _props.registerProperty("fall", _states[Fall]);
-        _props.registerProperty("state", _current, PROP_METHOD(State, changeState), this, 0, NumStates, state_strings);
+        _props.registerProperty("state", _current, PROP_METHOD(_current, changeState), this, 0, NumStates, state_strings);
     }
 
     void ActorComponent::changeState(State state)

@@ -18,7 +18,7 @@ namespace gamelib
     {
         flags = flags_;
         _setSupportedOps(true, true, false);
-        _props.registerProperty("size", _size, PROP_METHOD(math::Vec2f, setSize), this);
+        _props.registerProperty("size", _size, PROP_METHOD(_size, setSize), this);
     }
 
 
