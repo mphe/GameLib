@@ -3,6 +3,7 @@
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/utils/conversions.hpp"
+#include "gamelib/properties/PropDummy.hpp"
 
 namespace gamelib
 {
@@ -17,6 +18,7 @@ namespace gamelib
         _props.registerProperty("texoffset", _texoffset, PROP_METHOD(math::Vec2f, setTexOffset), this);
         _props.registerProperty("texscale", _texscale, PROP_METHOD(math::Vec2f, setTexScale), this);
         _props.registerProperty("mapping", _mapping, PROP_METHOD(MappingMethod, setMappingMethod), this, 0, NumMappingMethods, mapping_strings);
+        registerDummyProperty(_props, "vertices");
     }
 
     void PolygonShape::fetch(const math::AABBf& rect)

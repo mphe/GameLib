@@ -1,6 +1,7 @@
 #include "gamelib/core/ecs/Component.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/json/json-transformable.hpp"
+#include "gamelib/properties/PropDummy.hpp"
 
 namespace gamelib
 {
@@ -11,7 +12,9 @@ namespace gamelib
     Component::Component(const std::string& name) :
         _name(name),
         _entptr(nullptr)
-    { }
+    {
+        registerDummyProperty(_props, "transform");
+    }
 
     const std::string& Component::getName() const
     {

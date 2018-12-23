@@ -1,5 +1,6 @@
 #include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/utils/log.hpp"
+#include "gamelib/properties/PropDummy.hpp"
 
 namespace gamelib
 {
@@ -16,6 +17,8 @@ namespace gamelib
         flags = flags_;
         _setSupportedOps(true, true, true);
         _props.registerProperty("Normals", *reinterpret_cast<int*>(&_polygon.normaldir), 0, 3, normaldir_hints);
+        registerDummyProperty(_props, "vertices");
+        registerDummyProperty(_props, "type");
     }
 
     bool Polygon::intersect(const math::Point2f& point) const

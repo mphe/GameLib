@@ -182,6 +182,7 @@
     * filename
     * notzero
     * guarantee load first (-> race condition in SpriteComponent)
+    * dummy (makes PropDummy obsolete)
   * ConstPropertyHandle
     * use in BasePropType loadFromJson, drawGui
   * remove custom resource related register functions
