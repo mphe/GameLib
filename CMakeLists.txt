@@ -25,7 +25,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 if (CMAKE_COMPILER_IS_GNUCC)
-    add_definitions(-Wall -Wno-switch -Wno-sign-compare -Wno-parentheses -fdiagnostics-color=always)
+    add_definitions(-Wall -Wextra -Wno-unused-parameter -Wno-switch -Wno-sign-compare -Wno-parentheses -fdiagnostics-color=always)
 elseif (MSVC)
     # Untested
     add_definitions(/W3)
