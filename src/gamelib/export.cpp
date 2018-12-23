@@ -48,12 +48,15 @@ namespace gamelib
                 return true;
             };
 
-            if (direct)
-                for (auto& i : mgrnode)
+            for (auto& i : mgrnode)
+            {
+                LOG_DEBUG("Creating entity ", i["name"].asString());
+
+                if (direct)
                     factory->createFromJson(i);
-            else
-                for (auto& i : mgrnode)
+                else
                     factory->createWithDelta(i["name"].asString(), i);
+            }
         }
 
         LOG("Loading finished");
