@@ -27,7 +27,7 @@ namespace gamelib
     void inputEntityProps(Entity& ent);
     void inputComponent(Component& comp);
 
-    bool inputComponentSelect(const std::string& name, Component** ptr, const Entity& ent, unsigned int filter = 0, int numfilters = 0, const char* const* namefilters = nullptr);
+    bool inputComponentSelect(const std::string& name, Component** ptr, const Entity& ent, const Component* self, unsigned int filter = 0, int numfilters = 0, const char* const* namefilters = nullptr);
 }
 
 #endif

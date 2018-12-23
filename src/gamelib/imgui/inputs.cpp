@@ -216,7 +216,7 @@ namespace gamelib
         inputProperties(comp.getProperties());
     }
 
-    bool inputComponentSelect(const std::string& name, Component** ptr, const Entity& ent, unsigned int filter, int numfilters, const char* const* namefilters)
+    bool inputComponentSelect(const std::string& name, Component** ptr, const Entity& ent, const Component* self, unsigned int filter, int numfilters, const char* const* namefilters)
     {
         struct Cache
         {
@@ -229,6 +229,9 @@ namespace gamelib
 
         for (auto& i : ent)
         {
+            if (i.ptr.get() == self)
+                continue;
+
             if (filter != 0 && i.ptr->getID() != filter)
                 continue;
 

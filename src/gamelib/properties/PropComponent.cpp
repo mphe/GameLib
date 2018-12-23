@@ -71,12 +71,12 @@ namespace gamelib
 
     bool PropComponent::drawGui(const PropertyHandle& prop, const std::string& name, Component** ptr) const
     {
-        if (!getEntity(prop))
+        if (!getEntity(prop) || !prop.getData())
         {
             LOG_ERROR("No entity pointer passed to component property");
             return false;
         }
-        return inputComponentSelect(name, ptr, *getEntity(prop), prop.min, prop.max, prop.hints);
+        return inputComponentSelect(name, ptr, *getEntity(prop), static_cast<Component*>(prop.getData()), prop.min, prop.max, prop.hints);
     }
 
     Entity* PropComponent::getEntity(const PropertyHandle& prop)
