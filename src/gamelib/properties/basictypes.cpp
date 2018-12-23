@@ -4,6 +4,7 @@
 #include "gamelib/imgui/resources.hpp"
 #include "imgui.h"
 #include <climits>
+#include <boost/filesystem.hpp>
 
 namespace gamelib
 {
@@ -81,7 +82,15 @@ namespace gamelib
     void PropResource::writeToJson(const PropertyHandle& prop, const BaseResourceHandle* ptr, Json::Value& node)   const
     {
         if (*ptr)
-            node = ptr->getResource()->getPath();
+        {
+            auto resmgr = getSubsystem<ResourceManager>();
+            if (resmgr)
+                node = boost::filesystem::relative(ptr->getResource()->getPath(), resmgr->getSearchpath()).string();
+            else
+                node = ptr->getResource()->getPath();
+        }
+        else
+            node = "";
     }
 
     bool PropResource::drawGui(const PropertyHandle& prop, const std::string& name, BaseResourceHandle* ptr) const

@@ -12,8 +12,7 @@
 * font resource
 * implement own frame capping mechanic to allow better time measurement
 * option to specify base entity in entity configs
-
-* serialization of resource handles yield paths relative to cwd rather than searchpath
+* use override keyword
 
 * find a way to inform references about component removal
   1. somewhere a pointer to a component is stored
