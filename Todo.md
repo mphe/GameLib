@@ -14,6 +14,33 @@
 * option to specify base entity in entity configs
 * use override keyword
 
+* more efficient transformable system
+  * remove getBBox()
+    * move it to new class
+  * TransformableSystem
+    * keeps track of Transformables
+    * stored in a SlotMap
+    * sorted in hierachical order
+  * classes that use Transformables reference them using pointers
+  * split classes
+    * Transform
+      * contains data (matrix, pos, scale, angle, ...)
+    * Transformable
+      * references a Transform
+      * reference by handle or instantiates a Transform
+      * acts as a client to Transform
+
+* ECS parent system
+  * maybe new base class: Parentable
+  * provide new virtual functions
+    * setParent(parent) -> ptr:  sets the parent and returns or pointer or nullptr if not possible
+    * tryParent(parent) -> bool: checks if setting this parent is possible
+  * components and entities implement this interface
+  * what the entity/component does with the parent is implementation dependant
+    * Inherit transformation
+    * Inherit flags
+
+
 * remove ambiguous component referencing
   1. use a component (A) with PropComponent
   2. use another component (B)
@@ -134,6 +161,8 @@
     * PolygonShape -> BrushRenderer
   * include origin for sprites in ActorComponent
   * fix scale in ActorComponent to match the actual max scale and not 1
+  * components should be more abstract
+    * don't inherit Transformable
 
 * math
   * Generic polygon functions that accept pointers and offsets to compute polygon stuff
