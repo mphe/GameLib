@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(GameLib)
+project(gamelib)
 
 # Options {{{
 
@@ -23,6 +23,8 @@ set(SFML_DIR "" CACHE PATH "SFML library directory (optional)")
 # Build config {{{
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_CXX_STANDARD 11)
+set(CXX_STANDARD_REQUIRED ON)
 
 if (CMAKE_COMPILER_IS_GNUCC)
     add_definitions(-Wall -Wextra -Wno-unused-parameter -Wno-switch -Wno-sign-compare -Wno-parentheses -fdiagnostics-color=always)
@@ -55,8 +57,18 @@ endif()
 
 # }}}
 
-
+# build external libraries first
 add_subdirectory(extlib)
+
+include_directories(
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/extlib/cppmath/include
+    ${PROJECT_SOURCE_DIR}/extlib/jsoncpp/include
+    ${PROJECT_SOURCE_DIR}/extlib/imgui
+    ${PROJECT_SOURCE_DIR}/extlib/imgui-sfml
+    ${PROJECT_SOURCE_DIR}/extlib/imguifilesystem
+)
+
 add_subdirectory(src/gamelib)
 
 if (GAMELIB_BUILD_EXAMPLES)
@@ -64,6 +76,7 @@ if (GAMELIB_BUILD_EXAMPLES)
 endif()
 
 if (GAMELIB_BUILD_TESTS)
+    # enable_testing() must be called in this file for some reason
     enable_testing()
     add_subdirectory(test)
 endif()

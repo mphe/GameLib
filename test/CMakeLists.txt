@@ -1,31 +1,18 @@
-set(CXX_STANDARD_REQUIRED ON)
-
-macro(gen_test_full TESTNAME SOURCE)
-    add_executable(${TESTNAME} ${SOURCE} ${ARGN})
-    target_link_libraries(${TESTNAME} ${PROJECT_NAME})
-    add_test(NAME ${TESTNAME} COMMAND ${TESTNAME} WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/test)
-    set_property(TARGET ${TESTNAME} PROPERTY CXX_STANDARD 11)
-endmacro()
-
-macro(gen_test_extlib TESTNAME SOURCE)
-    add_executable(${TESTNAME} ${SOURCE} ${ARGN})
-    target_link_libraries(${TESTNAME} cppmath jsoncpp imgui)
-    add_test(NAME ${TESTNAME} COMMAND ${TESTNAME} WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/test)
-    set_property(TARGET ${TESTNAME} PROPERTY CXX_STANDARD 11)
-endmacro()
-
 macro(gen_test TESTNAME SOURCE)
     add_executable(${TESTNAME} ${SOURCE} ${ARGN})
     add_test(NAME ${TESTNAME} COMMAND ${TESTNAME} WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/test)
-    set_property(TARGET ${TESTNAME} PROPERTY CXX_STANDARD 11)
 endmacro()
 
+macro(gen_test_full TESTNAME SOURCE)
+    gen_test(${TESTNAME} ${SOURCE} ${ARGN})
+    target_link_libraries(${TESTNAME} gamelib)
+endmacro()
 
-include_directories(
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/extlib/cppmath/include
-    ${PROJECT_SOURCE_DIR}/extlib/jsoncpp/include
-)
+macro(gen_test_extlib TESTNAME SOURCE)
+    gen_test(${TESTNAME} ${SOURCE} ${ARGN})
+    target_link_libraries(${TESTNAME} cppmath jsoncpp imgui)
+endmacro()
+
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/test)
 gen_test(factorytest factory.cpp)

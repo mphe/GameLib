@@ -1,14 +1,13 @@
-set(CXX_STANDARD_REQUIRED ON)
-
-find_package(SFML 2.4 COMPONENTS system window graphics REQUIRED)
+set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL)
+find_package(SFML 2.4 COMPONENTS system window graphics REQUIRED)
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 
-macro(gen_binary BINNAME SOURCE)
-    add_executable(${BINNAME} ${SOURCE} ${ARGN})
-    target_link_libraries(${BINNAME} ${PROJECT_NAME})
-    set_property(TARGET ${BINNAME} PROPERTY CXX_STANDARD 11)
+macro(gen_binary BINNAME SOURCES)
+    add_executable(${BINNAME} ${SOURCES} ${ARGN})
+    target_link_libraries(${BINNAME} gamelib)
 endmacro()
+
 
 set(EXT_LIBRARIES
     sfml-graphics
@@ -16,12 +15,13 @@ set(EXT_LIBRARIES
     sfml-system
     cppmath
     jsoncpp
-    ${OPENGL_LIBRARIES}
     imgui
+    ${OPENGL_LIBRARIES}
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
 )
 
+#  gamelib sources {{{
 set(GAMELIB_SOURCES
     events/ResourceReloadEvent.cpp
 
@@ -96,29 +96,14 @@ set(GAMELIB_SOURCES
     Engine.cpp
     export.cpp
 )
+# }}} gamelib sources
 
 source_group(gamelib FILES ${GAMELIB_SOURCES})
 
-include_directories(
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/extlib/cppmath/include
-    ${PROJECT_SOURCE_DIR}/extlib/jsoncpp/include
-)
 
-add_library(${PROJECT_NAME} ${GAMELIB_SOURCES})
-target_link_libraries(${PROJECT_NAME} ${EXT_LIBRARIES})
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
-
-
-if (GAMELIB_BUILD_TOOLS)
-    source_group(tools FILES main/checkentcfg.cpp)
-    gen_binary(checkentcfg main/checkentcfg.cpp)
-endif()
-
-
-if(GAMELIB_BUILD_EDITOR)
+#  editor {{{ 
+if (GAMELIB_BUILD_EDITOR)
     set(EDITOR_SOURCES
-        main/editormain.cpp
         editor/Editor.cpp
         editor/EditorShared.cpp
         editor/tools/SelectTool.cpp
@@ -138,22 +123,43 @@ if(GAMELIB_BUILD_EDITOR)
         editor/events/OnSelect.cpp
     )
 
-    source_group(editor FILES ${EDITOR_SOURCES} main/editormain.cpp)
+    source_group(editor FILES ${EDITOR_SOURCES})
 
-    set(EXT_EDITOR_LIBRARIES
+    set(EXT_LIBRARIES
+        ${EXT_LIBRARIES}
+        # external editor libraries
     )
 
-    include_directories(
-        ${PROJECT_SOURCE_DIR}/extlib/imgui
-        ${PROJECT_SOURCE_DIR}/extlib/imgui-sfml
-        ${PROJECT_SOURCE_DIR}/extlib/imguifilesystem
+    # Append to GAMELIB_SOURCES so when linking with the static lib, the editor code is included
+    set(GAMELIB_SOURCES
+        ${GAMELIB_SOURCES}
+        ${EDITOR_SOURCES}
     )
 
-    gen_binary(editor ${EDITOR_SOURCES})
-    target_link_libraries(editor ${EXT_EDITOR_LIBRARIES})
+    if (NOT TARGET run)
+        add_custom_target(run
+            COMMAND editor assets/testmap.json
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        )
+    endif()
+endif()
+# }}} editor
 
-    add_custom_target(run
-        COMMAND editor assets/testmap.json
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+
+# create static gamelib library
+add_library(gamelib ${GAMELIB_SOURCES})
+target_link_libraries(gamelib ${EXT_LIBRARIES})
+
+
+if (GAMELIB_BUILD_TOOLS)
+    source_group(tools FILES
+        main/checkentcfg.cpp
+        main/editormain.cpp
     )
+
+    gen_binary(checkentcfg main/checkentcfg.cpp)
+
+    if (GAMELIB_BUILD_EDITOR)
+        gen_binary(editor main/editormain.cpp)
+    endif()
 endif()
