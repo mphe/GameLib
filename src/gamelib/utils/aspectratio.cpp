@@ -38,7 +38,7 @@ namespace gamelib
         // Create view rect from 2 points
         auto screensize = convert(target.getSize());
         auto& viewport = convert(view.getViewport());
-        math::AABBf screen((viewport.pos * screensize).asPoint(), (viewport.size * screensize).asPoint());
+        auto screen = math::AABBf::fromPoints((viewport.pos * screensize).asPoint(), (viewport.size * screensize).asPoint());
 
         auto newrect = applyAspectRatio(rect, screen, ratio);
         newrect.pos /= screensize;

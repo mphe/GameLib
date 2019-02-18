@@ -13,7 +13,7 @@ namespace gamelib
     {
         public:
             Camera(const std::string& name);
-            Camera(const std::string& name, const math::Vec2f& pos, const math::Vec2f& size);
+            Camera(const std::string& name, const math::Point2f& pos, const math::Vec2f& size);
             virtual ~Camera() {}
 
             virtual bool loadFromJson(const Json::Value& node);
@@ -25,7 +25,7 @@ namespace gamelib
             void addMotion(float speed, float dir);
 
             void center(float x, float y);
-            void center(const math::Vec2f& pos);
+            void center(const math::Point2f& pos);
             void move(float x, float y);
 
             void zoomTowards(float x, float y, float zoom);
@@ -40,7 +40,7 @@ namespace gamelib
 
         public:
             float zoom;
-            math::Vec2f pos;
+            math::Point2f pos;
             math::Vec2f size;
             math::AABBf viewport;
             math::Vec2f vel;

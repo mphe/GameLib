@@ -45,7 +45,7 @@ namespace gamelib
 
         if (selected)
         {
-            auto& pol = selected->getBrushPolygon()->getPolygon();
+            auto& pol = selected->getBrushPolygon()->getGlobal();
             math::Point2f p = _snappoint ? snap(pol, EditorShared::getMouse()) : snapped;
 
             if (_type == Rect && pol.size() == 1)
@@ -59,7 +59,7 @@ namespace gamelib
         else
         {
             auto brush = getEntity(createEntity(brushEntities[_type], snapped.x, snapped.y));
-            _apply(brush->findByType<BrushComponent>());
+            _apply(brush->findByType<PolygonBrushComponent>());
             EditorShared::getSelectTool().select(brush);
             onMousePressed();
         }
@@ -73,7 +73,7 @@ namespace gamelib
 
         if (selected)
         {
-            auto& pol = selected->getBrushPolygon()->getPolygon();
+            auto& pol = selected->getBrushPolygon()->getGlobal();
 
             if (!input->isMouseConsumed())
             {
@@ -86,12 +86,12 @@ namespace gamelib
                 }
                 else if (_type == Polygon && pol.size() > 1)
                 {
-                    drawLine(target, pol.get(-1), mouse);
-                    drawLine(target, pol.get(-2), mouse);
+                    drawLine(target, pol.get(pol.size() - 1), mouse);
+                    drawLine(target, pol.get(pol.size() - 2), mouse);
                 }
                 else if (pol.size() > 0)
                 {
-                    drawLine(target, pol.get(-1), mouse);
+                    drawLine(target, pol.get(pol.size() - 1), mouse);
                 }
             }
 
@@ -135,7 +135,7 @@ namespace gamelib
             _apply(brush);
     }
 
-    void BrushTool::_apply(BrushComponent* brush) const
+    void BrushTool::_apply(PolygonBrushComponent* brush) const
     {
         if (brush->getEntity()->getName() == brushEntities[Line])
             static_cast<LineBrushComponent*>(brush)->setWidth(_linewidth);
@@ -149,7 +149,7 @@ namespace gamelib
             RMFLAG(brush->getBrushPolygon()->flags, collision_solid);
     }
 
-    BrushComponent* BrushTool::_getIfSame() const
+    PolygonBrushComponent* BrushTool::_getIfSame() const
     {
         auto selected = getIfBrush(EditorShared::getSelected());
         if (selected && brushEntities[_type] == selected->getEntity()->getName())

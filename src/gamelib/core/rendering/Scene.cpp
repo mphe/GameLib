@@ -4,6 +4,7 @@
 #include "gamelib/utils/conversions.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/core/res/JsonResource.hpp"
+#include "math/geometry/intersect.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <cassert>
 
@@ -111,7 +112,7 @@ namespace gamelib
             if (!(flags & render_noparallax) && !math::almostEquals(parallax, 1.0f))
             {
                 auto vcenter = view.getCenter();
-                translate = (bbox.getCenter() - convert(vcenter)) * (parallax - 1);
+                translate = (bbox.getCenter().asVector() - convert(vcenter)) * (parallax - 1);
 
                 if (flags & render_scaleparallax)
                 {
@@ -134,7 +135,7 @@ namespace gamelib
             }
 
             // Skip if outside of view
-            if (!bbox.intersect(vbox))
+            if (!math::intersect(bbox, vbox))
             {
                 if (bbox.w == 0 || bbox.h == 0)
                     LOG_WARN("SceneObject bounding box has 0 width or height: ", bbox.w, "x", bbox.h);

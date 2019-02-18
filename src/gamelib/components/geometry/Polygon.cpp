@@ -1,71 +1,88 @@
 #include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/properties/PropDummy.hpp"
+#include "math/geometry/intersect.hpp"
 
 namespace gamelib
 {
     constexpr const char* normaldir_hints[] = { "Both", "Left", "Right" };
+    constexpr const char* filltype_hints[] = { "Open", "Closed", "Filled" };
 
-    Polygon::Polygon(unsigned int flags) :
-        Polygon(math::TriangleStrip, flags)
-    { }
-
-    Polygon::Polygon(math::PolygonType type, unsigned int flags_) :
+    PolygonCollider::PolygonCollider(unsigned int flags_) :
         CollisionComponent(name),
-        _polygon(type, math::NormalLeft)
+        _global(_local),
+        _filltype(_local.getFillType()),
+        _normaldir(_local.getNormalDir())
     {
+        auto normalsetter = +[](math::NormalDirection* var, const math::NormalDirection* val, PolygonCollider* self) {
+            *var = *val;
+            self->_local.setNormalDir(*val);
+        };
+
+        auto fillsetter = +[](math::FillType* var, const math::FillType* val, PolygonCollider* self) {
+            *var = *val;
+            self->_local.setFillType(*val);
+        };
+
         flags = flags_;
+        _local.setFillType(math::Closed);
+        _local.setNormalDir(math::NormalLeft);
         _setSupportedOps(true, true, true);
-        _props.registerProperty("Normals", *reinterpret_cast<int*>(&_polygon.normaldir), 0, 3, normaldir_hints);
+        _props.registerProperty("Normals", _normaldir, normalsetter, this, 0, 3, normaldir_hints);
+        _props.registerProperty("FillType", _filltype, fillsetter, this, 0, 3, filltype_hints);
         registerDummyProperty(_props, "vertices");
-        registerDummyProperty(_props, "type");
     }
 
-    bool Polygon::intersect(const math::Point2f& point) const
+    bool PolygonCollider::intersect(const math::Point2f& point) const
     {
-        return _polygon.intersect(point);
+        return math::intersect(point, _global);
     }
 
-    Intersection Polygon::intersect(const math::Line2f& line) const
+    Intersection PolygonCollider::intersect(const math::Line2f& line) const
     {
-        return _polygon.intersect(line);
+        return math::intersect(line, _global);
     }
 
-    Intersection Polygon::intersect(const math::AABBf& rect) const
+    Intersection PolygonCollider::intersect(const math::AABBf& rect) const
     {
         Intersection isec;
-        _polygon.foreachSegment([&](const math::Line2f& seg) {
-                isec = seg.intersect(rect);
+        _global.foreachSegment([&](const math::Line2f& seg) {
+                isec = math::intersect(seg, rect);
                 return isec;
             });
         return isec;
     }
 
-    Intersection Polygon::sweep(const math::AABBf& rect, const math::Vec2f& vel) const
+    Intersection PolygonCollider::sweep(const math::AABBf& rect, const math::Vec2f& vel) const
     {
-        return rect.sweep(vel, _polygon);
+        return math::sweep(rect, vel, _global);
     }
 
-    void Polygon::_onChanged(const sf::Transform& old)
+    void PolygonCollider::_onChanged(const sf::Transform& old)
     {
-        _polygon.setMatrix(getMatrix());
+        _global.setMatrix(getMatrix());
     }
 
-    const math::AABBf& Polygon::getBBox() const
+    const math::AABBf& PolygonCollider::getBBox() const
     {
-        return _polygon.getBBox();
+        _bbox = _global.getBBox();
+        return _bbox;
     }
 
-    const math::BasePolygon<float>& Polygon::getPolygon() const
+    const math::AbstractPolygon<float>& PolygonCollider::getGlobal() const
     {
-        return _polygon;
+        return _global;
     }
 
-    bool Polygon::loadFromJson(const Json::Value& node)
+    const math::AbstractPolygon<float>& PolygonCollider::getLocal() const
+    {
+        return _local;
+    }
+
+    bool PolygonCollider::loadFromJson(const Json::Value& node)
     {
         CollisionComponent::loadFromJson(node);
-        _polygon.clear();
-        _polygon.type = static_cast<math::PolygonType>(node.get("type", _polygon.type).asInt());
+        _global.clear();
 
         if (node.isMember("vertices"))
         {
@@ -74,7 +91,7 @@ namespace gamelib
             for (auto& i : vertices)
             {
                 if (gamelib::loadFromJson(i, p))
-                    _polygon.addRaw(p);
+                    _local.add(p);
                 else
                     LOG_WARN("Incorrect vertex format: ", node.toStyledString());
             }
@@ -82,42 +99,41 @@ namespace gamelib
         return true;
     }
 
-    void Polygon::writeToJson(Json::Value& node) const
+    void PolygonCollider::writeToJson(Json::Value& node) const
     {
         CollisionComponent::writeToJson(node);
-        node["type"] = _polygon.type;
         auto& vertices = node["vertices"];
-        vertices.resize(_polygon.size());
-        for (size_t i = 0; i < _polygon.size(); ++i)
-            gamelib::writeToJson(vertices[Json::ArrayIndex(i)], _polygon.getRaw(i));
+        vertices.resize(_local.size());
+        for (size_t i = 0; i < _local.size(); ++i)
+            gamelib::writeToJson(vertices[Json::ArrayIndex(i)], _local.get(i));
     }
 
-    void Polygon::add(const math::Point2f& point, bool raw)
+    void PolygonCollider::add(const math::Point2f& point, bool raw)
     {
         if (raw)
-            _polygon.addRaw(point);
+            _local.add(point);
         else
-            _polygon.add(point);
+            _global.add(point);
         _markDirty();
     }
 
-    void Polygon::edit(size_t i, const math::Point2f& p, bool raw)
+    void PolygonCollider::edit(size_t i, const math::Point2f& p, bool raw)
     {
         if (raw)
-            _polygon.editRaw(i, p);
+            _local.edit(i, p);
         else
-            _polygon.edit(i, p);
+            _global.edit(i, p);
         _markDirty();
     }
 
-    void Polygon::clear()
+    void PolygonCollider::clear()
     {
-        _polygon.clear();
+        _local.clear();
         _markDirty();
     }
 
-    size_t Polygon::size() const
+    size_t PolygonCollider::size() const
     {
-        return _polygon.size();
+        return _local.size();
     }
 }

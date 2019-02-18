@@ -2,7 +2,7 @@
 #define GAMELIB_COLLISION_SYSTEM_HPP
 
 #include <vector>
-#include "math/geometry/Line2.hpp"
+#include "math/geometry/intersect.hpp"
 #include "gamelib/core/Subsystem.hpp"
 #include "Collidable.hpp"
 #include "flags.hpp"
@@ -91,7 +91,7 @@ namespace gamelib
             {
                 if (c->flags & collision_noprecise)
                 {
-                    if (!c->getBBox().intersect(shape))
+                    if (!math::intersect(c->getBBox(), shape))
                         continue;
                 }
                 else
@@ -130,7 +130,7 @@ namespace gamelib
             {
                 Intersection isec;
                 if (i->flags & collision_noprecise)
-                    isec = line.intersect(i->getBBox());
+                    isec = math::intersect(line, i->getBBox());
                 else
                 {
                     isec = i->intersect(line);
@@ -160,7 +160,7 @@ namespace gamelib
             {
                 Intersection isec;
                 if (i->flags & collision_noprecise)
-                    isec = rect.sweep(vel, i->getBBox());
+                    isec = math::sweep(rect, vel, i->getBBox());
                 else
                     isec = i->sweep(rect, vel);
 

@@ -69,7 +69,7 @@ namespace gamelib
             for (size_t i = 0; i < scene->getNumCameras(); ++i)
             {
                 auto cam = scene->getCamera(i);
-                math::AABBf baserect(cam->pos.asPoint(), cam->size);
+                math::AABBf baserect(cam->pos, cam->size);
                 drawRectOutline(target, baserect, col);
 
                 if (!math::almostEquals(cam->zoom, 1.f))
@@ -104,9 +104,9 @@ namespace gamelib
 
         if (renderNormals)
         {
-            ent->findAllByName<Polygon>([&](Polygon* pol) {
+            ent->findAllByName<PolygonCollider>([&](PolygonCollider* pol) {
                     if (pol->flags & collision_solid)
-                        drawNormals(target, pol->getPolygon());
+                        drawNormals(target, pol->getGlobal());
                     return false;
                 });
         }

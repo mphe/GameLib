@@ -5,11 +5,12 @@
 #include "gamelib/utils/conversions.hpp"
 #include "gamelib/components/geometry/AABB.hpp"
 #include "gamelib/components/geometry/Polygon.hpp"
-#include "gamelib/components/editor/BrushComponent.hpp"
+#include "gamelib/components/editor/PolygonBrushComponent.hpp"
+#include "math/geometry/intersect.hpp"
 
 namespace gamelib
 {
-    bool selectDragBoxes(const math::BasePolygon<float>& pol, size_t* selected)
+    bool selectDragBoxes(const math::AbstractPolygon<float>& pol, size_t* selected)
     {
         *selected = -1;
         for (size_t i = 0; i < pol.size(); ++i)
@@ -24,7 +25,7 @@ namespace gamelib
     bool checkDragBox(const math::Point2f& p)
     {
         static const math::AABBf drag_rect(-drag_size, -drag_size, drag_size * 2, drag_size * 2);
-        return drag_rect.contains(EditorShared::getMouse() - p.asVector());
+        return math::intersect(drag_rect, EditorShared::getMouse() - p.asVector());
     }
 
     void drawDragBox(sf::RenderTarget& target, const math::Point2f& p, bool selected)
@@ -74,7 +75,7 @@ namespace gamelib
         target.draw(v, 6, sf::Lines, trans);
     }
 
-    void drawDragBoxes(sf::RenderTarget& target, const math::BasePolygon<float>& pol, size_t selected)
+    void drawDragBoxes(sf::RenderTarget& target, const math::AbstractPolygon<float>& pol, size_t selected)
     {
         for (size_t i = 0; i < pol.size(); ++i)
             drawDragBox(target, pol.get(i), i == selected);
@@ -99,10 +100,10 @@ namespace gamelib
         ent.findAllByType<CollisionComponent>([&](CollisionComponent* comp) {
                 if (comp->flags & flags)
                 {
-                    if (comp->getName() == Polygon::name && !(comp->flags & collision_noprecise))
+                    if (comp->getName() == PolygonCollider::name && !(comp->flags & collision_noprecise))
                     {
-                        auto pol = static_cast<Polygon*>(comp);
-                        pol->getPolygon().foreachSegment([&](const math::Line2f seg) {
+                        auto pol = static_cast<PolygonCollider*>(comp);
+                        pol->getGlobal().foreachSegment([&](const math::Line2f seg) {
                                 vertices.append(sf::Vertex(sf::Vector2f(seg.p.x, seg.p.y), col));
                                 vertices.append(sf::Vertex(sf::Vector2f(seg.p.x + seg.d.x, seg.p.y + seg.d.y), col));
                                 return false;
@@ -130,7 +131,7 @@ namespace gamelib
         target.draw(vertices);
     }
 
-    void drawNormals(sf::RenderTarget& target, const math::BasePolygon<float>& pol, sf::Color col)
+    void drawNormals(sf::RenderTarget& target, const math::AbstractPolygon<float>& pol, sf::Color col)
     {
         sf::VertexArray vertices(sf::Lines);
 
@@ -139,9 +140,9 @@ namespace gamelib
             math::Vec2f start = seg.p.asVector() + seg.d / 2;
             math::Vec2f stop;
 
-            if (pol.normaldir == math::NormalLeft)
+            if (pol.getNormalDir() == math::NormalLeft)
                 stop = start + normal * 5;
-            else if (pol.normaldir == math::NormalRight)
+            else if (pol.getNormalDir() == math::NormalRight)
                 stop = start - normal * 5;
             else
             {
@@ -156,7 +157,7 @@ namespace gamelib
         target.draw(vertices);
     }
 
-    math::Point2f snap(const math::BasePolygon<float>& pol, const math::Point2f& p, size_t ignoreindex)
+    math::Point2f snap(const math::AbstractPolygon<float>& pol, const math::Point2f& p, size_t ignoreindex)
     {
         for (size_t i = 0; i < pol.size(); ++i)
             if (i != ignoreindex)
@@ -168,10 +169,10 @@ namespace gamelib
         return EditorShared::snap(p);
     }
 
-    BrushComponent* getIfBrush(Entity* ent)
+    PolygonBrushComponent* getIfBrush(Entity* ent)
     {
         if (ent)
-            return ent->findByType<BrushComponent>();
+            return ent->findByType<PolygonBrushComponent>();
         return nullptr;
     }
 }

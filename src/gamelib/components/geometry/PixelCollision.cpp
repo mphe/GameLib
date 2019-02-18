@@ -2,6 +2,7 @@
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/core/res/TextureResource.hpp"
 #include "gamelib/utils/conversions.hpp"
+#include "math/geometry/intersect.hpp"
 
 namespace gamelib
 {
@@ -24,7 +25,7 @@ namespace gamelib
 
     bool PixelCollision::intersect(const math::Point2f& point) const
     {
-        if (_rect.contains(point))
+        if (math::intersect(_rect, point))
             return _img.getPixel(point.x - _rect.x, point.y - _rect.y).a != 0;
         return false;
     }
@@ -35,7 +36,7 @@ namespace gamelib
 
         auto dir = line.d.normalized();
         auto len = line.d.abs();
-        auto isec = line.intersect(_rect);
+        auto isec = math::intersect(line, _rect);
 
         if (!isec)
             return Intersection();
@@ -45,7 +46,7 @@ namespace gamelib
         {
             auto p = isec.p + dir * i;
 
-            if (!_rect.contains(p))
+            if (!math::intersect(_rect, p))
                 return Intersection();
             else if (intersect(p))
                 return Intersection(p, math::Vec2f(i / len, i / len), getNormal(p));
@@ -54,7 +55,7 @@ namespace gamelib
 
     Intersection PixelCollision::intersect(const math::AABBf& rect) const
     {
-        auto isec = rect.intersect(_rect);
+        auto isec = math::intersect(rect, _rect);
         if (isec)
         {
             // TODO: check only difference
@@ -89,7 +90,7 @@ namespace gamelib
         float len = vel.abs();
         int time = ceil(len);
 
-        auto isec = math::Line2f(rect.getCenter().asPoint(), vel, math::Segment).intersect(_rect);
+        auto isec = math::intersect(math::Line2f(rect.getCenter(), vel, math::Segment), _rect);
         if (isec)
         {
             for (int i = isec.time * len; i < len; ++i)
@@ -117,7 +118,7 @@ namespace gamelib
             }
 
             return math::Intersection<float>(
-                    rect2.getCenter().asPoint(),
+                    rect2.getCenter(),
                     math::Vec2f(time / len, time / len),
                     getNormal(cp.x, cp.y)); // normal seems to bug out sometimes
         }

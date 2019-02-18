@@ -29,7 +29,7 @@ namespace gamelib
             PolygonShape();
             virtual ~PolygonShape() {}
 
-            virtual auto fetch(const math::BasePolygon<float>& pol, bool raw = true) -> void;
+            virtual auto fetch(const math::AbstractPolygon<float>& pol) -> void;
             virtual auto fetch(const math::AABBf& rect)         -> void;
 
             auto adaptToTexture() -> void;

@@ -2,7 +2,7 @@
 #define GAMELIB_COLLISION_COLLIDABLE_HPP
 
 #include "Transformable.hpp"
-#include "math/geometry/Line2.hpp"
+#include "math/geometry/Intersection.hpp"
 
 /*
  * TODO: Consider removing this abstraction and put it directly inside

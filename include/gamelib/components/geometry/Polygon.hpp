@@ -6,15 +6,14 @@
 
 namespace gamelib
 {
-    class Polygon : public CollisionComponent
+    class PolygonCollider : public CollisionComponent
     {
         public:
             constexpr static const char* name = "PolygonCollision";
 
         public:
-            Polygon(unsigned int flags = 0);
-            Polygon(math::PolygonType type, unsigned int flags = 0);
-            virtual ~Polygon() {}
+            PolygonCollider(unsigned int flags = 0);
+            virtual ~PolygonCollider() {}
 
             auto intersect(const math::Point2f& point) const -> bool;
             auto intersect(const math::Line2f& line) const   -> Intersection;
@@ -31,13 +30,19 @@ namespace gamelib
             auto edit(size_t i, const math::Point2f& p, bool raw = true) -> void;
             auto clear()            -> void;
             auto size() const       -> size_t;
-            auto getPolygon() const -> const math::BasePolygon<float>&;
+
+            auto getLocal() const -> const math::AbstractPolygon<float>&;
+            auto getGlobal() const -> const math::AbstractPolygon<float>&;
 
         protected:
             virtual auto _onChanged(const sf::Transform& old) -> void;
 
         protected:
-            MatrixPolygon _polygon;
+            Polygon _local;
+            PolygonTransformer _global;
+            math::FillType _filltype; // needed for properties
+            math::NormalDirection _normaldir; // needed for properties
+            mutable math::AABBf _bbox;
     };
 }
 

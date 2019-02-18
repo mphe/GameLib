@@ -2,14 +2,14 @@
     "name": "brush_rect",
     "components": {
         "PolygonCollision": {
-            "type": 1,
+            "FillType": 2,
             "flags": 6,
             "Normals": 1
         },
         "PolygonShape": {
             "mapping": 0
         },
-        "BrushComponent": {
+        "PolygonBrushComponent": {
             "polygon": "PolygonCollision#1",
             "shape": "PolygonShape#1"
         }

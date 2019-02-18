@@ -11,7 +11,7 @@
 #include "gamelib/components/update/ActorComponent.hpp"
 #include "gamelib/components/rendering/SpriteComponent.hpp"
 #include "gamelib/components/rendering/PolygonShape.hpp"
-#include "gamelib/components/editor/BrushComponent.hpp"
+#include "gamelib/components/editor/PolygonBrushComponent.hpp"
 #include "gamelib/components/editor/LineBrushComponent.hpp"
 
 namespace gamelib
@@ -19,7 +19,7 @@ namespace gamelib
     void registerComponents(EntityFactory& factory)
     {
 #define _REGISTER_COMPONENT(c) factory.addComponent<c>(c::name);
-        _REGISTER_COMPONENT(Polygon);
+        _REGISTER_COMPONENT(PolygonCollider);
         _REGISTER_COMPONENT(AABB);
         _REGISTER_COMPONENT(PixelCollision);
         _REGISTER_COMPONENT(AABBMask);
@@ -29,7 +29,7 @@ namespace gamelib
         _REGISTER_COMPONENT(SpriteComponent);
         _REGISTER_COMPONENT(CameraTracker);
         _REGISTER_COMPONENT(PolygonShape);
-        _REGISTER_COMPONENT(BrushComponent);
+        _REGISTER_COMPONENT(PolygonBrushComponent);
         _REGISTER_COMPONENT(LineBrushComponent);
         _REGISTER_COMPONENT(ActorComponent);
 #undef _REGISTER_COMPONENT

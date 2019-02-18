@@ -39,7 +39,7 @@ set(GAMELIB_SOURCES
     components/geometry/AABBMask.cpp
     components/rendering/PolygonShape.cpp
     components/rendering/SpriteComponent.cpp
-    components/editor/BrushComponent.cpp
+    components/editor/PolygonBrushComponent.cpp
     components/editor/LineBrushComponent.cpp
 
     utils/SpriteBatch.cpp

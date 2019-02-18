@@ -1,5 +1,6 @@
 #include "gamelib/components/geometry/AABBMask.hpp"
 #include "gamelib/properties/PropComponent.hpp"
+#include "math/geometry/intersect.hpp"
 
 namespace gamelib
 {
@@ -22,22 +23,22 @@ namespace gamelib
 
     bool AABBMask::intersect(const math::Point2f& point) const
     {
-        return getBBox().contains(point);
+        return math::intersect(getBBox(), point);
     }
 
     Intersection AABBMask::intersect(const math::Line2f& line) const
     {
-        return line.intersect(getBBox());
+        return math::intersect(line, getBBox());
     }
 
     Intersection AABBMask::intersect(const math::AABBf& rect) const
     {
-        return getBBox().intersect(rect);
+        return math::intersect(getBBox(), rect);
     }
 
     Intersection AABBMask::sweep(const math::AABBf& rect, const math::Vec2f& vel) const
     {
-        return rect.sweep(vel, getBBox());
+        return math::sweep(rect, vel, getBBox());
     }
 
     bool AABBMask::setComponent(const Component* c)

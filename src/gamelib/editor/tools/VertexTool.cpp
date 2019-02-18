@@ -6,7 +6,7 @@
 #include "gamelib/editor/tools/SelectTool.hpp"
 #include "gamelib/editor/tools/ToolUtils.hpp"
 #include "gamelib/editor/EditorShared.hpp"
-#include "gamelib/components/editor/BrushComponent.hpp"
+#include "gamelib/components/editor/PolygonBrushComponent.hpp"
 #include "gamelib/components/geometry/Polygon.hpp"
 
 namespace gamelib
@@ -20,7 +20,7 @@ namespace gamelib
     {
         auto brush = getIfBrush(EditorShared::getSelectTool().getSelected());
         if (brush)
-            selectDragBoxes(brush->getBrushPolygon()->getPolygon(), &_selected);
+            selectDragBoxes(brush->getBrushPolygon()->getGlobal(), &_selected);
 
         if (_selected == (size_t)-1)
             EditorShared::getSelectTool().select(EditorShared::getMouse().x, EditorShared::getMouse().y);
@@ -33,7 +33,7 @@ namespace gamelib
         if (brush && _selected != (size_t)-1)
         {
             if (_snappoint)
-                brush->edit(_selected, snap(brush->getBrushPolygon()->getPolygon(), EditorShared::getMouse(), _selected), false);
+                brush->edit(_selected, snap(brush->getBrushPolygon()->getGlobal(), EditorShared::getMouse(), _selected), false);
             else
                 brush->edit(_selected, EditorShared::getMouseSnapped(), false);
         }
@@ -48,6 +48,6 @@ namespace gamelib
     {
         auto brush = getIfBrush(EditorShared::getSelectTool().getSelected());
         if (brush)
-            drawDragBoxes(target, brush->getBrushPolygon()->getPolygon(), _selected);
+            drawDragBoxes(target, brush->getBrushPolygon()->getGlobal(), _selected);
     }
 }

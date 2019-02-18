@@ -1,4 +1,4 @@
-#include "gamelib/components/editor/BrushComponent.hpp"
+#include "gamelib/components/editor/PolygonBrushComponent.hpp"
 #include "gamelib/components/rendering/PolygonShape.hpp"
 #include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
@@ -6,54 +6,54 @@
 
 namespace gamelib
 {
-    constexpr const char* BrushComponent::name;
+    constexpr const char* PolygonBrushComponent::name;
 
-    BrushComponent::BrushComponent() :
-        BrushComponent(name)
+    PolygonBrushComponent::PolygonBrushComponent() :
+        PolygonBrushComponent(name)
     { }
 
-    BrushComponent::BrushComponent(const std::string& name_) :
+    PolygonBrushComponent::PolygonBrushComponent(const std::string& name_) :
         Identifier(name_),
         _pol(nullptr),
         _shape(nullptr)
     {
-        auto cb = +[](Polygon** var, Polygon* const* val, BrushComponent* self) {
+        auto cb = +[](PolygonCollider** var, PolygonCollider* const* val, PolygonBrushComponent* self) {
             *var = *val;
             self->regenerate();
         };
 
         registerProperty(_props, "polygon", _pol, *this, cb);
-        registerProperty(_props, "shape", _shape, *this, (ComponentPropSetter<PolygonShape, BrushComponent>)cb);
+        registerProperty(_props, "shape", _shape, *this, (ComponentPropSetter<PolygonShape, PolygonBrushComponent>)cb);
     }
 
-    void BrushComponent::add(const math::Point2f& p, bool raw) const
+    void PolygonBrushComponent::add(const math::Point2f& p, bool raw) const
     {
         getBrushPolygon()->add(p, raw);
         regenerate();
     }
 
-    void BrushComponent::edit(size_t i, const math::Point2f& p, bool raw) const
+    void PolygonBrushComponent::edit(size_t i, const math::Point2f& p, bool raw) const
     {
         getBrushPolygon()->edit(i, p, raw);
         regenerate();
     }
 
-    void BrushComponent::remove(size_t i) const
+    void PolygonBrushComponent::remove(size_t i) const
     {
         // TODO
     }
 
-    Polygon* BrushComponent::getBrushPolygon() const
+    PolygonCollider* PolygonBrushComponent::getBrushPolygon() const
     {
         return _pol;
     }
 
-    PolygonShape* BrushComponent::getBrushShape() const
+    PolygonShape* PolygonBrushComponent::getBrushShape() const
     {
         return _shape;
     }
 
-    void BrushComponent::_refresh()
+    void PolygonBrushComponent::_refresh()
     {
         // _shape = getEntity()->findByName<PolygonShape>();
         // _pol = nullptr;
@@ -72,9 +72,9 @@ namespace gamelib
         //     });
     }
 
-    void BrushComponent::regenerate() const
+    void PolygonBrushComponent::regenerate() const
     {
         if (_shape && _pol)
-            _shape->fetch(_pol->getPolygon());
+            _shape->fetch(_pol->getLocal());
     }
 }

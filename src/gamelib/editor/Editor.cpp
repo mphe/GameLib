@@ -35,7 +35,7 @@ namespace gamelib
         "Entity Tool"
     };
 
-    // Strips BrushComponents from output
+    // Strips PolygonBrushComponents from output
     void defaultExport(const std::string& fname);
 
 
@@ -468,7 +468,7 @@ namespace gamelib
                 auto selected = getSelectTool().getSelected();
                 if (selected)
                 {
-                    _cam.center(selected->getTransform().getPosition().asVector());
+                    _cam.center(selected->getTransform().getPosition());
                     _cam.zoom = 1;
                 }
             }
@@ -509,7 +509,7 @@ namespace gamelib
 
     void defaultExport(const std::string& fname)
     {
-        // TODO: strip BrushComponent
+        // TODO: strip PolygonBrushComponent
         // TODO: export as entity
         save(fname);
         LOG("Map exported to ", fname);

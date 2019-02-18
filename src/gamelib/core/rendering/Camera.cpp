@@ -9,10 +9,10 @@ using namespace math;
 namespace gamelib
 {
     Camera::Camera(const std::string& name) :
-        Camera(name, math::Vec2f(), math::Vec2f())
+        Camera(name, math::Point2f(), math::Vec2f())
     { }
 
-    Camera::Camera(const std::string& name, const Vec2f& pos, const Vec2f& size) :
+    Camera::Camera(const std::string& name, const Point2f& pos, const Vec2f& size) :
         zoom(1),
         pos(pos),
         size(size),
@@ -83,14 +83,14 @@ namespace gamelib
         vel.y += math::lengthdirY(speed, dir);
     }
 
-    void Camera::center(const math::Vec2f& p)
+    void Camera::center(const math::Point2f& p)
     {
         pos = p - size / 2;
     }
 
     void Camera::center(float x, float y)
     {
-        center(math::Vec2f(x, y));
+        center(math::Point2f(x, y));
     }
 
     void Camera::move(float x, float y)
@@ -110,7 +110,7 @@ namespace gamelib
 
     AABBf Camera::getCamRect() const
     {
-        return AABBf(pos.asPoint() + (size - (size * zoom)) / 2, size * zoom);
+        return AABBf(pos + (size - (size * zoom)) / 2, size * zoom);
     }
 
     sf::View Camera::getView() const

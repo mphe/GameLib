@@ -1,5 +1,6 @@
 #include "gamelib/components/geometry/AABB.hpp"
 #include "gamelib/utils/conversions.hpp"
+#include "math/geometry/intersect.hpp"
 
 namespace gamelib
 {
@@ -47,21 +48,21 @@ namespace gamelib
 
     bool AABB::intersect(const math::Point2f& point) const
     {
-        return _rect.contains(point);
+        return math::intersect(_rect, point);
     }
 
     Intersection AABB::intersect(const math::Line2f& line) const
     {
-        return line.intersect(_rect);
+        return math::intersect(line, _rect);
     }
 
     Intersection AABB::intersect(const math::AABBf& rect) const
     {
-        return _rect.intersect(rect);
+        return math::intersect(_rect, rect);
     }
 
     Intersection AABB::sweep(const math::AABBf& rect, const math::Vec2f& vel) const
     {
-        return rect.sweep(vel, _rect);
+        return math::sweep(rect, vel, _rect);
     }
 }

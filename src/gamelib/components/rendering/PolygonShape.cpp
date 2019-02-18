@@ -32,12 +32,12 @@ namespace gamelib
         _updateBBox();
     }
 
-    void PolygonShape::fetch(const math::BasePolygon<float>& pol, bool raw)
+    void PolygonShape::fetch(const math::AbstractPolygon<float>& pol)
     {
         _vertices.resize(pol.size());
 
         for (size_t i = 0; i < pol.size(); ++i)
-            _vertices[i] = sf::Vertex(convert((raw ? pol.getRaw(i) : pol.get(i)).asVector()));
+            _vertices[i] = sf::Vertex(convert(pol.get(i)));
 
         _mapTexture();
         _updateBBox();

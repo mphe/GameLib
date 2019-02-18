@@ -1,5 +1,5 @@
-#ifndef GAMELIB__BRUSH_COMPONENT_HPP
-#define GAMELIB__BRUSH_COMPONENT_HPP
+#ifndef GAMELIB_POLYGON_BRUSH_COMPONENT_HPP
+#define GAMELIB_POLYGON_BRUSH_COMPONENT_HPP
 
 #include "gamelib/core/Identifier.hpp"
 #include "gamelib/core/ecs/Component.hpp"
@@ -8,17 +8,17 @@
 namespace gamelib
 {
     class PolygonShape;
-    class Polygon;
+    class PolygonCollider;
 
-    class BrushComponent : public Identifier<0xaece07e3, Component>
+    class PolygonBrushComponent : public Identifier<0xaece07e3, Component>
     {
         public:
-            constexpr static const char* name = "BrushComponent";
+            constexpr static const char* name = "PolygonBrushComponent";
 
         public:
-            BrushComponent();
-            BrushComponent(const std::string& name);
-            virtual ~BrushComponent() {};
+            PolygonBrushComponent();
+            PolygonBrushComponent(const std::string& name);
+            virtual ~PolygonBrushComponent() {};
 
             auto add(const math::Point2f& p, bool raw = true) const            -> void;
             auto edit(size_t i, const math::Point2f& p, bool raw = true) const -> void;
@@ -26,7 +26,7 @@ namespace gamelib
 
             // Not very ECSy but saves a bunch of lines and makes working with
             // brushes easier. It's only intended to be used in the editor anyways.
-            virtual auto getBrushPolygon() const -> Polygon*;
+            virtual auto getBrushPolygon() const -> PolygonCollider*;
             virtual auto getBrushShape() const   -> PolygonShape*;
 
             virtual auto regenerate() const -> void;
@@ -35,7 +35,7 @@ namespace gamelib
             virtual auto _refresh() -> void;
 
         protected:
-            Polygon* _pol;
+            PolygonCollider* _pol;
             PolygonShape* _shape;
     };
 }

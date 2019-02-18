@@ -1,11 +1,11 @@
 #ifndef GAMELIB_LINE_BRUSH_COMPONENT_HPP
 #define GAMELIB_LINE_BRUSH_COMPONENT_HPP
 
-#include "BrushComponent.hpp"
+#include "PolygonBrushComponent.hpp"
 
 namespace gamelib
 {
-    class LineBrushComponent : public BrushComponent
+    class LineBrushComponent : public PolygonBrushComponent
     {
         public:
             constexpr static const char* name = "LineBrushComponent";
@@ -16,7 +16,7 @@ namespace gamelib
             auto setWidth(int width) -> void;
             auto getWidth() const    -> int;
 
-            auto getBrushPolygon() const -> Polygon*;
+            auto getBrushPolygon() const -> PolygonCollider*;
 
             auto regenerate() const -> void;
 
@@ -24,7 +24,7 @@ namespace gamelib
             virtual auto _refresh()  -> void;
 
         private:
-            Polygon* _line;
+            PolygonCollider* _line;
             int _linewidth;
     };
 }

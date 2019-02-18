@@ -9,11 +9,11 @@ namespace gamelib
     constexpr const char* LineBrushComponent::name;
 
     LineBrushComponent::LineBrushComponent() :
-        BrushComponent(name),
+        PolygonBrushComponent(name),
         _line(nullptr),
         _linewidth(32)
     {
-        auto cb = +[](Polygon** var, Polygon* const* val, LineBrushComponent* self) {
+        auto cb = +[](PolygonCollider** var, PolygonCollider* const* val, LineBrushComponent* self) {
             *var = *val;
             self->regenerate();
         };
@@ -36,14 +36,14 @@ namespace gamelib
         return _linewidth;
     }
 
-    Polygon* LineBrushComponent::getBrushPolygon() const
+    PolygonCollider* LineBrushComponent::getBrushPolygon() const
     {
         return _line;
     }
 
     void LineBrushComponent::_refresh()
     {
-        // BrushComponent::_refresh();
+        // PolygonBrushComponent::_refresh();
         //
         // _line = nullptr;
         // getEntity()->findAllByName<Polygon>([&](Polygon* pol) {
@@ -123,15 +123,13 @@ namespace gamelib
             return false;
         };
 
-        auto& linepol = _line->getPolygon();
+        auto& linepol = _line->getLocal();
         _pol->clear();
-        // _pol->setScale(1, 1);
-        // _pol->setPosition(0, 0);
-        linepol.foreachSegment(cb, true);
+        linepol.foreachSegment(cb);
         dir = lastd.right().normalized() * (_linewidth / 2.0);
-        _pol->add(linepol.getRaw(-1) - dir);
-        _pol->add(linepol.getRaw(-1) + dir);
+        _pol->add(linepol.get(linepol.size() - 1) - dir);
+        _pol->add(linepol.get(linepol.size() - 1) + dir);
 
-        _shape->fetch(_pol->getPolygon(), true);
+        _shape->fetch(_pol->getLocal());
     }
 }

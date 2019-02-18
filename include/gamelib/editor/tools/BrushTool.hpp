@@ -8,7 +8,7 @@
 namespace gamelib
 {
     class Entity;
-    class BrushComponent;
+    class PolygonBrushComponent;
 
     class BrushTool : public Tool
     {
@@ -28,8 +28,8 @@ namespace gamelib
             void render(sf::RenderTarget& target);
 
         private:
-            BrushComponent* _getIfSame() const;
-            void _apply(BrushComponent* brush) const;
+            PolygonBrushComponent* _getIfSame() const;
+            void _apply(PolygonBrushComponent* brush) const;
 
         private:
             bool _showdraggers;

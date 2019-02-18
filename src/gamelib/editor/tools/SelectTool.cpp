@@ -120,7 +120,7 @@ namespace gamelib
                     break;
             }
 
-            math::AABBf scalebox(start, end);
+            auto scalebox = math::AABBf::fromPoints(start, end);
             if (math::almostEquals(scalebox.w, 0.f))
                 scalebox.w = 0.01;
             if (math::almostEquals(scalebox.h, 0.f))

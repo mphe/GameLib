@@ -5,11 +5,11 @@
             "mapping": 1
         },
         "PolygonCollision#1": {
-            "type": 0,
+            "FillType": 0,
             "Normals": 1
         },
         "PolygonCollision#2": {
-            "type": 1,
+            "FillType": 2,
             "flags": 2,
             "Normals": 1
         },

@@ -13,6 +13,19 @@
 * implement own frame capping mechanic to allow better time measurement
 * option to specify base entity in entity configs
 * use override keyword
+* move all resources to a "coreres" folder to allow easy symlinking when using the engine in a real project
+* Message System
+* rename Component::init/quit to enable/disable
+
+* create documents defining standard behaviour and templates
+  * .hpp/.cpp template for new component
+  * properties must always be readable/writable
+    * even if the component is not initialized
+    * even if the component is quit()ed
+    * must not have side effects if component is not initialized
+    * must not crash if component is not initialized
+    -> can help to solve c6d84f340805c911d58c15af3d198d16f56ffa2d
+
 
 * more efficient transformable system
   * remove getBBox()
@@ -39,6 +52,15 @@
   * what the entity/component does with the parent is implementation dependant
     * Inherit transformation
     * Inherit flags
+  * consider making all components use the parent transform (as in unity)
+    * no child transforms
+    * pros
+      * simplifies system
+      * doesn't require maintaining another transform-parent system (for components)
+    * cons
+      * requires a prefab loading system
+        * loading/saving entity hierachies, not just whole levels
+    * maybe keep both but don't implement parent system for components?
 
 
 * remove ambiguous component referencing
@@ -144,6 +166,7 @@
 
 * Transformable
   * Consider removing GroupTransform and instead give all Transformables a vector of children
+  * remove getBBox() and instead introduce a Geometry interface for this
 
 * InputSystem
   * map["shoot"] = { Space, Enter, ... }
@@ -163,20 +186,16 @@
   * fix scale in ActorComponent to match the actual max scale and not 1
   * components should be more abstract
     * don't inherit Transformable
+  * allow sub-IDs
+    * allows differentiating between different specializations of the same base component
+      * e.g., UpdateComponent and PhysicsComponent
+    * can use a mask for searching by ID to specify which abstraction layer is wanted
 
 * math
-  * Generic polygon functions that accept pointers and offsets to compute polygon stuff
-    * allows running functions on any data layouts (vertex buffers, raw point data, ...)
-  * use inheritance for polygon classes
-  * PolygonCollider (interface/abstract)
-    * intersect
-    * foreach
-    * find nearest
-    * derived:
-      * TriangleStripCollider
-      * LineStripCollider
-      * ...
-  * LineStrip polygon closed flag
+  * get convex hull function
+  * convex optimize line vs polygon test
+  * use Point for AABB.pos
+  * support sweep against filled polygon
 
 * Physics
   * fix slope corners
@@ -192,6 +211,7 @@
 * collisions
   * Remove Collidable and merge it into CollisionComponent
   * Return TraceResult in all line checks
+  * return a copy of the bbox -> solves the lazy evaluate problem
 
 * rendering
   * Consider making Renderable::render const
@@ -234,6 +254,7 @@
     * use in BasePropType loadFromJson, drawGui
   * remove custom resource related register functions
   * rename Property.hpp/cpp to PropertyContainer.hpp/cpp
+  * support getters
 
 * log
   * warn if null

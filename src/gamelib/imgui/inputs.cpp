@@ -139,7 +139,7 @@ namespace gamelib
             ImGui::SameLine();
             if (ImGui::Button("Center"))
             {
-                data.origin = trans.getLocalBBox().getCenter().asPoint();
+                data.origin = trans.getLocalBBox().getCenter();
                 changed = true;
             }
         }
