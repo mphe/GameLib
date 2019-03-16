@@ -2,6 +2,7 @@
 #define GAMELIB_COLLISION_FLAGS_HPP
 
 #include "gamelib/utils/bitflags.hpp"
+#include "gamelib/utils/typetraits.hpp"
 
 namespace gamelib
 {
@@ -19,7 +20,7 @@ namespace gamelib
         "Physics Drag"
     };
 
-    constexpr unsigned int num_colflags = sizeof(str_colflags) / sizeof(char*);
+    constexpr unsigned int num_colflags = ARRAY_SIZE(str_colflags);
 }
 
 #endif

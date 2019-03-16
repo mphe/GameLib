@@ -2,6 +2,7 @@
 #define GAMELIB_RENDERING_FLAGS_HPP
 
 #include "gamelib/utils/bitflags.hpp"
+#include "gamelib/utils/typetraits.hpp"
 
 namespace gamelib
 {
@@ -19,7 +20,7 @@ namespace gamelib
         "Scale parallax",
     };
 
-    constexpr unsigned int num_renderflags = sizeof(str_renderflags) / sizeof(char*);
+    constexpr unsigned int num_renderflags = ARRAY_SIZE(str_renderflags);
 }
 
 #endif
