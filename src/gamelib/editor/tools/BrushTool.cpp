@@ -140,7 +140,7 @@ namespace gamelib
         if (brush->getEntity()->getName() == brushEntities[Line])
             static_cast<LineBrushComponent*>(brush)->setWidth(_linewidth);
 
-        brush->getBrushShape()->texture = _tex;
+        brush->getBrushShape()->setTexture(_tex);
         brush->getBrushShape()->setTexOffset(_offset);
 
         if (_solid)

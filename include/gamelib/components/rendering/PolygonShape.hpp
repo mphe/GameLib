@@ -8,6 +8,10 @@
 
 namespace gamelib
 {
+    constexpr const char* str_primitives[] = {
+        "Points", "Lines", "LineStrip", "Triangles", "TriangleStrip", "TriangleFan", "Quads",
+    };
+
     enum MappingMethod
     {
         MapWorld,
@@ -18,7 +22,7 @@ namespace gamelib
         NumMappingMethods
     };
 
-    constexpr const char* mapping_strings[] = { "World", "Line", "Instance", "Fit", "Stretch" };
+    constexpr const char* str_mappings[] = { "World", "Line", "Instance", "Fit", "Stretch" };
 
     class PolygonShape : public RenderComponent
     {
@@ -33,6 +37,12 @@ namespace gamelib
             virtual auto fetch(const math::AABBf& rect)         -> void;
 
             auto adaptToTexture() -> void;
+
+            auto setPrimitiveType(sf::PrimitiveType type) -> void;
+            auto getPrimitiveType() const                 -> sf::PrimitiveType;
+
+            auto setTexture(TextureResource::Handle tex) -> void;
+            auto getTexture() const                      -> TextureResource::Handle;
 
             auto setTexOffset(const math::Vec2f& vec) -> void;
             auto getTexOffset() const                 -> const math::Vec2f&;
@@ -55,10 +65,9 @@ namespace gamelib
             // Adapt mapping on transform
             virtual auto _onChanged(const sf::Transform& old) -> void;
 
-        public:
-            TextureResource::Handle texture;
-
         private:
+            TextureResource::Handle _tex;
+            sf::PrimitiveType _primitiveType;
             math::Vec2f _texoffset;
             math::Vec2f _texscale;
             MappingMethod _mapping;

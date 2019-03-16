@@ -3,21 +3,24 @@
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/utils/conversions.hpp"
+#include "gamelib/utils/typetraits.hpp"
 #include "gamelib/properties/PropDummy.hpp"
 
 namespace gamelib
 {
     PolygonShape::PolygonShape() :
         RenderComponent(name),
+        _primitiveType(sf::TriangleStrip),
         _texscale(1, 1),
         _mapping(MapInstance)
     {
-        _vertices.setPrimitiveType(sf::TriangleStrip);
+        _vertices.setPrimitiveType(_primitiveType);
 
-        _props.registerProperty("texture", texture);
+        _props.registerProperty("primitiveType", _primitiveType, PROP_METHOD(_primitiveType, setPrimitiveType), this, 0, ARRAY_SIZE(str_primitives), str_primitives);
+        _props.registerProperty("texture", _tex, PROP_METHOD(_tex, setTexture), this);
         _props.registerProperty("texoffset", _texoffset, PROP_METHOD(_texoffset, setTexOffset), this);
         _props.registerProperty("texscale", _texscale, PROP_METHOD(_texscale, setTexScale), this);
-        _props.registerProperty("mapping", _mapping, PROP_METHOD(_mapping, setMappingMethod), this, 0, NumMappingMethods, mapping_strings);
+        _props.registerProperty("mapping", _mapping, PROP_METHOD(_mapping, setMappingMethod), this, 0, NumMappingMethods, str_mappings);
         registerDummyProperty(_props, "vertices");
     }
 
@@ -47,7 +50,7 @@ namespace gamelib
     void PolygonShape::adaptToTexture()
     {
         _mapping = MapInstance;
-        fetch(math::AABBf(0, 0, texture->getSize().x, texture->getSize().y));
+        fetch(math::AABBf(0, 0, _tex->getSize().x, _tex->getSize().y));
     }
 
 
@@ -60,6 +63,28 @@ namespace gamelib
     MappingMethod PolygonShape::getMappingMethod() const
     {
         return _mapping;
+    }
+
+    void PolygonShape::setPrimitiveType(sf::PrimitiveType type)
+    {
+        _primitiveType = type;
+        _vertices.setPrimitiveType(type);
+    }
+
+    sf::PrimitiveType PolygonShape::getPrimitiveType() const
+    {
+        return _primitiveType;
+    }
+
+    void PolygonShape::setTexture(TextureResource::Handle tex)
+    {
+        _tex = tex;
+        _mapTexture();
+    }
+
+    TextureResource::Handle PolygonShape::getTexture() const
+    {
+        return _tex;
     }
 
     void PolygonShape::setTexOffset(const math::Vec2f& vec)
@@ -90,7 +115,7 @@ namespace gamelib
 
     void PolygonShape::render(sf::RenderTarget& target, sf::RenderStates states) const
     {
-        states.texture = texture.get();
+        states.texture = _tex.get();
         SceneObject::render(target, states);
     }
 
@@ -147,7 +172,7 @@ namespace gamelib
             case MapLine:
                 {
                     float offx = 0;
-                    unsigned int texh = texture ? texture->getSize().y : 0;
+                    unsigned int texh = _tex ? _tex->getSize().y : 0;
                     math::Vec2f p[4];
 
                     for (size_t i = 0; i + 4 <= size(); i += 4)
