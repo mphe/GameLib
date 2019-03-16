@@ -35,7 +35,7 @@ namespace gamelib
         _updateBBox();
     }
 
-    void PolygonShape::fetch(const math::AbstractPolygon<float>& pol)
+    void PolygonShape::fetch(const math::AbstractPointSet<float>& pol)
     {
         _vertices.resize(pol.size());
 
