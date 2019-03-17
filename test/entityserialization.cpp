@@ -13,7 +13,7 @@ struct SomeStruct
 class PropTest : public PropType<0x4933b918, SomeStruct>
 {
     public:
-        bool loadFromJson(const PropertyHandle&, SomeStruct* ptr, const Json::Value& node) const
+        bool loadFromJson(const PropertyHandle&, SomeStruct* ptr, const Json::Value& node) const final override
         {
             ptr->a = node.get("a", -1).asInt();
             ptr->b = node.get("b", -1).asInt();
@@ -21,14 +21,17 @@ class PropTest : public PropType<0x4933b918, SomeStruct>
             return true;
         }
 
-        void writeToJson(const PropertyHandle& prop, const SomeStruct* ptr, Json::Value& node) const
+        void writeToJson(const PropertyHandle& prop, const SomeStruct* ptr, Json::Value& node) const final override
         {
             node["a"] = ptr->a;
             node["b"] = ptr->b;
             node["c"] = ptr->c;
         }
 
-        bool drawGui(const PropertyHandle&, const std::string&, SomeStruct*) const { return false; }
+        bool drawGui(const PropertyHandle&, const std::string&, SomeStruct*) const final override
+        {
+            return false;
+        }
 } propTest;
 
 

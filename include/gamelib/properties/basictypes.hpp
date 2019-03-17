@@ -17,13 +17,13 @@ namespace gamelib
         public:
             virtual ~BasicTypeSerializer() {};
 
-            bool loadFromJson(const PropertyHandle& prop, T* ptr, const Json::Value& node) const
+            bool loadFromJson(const PropertyHandle& prop, T* ptr, const Json::Value& node) const final override
             {
                 gamelib::loadFromJson(node, *ptr);
                 return true;
             }
 
-            void writeToJson(const PropertyHandle& prop, const T* ptr, Json::Value& node) const
+            void writeToJson(const PropertyHandle& prop, const T* ptr, Json::Value& node) const final override
             {
                 gamelib::writeToJson(node, *ptr);
             }
@@ -32,9 +32,9 @@ namespace gamelib
     class PropResource : public PropType<0xd41af3a9, BaseResourceHandle>
     {
         public:
-            bool loadFromJson(const PropertyHandle& prop, BaseResourceHandle* ptr, const Json::Value& node) const;
-            void writeToJson(const PropertyHandle& prop, const BaseResourceHandle* ptr, Json::Value& node) const;
-            bool drawGui(const PropertyHandle& prop, const std::string& name, BaseResourceHandle* ptr) const;
+            bool loadFromJson(const PropertyHandle& prop, BaseResourceHandle* ptr, const Json::Value& node) const final override;
+            void writeToJson(const PropertyHandle& prop, const BaseResourceHandle* ptr, Json::Value& node) const final override;
+            bool drawGui(const PropertyHandle& prop, const std::string& name, BaseResourceHandle* ptr) const final override;
     };
 
     extern PropResource propResource;
@@ -42,9 +42,9 @@ namespace gamelib
     class PropColor : public PropType<0xf261806f, sf::Color>
     {
         public:
-            bool loadFromJson(const PropertyHandle& prop, sf::Color* ptr, const Json::Value& node) const;
-            void writeToJson(const PropertyHandle& prop, const sf::Color* ptr, Json::Value& node) const;
-            bool drawGui(const PropertyHandle& prop, const std::string& name, sf::Color* ptr) const;
+            bool loadFromJson(const PropertyHandle& prop, sf::Color* ptr, const Json::Value& node) const final override;
+            void writeToJson(const PropertyHandle& prop, const sf::Color* ptr, Json::Value& node) const final override;
+            bool drawGui(const PropertyHandle& prop, const std::string& name, sf::Color* ptr) const final override;
     };
 
     extern PropColor propColor;
@@ -60,7 +60,7 @@ namespace gamelib
     class Prop##name : public Identifier<id, base<type>> \
     {   \
         public: \
-            auto drawGui(const PropertyHandle& prop, const std::string& name, type* ptr) const -> bool; \
+            auto drawGui(const PropertyHandle& prop, const std::string& name, type* ptr) const -> bool final override; \
     };  \
     extern Prop##name prop##name;   \
     GENERATE_CATEGORIZER(name, type)

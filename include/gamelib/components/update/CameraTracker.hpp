@@ -15,7 +15,7 @@ namespace gamelib
         public:
             CameraTracker();
 
-            auto update(float elapsed) -> void;
+            auto update(float elapsed) -> void final override;
 
             auto shake(float seconds) -> void;
             auto getCamera() const    -> Camera*;

@@ -53,25 +53,6 @@ namespace gamelib
         return _shape;
     }
 
-    void PolygonBrushComponent::_refresh()
-    {
-        // _shape = getEntity()->findByName<PolygonShape>();
-        // _pol = nullptr;
-        //
-        // getEntity()->findAllByName<Polygon>([&](Polygon* pol) {
-        //         if (pol->getPolygon().type == math::TriangleStrip)
-        //         {
-        //             if (_pol != pol)
-        //             {
-        //                 _pol = pol;
-        //                 regenerate();
-        //             }
-        //             return true;
-        //         }
-        //         return false;
-        //     });
-    }
-
     void PolygonBrushComponent::regenerate() const
     {
         if (_shape && _pol)

@@ -16,12 +16,9 @@ namespace gamelib
             auto setWidth(int width) -> void;
             auto getWidth() const    -> int;
 
-            auto getBrushPolygon() const -> PolygonCollider*;
+            auto getBrushPolygon() const -> PolygonCollider* final override;
 
-            auto regenerate() const -> void;
-
-        private:
-            virtual auto _refresh()  -> void;
+            auto regenerate() const -> void final override;
 
         private:
             PolygonCollider* _line;

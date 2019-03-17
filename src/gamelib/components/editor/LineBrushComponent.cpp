@@ -41,26 +41,6 @@ namespace gamelib
         return _line;
     }
 
-    void LineBrushComponent::_refresh()
-    {
-        // PolygonBrushComponent::_refresh();
-        //
-        // _line = nullptr;
-        // getEntity()->findAllByName<Polygon>([&](Polygon* pol) {
-        //         if (pol->getPolygon().type == math::LineStrip)
-        //         {
-        //             if (_line != pol)
-        //             {
-        //                 _line = pol;
-        //                 regenerate();
-        //             }
-        //             return true;
-        //         }
-        //         return false;
-        //     });
-        //
-    }
-
     void LineBrushComponent::regenerate() const
     {
         if (!_shape || !_pol || !_line || _line->size() == 0)

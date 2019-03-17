@@ -39,14 +39,14 @@ namespace gamelib
             auto getAnimation() const  -> const AnimationComponent&;
             auto getTexture() const    -> TextureResource::Handle;
 
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node) const  -> void;
+            auto loadFromJson(const Json::Value& node) -> bool final override;
+            auto writeToJson(Json::Value& node) const  -> void final override;
 
-            auto render(sf::RenderTarget& target, sf::RenderStates states_) const -> void;
+            auto render(sf::RenderTarget& target, sf::RenderStates states_) const -> void final override;
 
         protected:
-            auto _init()    -> bool;
-            auto _quit()    -> void;
+            auto _init()    -> bool final override;
+            auto _quit()    -> void final override;
             auto _initShape() -> void;
             auto _updateUV()  -> void;
 

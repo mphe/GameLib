@@ -16,7 +16,7 @@ namespace gamelib
         public:
             FreeCamController(Camera* cam, float speed = 400);
 
-            void update(float elapsed);
+            void update(float elapsed) final override;
 
         public:
             Camera* cam;

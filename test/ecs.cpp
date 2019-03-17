@@ -15,7 +15,7 @@ class BarComponent : public Identifier<0x650e189e, Component>
     public:
         BarComponent(int x_) : x(x_) {}
 
-        void _refresh()
+        void _refresh() final override
         {
             FooComponent* foo = getEntity()->findByType<FooComponent>();
             assert(foo && "FooComponent not found");

@@ -22,20 +22,23 @@ struct SomeClass
 
 struct SomeClassSerializer : public PropType<0x13a51995, SomeClass>
 {
-    auto loadFromJson(const PropertyHandle& prop, SomeClass* ptr, const Json::Value& node) const -> bool
+    auto loadFromJson(const PropertyHandle& prop, SomeClass* ptr, const Json::Value& node) const -> bool final override
     {
         ptr->x = node["x"].asInt();
         ptr->y = node["y"].asInt();
         return true;
     }
 
-    auto writeToJson(const PropertyHandle& prop, const SomeClass* ptr, Json::Value& node) const -> void
+    auto writeToJson(const PropertyHandle& prop, const SomeClass* ptr, Json::Value& node) const -> void final override
     {
         node["x"] = prop.getAs<int>();
         node["y"] = prop.getAs<int>();
     }
 
-    auto drawGui(const PropertyHandle& prop, const std::string& name, SomeClass* ptr) const -> bool { return false; }
+    auto drawGui(const PropertyHandle& prop, const std::string& name, SomeClass* ptr) const -> bool final override
+    {
+        return false;
+    }
 } someClassSerializer;
 
 

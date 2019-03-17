@@ -31,7 +31,7 @@ namespace gamelib
                 drawText(8, 8 + _dbgSize++ * _fontsize, std::forward<Args>(args)...);
             }
 
-            void render(sf::RenderTarget& target);
+            void render(sf::RenderTarget& target) final override;
 
         private:
             template <class T, class... Args>

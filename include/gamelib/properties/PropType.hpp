@@ -39,9 +39,9 @@ namespace gamelib
             virtual bool drawGui(const PropertyHandle& prop, const std::string& name, T* ptr) const = 0;
 
         private:
-            bool loadFromJson(const PropertyHandle& prop, const Json::Value& node) const;
-            void writeToJson(const PropertyHandle& prop, Json::Value& node) const;
-            bool drawGui(const PropertyHandle& prop, const std::string& name) const;
+            bool loadFromJson(const PropertyHandle& prop, const Json::Value& node) const final override;
+            void writeToJson(const PropertyHandle& prop, Json::Value& node) const final override;
+            bool drawGui(const PropertyHandle& prop, const std::string& name) const final override;
     };
 
 

@@ -15,7 +15,7 @@ class ComponentB : public Identifier<0x650e189e, Component>
     public:
         ComponentB() : Identifier("ComponentB") {}
 
-        bool loadFromJson(const Json::Value& node)
+        bool loadFromJson(const Json::Value& node) final override
         {
             x = node.get("x", 0).asInt();
             return Component::loadFromJson(node);

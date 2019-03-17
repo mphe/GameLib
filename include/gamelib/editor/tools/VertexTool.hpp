@@ -10,10 +10,10 @@ namespace gamelib
         public:
             VertexTool();
 
-            void onMousePressed();
-            void onDrag();
-            void drawGui();
-            void render(sf::RenderTarget& target);
+            void onMousePressed() final override;
+            void onDrag() final override;
+            void drawGui() final override;
+            void render(sf::RenderTarget& target) final override;
 
         private:
             size_t _selected;

@@ -196,6 +196,7 @@
   * convex optimize line vs polygon test
   * use Point for AABB.pos
   * support sweep against filled polygon
+  * consider removing the \_add, \_edit, \_remove, ... variants in BasePointSet and BasePolygon
 
 * Physics
   * fix slope corners

@@ -12,9 +12,9 @@ namespace gamelib
     class PropComponent : public PropType<0xe73dee69, Component*>
     {
         public:
-            bool loadFromJson(const PropertyHandle& prop, Component** ptr, const Json::Value& node) const;
-            void writeToJson(const PropertyHandle& prop, Component* const* ptr, Json::Value& node) const;
-            bool drawGui(const PropertyHandle& prop, const std::string& name, Component** ptr) const;
+            bool loadFromJson(const PropertyHandle& prop, Component** ptr, const Json::Value& node) const final override;
+            void writeToJson(const PropertyHandle& prop, Component* const* ptr, Json::Value& node) const final override;
+            bool drawGui(const PropertyHandle& prop, const std::string& name, Component** ptr) const final override;
 
             static Entity* getEntity(const PropertyHandle& prop);
     };

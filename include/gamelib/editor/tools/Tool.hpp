@@ -17,7 +17,7 @@ namespace gamelib
             virtual void onMouseMove() {};
             virtual void onDrag() {};
             virtual void drawGui() {};
-            virtual void render(sf::RenderTarget& target) {};
+            virtual void render(sf::RenderTarget& target) override {};
     };
 }
 

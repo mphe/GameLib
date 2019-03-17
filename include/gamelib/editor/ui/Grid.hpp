@@ -17,7 +17,7 @@ namespace gamelib
 
             auto snap(const math::Point2f& p) const -> math::Point2f;
 
-            auto render(sf::RenderTarget& target) -> void;
+            auto render(sf::RenderTarget& target) -> void final override;
 
         private:
             auto _recalculate(const sf::Vector2f& size) -> void;

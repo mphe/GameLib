@@ -32,9 +32,6 @@ namespace gamelib
             virtual auto regenerate() const -> void;
 
         protected:
-            virtual auto _refresh() -> void;
-
-        protected:
             PolygonCollider* _pol;
             PolygonShape* _shape;
     };

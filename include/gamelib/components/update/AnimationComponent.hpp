@@ -29,7 +29,7 @@ namespace gamelib
             AnimationComponent();
             AnimationComponent(SpriteComponent* sprite);
 
-            auto update(float elapsed) -> void;
+            auto update(float elapsed) -> void final override;
 
         public:
             SpriteComponent* sprite;

@@ -35,7 +35,7 @@ namespace gamelib
 
             virtual ~Identifier() {}
 
-            inline ID getID() const
+            inline ID getID() const final override
             {
                 return id;
             }

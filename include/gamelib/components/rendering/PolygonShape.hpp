@@ -53,17 +53,17 @@ namespace gamelib
             auto setMappingMethod(MappingMethod m) -> void;
             auto getMappingMethod() const          -> MappingMethod;
 
-            auto render(sf::RenderTarget& target, sf::RenderStates states) const -> void;
+            auto render(sf::RenderTarget& target, sf::RenderStates states) const -> void final override;
 
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node) const  -> void;
+            auto loadFromJson(const Json::Value& node) -> bool final override;
+            auto writeToJson(Json::Value& node) const  -> void final override;
 
         protected:
             auto _mapTexture() -> void;
             virtual auto _mapTexture(MappingMethod mappingMethod) -> void;
 
             // Adapt mapping on transform
-            virtual auto _onChanged(const sf::Transform& old) -> void;
+            virtual auto _onChanged(const sf::Transform& old) -> void override;
 
         private:
             TextureResource::Handle _tex;

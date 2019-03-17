@@ -36,11 +36,11 @@ namespace gamelib
         public:
             Editor();
 
-            auto init(Game* game) -> bool;
-            auto quit()                    -> void;
+            auto init(Game* game) -> bool final override;
+            auto quit()           -> void final override;
 
-            auto update(float elapsed)            -> void;
-            auto render(sf::RenderTarget& target) -> void;
+            auto update(float elapsed)            -> void final override;
+            auto render(sf::RenderTarget& target) -> void final override;
 
             auto setTool(Tools tool) -> void;
             auto getSelectTool()     -> SelectTool&;

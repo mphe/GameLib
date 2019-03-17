@@ -24,8 +24,8 @@ namespace gamelib
             typedef std::unordered_map<std::string, PropertyHandle> PropertyMap;
 
         public:
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node) const  -> void;
+            auto loadFromJson(const Json::Value& node) -> bool final override;
+            auto writeToJson(Json::Value& node) const  -> void final override;
 
             auto unregisterProperty(const std::string& name) -> void;
 

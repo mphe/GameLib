@@ -24,7 +24,7 @@ namespace gamelib
             auto getLocalBounds() const -> math::AABBf;
             auto getVertices() const    -> const sf::VertexArray&;
             auto size() const           -> size_t;
-            auto getBBox() const        -> const math::AABBf&;
+            auto getBBox() const        -> const math::AABBf& override;
 
             auto unregister() -> void;
 
@@ -32,11 +32,11 @@ namespace gamelib
             virtual auto render(sf::RenderTarget& target, sf::RenderStates states) const -> void;
 
             // TODO: consider removing json stuff
-            virtual auto loadFromJson(const Json::Value& node) -> bool;
-            virtual auto writeToJson(Json::Value& node) const  -> void;
+            virtual auto loadFromJson(const Json::Value& node) -> bool override;
+            virtual auto writeToJson(Json::Value& node) const  -> void override;
 
         protected:
-            virtual auto _onChanged(const sf::Transform& old) -> void;
+            virtual auto _onChanged(const sf::Transform& old) -> void override;
 
             // Should be called by parents whenever the vertex list changes
             auto _updateBBox() -> void;

@@ -16,9 +16,9 @@ namespace gamelib
     class PropDummy : public Identifier<invalidID, IPropType>
     {
         public:
-            inline bool loadFromJson(const PropertyHandle&, const Json::Value&) const { return true; };
-            inline void writeToJson(const PropertyHandle&, Json::Value&)        const { };
-            inline bool drawGui(const PropertyHandle&, const std::string&)      const { return false; };
+            inline bool loadFromJson(const PropertyHandle&, const Json::Value&) const final override { return true; };
+            inline void writeToJson(const PropertyHandle&, Json::Value&)        const final override {};
+            inline bool drawGui(const PropertyHandle&, const std::string&)      const final override { return false; };
     };
 
     extern PropDummy propDummy;

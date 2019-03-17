@@ -19,10 +19,10 @@ namespace gamelib
 
             auto getChildren() const -> const std::vector<Transformable*>&;
 
-            virtual auto getBBox() const -> const math::AABBf&;
+            virtual auto getBBox() const -> const math::AABBf& override;
 
         protected:
-            virtual auto _onChanged(const sf::Transform& old) -> void;
+            virtual auto _onChanged(const sf::Transform& old) -> void override;
 
         protected:
             std::vector<Transformable*> _objs;

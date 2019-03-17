@@ -23,9 +23,9 @@ namespace gamelib
         public:
             BrushTool();
 
-            void onMousePressed();
-            void drawGui();
-            void render(sf::RenderTarget& target);
+            void onMousePressed() final override;
+            void drawGui() final override;
+            void render(sf::RenderTarget& target) final override;
 
         private:
             PolygonBrushComponent* _getIfSame() const;

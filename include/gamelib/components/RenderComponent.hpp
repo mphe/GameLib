@@ -15,15 +15,15 @@ namespace gamelib
             RenderComponent(const std::string& name);
             virtual ~RenderComponent() {}
 
-            virtual auto getTransform()       -> Transformable*;
-            virtual auto getTransform() const -> const Transformable*;
+            virtual auto getTransform()       -> Transformable* override;
+            virtual auto getTransform() const -> const Transformable* override;
 
             using Component::loadFromJson;
             using Component::writeToJson;
 
         protected:
-            virtual auto _init() -> bool;
-            virtual auto _quit() -> void;
+            virtual auto _init() -> bool override;
+            virtual auto _quit() -> void override;
     };
 }
 

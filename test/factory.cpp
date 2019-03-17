@@ -18,7 +18,7 @@ class Bar : public Foo
         Bar(const string& name_) : name(name_) {}
         virtual ~Bar() {}
 
-        const string& getName() const { return name; }
+        const string& getName() const final override { return name; }
 
         static std::unique_ptr<Foo> create(const string& name)
         {

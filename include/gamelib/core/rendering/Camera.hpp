@@ -16,10 +16,10 @@ namespace gamelib
             Camera(const std::string& name, const math::Point2f& pos, const math::Vec2f& size);
             virtual ~Camera() {}
 
-            virtual bool loadFromJson(const Json::Value& node);
-            virtual void writeToJson(Json::Value& node) const;
+            virtual bool loadFromJson(const Json::Value& node) override;
+            virtual void writeToJson(Json::Value& node) const override;
 
-            virtual void update(float elapsed);
+            virtual void update(float elapsed) override;
 
             void setMotion(float speed, float dir);
             void addMotion(float speed, float dir);

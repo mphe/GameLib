@@ -29,8 +29,8 @@ namespace gamelib
             virtual auto getTransform()       -> Transformable*;
             virtual auto getTransform() const -> const Transformable*;
 
-            virtual auto loadFromJson(const Json::Value& node) -> bool;
-            virtual auto writeToJson(Json::Value& node) const  -> void;
+            virtual auto loadFromJson(const Json::Value& node) -> bool override;
+            virtual auto writeToJson(Json::Value& node) const  -> void override;
 
         protected:
             // Those are called by Entity

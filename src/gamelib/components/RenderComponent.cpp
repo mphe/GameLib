@@ -8,18 +8,18 @@ namespace gamelib
     class PropSceneObject : public PropType<0x4933b918, SceneObject>
     {
         public:
-            bool loadFromJson(const PropertyHandle& prop, SceneObject* ptr, const Json::Value& node) const
+            bool loadFromJson(const PropertyHandle& prop, SceneObject* ptr, const Json::Value& node) const final override
             {
                 return ptr->SceneObject::loadFromJson(node);
             }
 
-            void writeToJson(const PropertyHandle& prop, const SceneObject* ptr, Json::Value& node) const
+            void writeToJson(const PropertyHandle& prop, const SceneObject* ptr, Json::Value& node) const final override
             {
                 ptr->SceneObject::writeToJson(node);
                 node.removeMember("transform");
             }
 
-            bool drawGui(const PropertyHandle& prop, const std::string& name, SceneObject* ptr) const
+            bool drawGui(const PropertyHandle& prop, const std::string& name, SceneObject* ptr) const final override
             {
                 bool changed = inputSceneData(*ptr);
 

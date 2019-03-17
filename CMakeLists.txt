@@ -27,7 +27,17 @@ set(CMAKE_CXX_STANDARD 11)
 set(CXX_STANDARD_REQUIRED ON)
 
 if (CMAKE_COMPILER_IS_GNUCC)
-    add_definitions(-Wall -Wextra -Wno-unused-parameter -Wno-switch -Wno-sign-compare -Wno-parentheses -fdiagnostics-color=always)
+    add_definitions(
+        -Wall
+        -Wextra
+        -Wno-unused-parameter
+        -Wno-switch
+        -Wno-sign-compare
+        -Wno-parentheses
+        -Wsuggest-override
+        -Werror=suggest-override
+        -fdiagnostics-color=always
+        )
 elseif (MSVC)
     # Untested
     add_definitions(/W3)

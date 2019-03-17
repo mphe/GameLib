@@ -18,10 +18,10 @@ namespace gamelib
             IDCounter();
             virtual ~IDCounter() {};
 
-            auto getID() const -> ID;
+            auto getID() const -> ID final override;
 
-            virtual auto loadFromJson(const Json::Value& node) -> bool;
-            virtual auto writeToJson(Json::Value& node) const  -> void;
+            virtual auto loadFromJson(const Json::Value& node) -> bool override;
+            virtual auto writeToJson(Json::Value& node) const  -> void override;
 
         protected:
             // Maybe make this public if really needed, but seems dangerous to do so

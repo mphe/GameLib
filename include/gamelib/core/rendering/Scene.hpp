@@ -64,8 +64,8 @@ namespace gamelib
             // Resets everything and removes all SceneObjects and Cameras
             auto destroy() -> void;
 
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node) const  -> void;
+            auto loadFromJson(const Json::Value& node) -> bool final override;
+            auto writeToJson(Json::Value& node) const  -> void final override;
 
             auto add(SceneObject* obj)    -> SceneObject*;
             auto remove(SceneObject* obj) -> void;

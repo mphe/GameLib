@@ -13,9 +13,9 @@ namespace gamelib
         public:
             SpriteTool();
 
-            auto onMousePressed()                 -> void;
-            auto drawGui()                        -> void;
-            auto render(sf::RenderTarget& target) -> void;
+            void onMousePressed() final override;
+            void drawGui() final override;
+            void render(sf::RenderTarget& target) final override;
 
         private:
             SpriteResource::Handle _sprite;

@@ -42,11 +42,11 @@ namespace gamelib
             constexpr static const char* name = "UpdateSystem";
 
         public:
-            auto add(UpdateComponent* obj, UpdateHookType hook)   -> Handle;
-            auto remove(Handle handle, UpdateHookType hook) -> void;
-            auto destroy()                            -> void;
+            Handle add(UpdateComponent* obj, UpdateHookType hook);
+            void remove(Handle handle, UpdateHookType hook);
+            void destroy();
 
-            auto update(float elapsed) -> void;
+            void update(float elapsed) final override;
 
         private:
             struct Data

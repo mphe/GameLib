@@ -20,8 +20,8 @@ namespace gamelib
             auto getHook() const              -> UpdateHookType;
 
         protected:
-            virtual auto _init() -> bool;
-            virtual auto _quit() -> void;
+            virtual auto _init() -> bool override;
+            virtual auto _quit() -> void override;
 
         public:
             int interval;

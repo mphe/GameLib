@@ -15,10 +15,10 @@ namespace gamelib
         public:
             QController();
 
-            auto update(float elapsed) -> void;
+            auto update(float elapsed) -> void final override;
 
         private:
-            auto _refresh() -> void;
+            auto _refresh() -> void final override;
 
         public:
             float accelerate;

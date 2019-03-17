@@ -62,8 +62,8 @@ namespace gamelib
             ResourceManager() {};
             ResourceManager(const std::string& searchpath);
 
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node) const  -> void;
+            auto loadFromJson(const Json::Value& node) -> bool final override;
+            auto writeToJson(Json::Value& node) const  -> void final override;
 
             // (Re-)Load a resource.
             auto load(const std::string& fname) -> BaseResourceHandle;

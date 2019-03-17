@@ -46,7 +46,7 @@ namespace gamelib
             QPhysics(const math::AABBf* box, int interval = 1);
             virtual ~QPhysics() {};
 
-            virtual auto update(float elapsed) -> void;
+            virtual auto update(float elapsed) -> void override;
 
             // Accelerate by a given amount of units/sec in a certain direction
             // Expects wishdir to be a normalized vector.
@@ -73,7 +73,7 @@ namespace gamelib
             auto setGround(CollisionComponent* ground, const math::Vec2f& normal) -> void;
 
         protected:
-            virtual auto _refresh() -> void;
+            virtual auto _refresh() -> void override;
 
             auto _nudge(math::AABBf* box, float size = 0.5) -> bool;
             auto _move(const math::Vec2f& dist) -> void;

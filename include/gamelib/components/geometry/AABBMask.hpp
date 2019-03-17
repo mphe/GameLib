@@ -14,19 +14,19 @@ namespace gamelib
             AABBMask(unsigned int flags = 0);
             ~AABBMask() {}
 
-            auto intersect(const math::Point2f& point) const -> bool;
-            auto intersect(const math::Line2f& line) const   -> Intersection;
-            auto intersect(const math::AABBf& rect) const    -> Intersection;
+            auto intersect(const math::Point2f& point) const -> bool final override;
+            auto intersect(const math::Line2f& line) const   -> Intersection final override;
+            auto intersect(const math::AABBf& rect) const    -> Intersection final override;
 
-            auto sweep(const math::AABBf& rect, const math::Vec2f& vel) const -> Intersection;
+            auto sweep(const math::AABBf& rect, const math::Vec2f& vel) const -> Intersection final override;
 
-            auto getBBox() const -> const math::AABBf&;
+            auto getBBox() const -> const math::AABBf& final override;
 
             auto setComponent(const Component* c) -> bool;
             auto getComponent() const             -> const Component*;
 
         protected:
-            auto _onChanged(const sf::Transform&) -> void {};
+            auto _onChanged(const sf::Transform&) -> void final override {};
 
         private:
             const Component* _comp;

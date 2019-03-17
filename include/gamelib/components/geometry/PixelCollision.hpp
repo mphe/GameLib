@@ -18,19 +18,19 @@ namespace gamelib
             PixelCollision(const math::AABBf& aabb, unsigned int flags = 0);
             virtual ~PixelCollision() {}
 
-            auto intersect(const math::Point2f& point) const -> bool;
-            auto intersect(const math::Line2f& line) const   -> Intersection;
-            auto intersect(const math::AABBf& rect) const    -> Intersection;
+            auto intersect(const math::Point2f& point) const -> bool final override;
+            auto intersect(const math::Line2f& line) const   -> Intersection final override;
+            auto intersect(const math::AABBf& rect) const    -> Intersection final override;
 
-            auto sweep(const math::AABBf& rect, const math::Vec2f& vel) const -> Intersection;
+            auto sweep(const math::AABBf& rect, const math::Vec2f& vel) const -> Intersection final override;
 
             auto getNormal(float x, float y) const       -> math::Vec2f;
             auto getNormal(const math::Point2f& p) const -> math::Vec2f;
 
-            auto getBBox() const     -> const math::AABBf&;
+            auto getBBox() const     -> const math::AABBf& final override;
 
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node) const  -> void;
+            auto loadFromJson(const Json::Value& node) -> bool final override;
+            auto writeToJson(Json::Value& node) const  -> void final override;
 
             // Queries the ResourceManager or falls back to normal loading
             auto loadImageFromFile(const std::string& fname)       -> bool;
@@ -43,7 +43,7 @@ namespace gamelib
             auto setMaskColor(sf::Color mask) -> void;
 
         protected:
-            virtual auto _onChanged(const sf::Transform& old) -> void;
+            virtual auto _onChanged(const sf::Transform& old) -> void override;
 
         protected:
             sf::Color _mask;

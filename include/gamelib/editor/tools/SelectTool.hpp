@@ -17,16 +17,16 @@ namespace gamelib
         public:
             SelectTool();
 
-            auto onMousePressed() -> void;
-            auto onMouseRelease() -> void;
-            auto onDrag()         -> void;
+            void onMousePressed() final override;
+            void onMouseRelease() final override;
+            void onDrag() final override;
 
-            auto render(sf::RenderTarget& target) -> void;
-            auto drawGui()                        -> void;
+            void render(sf::RenderTarget& target) final override;
+            void drawGui() final override;
 
-            auto select(Entity::Handle enthandle)        -> void;
-            auto select(Entity* ent)                     -> void;
-            auto select(float x, float y, unsigned int flags = collision_mask) -> void;
+            void select(Entity::Handle enthandle);
+            void select(Entity* ent);
+            void select(float x, float y, unsigned int flags = collision_mask);
 
             auto getSelected() const -> const Entity*;
             auto getSelected()       -> Entity*;

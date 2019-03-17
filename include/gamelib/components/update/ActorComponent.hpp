@@ -31,10 +31,10 @@ namespace gamelib
 
             auto changeState(State state) -> void;
 
-            virtual auto update(float elapsed) -> void;
+            virtual auto update(float elapsed) -> void override;
 
         protected:
-            virtual auto _refresh() -> void;
+            virtual auto _refresh() -> void override;
 
         public:
             float turnspeed;

@@ -35,8 +35,8 @@ namespace gamelib
             // Use this outside the game loop.
             auto destroy() -> void;
 
-            auto loadFromJson(const Json::Value& node) -> bool;
-            auto writeToJson(Json::Value& node) const  -> void;
+            auto loadFromJson(const Json::Value& node) -> bool final override;
+            auto writeToJson(Json::Value& node) const  -> void final override;
 
             auto pushState(GameStatePtr state) -> void;
             auto popState()                    -> void;
