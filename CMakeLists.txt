@@ -35,6 +35,8 @@ if (CMAKE_COMPILER_IS_GNUCC)
         -Wno-sign-compare
         -Wno-parentheses
         -Wsuggest-override
+        -Wsuggest-final-methods
+        -Wsuggest-final-types
         -Werror=suggest-override
         -fdiagnostics-color=always
         )

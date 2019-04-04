@@ -91,6 +91,10 @@ RenderSystem:
     * provide function to get key/version combined as int
   * add function to get by index disregarding version
   * overwrite on delete only if not trivially destructable
+=======
+* rename Component::init/quit to enable/disable
+* give flags a fixed width integer (int32, int64)
+>>>>>>> Fix missing final and add suggest final flags
 
 * create documents defining standard behaviour and templates
   * .hpp/.cpp template for new component

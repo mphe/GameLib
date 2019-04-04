@@ -24,7 +24,7 @@ namespace gamelib
             auto getLocalBounds() const -> math::AABBf;
             auto getVertices() const    -> const sf::VertexArray&;
             auto size() const           -> size_t;
-            auto getBBox() const        -> const math::AABBf& override;
+            auto getBBox() const        -> const math::AABBf& final override;
 
             auto unregister() -> void;
 
