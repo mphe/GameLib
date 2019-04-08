@@ -190,6 +190,9 @@ namespace gamelib
             auto clear()                   -> void;
             // auto size() const               -> unsigned int;
 
+            auto get(Handle key) const -> const T*;
+            auto get(Handle key)       -> T*;
+
             auto begin()       -> iterator;
             auto begin() const -> const_iterator;
             auto end()         -> iterator;

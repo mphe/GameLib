@@ -106,6 +106,19 @@ namespace gamelib
     }
 
     template <typename T, typename IT, typename VT, int C>
+    const T* SlotMap<T, IT, VT, C>::get(Handle key) const
+    {
+        return isValid(key) ? &_data[key.index].data : nullptr;
+    }
+
+    template <typename T, typename IT, typename VT, int C>
+    T* SlotMap<T, IT, VT, C>::get(Handle key)
+    {
+        return isValid(key) ? &_data[key.index].data : nullptr;
+    }
+
+
+    template <typename T, typename IT, typename VT, int C>
     const T& SlotMap<T, IT, VT, C>::operator[](Handle key) const
     {
         assert(isValid(key) && "Key is not valid (anymore)");
