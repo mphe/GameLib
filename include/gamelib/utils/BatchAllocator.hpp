@@ -29,6 +29,16 @@ namespace gamelib
     {
         size_t index;
         size_t size;
+
+        BatchHandle() :
+            index(0),
+            size(0)
+        { }
+
+        inline bool isValid() const
+        {
+            return size != 0;
+        }
     };
 
     template <typename T>
