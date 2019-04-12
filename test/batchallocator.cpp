@@ -8,7 +8,6 @@
 using namespace std;
 using namespace gamelib;
 
-constexpr int min_size = 1;
 constexpr int max_size = 20;
 
 struct TestData
