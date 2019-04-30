@@ -86,6 +86,8 @@ set(GAMELIB_SOURCES
     core/rendering/Layer.cpp
     core/rendering/Camera.cpp
     core/rendering/FreeCam.cpp
+    core/rendering/RenderSystem.cpp
+    core/rendering/RenderStructs.cpp
     core/ecs/Entity.cpp
     core/ecs/EntityManager.cpp
     core/ecs/EntityFactory.cpp

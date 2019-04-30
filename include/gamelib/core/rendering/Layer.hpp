@@ -6,6 +6,8 @@
 
 namespace gamelib
 {
+    typedef SlotKeyShort LayerHandle;
+
     class Layer : public SceneData
     {
         friend class Scene;

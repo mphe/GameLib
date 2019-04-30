@@ -56,6 +56,7 @@ namespace gamelib
         _game = nullptr;
         entmgr.clear();
         scene.destroy();
+        rendersystem.destroy();
         colsys.destroy();
         updatesystem.destroy();
         resmgr.clear();
@@ -75,11 +76,12 @@ namespace gamelib
     void Engine::render(sf::RenderTarget& target)
     {
         auto numrendered = scene.render(target);
+        numrendered += rendersystem.render(target);
 
         if (_printstatus)
             // Insert blanks after \r for clean overwriting
             LOG_RAW("\rRendered ", numrendered, " objects with ",
-                    scene.getNumCameras(), " camera(s) at ",
+                    // scene.getNumCameras(), " camera(s) at ",
                     std::round(1.f / _game->getFrametime()), " FPS");
     }
 }
