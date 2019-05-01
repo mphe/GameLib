@@ -73,6 +73,11 @@ namespace gamelib
         constexpr SlotKey() : index(-1), version(-1) {}
         constexpr SlotKey(IndexType i, VersionType v) : index(i), version(v) {}
 
+        void reset()
+        {
+            *this = type();
+        }
+
         constexpr bool isNull() const
         {
             return index == (IndexType)-1 && version == (VersionType)-1;
