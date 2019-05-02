@@ -26,6 +26,7 @@ set(GAMELIB_SOURCES
     events/ResourceReloadEvent.cpp
 
     components/RenderComponent.cpp
+    components/NewRenderComponent.cpp
     components/CollisionComponent.cpp
     components/UpdateComponent.cpp
     components/update/QPhysics.cpp
