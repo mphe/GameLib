@@ -1,10 +1,24 @@
 # Todo
 
+## Priority
+
+* Component
+  * Implement init()/quit() wrapper around \_init()/\_quit() that sets an initialized bool
+  * Add isInitialized() function
+  * Add enable()/disable() function
+* Return bbox copies instead of references in getBBox()
+* Use new name assignment system
+* ResourceManager
+  * Implement multiple searchpath
+  * Revert relative loads
+* Make components more interface-y to prevent diamond problems
+
+## All
+
 * FPS scaling
 * use median frametime to prevent stuttering
 * Give resources a type name member
 * move utils in a separate git repo
-* SlotMap size()
 * entity tags
 * inputBitflags() exclude list
 * replace std::unordered_map with a better implementation
@@ -15,7 +29,68 @@
 * use override keyword
 * move all resources to a "coreres" folder to allow easy symlinking when using the engine in a real project
 * Message System
-* rename Component::init/quit to enable/disable
+* give flags a fixed width integer (int32, int64)
+
+* provide failsafe implementations in core subsystems
+  * no crash when trying to create unknown entities/components
+  * no crash with missing components
+  * etc
+
+* config normalization problem
+  * related to c6d84f340805c911d58c15af3d198d16f56ffa2d
+  * entity configurations are usually handwritten and therefore
+  * entity configurations usually only include the properties that changed from the default
+  * properties can be user extended and can therefore have basically custom format/interpretations
+    * e.g. PropComponent uses a string with the referenced component name
+  * the configuration (diff) must be normalized in order to be used for further diffing and map saving
+
+  * normalization process:
+    * create new entity
+    * load config
+      * entity has now the config values
+    * write config
+    * the written config is normalized because it is machine generated and contains all possible properties
+
+  * problem:
+    * to make it work completely, components have to be created, too
+    * but: normalization should not modify the game state in a visible way
+      * component should not be initialized
+      * unknown what happens if it was initialized
+        * e.g. could execute game changing code
+    * unknown what happens if the properties are accessed (read/write) without component initialization
+
+  * solutions:
+    * add standard
+      * ensure component manipulation does not alter the gamestate
+        * safely call Component::init()/quit() without side effects
+        * probably best option as it should be possible to activate/deactivate entities and components ingame or in editor without risking component data loss
+      * allow no ambiguous properties and config values
+    * introduce another virtual function to IPropType to normalize a given json
+      * json normalize function calls the IPropType::normalize function if possible to normalize the user part
+
+
+RenderSystem:
+  * Write an IPointSet adapter to edit meshes
+
+  * Consider splitting camera functionality to other class
+    * Scene
+      * stores cameras
+      * uses render hierachy from RenderSystem
+      * determines visibility
+      * renders for each camera
+        * render call to RenderSystem with camera rect?
+
+* SlotMap
+  * add operator->() to SlotMapIterator
+  * size() function
+  * consider using std::vector to store empty fields
+    * nextempty var in each field is unnecessary memory overhead
+  * specify key size in terms of bits
+    * sum is always sizeof(int)
+    * version size is the difference
+    * provide function to get key/version combined as int
+  * add function to get by index disregarding version
+  * overwrite on delete only if not trivially destructable
 
 * create documents defining standard behaviour and templates
   * .hpp/.cpp template for new component
@@ -24,7 +99,11 @@
     * even if the component is quit()ed
     * must not have side effects if component is not initialized
     * must not crash if component is not initialized
+    * must reflect changes
+    * if the component requires a system to store its data, it must be initialized, otherwise undefined behavior
+      * e.g. RenderComponent needs a running RenderSystem to store its render data
     -> can help to solve c6d84f340805c911d58c15af3d198d16f56ffa2d
+  * pointers from Component::getTransform() are volatile and could change over time
 
 
 * more efficient transformable system
@@ -100,16 +179,6 @@
   * rename to View to make clear it needs a controller to control its movement
   * https://www.reddit.com/r/gamedev/comments/4o7w59/how_do_you_managing_scenes_with_a_dod_approach/d4aip2m/
 
-  * RenderSystem
-    * stores cameras
-    * uses render hierachy from Scene
-    * determines visibility
-    * renders for each camera
-    * Scene
-      * no longer renders
-      * keeps track of objects to be rendered
-      * manages hierachy (layers, depth)
-
 
 * imgui
   * imgui game state
@@ -156,6 +225,12 @@
   * load all files from a folder
   * recursively load-once resource files
   * write loaders for various config files
+  * revert back to loading only from searchpath
+    * makes things simpler
+    * less path hell
+  * support multiple searchpaths
+    * loading a resource will try all searchpaths from newest to oldest to find the file
+    * allows easy extending and soft-overriding resources
 
 * EntityFactory
   * handle json return values
@@ -190,6 +265,7 @@
     * allows differentiating between different specializations of the same base component
       * e.g., UpdateComponent and PhysicsComponent
     * can use a mask for searching by ID to specify which abstraction layer is wanted
+  * rename Component::init/quit to enable/disable
 
 * math
   * get convex hull function
@@ -197,6 +273,7 @@
   * use Point for AABB.pos
   * support sweep against filled polygon
   * consider removing the \_add, \_edit, \_remove, ... variants in BasePointSet and BasePolygon
+  * fix typename errors in Vector.inl
 
 * Physics
   * fix slope corners
@@ -256,6 +333,11 @@
   * remove custom resource related register functions
   * rename Property.hpp/cpp to PropertyContainer.hpp/cpp
   * support getters
+  * Consider moving read/write functions to IPropType
+    * Makes separation between IPropType and PropertyHandle obsolete
+    * Make whole property system OOP based
+    * Probably cleaner
+    * Performance negligible
 
 * log
   * warn if null
