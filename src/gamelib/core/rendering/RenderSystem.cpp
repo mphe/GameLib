@@ -209,7 +209,7 @@ namespace gamelib
     }
 
     auto RenderSystem::updateNodeMesh(NodeHandle handle, const sf::Vertex* vertices, size_t size,
-            size_t offset, bool updateSize)
+            size_t offset, bool updateSize, unsigned int copyflags)
         -> void
     {
         ASSURE_VALID(handle);
@@ -221,13 +221,22 @@ namespace gamelib
             LOG_WARN("Trying to assign more vertices than space allocated -> Clipping to maximum");
 
         stop = std::min(stop, mesh.handle.size);
-        if (updateSize)
+        bool sizechanged = updateSize && stop != mesh.size;
+
+        if (sizechanged)
             mesh.size = stop;
 
         for (size_t i = offset; i < stop; ++i)
-            *_vertices.get(mesh.handle.index + i) = vertices[i - offset];
+        {
+            sf::Vertex& v = *_vertices.get(mesh.handle.index + i);
 
-        _updateMeshBBox(handle);
+            if (copyflags & vertex_position) v.position  = vertices[i - offset].position;
+            if (copyflags & vertex_uv)       v.texCoords = vertices[i - offset].texCoords;
+            if (copyflags & vertex_color)    v.color     = vertices[i - offset].color;
+        }
+
+        if (copyflags & vertex_position || sizechanged)
+            _updateMeshBBox(handle);
     }
 
     auto RenderSystem::setNodeMeshType(NodeHandle handle, sf::PrimitiveType type) -> void

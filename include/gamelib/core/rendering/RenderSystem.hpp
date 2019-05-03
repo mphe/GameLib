@@ -20,6 +20,12 @@
 
 namespace gamelib
 {
+    constexpr unsigned int vertex_position = 1;
+    constexpr unsigned int vertex_uv       = 1 << 1;
+    constexpr unsigned int vertex_color    = 1 << 2;
+    constexpr unsigned int vertex_pos_uv   = vertex_position | vertex_uv;
+    constexpr unsigned int vertex_all      = vertex_pos_uv | vertex_color;
+
     class RenderSystem : public Subsystem<RenderSystem>
     {
         public:
@@ -53,7 +59,7 @@ namespace gamelib
             auto setNodeMeshType(NodeHandle handle, sf::PrimitiveType type)             -> void;
             auto setNodeMeshSize(NodeHandle handle, size_t size)                        -> void;
             auto updateNodeMesh(NodeHandle handle, const sf::Vertex* vertices, size_t size,
-                    size_t offset = 0, bool updateSize = true)
+                    size_t offset = 0, bool updateSize = true, unsigned int copyflags = vertex_all)
                 -> void;
 
             auto setRootOptions(const RenderOptions& options) -> void;
