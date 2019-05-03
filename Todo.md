@@ -332,11 +332,6 @@ RenderSystem:
     * use in BasePropType loadFromJson, drawGui
   * remove custom resource related register functions
   * support getters
-  * Consider moving read/write functions to IPropType
-    * Makes separation between IPropType and PropertyHandle obsolete
-    * Make whole property system OOP based
-    * Probably cleaner
-    * Performance negligible
 
 * log
   * warn if null
