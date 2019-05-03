@@ -72,7 +72,7 @@ namespace gamelib
     }
 }
 
-#include "Property.hpp"
+#include "PropertyContainer.hpp"
 
 namespace gamelib
 {

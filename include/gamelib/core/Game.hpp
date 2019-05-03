@@ -8,7 +8,7 @@
 #include "gamelib/json/JsonSerializer.hpp"
 #include "gamelib/core/Subsystem.hpp"
 #include "math/geometry/Point2.hpp"
-#include "gamelib/properties/Property.hpp"
+#include "gamelib/properties/PropertyContainer.hpp"
 
 namespace gamelib
 {

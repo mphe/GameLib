@@ -331,7 +331,6 @@ RenderSystem:
   * ConstPropertyHandle
     * use in BasePropType loadFromJson, drawGui
   * remove custom resource related register functions
-  * rename Property.hpp/cpp to PropertyContainer.hpp/cpp
   * support getters
   * Consider moving read/write functions to IPropType
     * Makes separation between IPropType and PropertyHandle obsolete

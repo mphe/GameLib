@@ -1,5 +1,5 @@
-#ifndef GAMELIB_PROPERTY_HPP
-#define GAMELIB_PROPERTY_HPP
+#ifndef GAMELIB_PROPERTY_CONTAINER_HPP
+#define GAMELIB_PROPERTY_CONTAINER_HPP
 
 #include <string>
 #include <unordered_map>

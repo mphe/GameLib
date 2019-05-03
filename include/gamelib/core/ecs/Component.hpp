@@ -3,7 +3,7 @@
 
 #include "gamelib/core/Identifiable.hpp"
 #include "gamelib/utils/SlotMap.hpp"
-#include "gamelib/properties/Property.hpp"
+#include "gamelib/properties/PropertyContainer.hpp"
 #include "gamelib/json/JsonSerializer.hpp"
 
 namespace gamelib

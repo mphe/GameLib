@@ -1,7 +1,7 @@
 #include <cassert>
 #include <string>
 #include <iostream>
-#include "gamelib/properties/Property.hpp"
+#include "gamelib/properties/PropertyContainer.hpp"
 #include "gamelib/properties/basictypes.hpp"
 #include "math/geometry/Vector.hpp"
 

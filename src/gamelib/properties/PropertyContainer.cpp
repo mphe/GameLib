@@ -1,4 +1,4 @@
-#include "gamelib/properties/Property.hpp"
+#include "gamelib/properties/PropertyContainer.hpp"
 
 namespace gamelib
 {

@@ -1,6 +1,6 @@
 #include "gamelib/imgui/inputs.hpp"
 #include "gamelib/imgui/resources.hpp"
-#include "gamelib/properties/Property.hpp"
+#include "gamelib/properties/PropertyContainer.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/components/RenderComponent.hpp"
