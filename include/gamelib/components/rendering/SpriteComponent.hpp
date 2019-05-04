@@ -1,7 +1,7 @@
 #ifndef GAMELIB_SPRITE_COMPONENT_HPP
 #define GAMELIB_SPRITE_COMPONENT_HPP
 
-#include "gamelib/components/RenderComponent.hpp"
+#include "gamelib/components/NewRenderComponent.hpp"
 #include "gamelib/components/update/AnimationComponent.hpp"
 #include "gamelib/core/res/SpriteResource.hpp"
 
@@ -20,7 +20,7 @@ namespace gamelib
 {
     class AnimationComponent;
 
-    class SpriteComponent : public RenderComponent
+    class SpriteComponent : public NewRenderComponent
     {
         friend class AnimationComponent;
 
@@ -38,11 +38,6 @@ namespace gamelib
             auto getSpriteName() const -> const std::string&;
             auto getAnimation() const  -> const AnimationComponent&;
             auto getTexture() const    -> TextureResource::Handle;
-
-            auto loadFromJson(const Json::Value& node) -> bool final override;
-            auto writeToJson(Json::Value& node) const  -> void final override;
-
-            auto render(sf::RenderTarget& target, sf::RenderStates states_) const -> void final override;
 
         protected:
             auto _init()    -> bool final override;

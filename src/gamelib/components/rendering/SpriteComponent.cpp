@@ -1,21 +1,20 @@
 #include "gamelib/components/rendering/SpriteComponent.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
+#include "gamelib/core/rendering/RenderSystem.hpp"
+#include <SFML/Graphics/Vertex.hpp>
 
 namespace gamelib
 {
     SpriteComponent::SpriteComponent() :
-        RenderComponent(name),
+        NewRenderComponent(name),
         _ani(this)
     {
-        _vertices.resize(4);
-        _vertices.setPrimitiveType(sf::TriangleStrip);
-
         _props.registerProperty("sprite", _sprite, PROP_METHOD(_sprite, change), this);
 
         // Don't register these properties, because it can't be guaranteed after serializaion
         // that these are loaded _after_ sprite is loaded and therefore overwrite the default
         // values.
-        // That means these properties are unreliable need extra code to work properly.
+        // That means these properties are unreliable and need extra code to work properly.
         // TODO: Fix this
         // _props.registerProperty("offset", _ani.ani.offset, 0, _ani.ani.length);
         // _props.registerProperty("speed", _ani.ani.speed);
@@ -25,16 +24,19 @@ namespace gamelib
 
     bool SpriteComponent::_init()
     {
-        if (!RenderComponent::_init())
+        if (!NewRenderComponent::_init())
             return false;
         if (!_ani._init())
             return false;
+
+        _system->createNodeMesh(_handle, 4, sf::TriangleStrip);
+        _system->setNodeMeshSize(_handle, 0);   // Don't render anything when no sprite is set
         return true;
     }
 
     void SpriteComponent::_quit()
     {
-        RenderComponent::_quit();
+        NewRenderComponent::_quit();
         _ani._quit();
     }
 
@@ -53,38 +55,27 @@ namespace gamelib
     void SpriteComponent::change(SpriteResource::Handle sprite)
     {
         _sprite = sprite;
-        if (_sprite)
+
+        if (!_sprite)
         {
-            _ani.ani = _sprite->ani;
-            if (_ani.ani.offset < 0)
-                _ani.ani.randomize();
-
-            setOrigin(sprite->origin);
-            _initShape();
+            _system->setNodeMeshSize(_handle, 0);
+            return;
         }
-    }
 
-    bool SpriteComponent::loadFromJson(const Json::Value& node)
-    {
-        // if (!node.isMember("sprite"))
-        // {
-        //     _sprite.reset();
-        //     return false;
-        // }
-
-        bool success = RenderComponent::loadFromJson(node);
-
+        _ani.ani = _sprite->ani;
         if (_ani.ani.offset < 0)
             _ani.ani.randomize();
 
-        _initShape();
+        sf::Vertex vertices[] = {
+            sf::Vertex(sf::Vector2f(0, _sprite->rect.h)),
+            sf::Vertex(sf::Vector2f(_sprite->rect.w, 0)),
+            sf::Vertex(sf::Vector2f(_sprite->rect.w, _sprite->rect.h)),
+        };
 
-        return success;
-    }
-
-    void SpriteComponent::writeToJson(Json::Value& node) const
-    {
-        RenderComponent::writeToJson(node);
+        _system->setNodeOptions(_handle, nullptr, nullptr, nullptr, _sprite->tex.get());
+        _system->updateNodeMesh(_handle, vertices, 3, 1, true, vertex_position);
+        _updateUV();
+        setOrigin(sprite->origin);
     }
 
     SpriteResource::Handle SpriteComponent::getSprite() const
@@ -95,30 +86,6 @@ namespace gamelib
     const std::string& SpriteComponent::getSpriteName() const
     {
         return _sprite.getResource()->getPath();
-    }
-
-    void SpriteComponent::render(sf::RenderTarget& target, sf::RenderStates states) const
-    {
-        if (_sprite)
-        {
-            states.texture = _sprite->tex.get();
-            SceneObject::render(target, states);
-        }
-    }
-
-
-    void SpriteComponent::_initShape()
-    {
-        if (!_sprite)
-            return;
-
-        _vertices[0].position = sf::Vector2f(0, 0);
-        _vertices[1].position = sf::Vector2f(0, _sprite->rect.h);
-        _vertices[2].position = sf::Vector2f(_sprite->rect.w, 0);
-        _vertices[3].position = sf::Vector2f(_sprite->rect.w, _sprite->rect.h);
-        _updateBBox();
-
-        setIndex(_ani.ani.offset);
     }
 
     void SpriteComponent::_updateUV()
@@ -138,9 +105,12 @@ namespace gamelib
         int y = (rect.y + (int)(x / tsize.x) * rect.h) % tsize.y;
         x = x % tsize.x;
 
-        _vertices[0].texCoords = sf::Vector2f(x + magic, y + magic);
-        _vertices[1].texCoords = sf::Vector2f(x + magic, y + rect.h - magic);
-        _vertices[2].texCoords = sf::Vector2f(x + rect.w - magic, y + magic);
-        _vertices[3].texCoords = sf::Vector2f(x + rect.w - magic, y + rect.h - magic);
+        sf::Vertex vertices[] = {
+            sf::Vertex(sf::Vector2f(), sf::Vector2f(x + magic, y + magic)),
+            sf::Vertex(sf::Vector2f(), sf::Vector2f(x + magic, y + rect.h - magic)),
+            sf::Vertex(sf::Vector2f(), sf::Vector2f(x + rect.w - magic, y + magic)),
+            sf::Vertex(sf::Vector2f(), sf::Vector2f(x + rect.w - magic, y + rect.h - magic)),
+        };
+        _system->updateNodeMesh(_handle, vertices, 4, 0, false, vertex_uv);
     }
 }
