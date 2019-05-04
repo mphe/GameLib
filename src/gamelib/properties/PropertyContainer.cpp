@@ -30,7 +30,12 @@ namespace gamelib
     {
         for (auto& i : _properties)
             if (i.second.serializer)
-                i.second.serializer->writeToJson(i.second, node[i.first]);
+            {
+                Json::Value& cfg = node[i.first];
+                i.second.serializer->writeToJson(i.second, cfg);
+                if (cfg.isNull())
+                    LOG_DEBUG_WARN("Property json is null: ", i.first);
+            }
             else
                 LOG_DEBUG_WARN("Property has no serializer: ", i.first);
     }
