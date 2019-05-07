@@ -73,7 +73,7 @@ namespace gamelib
         }
     }
 
-    void QController::_refresh()
+    void QController::_refresh(RefreshType type, Component* comp)
     {
         phys = getEntity()->findByName<QPhysics>();
     }

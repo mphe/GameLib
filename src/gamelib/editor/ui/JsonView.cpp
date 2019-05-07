@@ -139,10 +139,8 @@ namespace gamelib
 
                             if (selected && selected->getName() == name)
                             {
-                                Json::Value entcfg;
-                                writeToJson(entcfg, *selected);
-                                diffJson(entcfg, norm, &diff);
-                                diff["name"] = selected->getName();
+                                Json::Value diff;
+                                getConfigDelta(*selected, norm, &diff);
                                 diffstring = diff.toStyledString();
                             }
                             else

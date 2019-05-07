@@ -42,6 +42,8 @@ namespace gamelib
     bool saveToJson(Json::Value& node, F callback)
     {
         LOG("Saving game...");
+
+        // Cache normalized entity templates
         std::unordered_map<std::string, Json::Value> norments;
 
         auto scene = getSubsystem<Scene>();
@@ -49,39 +51,32 @@ namespace gamelib
             scene->writeToJson(node["scene"]);
 
         auto entmgr = getSubsystem<EntityManager>();
-        if (entmgr)
+        if (!entmgr)
+            return true;
+
+        auto factory = getSubsystem<EntityFactory>();
+        auto& mgrnode = node["entmgr"];
+
+        for (auto& i : *entmgr)
         {
-            auto factory = getSubsystem<EntityFactory>();
-            auto& mgrnode = node["entmgr"];
+            auto& name = i.getName();
+            Json::Value entcfg;
 
-            for (auto& i : *entmgr)
+            auto cacheit = norments.find(name);
+            if (cacheit == norments.end())
             {
-                Json::Value ent;
-                writeToJson(ent, i);
-                auto it = norments.find(i.getName());
-
-                if (it == norments.end())
-                {
-                    auto ent = factory->findEntity(i.getName());
-                    if (ent)
-                    {
-                        it = norments.insert(std::make_pair(i.getName(), Json::Value())).first;
-                        normalizeConfig(*ent, &it->second, *factory);
-                    }
-                }
-
-                if (it != norments.end())
-                {
-                    Json::Value diff;
-                    diffJson(ent, it->second, &diff);
-                    diff["name"] = i.getName();
-                    ent = std::move(diff);
-                }
-
-                if (callback(ent, i) && !ent.isNull())
-                    mgrnode.append(ent);
-
+                Json::Value enttemplate;
+                if (getNormalizedEntityTemplate(i, &enttemplate, *factory))
+                    cacheit = norments.insert(std::make_pair(name, std::move(enttemplate))).first;
             }
+
+            if (cacheit != norments.end())
+                getConfigDelta(i, cacheit->second, &entcfg);
+            else
+                writeToJson(entcfg, i);
+
+            if (callback(entcfg, i) && !entcfg.isNull())
+                mgrnode.append(entcfg);
         }
 
         LOG("Saving finished");

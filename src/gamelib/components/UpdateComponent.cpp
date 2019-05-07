@@ -11,6 +11,11 @@ namespace gamelib
         _props.registerProperty("hook", _hook, PROP_METHOD(_hook, setHook), this, 0, NumFrameHooks, str_framehooks);
     }
 
+    UpdateComponent::~UpdateComponent()
+    {
+        quit();
+    }
+
     bool UpdateComponent::_init()
     {
         auto sys = getSubsystem<UpdateSystem>();

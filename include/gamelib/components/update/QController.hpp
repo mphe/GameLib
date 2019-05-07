@@ -18,7 +18,7 @@ namespace gamelib
             auto update(float elapsed) -> void final override;
 
         private:
-            auto _refresh() -> void final override;
+            auto _refresh(RefreshType type, Component* comp) -> void final override;
 
         public:
             float accelerate;

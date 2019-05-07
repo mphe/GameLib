@@ -73,7 +73,7 @@ namespace gamelib
             auto setGround(CollisionComponent* ground, const math::Vec2f& normal) -> void;
 
         protected:
-            virtual auto _refresh() -> void override;
+            virtual auto _refresh(RefreshType type, Component* comp) -> void override;
 
             auto _nudge(math::AABBf* box, float size = 0.5) -> bool;
             auto _move(const math::Vec2f& dist) -> void;

@@ -34,7 +34,7 @@ namespace gamelib
             virtual auto update(float elapsed) -> void override;
 
         protected:
-            virtual auto _refresh() -> void override;
+            virtual auto _refresh(RefreshType type, Component* comp) -> void override;
 
         public:
             float turnspeed;

@@ -77,6 +77,12 @@ namespace gamelib
     {
         assert(comp && "Component is nullptr");
 
+        if (!comp->init())
+        {
+            LOG_ERROR("Failed to add component ", comp->getName(), " to entity ", _name);
+            return nullptr;
+        }
+
         if (_entmgr)
             comp->_ent = _handle;
         else
@@ -85,18 +91,6 @@ namespace gamelib
         if (comp->getTransform())
             getTransform().add(comp->getTransform());
 
-        if (!comp->_init())
-        {
-            comp->_ent = Handle();
-            comp->_entptr = nullptr;
-
-            if (comp->getTransform())
-                getTransform().remove(comp->getTransform());
-
-            LOG_ERROR("Failed to add component ", comp->getName(), " to entity ", _name);
-            return nullptr;
-        }
-
         // Find highest id of these component types
         unsigned int id = 0;
         for (auto& i : _components)
@@ -104,9 +98,10 @@ namespace gamelib
                 id = std::max(id, i.id);
         ++id;
 
+        auto ptr = comp.get();
         _components.push_back({ id, std::move(comp) });
-        _refresh();
-        return _components.back().ptr.get();
+        _refresh(ComponentAdded, ptr);
+        return ptr;
     }
 
     void Entity::remove(Component* comp)
@@ -114,18 +109,19 @@ namespace gamelib
         for (auto it = _components.begin(), end = _components.end(); it != end; ++it)
             if (it->ptr.get() == comp)
             {
-                it->ptr->_quit();
+                _refresh(ComponentRemoved, it->ptr.get());
 
                 if (comp->getTransform())
                     getTransform().remove(comp->getTransform());
 
+                it->ptr->_ent.reset();
+                it->ptr->_entptr = nullptr;
+                it->ptr->quit();
+                it->ptr.reset();
+
                 if (!_quitting)
                     _components.erase(it);
-                else
-                    it->ptr.reset();
-
-                _refresh();
-                break;
+                return;
             }
     }
 
@@ -170,16 +166,16 @@ namespace gamelib
         _quitting = true;
         for (auto& i : _components)
             if (i.ptr)
-                i.ptr->_quit();
+                i.ptr->quit();
         _components.clear();
         _quitting = false;
     }
 
-    void Entity::_refresh()
+    void Entity::_refresh(RefreshType type, Component* comp)
     {
         for (auto& i : _components)
             if (i.ptr)
-                i.ptr->_refresh();
+                i.ptr->_refresh(type, comp);
     }
 
 
@@ -197,14 +193,14 @@ namespace gamelib
     Entity& Entity::operator=(Entity&& other)
     {
         flags = other.flags;
-        _entmgr = std::move(other._entmgr);
+        _entmgr = other._entmgr;
+        _quitting = other._quitting;
+        _handle = other._handle;
         _name = std::move(other._name);
-        _quitting = std::move(other._quitting);
-        _handle = std::move(other._handle);
         _transform = std::move(other._transform);
         _components = std::move(other._components);
         other._entmgr = nullptr;
-        other._handle = Handle();
+        other._handle.reset();
         return *this;
     }
 }

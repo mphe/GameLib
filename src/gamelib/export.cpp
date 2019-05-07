@@ -34,19 +34,20 @@ namespace gamelib
         if (scene)
             scene->loadFromJson(node["scene"]);
 
+        const auto& mgrnode = node["entmgr"];
+
+        if (!mgrnode.isArray())
+        {
+            LOG_WARN("No valid entity array in save file");
+            return true;
+        };
+
         auto entmgr = getSubsystem<EntityManager>();
         auto factory = getSubsystem<EntityFactory>();
 
         if (entmgr && factory)
         {
-            const auto& mgrnode = node["entmgr"];
             entmgr->clear();
-
-            if (!mgrnode.isArray())
-            {
-                LOG_WARN("No valid entity array in save file");
-                return true;
-            };
 
             for (auto& i : mgrnode)
             {

@@ -13,7 +13,7 @@ namespace gamelib
         public:
             CollisionComponent();
             CollisionComponent(const std::string& name);
-            virtual ~CollisionComponent() {}
+            virtual ~CollisionComponent();
 
             virtual auto getTransform()       -> Transformable* override;
             virtual auto getTransform() const -> const Transformable* override;

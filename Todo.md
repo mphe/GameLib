@@ -2,9 +2,8 @@
 
 ## Priority
 
+* property flags (readonly!)
 * Component
-  * Implement init()/quit() wrapper around \_init()/\_quit() that sets an initialized bool
-  * Add isInitialized() function
   * Add enable()/disable() function
 * Return bbox copies instead of references in getBBox()
 * Use new name assignment system
@@ -26,10 +25,10 @@
 * font resource
 * implement own frame capping mechanic to allow better time measurement
 * option to specify base entity in entity configs
-* use override keyword
 * move all resources to a "coreres" folder to allow easy symlinking when using the engine in a real project
 * Message System
 * give flags a fixed width integer (int32, int64)
+* consistently use pointers for arguments that are modified in the function
 
 * provide failsafe implementations in core subsystems
   * no crash when trying to create unknown entities/components
@@ -38,35 +37,31 @@
 
 * config normalization problem
   * related to c6d84f340805c911d58c15af3d198d16f56ffa2d
-  * entity configurations are usually handwritten and therefore
+  * entity configurations are usually handwritten
   * entity configurations usually only include the properties that changed from the default
   * properties can be user extended and can therefore have basically custom format/interpretations
     * e.g. PropComponent uses a string with the referenced component name
+      * can be "Component#1" or "Component" to reference the first of a kind
   * the configuration (diff) must be normalized in order to be used for further diffing and map saving
 
   * normalization process:
     * create new entity
-    * load config
-      * entity has now the config values
-    * write config
-    * the written config is normalized because it is machine generated and contains all possible properties
+    * write to json
+      * json contains the default values for entity and components
+    * merge config with custom json
+    * the config is normalized because it is machine generated and contains all possible properties
 
   * problem:
     * to make it work completely, components have to be created, too
     * but: normalization should not modify the game state in a visible way
-      * component should not be initialized
-      * unknown what happens if it was initialized
-        * e.g. could execute game changing code
-    * unknown what happens if the properties are accessed (read/write) without component initialization
+
+  * normalization only 100% works if the entity is created from the json to normalize and then write that entity to json again
+    * must be ensured it does not alter gamestate
 
   * solutions:
     * add standard
       * ensure component manipulation does not alter the gamestate
-        * safely call Component::init()/quit() without side effects
-        * probably best option as it should be possible to activate/deactivate entities and components ingame or in editor without risking component data loss
-      * allow no ambiguous properties and config values
-    * introduce another virtual function to IPropType to normalize a given json
-      * json normalize function calls the IPropType::normalize function if possible to normalize the user part
+    * allow no ambiguous properties and config values
 
 
 RenderSystem:
@@ -91,22 +86,9 @@ RenderSystem:
     * provide function to get key/version combined as int
   * add function to get by index disregarding version
   * overwrite on delete only if not trivially destructable
-=======
-* rename Component::init/quit to enable/disable
-* give flags a fixed width integer (int32, int64)
->>>>>>> Fix missing final and add suggest final flags
 
 * create documents defining standard behaviour and templates
   * .hpp/.cpp template for new component
-  * properties must always be readable/writable
-    * even if the component is not initialized
-    * even if the component is quit()ed
-    * must not have side effects if component is not initialized
-    * must not crash if component is not initialized
-    * must reflect changes
-    * if the component requires a system to store its data, it must be initialized, otherwise undefined behavior
-      * e.g. RenderComponent needs a running RenderSystem to store its render data
-    -> can help to solve c6d84f340805c911d58c15af3d198d16f56ffa2d
   * pointers from Component::getTransform() are volatile and could change over time
 
 
@@ -269,7 +251,6 @@ RenderSystem:
     * allows differentiating between different specializations of the same base component
       * e.g., UpdateComponent and PhysicsComponent
     * can use a mask for searching by ID to specify which abstraction layer is wanted
-  * rename Component::init/quit to enable/disable
 
 * math
   * get convex hull function
@@ -300,9 +281,6 @@ RenderSystem:
   * render offset shader
   * render repeat shader (for texture regions)
   * Scene force redraw
-  * remove json functionality from SceneObject and SceneData
-    * SceneObject should be a data class
-    * saving/loading transform, layer, etc, but not vertices is not particulary style-consistent as it saves everything else
 
 * editor
   * grid numbers
@@ -336,11 +314,12 @@ RenderSystem:
     * use in BasePropType loadFromJson, drawGui
   * remove custom resource related register functions
   * support getters
+  * PropComponent needs to react if the component list changes
 
 * log
   * warn if null
   * assert
 
 
-<!-- vim: tabstop=2 shiftwidth=2 wrap
+<!-- vim: wrap
 -->

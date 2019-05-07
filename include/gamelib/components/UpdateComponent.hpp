@@ -14,7 +14,7 @@ namespace gamelib
 
         public:
             UpdateComponent(const std::string& name, int interval = 1, UpdateHookType hook = Frame);
-            virtual ~UpdateComponent() {}
+            virtual ~UpdateComponent();
 
             auto setHook(UpdateHookType hook) -> void;
             auto getHook() const              -> UpdateHookType;

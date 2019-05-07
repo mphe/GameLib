@@ -490,7 +490,7 @@ namespace gamelib
         return false;
     }
 
-    void QPhysics::_refresh()
+    void QPhysics::_refresh(RefreshType type, Component* comp)
     {
         _bbox = nullptr;
         _self = nullptr;

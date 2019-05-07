@@ -23,8 +23,20 @@ namespace gamelib
         return join(name, "#", id);
     }
 
+    void getDefaultComponentConfig(const std::string& name, Json::Value* out, EntityFactory& factory)
+    {
+        assert(out && "out must not be null");
+        auto comp = factory.createComponent(name);
+        comp->init();
+        // It's safe to use writeToJson even if the component does not belong to an entity
+        comp->writeToJson(*out);
+        comp->quit();
+    }
+
+
     bool normalizeConfig(const Json::Value& node, Json::Value* out_, EntityFactory& factory)
     {
+        assert(out_ && "out must not be null");
         auto& out = *out_;
         bool good = true;
 
@@ -75,8 +87,7 @@ namespace gamelib
                 if (it->isObject())
                 {
                     auto& compcfg = outcomps[cleanname];
-                    auto comp = factory.createComponent(name);
-                    comp->writeToJson(compcfg);
+                    getDefaultComponentConfig(name, &compcfg, factory);
                     mergeJson(*it, &compcfg);
                 }
                 else
@@ -90,6 +101,49 @@ namespace gamelib
         }
 
         return good;
+    }
+
+
+    auto getNormalizedEntityTemplate(const Entity& ent, Json::Value* out, EntityFactory& factory) -> bool
+    {
+        assert(out && "out must not be null");
+
+        const std::string& name = ent.getName();
+        const Json::Value* enttemplate = factory.findEntity(name);
+
+        if (!enttemplate)
+        {
+            LOG_WARN("Entity is not registered, can't compute delta config: ", name);
+            return false;
+        }
+
+        normalizeConfig(*enttemplate, out, factory);
+        return true;
+    }
+
+    auto getConfigDelta(const Entity& ent, Json::Value* out, EntityFactory& factory) -> bool
+    {
+        assert(out && "out must not be null");
+
+        Json::Value normtemplate;
+        if (!getNormalizedEntityTemplate(ent, &normtemplate, factory))
+        {
+            writeToJson(*out, ent);
+            return false;
+        }
+
+        getConfigDelta(ent, normtemplate, out);
+        return true;
+    }
+
+    auto getConfigDelta(const Entity& ent, const Json::Value& normalized, Json::Value* out) -> bool
+    {
+        assert(out && "out must not be null");
+        Json::Value cfg;
+        writeToJson(cfg, ent);
+        diffJson(cfg, normalized, out);
+        (*out)["name"] = ent.getName();
+        return true;
     }
 
 
@@ -109,7 +163,7 @@ namespace gamelib
 
         if (node.isMember("components"))
         {
-            struct Tmp
+            struct CompInfo
             {
                 Component* comp;
                 const Json::Value* node;
@@ -117,7 +171,7 @@ namespace gamelib
 
             auto& comps = node["components"];
             auto factory = getSubsystem<EntityFactory>();
-            std::vector<Tmp> loadlist;
+            std::vector<CompInfo> loadlist;
 
             if (!comps.isObject())
             {
@@ -161,23 +215,21 @@ namespace gamelib
                         break;
                     }
 
-                if (!found)
+                // Component is already present
+                if (found)
+                    continue;
+
+                if (!createMissing)
+                    LOG_WARN("Couldn't find matching component in entity ", ent.getName(), " for component ", it.key().asString());
+                else
                 {
-                    if (!createMissing)
-                        LOG_WARN("Couldn't find matching component in entity ", ent.getName(), " for component ", it.key().asString());
-                    else
+                    auto comp = factory->createComponent(name);
+                    if (!comp)
+                        LOG_ERROR("Failed to create component ", comp->getName());
+                    else if (ent.add(std::move(comp)))
                     {
-                        auto comp = factory->createComponent(name);
-                        if (comp)
-                        {
-                            if (ent.add(std::move(comp)))
-                            {
-                                ent._components.back().id = id;
-                                loadlist.push_back({ ent._components.back().ptr.get(), &(*it) });
-                            }
-                        }
-                        else
-                            LOG_ERROR("Failed to create component ", comp->getName());
+                        ent._components.back().id = id;
+                        loadlist.push_back({ ent._components.back().ptr.get(), &(*it) });
                     }
                 }
             }
@@ -191,8 +243,8 @@ namespace gamelib
             // Do another refresh after all components have their configs loaded.
             // Makes sure that components that search (in their _refresh function)
             // for another component that fits certain criteria will find it even
-            // if the criteria is met after loading.
-            ent._refresh();
+            // if the criteria is met only after loading.
+            ent._refresh(PostLoad, nullptr);
         }
 
         return true;

@@ -13,6 +13,11 @@ namespace gamelib
         _props.registerProperty("flags", flags, 0, num_colflags, str_colflags);
     }
 
+    CollisionComponent::~CollisionComponent()
+    {
+        quit();
+    }
+
     bool CollisionComponent::_init()
     {
         auto sys = getSubsystem<CollisionSystem>();

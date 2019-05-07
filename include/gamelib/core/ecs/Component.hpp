@@ -11,6 +11,13 @@ namespace gamelib
     class Entity;
     class Transformable;
 
+    enum RefreshType
+    {
+        ComponentAdded,     // A component was added to the entity
+        ComponentRemoved,   // A component was removed from the entity
+        PostLoad,           // All configs were loaded (in entity creation)
+    };
+
     class Component : public Identifiable, public JsonSerializer
     {
         friend class Entity;
@@ -20,12 +27,18 @@ namespace gamelib
         public:
             Component();
             Component(const std::string& name);
+            Component(const Component&) = delete;   // Prevent shooting in the foot
             virtual ~Component() {};
+
+            auto init()                -> bool;
+            auto quit()                -> void;
+            auto isInitialized() const -> bool;
 
             auto getName() const         -> const std::string&;
             auto getEntity() const       -> Entity*;
             auto getEntityHandle() const -> Handle;
             auto getProperties() const   -> const PropertyContainer&;
+
             virtual auto getTransform()       -> Transformable*;
             virtual auto getTransform() const -> const Transformable*;
 
@@ -33,10 +46,11 @@ namespace gamelib
             virtual auto writeToJson(Json::Value& node) const  -> void override;
 
         protected:
-            // Those are called by Entity
-            virtual auto _init()    -> bool;
-            virtual auto _quit()    -> void;
-            virtual auto _refresh() -> void;
+            virtual auto _init() -> bool { return true; };
+            virtual auto _quit() -> void {};
+
+            // Called by Entity
+            virtual auto _refresh(RefreshType type, Component* comp) -> void {};
 
         protected:
             PropertyContainer _props;
@@ -44,9 +58,9 @@ namespace gamelib
 
         private:
             Handle _ent;   // Set by Entity
-
             // Only used when the entity was created outside an EntityManager
             Entity* _entptr; // Set by Entity
+            bool _initialized;
     };
 }
 

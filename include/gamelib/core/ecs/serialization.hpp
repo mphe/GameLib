@@ -45,12 +45,20 @@ namespace gamelib
     auto writeToJson(Json::Value& node, const Entity& ent) -> void;
 
     // Extracts the id and removes the id part from the string
-    auto extractID(std::string* name)                               -> unsigned int;
-    auto generateName(const std::string& name, unsigned int id)     -> std::string;
+    auto extractID(std::string* name)                           -> unsigned int;
+    auto generateName(const std::string& name, unsigned int id) -> std::string;
+
+    auto getDefaultComponentConfig(const std::string& name, Json::Value* out, EntityFactory& factory) -> void;
 
     // Returns true if the config has no errors / warnings, otherwise false.
     // This does not mean that the given config equals the normalized config!
     auto normalizeConfig(const Json::Value& node, Json::Value* out, EntityFactory& factory) -> bool;
+
+    // Calculates the delta between the entity and its template
+    auto getConfigDelta(const Entity& ent, Json::Value* out, EntityFactory& factory)        -> bool;
+    auto getConfigDelta(const Entity& ent, const Json::Value& normalized, Json::Value* out) -> bool;
+
+    auto getNormalizedEntityTemplate(const Entity& ent, Json::Value* out, EntityFactory& factory) -> bool;
 
     // Calls a callback for each component about to be serialized.
     // The callback handles the serialization (or not).

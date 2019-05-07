@@ -16,6 +16,29 @@ namespace gamelib
         registerDummyProperty(_props, "transform");
     }
 
+    auto Component::init() -> bool
+    {
+        if (!_initialized)
+            _initialized = _init();
+        if (!_initialized)
+            LOG_ERROR("Failed to initialize component ", getName());
+        return _initialized;
+    }
+
+    auto Component::quit() -> void
+    {
+        if (_initialized)
+        {
+            _quit();
+            _initialized = false;
+        }
+    }
+
+    auto Component::isInitialized() const -> bool
+    {
+        return _initialized;
+    }
+
     const std::string& Component::getName() const
     {
         return _name;
@@ -61,15 +84,4 @@ namespace gamelib
             gamelib::writeToJson(node["transform"], *getTransform());
         _props.writeToJson(node);
     }
-
-    bool Component::_init()
-    {
-        return true;
-    }
-
-    void Component::_quit()
-    { }
-
-    void Component::_refresh()
-    { }
 }
