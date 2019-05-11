@@ -67,18 +67,30 @@ int main()
             size_t offset = size == 1 ? 0 : rand() % (size - 1);
             size_t usesize = rand() % (size - offset);
             size_t stop = offset + usesize;
-            std::vector<sf::Vertex> vertices;
+
+            sf::Vector2f vpos[usesize];
+            sf::Vector2f vuv[usesize];
+            sf::Color vcolor[usesize];
 
             for (size_t i = 0; i < usesize; ++i)
-                vertices.push_back(sf::Vertex(sf::Vector2f(rand(), rand())));
+            {
+                vpos[i] = sf::Vector2f(rand(), rand());
+                vuv[i] = sf::Vector2f(rand(), rand());
+                vcolor[i] = sf::Color(rand(), rand(), rand());
+            }
 
-            rendersystem.updateNodeMesh(handle, vertices.data(), usesize, offset);
+            rendersystem.updateNodeMesh(handle, usesize, offset, vpos, vuv, vcolor);
 
             assert(node.mesh.size == stop && "Wrong size");
             assert(node.mesh.handle.size == size && "Wrong size");
 
             for (size_t i = offset; i < stop; ++i)
-                assert(rendersystem.getNodeMesh(handle, i)->position == vertices[i - offset].position && "Wrong vertex");
+            {
+                const auto* v = rendersystem.getNodeMesh(handle, i);
+                assert(v->position == vpos[i - offset] && "Wrong vertex position");
+                assert(v->texCoords == vuv[i - offset] && "Wrong vertex uv");
+                assert(v->color == vcolor[i - offset] && "Wrong vertex color");
+            }
         }
 
         checkQueue(rendersystem);

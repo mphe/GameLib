@@ -66,14 +66,14 @@ namespace gamelib
         if (_ani.ani.offset < 0)
             _ani.ani.randomize();
 
-        sf::Vertex vertices[] = {
-            sf::Vertex(sf::Vector2f(0, _sprite->rect.h)),
-            sf::Vertex(sf::Vector2f(_sprite->rect.w, 0)),
-            sf::Vertex(sf::Vector2f(_sprite->rect.w, _sprite->rect.h)),
+        sf::Vector2f vertices[] = {
+            sf::Vector2f(0, _sprite->rect.h),
+            sf::Vector2f(_sprite->rect.w, 0),
+            sf::Vector2f(_sprite->rect.w, _sprite->rect.h),
         };
 
         _system->setNodeOptions(_handle, nullptr, nullptr, nullptr, _sprite->tex.get());
-        _system->updateNodeMesh(_handle, vertices, 3, 1, true, vertex_position);
+        _system->updateNodeMesh(_handle, 3, 1, vertices);
         _updateUV();
         setOrigin(sprite->origin);
     }
@@ -105,12 +105,12 @@ namespace gamelib
         int y = (rect.y + (int)(x / tsize.x) * rect.h) % tsize.y;
         x = x % tsize.x;
 
-        sf::Vertex vertices[] = {
-            sf::Vertex(sf::Vector2f(), sf::Vector2f(x + magic, y + magic)),
-            sf::Vertex(sf::Vector2f(), sf::Vector2f(x + magic, y + rect.h - magic)),
-            sf::Vertex(sf::Vector2f(), sf::Vector2f(x + rect.w - magic, y + magic)),
-            sf::Vertex(sf::Vector2f(), sf::Vector2f(x + rect.w - magic, y + rect.h - magic)),
+        sf::Vector2f uv[] = {
+            sf::Vector2f(x + magic, y + magic),
+            sf::Vector2f(x + magic, y + rect.h - magic),
+            sf::Vector2f(x + rect.w - magic, y + magic),
+            sf::Vector2f(x + rect.w - magic, y + rect.h - magic),
         };
-        _system->updateNodeMesh(_handle, vertices, 4, 0, false, vertex_uv);
+        _system->updateNodeMesh(_handle, 4, 0, nullptr, uv);
     }
 }

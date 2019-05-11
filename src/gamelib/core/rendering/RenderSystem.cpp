@@ -208,8 +208,41 @@ namespace gamelib
         return _vertices.get(_nodes[handle].mesh.handle.index + offset);
     }
 
-    auto RenderSystem::updateNodeMesh(NodeHandle handle, const sf::Vertex* vertices, size_t size,
-            size_t offset, bool updateSize, unsigned int copyflags)
+    // auto RenderSystem::updateNodeMesh(NodeHandle handle, const sf::Vertex* vertices, size_t size,
+    //         size_t offset, bool updateSize, unsigned int copyflags)
+    //     -> void
+    // {
+    //     ASSURE_VALID(handle);
+    //     CHECK_MESH_BOUNDS(handle, 0);
+    //     size_t stop = offset + size;
+    //     Mesh& mesh = _nodes[handle].mesh;
+    //
+    //     if (mesh.handle.size < stop)
+    //         LOG_WARN("Trying to assign more vertices than space allocated -> Clipping to maximum");
+    //
+    //     stop = std::min(stop, mesh.handle.size);
+    //     bool sizechanged = updateSize && stop != mesh.size;
+    //
+    //     if (sizechanged)
+    //         mesh.size = stop;
+    //
+    //     for (size_t i = offset; i < stop; ++i)
+    //     {
+    //         sf::Vertex& v = *_vertices.get(mesh.handle.index + i);
+    //
+    //         if (copyflags & vertex_position) v.position  = vertices[i - offset].position;
+    //         if (copyflags & vertex_uv)       v.texCoords = vertices[i - offset].texCoords;
+    //         if (copyflags & vertex_color)    v.color     = vertices[i - offset].color;
+    //     }
+    //
+    //     if (copyflags & vertex_position || sizechanged)
+    //         _updateMeshBBox(handle);
+    // }
+
+    auto RenderSystem::updateNodeMesh(
+            NodeHandle handle, size_t size, size_t offset,
+            const sf::Vector2f* vertices, const sf::Vector2f* uvs, const sf::Color* colors,
+            bool updateSize)
         -> void
     {
         ASSURE_VALID(handle);
@@ -230,12 +263,12 @@ namespace gamelib
         {
             sf::Vertex& v = *_vertices.get(mesh.handle.index + i);
 
-            if (copyflags & vertex_position) v.position  = vertices[i - offset].position;
-            if (copyflags & vertex_uv)       v.texCoords = vertices[i - offset].texCoords;
-            if (copyflags & vertex_color)    v.color     = vertices[i - offset].color;
+            if (vertices) v.position  = vertices[i - offset];
+            if (uvs)      v.texCoords = uvs[i - offset];
+            if (colors)   v.color     = colors[i - offset];
         }
 
-        if (copyflags & vertex_position || sizechanged)
+        if (vertices || sizechanged)
             _updateMeshBBox(handle);
     }
 

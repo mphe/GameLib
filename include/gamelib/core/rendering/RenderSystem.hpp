@@ -20,11 +20,11 @@
 
 namespace gamelib
 {
-    constexpr unsigned int vertex_position = 1;
-    constexpr unsigned int vertex_uv       = 1 << 1;
-    constexpr unsigned int vertex_color    = 1 << 2;
-    constexpr unsigned int vertex_pos_uv   = vertex_position | vertex_uv;
-    constexpr unsigned int vertex_all      = vertex_pos_uv | vertex_color;
+    // constexpr unsigned int vertex_position = 1;
+    // constexpr unsigned int vertex_uv       = 1 << 1;
+    // constexpr unsigned int vertex_color    = 1 << 2;
+    // constexpr unsigned int vertex_pos_uv   = vertex_position | vertex_uv;
+    // constexpr unsigned int vertex_all      = vertex_pos_uv | vertex_color;
 
     class RenderSystem : public Subsystem<RenderSystem>
     {
@@ -58,8 +58,18 @@ namespace gamelib
             auto getNodeMesh(NodeHandle handle, size_t offset) const                    -> const sf::Vertex*;
             auto setNodeMeshType(NodeHandle handle, sf::PrimitiveType type)             -> void;
             auto setNodeMeshSize(NodeHandle handle, size_t size)                        -> void;
-            auto updateNodeMesh(NodeHandle handle, const sf::Vertex* vertices, size_t size,
-                    size_t offset = 0, bool updateSize = true, unsigned int copyflags = vertex_all)
+
+            // auto updateNodeMesh(NodeHandle handle, const sf::Vertex* vertices, size_t size,
+            //         size_t offset = 0, bool updateSize = true, unsigned int copyflags = vertex_all)
+            //     -> void;
+
+            auto updateNodeMesh(
+                    NodeHandle handle,
+                    size_t size, size_t offset,
+                    const sf::Vector2f* vertices,
+                    const sf::Vector2f* uvs = nullptr,
+                    const sf::Color* colors = nullptr,
+                    bool updateSize = true)
                 -> void;
 
             auto setRootOptions(const RenderOptions& options) -> void;
