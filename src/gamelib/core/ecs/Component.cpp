@@ -5,13 +5,13 @@
 
 namespace gamelib
 {
-    Component::Component() :
-        _entptr(nullptr)
+    Component::Component() : Component("")
     { }
 
     Component::Component(const std::string& name) :
         _name(name),
-        _entptr(nullptr)
+        _entptr(nullptr),
+        _initialized(false)
     {
         registerDummyProperty(_props, "transform");
     }

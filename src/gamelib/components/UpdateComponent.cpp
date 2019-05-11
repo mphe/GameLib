@@ -30,16 +30,19 @@ namespace gamelib
     {
         auto sys = getSubsystem<UpdateSystem>();
         if (sys)
+        {
             sys->remove(_handle, _hook);
+            _handle.reset();
+        }
     }
 
     void UpdateComponent::setHook(UpdateHookType hook)
     {
         if (!_handle.isNull() && _hook != hook)
         {
-            _quit();
+            quit();
             _hook = hook;
-            _init();
+            init();
         }
         else
             _hook = hook;
