@@ -348,7 +348,7 @@ namespace gamelib
         if (_dirtylist.empty())
             return;
 
-        LOG_DEBUG("Recalculating global node transforms and bboxs");
+        // LOG_DEBUG("Recalculating global node transforms and bboxs: ", _dirtylist.size());
 
         for (NodeHandle handle : _dirtylist)
             if (_nodes.isValid(handle))
