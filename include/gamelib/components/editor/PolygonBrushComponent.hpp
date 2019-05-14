@@ -7,7 +7,7 @@
 
 namespace gamelib
 {
-    class PolygonShape;
+    class MeshRenderer;
     class PolygonCollider;
 
     class PolygonBrushComponent : public Identifier<0xaece07e3, Component>
@@ -22,18 +22,18 @@ namespace gamelib
 
             auto add(const math::Point2f& p, bool raw = true) const            -> void;
             auto edit(size_t i, const math::Point2f& p, bool raw = true) const -> void;
-            auto remove(size_t i) const                       -> void;
+            auto remove(size_t i) const                                        -> void;
 
             // Not very ECSy but saves a bunch of lines and makes working with
             // brushes easier. It's only intended to be used in the editor anyways.
             virtual auto getBrushPolygon() const -> PolygonCollider*;
-            virtual auto getBrushShape() const   -> PolygonShape*;
+            virtual auto getBrushShape() const   -> MeshRenderer*;
 
             virtual auto regenerate() const -> void;
 
         protected:
             PolygonCollider* _pol;
-            PolygonShape* _shape;
+            MeshRenderer* _shape;
     };
 }
 

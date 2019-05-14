@@ -1,5 +1,5 @@
 #include "gamelib/components/editor/PolygonBrushComponent.hpp"
-#include "gamelib/components/rendering/PolygonShape.hpp"
+#include "gamelib/components/rendering/MeshRenderer.hpp"
 #include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/properties/PropComponent.hpp"
@@ -23,7 +23,7 @@ namespace gamelib
         };
 
         registerProperty(_props, "polygon", _pol, *this, cb);
-        registerProperty(_props, "shape", _shape, *this, (ComponentPropSetter<PolygonShape, PolygonBrushComponent>)cb);
+        registerProperty(_props, "shape", _shape, *this, (ComponentPropSetter<MeshRenderer, PolygonBrushComponent>)cb);
     }
 
     void PolygonBrushComponent::add(const math::Point2f& p, bool raw) const
@@ -48,7 +48,7 @@ namespace gamelib
         return _pol;
     }
 
-    PolygonShape* PolygonBrushComponent::getBrushShape() const
+    MeshRenderer* PolygonBrushComponent::getBrushShape() const
     {
         return _shape;
     }
@@ -56,6 +56,6 @@ namespace gamelib
     void PolygonBrushComponent::regenerate() const
     {
         if (_shape && _pol)
-            _shape->fetch(_pol->getLocal());
+            _shape->fetch(_pol->getLocal(), sf::TriangleFan);
     }
 }

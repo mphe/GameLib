@@ -1,8 +1,8 @@
 {
     "name": "brush_line",
     "components": {
-        "PolygonShape": {
-            "mapping": 1
+        "MeshRenderer": {
+            "mapping": 2
         },
         "PolygonCollision#1": {
             "FillType": 0,
@@ -15,7 +15,7 @@
         },
         "LineBrushComponent": {
             "polygon": "PolygonCollision#2",
-            "shape": "PolygonShape#1",
+            "shape": "MeshRenderer#1",
             "line": "PolygonCollision#1"
         }
     }

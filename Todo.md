@@ -2,7 +2,9 @@
 
 ## Priority
 
+* adapt default snap distance in player entity
 * property flags (readonly!)
+* uint property
 * Component
   * Add enable()/disable() function
 * Return bbox copies instead of references in getBBox()
@@ -270,6 +272,8 @@ RenderSystem:
   * move airFriction code to QController
   * make snap distance fps independent
     * snap only if speed and gravity point in the same direction
+  * fix jitter when standing on a horizontal platform and the platform changes directions
+    -> player moves a bit to the old direction instead of following the platform precisely
 
 * collisions
   * Remove Collidable and merge it into CollisionComponent
@@ -319,6 +323,8 @@ RenderSystem:
 * log
   * warn if null
   * assert
+  * live update support (e.g. currently rendered instances)
+    * "log entry\r" fix
 
 
 <!-- vim: wrap

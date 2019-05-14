@@ -6,7 +6,7 @@
 #include "gamelib/core/input/InputSystem.hpp"
 #include "gamelib/components/editor/LineBrushComponent.hpp"
 #include "gamelib/components/geometry/Polygon.hpp"
-#include "gamelib/components/rendering/PolygonShape.hpp"
+#include "gamelib/components/rendering/MeshRenderer.hpp"
 #include "gamelib/editor/tools/SelectTool.hpp"
 #include "gamelib/editor/tools/ToolUtils.hpp"
 #include "gamelib/imgui/resources.hpp"

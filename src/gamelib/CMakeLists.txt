@@ -38,7 +38,7 @@ set(GAMELIB_SOURCES
     components/geometry/Polygon.cpp
     components/geometry/PixelCollision.cpp
     components/geometry/AABBMask.cpp
-    components/rendering/PolygonShape.cpp
+    components/rendering/MeshRenderer.cpp
     components/rendering/SpriteComponent.cpp
     components/editor/PolygonBrushComponent.cpp
     components/editor/LineBrushComponent.cpp

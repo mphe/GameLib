@@ -1,6 +1,6 @@
 #include "gamelib/components/editor/LineBrushComponent.hpp"
 #include "gamelib/components/geometry/Polygon.hpp"
-#include "gamelib/components/rendering/PolygonShape.hpp"
+#include "gamelib/components/rendering/MeshRenderer.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/properties/PropComponent.hpp"
 
@@ -110,6 +110,6 @@ namespace gamelib
         _pol->add(linepol.get(linepol.size() - 1) - dir);
         _pol->add(linepol.get(linepol.size() - 1) + dir);
 
-        _shape->fetch(_pol->getLocal());
+        _shape->fetch(_pol->getLocal(), sf::TriangleStrip);
     }
 }

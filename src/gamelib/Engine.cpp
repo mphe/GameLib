@@ -10,7 +10,7 @@
 #include "gamelib/components/update/CameraTracker.hpp"
 #include "gamelib/components/update/ActorComponent.hpp"
 #include "gamelib/components/rendering/SpriteComponent.hpp"
-#include "gamelib/components/rendering/PolygonShape.hpp"
+#include "gamelib/components/rendering/MeshRenderer.hpp"
 #include "gamelib/components/editor/PolygonBrushComponent.hpp"
 #include "gamelib/components/editor/LineBrushComponent.hpp"
 
@@ -28,7 +28,7 @@ namespace gamelib
         _REGISTER_COMPONENT(QController);
         _REGISTER_COMPONENT(SpriteComponent);
         _REGISTER_COMPONENT(CameraTracker);
-        _REGISTER_COMPONENT(PolygonShape);
+        _REGISTER_COMPONENT(MeshRenderer);
         _REGISTER_COMPONENT(PolygonBrushComponent);
         _REGISTER_COMPONENT(LineBrushComponent);
         _REGISTER_COMPONENT(ActorComponent);

@@ -6,12 +6,12 @@
             "flags": 6,
             "Normals": 1
         },
-        "PolygonShape": {
+        "MeshRenderer": {
             "mapping": 0
         },
         "PolygonBrushComponent": {
             "polygon": "PolygonCollision#1",
-            "shape": "PolygonShape#1"
+            "shape": "MeshRenderer#1"
         }
     }
 }
