@@ -145,6 +145,13 @@ if (GAMELIB_BUILD_EDITOR)
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         )
     endif()
+
+    if (NOT TARGET gdbrun)
+        add_custom_target(gdbrun
+            COMMAND gdb --args $<TARGET_FILE:editor> assets/testmap.json
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        )
+    endif()
 endif()
 # }}} editor
 
