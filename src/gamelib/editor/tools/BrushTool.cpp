@@ -36,6 +36,7 @@ namespace gamelib
         _tex(nullptr)
     {
         _tex = getSubsystem<ResourceManager>()->find<TextureResource>();
+        _linewidth = _tex->getSize().y;
     }
 
     void BrushTool::onMousePressed()
