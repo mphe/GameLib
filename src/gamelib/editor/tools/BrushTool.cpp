@@ -87,8 +87,10 @@ namespace gamelib
                 }
                 else if (_type == Polygon && pol.size() > 1)
                 {
+                    if (pol.size() == 2)
+                        drawLine(target, pol.get(0), pol.get(1));
+                    drawLine(target, pol.get(0), mouse);
                     drawLine(target, pol.get(pol.size() - 1), mouse);
-                    drawLine(target, pol.get(pol.size() - 2), mouse);
                 }
                 else if (pol.size() > 0)
                 {
