@@ -34,11 +34,13 @@ namespace gamelib
             auto clear()   -> void; // Removes all nodes
             auto destroy() -> void; // Removes everything (nodes, layers, options)
 
-            auto createNode(Component* owner)                 -> NodeHandle;
-            auto removeNode(NodeHandle handle)                -> void;
-            auto getNode(NodeHandle handle) const             -> const SceneNode*;
-            auto getNodeGlobalBBox(NodeHandle handle) const   -> const math::AABBf*;
-            auto getNodeGlobalMatrix(NodeHandle handle) const -> const sf::Transform*;
+            auto createNode(Component* owner)                  -> NodeHandle;
+            auto removeNode(NodeHandle handle)                 -> void;
+            auto getNode(NodeHandle handle) const              -> const SceneNode*;
+            auto getNodeGlobalBBox(NodeHandle handle) const    -> const math::AABBf*;
+            auto getNodeGlobalMatrix(NodeHandle handle) const  -> const sf::Transform*;
+            auto getNodeGlobalOptions(NodeHandle handle) const -> RenderOptions;
+            auto getNodeVisible(NodeHandle handle) const       -> bool;
 
             auto setNodeOwner(NodeHandle handle, Component* owner)                   -> void;
             auto setNodeDepth(NodeHandle handle, int depth)                          -> void;
@@ -87,8 +89,8 @@ namespace gamelib
             auto forceUpdate() -> void;
             auto render(sf::RenderTarget& target, const math::AABBf* rect = nullptr) -> size_t;
 
-            auto getComponentAtPosition(const math::Point2f& pos) const -> Component*;
-            auto getNumObjectsRendered() const                          -> size_t;
+            auto getNodeAtPosition(const math::Point2f& pos) const -> NodeHandle;
+            auto getNumObjectsRendered() const                     -> size_t;
 
         private:
             auto _updateDirty()                           -> void;

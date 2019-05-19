@@ -4,7 +4,7 @@
 #include "gamelib/components/CollisionComponent.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
-#include "gamelib/core/rendering/Scene.hpp"
+#include "gamelib/core/rendering/RenderSystem.hpp"
 #include "gamelib/core/geometry/CollisionSystem.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
 #include "gamelib/editor/EditorShared.hpp"
@@ -55,7 +55,7 @@ namespace gamelib
         }
 
         auto old = getSelected();
-        select(EditorShared::getMouse().x, EditorShared::getMouse().y, 0);
+        select(EditorShared::getMouse().x, EditorShared::getMouse().y);
 
         auto ent = getSelected();
         if (ent)
@@ -226,32 +226,22 @@ namespace gamelib
             select(Entity::Handle());
     }
 
-    void SelectTool::select(float x, float y, unsigned int flags)
+    void SelectTool::select(float x, float y)
     {
-        Entity* top = nullptr;
-        int depth = 0;
-        int layerdepth = 0;
+        auto rensys = getSubsystem<RenderSystem>();
+        if (!rensys)
+        {
+            select(nullptr);
+            return;
+        }
 
-        auto selector = [&](Collidable* col) {
-            auto ent = static_cast<CollisionComponent*>(col)->getEntity();
-            auto ren = ent->findByType<RenderComponent>();
-            if (!ren || !ren->isVisible())
-                return false;
+        auto node = rensys->getNode(
+                rensys->getNodeAtPosition(math::Point2f(x, y)));
 
-            auto layer = Scene::getActive()->getLayer(ren->getLayer());
-            int layerd = layer ? layer->getDepth() : 0;
-            int d = ren->getDepth();
-            if (top == nullptr || layerd < layerdepth || (layerd == layerdepth && d < depth))
-            {
-                depth = d;
-                layerdepth = layerd;
-                top = ent;
-            }
-            return false;
-        };
-
-        CollisionSystem::getActive()->intersectAll(math::Point2f(x, y), nullptr, flags, selector);
-        select(top);
+        if (node && node->owner)
+            select(node->owner->getEntity());
+        else
+            select(nullptr);
     }
 
     const Entity* SelectTool::getSelected() const

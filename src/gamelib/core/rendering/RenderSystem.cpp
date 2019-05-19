@@ -1,7 +1,9 @@
 #include "gamelib/core/rendering/RenderSystem.hpp"
+#include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/utils/log.hpp"
-#include "math/geometry/PointSet.hpp"
 #include "gamelib/utils/conversions.hpp"
+#include "math/geometry/PointSet.hpp"
+#include "math/geometry/mesh_intersect.hpp"
 
 // Enables setting a breakpoint inside a macro by breaking here
 template <typename... Args>
@@ -51,6 +53,41 @@ namespace gamelib
 
         return math::AABBf(min.asPoint(), max - min);
     }
+
+
+    class VertexPointSet: public math::AbstractPointSet<float>
+    {
+        public:
+            VertexPointSet(const sf::Vertex* array, const SceneNode* node) :
+                _node(node),
+                _array(array)
+            { }
+
+            auto add(const math::Point2f&)            -> void final override { assert(false && "Not supported"); };
+            auto edit(size_t, const math::Point2f&)   -> void final override { assert(false && "Not supported"); };
+            auto insert(size_t, const math::Point2f&) -> void final override { assert(false && "Not supported"); };
+            auto remove(size_t)                       -> void final override { assert(false && "Not supported"); };
+            auto clear()                              -> void final override { assert(false && "Not supported"); };
+
+            auto size() const -> size_t final override
+            {
+                return _node->mesh.size;
+            }
+
+            auto get(size_t i) const -> math::Point2f final override
+            {
+                return convert(_node->_globalTransform.transformPoint(_array[i].position)).asPoint();
+            }
+
+            auto getBBox() const -> math::AABBf final override
+            {
+                return _node->_globalBBox;
+            }
+
+        private:
+            const SceneNode* _node;
+            const sf::Vertex* _array;
+    };
 
 
 
@@ -117,6 +154,32 @@ namespace gamelib
         // Should be safe, because why instantiate a const RenderSystem?
         const_cast<RenderSystem*>(this)->_updateNodeTransform(handle);
         return &_nodes[handle]._globalTransform;
+    }
+
+    auto RenderSystem::getNodeGlobalOptions(NodeHandle handle) const -> RenderOptions
+    {
+        ASSURE_VALID_RET(handle, RenderOptions());
+
+        const SceneNode& node = *getNode(handle);
+        const RenderLayer* layer = _layers.get(node.layer);
+
+        RenderOptions options = node.options;
+        if (layer)
+            options.inherit(layer->options);
+        options.inherit(_root);
+
+        return options;
+    }
+
+    auto RenderSystem::getNodeVisible(NodeHandle handle) const -> bool
+    {
+        ASSURE_VALID_RET(handle, false);
+        CHECK_MESH_BOUNDS_RET(handle, 0, false)
+
+        RenderOptions options = getNodeGlobalOptions(handle);
+
+        return !(options.flags & render_invisible ||
+                (options.flags & render_hidden && !(options.flags & render_drawhidden)));
     }
 
 
@@ -342,6 +405,45 @@ namespace gamelib
         return _numrendered;
     }
 
+    auto RenderSystem::getNodeAtPosition(const math::Point2f& pos) const -> NodeHandle
+    {
+        // TODO: force update?
+
+        for (auto it = _renderqueue.rbegin(), end = _renderqueue.rend(); it != end; ++it)
+        {
+            NodeHandle handle = *it;
+
+            if (!getNodeVisible(handle))
+                continue;
+
+            const SceneNode* node = getNode(handle);
+            VertexPointSet pset(_vertices.get(node->mesh.handle.index), node);
+            bool hit = false;
+
+            switch (node->mesh.primitiveType)
+            {
+                case sf::Triangles:
+                    hit = math::intersectTriangles(pos, pset);
+                    break;
+                case sf::TriangleStrip:
+                    hit = math::intersectTriangleStrip(pos, pset);
+                    break;
+                case sf::TriangleFan:
+                    hit = math::intersectTriangleFan(pos, pset);
+                    break;
+                case sf::Quads:
+                    hit = math::intersectQuads(pos, pset);
+                    break;
+                default:
+                    break;
+            }
+
+            if (hit)
+                return handle;
+        }
+
+        return NodeHandle();
+    }
 
     auto RenderSystem::_updateDirty() -> void
     {

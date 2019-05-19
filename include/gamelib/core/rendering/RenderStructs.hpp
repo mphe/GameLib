@@ -57,6 +57,7 @@ namespace gamelib
     class SceneNode
     {
         friend class RenderSystem;
+        friend class VertexPointSet;
 
         public:
             SceneNode();

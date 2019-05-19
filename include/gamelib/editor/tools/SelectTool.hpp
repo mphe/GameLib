@@ -26,7 +26,7 @@ namespace gamelib
 
             void select(Entity::Handle enthandle);
             void select(Entity* ent);
-            void select(float x, float y, unsigned int flags = collision_mask);
+            void select(float x, float y);
 
             auto getSelected() const -> const Entity*;
             auto getSelected()       -> Entity*;
