@@ -2,6 +2,7 @@
 #include <cstring>
 #include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/Engine.hpp"
+#include "gamelib/core/Game.hpp"
 #include "gamelib/json/json-file.hpp"
 #include "gamelib/json/json-utils.hpp"
 
@@ -55,11 +56,13 @@ int main(int argc, char *argv[])
         if (!gamelib::loadJsonFromFile(argv[1], cfg))
             return 1;
 
-        gamelib::EntityFactory factory;
-        gamelib::registerComponents(factory);
+        gamelib::Game game;
+        game.pushState(gamelib::GameStatePtr(new gamelib::Engine(false)));
+
+        auto factory = gamelib::EntityFactory::getActive();
 
         Json::Value normalized;
-        bool good = gamelib::normalizeConfig(cfg, &normalized, factory);
+        bool good = gamelib::normalizeConfig(cfg, &normalized, *factory);
         cout<<normalized.toStyledString()<<endl;
 
         if (argc >= 3 && strlen(argv[2]) > 0)
