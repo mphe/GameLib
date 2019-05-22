@@ -76,7 +76,7 @@ namespace gamelib
 
             auto get(size_t i) const -> math::Point2f final override
             {
-                return convert(_node->_globalTransform.transformPoint(_array[i].position)).asPoint();
+                return convert(_node->transform.transformPoint(_array[i].position)).asPoint();
             }
 
             auto getBBox() const -> math::AABBf final override
@@ -142,18 +142,8 @@ namespace gamelib
     {
         ASSURE_VALID_RET(handle, nullptr);
 
-        // Should be safe, because why instantiate a const RenderSystem?
-        const_cast<RenderSystem*>(this)->_updateNodeTransform(handle);
+        _updateNodeGlobalBBox(handle);
         return &_nodes[handle]._globalBBox;
-    }
-
-    auto RenderSystem::getNodeGlobalMatrix(NodeHandle handle) const -> const sf::Transform*
-    {
-        ASSURE_VALID_RET(handle, nullptr);
-
-        // Should be safe, because why instantiate a const RenderSystem?
-        const_cast<RenderSystem*>(this)->_updateNodeTransform(handle);
-        return &_nodes[handle]._globalTransform;
     }
 
     auto RenderSystem::getNodeGlobalOptions(NodeHandle handle) const -> RenderOptions
@@ -233,14 +223,13 @@ namespace gamelib
 
         _nodes[handle].layer = layer;
         _orderdirty = true;
-        _markTransformDirty(handle);
     }
 
     auto RenderSystem::setNodeTransform(NodeHandle handle, const sf::Transform& transform) -> void
     {
         ASSURE_VALID(handle);
         _nodes[handle].transform = transform;
-        _markTransformDirty(handle);
+        _markBBoxDirty(handle);
     }
 
 
@@ -396,7 +385,7 @@ namespace gamelib
 
                 target.draw(
                         _vertices.get(mesh.handle.index), mesh.size, mesh.primitiveType,
-                        sf::RenderStates(options.blendMode, node._globalTransform, options.texture, options.shader));
+                        sf::RenderStates(options.blendMode, node.transform, options.texture, options.shader));
 
                 ++_numrendered;
             }
@@ -454,32 +443,25 @@ namespace gamelib
 
         for (NodeHandle handle : _dirtylist)
             if (_nodes.isValid(handle))
-                _updateNodeTransform(handle);
+                _updateNodeGlobalBBox(handle);
 
         _dirtylist.clear();
     }
 
-    auto RenderSystem::_updateNodeTransform(NodeHandle handle) -> void
+    auto RenderSystem::_updateNodeGlobalBBox(NodeHandle handle) const -> void
     {
-        SceneNode& node = _nodes[handle];
+        const SceneNode& node = _nodes[handle];
 
-        if (!node._globaldirty)
+        if (!node._bboxdirty)
             return;
 
-        RenderLayer* layer = _layers.get(node.layer);
-        node._globalTransform = layer ? layer->transform * node.transform : node.transform;
-        _updateNodeGlobalBBox(handle);
-        node._globaldirty = false;
-    }
-
-    auto RenderSystem::_updateNodeGlobalBBox(NodeHandle handle) -> void
-    {
-        SceneNode& node = _nodes[handle];
         if (node.mesh.size == 0)
             node._globalBBox = math::AABBf();
         else
             node._globalBBox = convert(
-                    node._globalTransform.transformRect(convert(node.mesh.bbox)));
+                    node.transform.transformRect(convert(node.mesh.bbox)));
+
+        node._bboxdirty = false;
     }
 
     auto RenderSystem::_updateMeshBBox(NodeHandle handle) -> void
@@ -487,11 +469,7 @@ namespace gamelib
         SceneNode& node = _nodes[handle];
         Mesh& mesh = node.mesh;
         mesh.bbox = calculateBBox(_vertices.get(mesh.handle.index), mesh.size);
-
-        // If the node is dirty, we can skip the global bbox, because it is
-        // recalculated anyway.
-        if (!node._globaldirty)
-            _updateNodeGlobalBBox(handle);
+        _markBBoxDirty(handle);
     }
 
     auto RenderSystem::_freeMesh(NodeHandle handle) -> void
@@ -506,15 +484,16 @@ namespace gamelib
             _vertices.free(mesh.handle);
             mesh = Mesh();
             _nodes[handle]._globalBBox = math::AABBf();
+            _nodes[handle]._bboxdirty = false;
         }
     }
 
-    auto RenderSystem::_markTransformDirty(NodeHandle handle) -> void
+    auto RenderSystem::_markBBoxDirty(NodeHandle handle) -> void
     {
         SceneNode& node = _nodes[handle];
-        if (!node._globaldirty)
+        if (!node._bboxdirty)
         {
-            node._globaldirty = true;
+            node._bboxdirty = true;
             _dirtylist.push_back(handle);
         }
     }

@@ -16,6 +16,8 @@
 // yet and if it would, there would be two hierachy systems.
 // So, until it is absolutely necessary to have a render hierachy, layers are
 // the only parents a node can have.
+// Layers don't have a transform because there would be two transform
+// hierachies otherwise.
 
 
 namespace gamelib
@@ -38,7 +40,6 @@ namespace gamelib
             auto removeNode(NodeHandle handle)                 -> void;
             auto getNode(NodeHandle handle) const              -> const SceneNode*;
             auto getNodeGlobalBBox(NodeHandle handle) const    -> const math::AABBf*;
-            auto getNodeGlobalMatrix(NodeHandle handle) const  -> const sf::Transform*;
             auto getNodeGlobalOptions(NodeHandle handle) const -> RenderOptions;
             auto getNodeVisible(NodeHandle handle) const       -> bool;
 
@@ -77,14 +78,13 @@ namespace gamelib
             auto setRootOptions(const RenderOptions& options) -> void;
             auto getRootOptions() const                       -> const RenderOptions&;
 
-            auto createLayer(const std::string& name)                                  -> LayerHandle;
-            auto removeLayer(LayerHandle handle)                                       -> void;
-            auto getLayer(LayerHandle handle) const                                    -> const RenderLayer*;
-            auto findLayer(const std::string& name) const                              -> LayerHandle;
-            auto setLayerName(LayerHandle handle, const std::string& name)             -> bool;
-            auto setLayerOptions(LayerHandle handle, const RenderOptions& options)     -> void;
-            auto setLayerDepth(LayerHandle handle, int depth)                          -> void;
-            auto setLayerTransform(LayerHandle handle, const sf::Transform& transform) -> void;
+            auto createLayer(const std::string& name)                              -> LayerHandle;
+            auto removeLayer(LayerHandle handle)                                   -> void;
+            auto getLayer(LayerHandle handle) const                                -> const RenderLayer*;
+            auto findLayer(const std::string& name) const                          -> LayerHandle;
+            auto setLayerName(LayerHandle handle, const std::string& name)         -> bool;
+            auto setLayerOptions(LayerHandle handle, const RenderOptions& options) -> void;
+            auto setLayerDepth(LayerHandle handle, int depth)                      -> void;
 
             auto forceUpdate() -> void;
             auto render(sf::RenderTarget& target, const math::AABBf* rect = nullptr) -> size_t;
@@ -93,14 +93,12 @@ namespace gamelib
             auto getNumObjectsRendered() const                     -> size_t;
 
         private:
-            auto _updateDirty()                           -> void;
-            auto _updateNodeTransform(NodeHandle handle)  -> void;
-            auto _updateNodeGlobalBBox(NodeHandle handle) -> void;
-            auto _updateMeshBBox(NodeHandle handle)       -> void;
-
-            auto _freeMesh(NodeHandle handle)           -> void;
-            auto _markTransformDirty(NodeHandle handle) -> void;
-            auto _updateQueue()                         -> void;
+            auto _updateDirty()                                 -> void;
+            auto _updateQueue()                                 -> void;
+            auto _updateMeshBBox(NodeHandle handle)             -> void;
+            auto _updateNodeGlobalBBox(NodeHandle handle) const -> void;
+            auto _markBBoxDirty(NodeHandle handle)              -> void;
+            auto _freeMesh(NodeHandle handle)                   -> void;
 
         private:
             BatchAllocator<sf::Vertex> _vertices;
@@ -110,7 +108,7 @@ namespace gamelib
             std::vector<NodeHandle> _renderqueue;
             size_t _numrendered;
 
-            std::vector<NodeHandle> _dirtylist; // used for transform updates
+            std::vector<NodeHandle> _dirtylist; // used for global bbox updates
             bool _orderdirty;    // used to sort and filter render list
     };
 }

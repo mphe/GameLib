@@ -38,7 +38,6 @@ namespace gamelib
     {
         int depth;
         RenderOptions options;
-        sf::Transform transform;
         std::string name;
 
         RenderLayer();
@@ -70,10 +69,8 @@ namespace gamelib
             Component* owner;
 
         private:
-            math::AABBf _globalBBox;
-            sf::Transform _globalTransform;
-
-            bool _globaldirty;    // used for transform updates
+            mutable math::AABBf _globalBBox;
+            mutable bool _bboxdirty;    // used for bbox updates
     };
 }
 

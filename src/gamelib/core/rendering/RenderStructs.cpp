@@ -13,7 +13,7 @@ namespace gamelib
     SceneNode::SceneNode() :
         depth(0),
         owner(nullptr),
-        _globaldirty(false)
+        _bboxdirty(false)
     { }
 
 

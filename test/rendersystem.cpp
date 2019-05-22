@@ -25,9 +25,6 @@ void checkQueue(RenderSystem& rendersystem)
         assert(node && "Invalid node in render queue");
         assert(node->depth <= lastdepth && "Wrong node order");
         lastdepth = node->depth;
-
-        sf::Transform matrix = node->transform;
-        assert(matrix == *rendersystem.getNodeGlobalMatrix(h) && "Wrong matrix");
     }
 }
 
