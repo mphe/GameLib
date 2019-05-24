@@ -2,7 +2,6 @@
 
 ## Priority
 
-* fix collision component in polygon brush out of sync
 * remove collision_mask flag
 * adapt default snap distance in player entity
 * property flags (readonly!)

@@ -58,6 +58,7 @@ namespace gamelib
     void PolygonTransformer::setMatrix(const sf::Transform& mat)
     {
         _matrix = mat;
+        _bbox = convert(_matrix.transformRect(convert(_pol->getBBox())));
     }
 
     const sf::Transform& PolygonTransformer::getMatrix() const
