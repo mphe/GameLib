@@ -6,7 +6,7 @@
 #include "gamelib/json/json-utils.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
-#include "gamelib/core/rendering/Scene.hpp"
+#include "gamelib/core/rendering/CameraSystem.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
 
 namespace gamelib
@@ -46,9 +46,9 @@ namespace gamelib
         // Cache normalized entity templates
         std::unordered_map<std::string, Json::Value> norments;
 
-        auto scene = getSubsystem<Scene>();
-        if (scene)
-            scene->writeToJson(node["scene"]);
+        auto camsys = getSubsystem<CameraSystem>();
+        if (camsys)
+            camsys->writeToJson(node["cameras"]);
 
         auto entmgr = getSubsystem<EntityManager>();
         if (!entmgr)

@@ -1,5 +1,5 @@
 #include "gamelib/editor/ui/CameraUI.hpp"
-#include "gamelib/core/rendering/Scene.hpp"
+#include "gamelib/core/rendering/CameraSystem.hpp"
 #include "gamelib/imgui/buttons.hpp"
 #include "gamelib/imgui/inputs.hpp"
 #include "imgui.h"
@@ -16,18 +16,24 @@ namespace gamelib
 
         if (ImGui::Begin("Cameras", open, ImVec2(250, 285)))
         {
-            Scene& scene = *Scene::getActive();
+            CameraSystem* sys = CameraSystem::getActive();
+
+            if (!sys)
+            {
+                ImGui::Text("Error: No CameraSystem available");
+                return;
+            }
 
             ImGui::Columns(2);
-
             ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
+
             if (ImGui::ListBoxHeader("##Cameras", ImVec2(0, -ImGui::GetItemsLineHeightWithSpacing())))
             {
-                for (size_t i = 0; i < scene.getNumCameras(); ++i)
+                for (size_t i = 0; i < sys->size(); ++i)
                 {
-                    auto& cam = *scene.getCamera(i);
+                    auto& cam = *sys->get(i);
                     ImGui::PushID(cam.getName().c_str());
-                    ImGui::Checkbox("##layervis", &cam.active);
+                    ImGui::Checkbox("##cameravis", &cam.active);
                     ImGui::SameLine();
                     if (ImGui::Selectable(cam.getName().c_str(), &cam == current) || !current)
                         current = &cam;
@@ -48,7 +54,7 @@ namespace gamelib
 
             if (ImGui::Button("Delete") && current)
             {
-                scene.removeCamera(current);
+                sys->remove(current);
                 current = nullptr;
             }
 
@@ -72,8 +78,8 @@ namespace gamelib
                 if (ImGui::InputText("Name", namebuf, sizeof(namebuf)))
                 {
                     exists = false;
-                    for (size_t i = 0; i < scene.getNumCameras(); ++i)
-                        if (scene.getCamera(i)->getName() == namebuf)
+                    for (size_t i = 0; i < sys->size(); ++i)
+                        if (sys->get(i)->getName() == namebuf)
                             exists = true;
                 }
 
@@ -84,7 +90,7 @@ namespace gamelib
 
                 if (okButton("Create") && strlen(namebuf) > 0 && !exists)
                 {
-                    scene.createCamera(std::string(namebuf));
+                    sys->create(std::string(namebuf));
                     ImGui::CloseCurrentPopup();
                 }
 

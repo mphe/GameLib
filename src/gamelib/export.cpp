@@ -30,9 +30,9 @@ namespace gamelib
     {
         LOG("Loading game...");
 
-        auto scene = Scene::getActive();
-        if (scene)
-            scene->loadFromJson(node["scene"]);
+        auto camsys = getSubsystem<CameraSystem>();
+        if (camsys && node.isMember("cameras"))
+            camsys->loadFromJson(node["cameras"]);
 
         const auto& mgrnode = node["entmgr"];
 

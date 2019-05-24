@@ -1,7 +1,6 @@
 #include "gamelib/components/update/CameraTracker.hpp"
-#include "gamelib/core/rendering/Scene.hpp"
+#include "gamelib/core/rendering/CameraSystem.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
-#include "gamelib/core/rendering/Camera.hpp"
 
 namespace gamelib
 {
@@ -54,6 +53,6 @@ namespace gamelib
 
     Camera* CameraTracker::getCamera() const
     {
-        return getSubsystem<Scene>()->getCamera(camera);
+        return getSubsystem<CameraSystem>()->get(camera);
     }
 }

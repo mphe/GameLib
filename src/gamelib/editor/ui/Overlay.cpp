@@ -6,7 +6,7 @@
 #include "gamelib/core/geometry/flags.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
 #include "gamelib/core/Game.hpp"
-#include "gamelib/core/rendering/Scene.hpp"
+#include "gamelib/core/rendering/CameraSystem.hpp"
 #include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/components/update/QPhysics.hpp"
 #include "imgui.h"
@@ -40,7 +40,7 @@ namespace gamelib
                 ImGui::Text("Real frametime: %i ms", (int)(game->getRealFrametime() * 1000));
                 ImGui::Text("Render time: %f ms", game->getRenderTime() * 1000);
                 ImGui::Text("Update time: %f ms", game->getUpdateTime() * 1000);
-                ImGui::Text("Objects rendered: %lu", getSubsystem<Scene>()->getNumObjectsRendered());
+                ImGui::Text("Objects rendered: %lu", getSubsystem<CameraSystem>()->getNumRendered());
             }
             ImGui::End();
             ImGui::PopStyleColor();
@@ -63,12 +63,12 @@ namespace gamelib
     {
         if (renderCams)
         {
-            auto scene = getSubsystem<Scene>();
+            auto camsys = getSubsystem<CameraSystem>();
             sf::Color col = sf::Color::Green;
 
-            for (size_t i = 0; i < scene->getNumCameras(); ++i)
+            for (size_t i = 0; i < camsys->size(); ++i)
             {
-                auto cam = scene->getCamera(i);
+                auto cam = camsys->get(i);
                 math::AABBf baserect(cam->pos, cam->size);
                 drawRectOutline(target, baserect, col);
 

@@ -282,6 +282,7 @@ RenderSystem:
   * save/restore editor settings (when running/returning to editor)
     * render options (parallax, etc)
     * camera position
+  * add Tool::getName() to get rid of the static tool name array in Editor.cpp
 
 * make Engine a Subsystem
   * makes a backup of an existing active Engine
