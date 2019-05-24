@@ -2,7 +2,7 @@
 #define GAMELIB_RENDERING_FLAGS_HPP
 
 #include "gamelib/utils/bitflags.hpp"
-#include "gamelib/utils/typetraits.hpp"
+#include "gamelib/utils/utils.hpp"
 
 namespace gamelib
 {
