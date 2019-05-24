@@ -23,6 +23,8 @@ namespace gamelib
             auto inherit(const RenderOptions& parent) -> RenderOptions&;
             auto inherited(const RenderOptions& parent) const -> RenderOptions;
 
+            auto isVisible() const -> bool;
+
         public:
             unsigned int flags;
             float parallax;

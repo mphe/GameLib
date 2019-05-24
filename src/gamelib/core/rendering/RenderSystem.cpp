@@ -4,6 +4,7 @@
 #include "gamelib/utils/conversions.hpp"
 #include "math/geometry/PointSet.hpp"
 #include "math/geometry/mesh_intersect.hpp"
+#include <SFML/Graphics.hpp>
 
 // Enables setting a breakpoint inside a macro by breaking here
 template <typename... Args>
@@ -164,12 +165,11 @@ namespace gamelib
     auto RenderSystem::getNodeVisible(NodeHandle handle) const -> bool
     {
         ASSURE_VALID_RET(handle, false);
-        CHECK_MESH_BOUNDS_RET(handle, 0, false)
+        CHECK_MESH_BOUNDS_RET(handle, 0, false);
 
-        RenderOptions options = getNodeGlobalOptions(handle);
-
-        return !(options.flags & render_invisible ||
-                (options.flags & render_hidden && !(options.flags & render_drawhidden)));
+        if (_nodes[handle].mesh.size == 0)
+            return false;
+        return getNodeGlobalOptions(handle).isVisible();
     }
 
 
@@ -260,37 +260,6 @@ namespace gamelib
         return _vertices.get(_nodes[handle].mesh.handle.index + offset);
     }
 
-    // auto RenderSystem::updateNodeMesh(NodeHandle handle, const sf::Vertex* vertices, size_t size,
-    //         size_t offset, bool updateSize, unsigned int copyflags)
-    //     -> void
-    // {
-    //     ASSURE_VALID(handle);
-    //     CHECK_MESH_BOUNDS(handle, 0);
-    //     size_t stop = offset + size;
-    //     Mesh& mesh = _nodes[handle].mesh;
-    //
-    //     if (mesh.handle.size < stop)
-    //         LOG_WARN("Trying to assign more vertices than space allocated -> Clipping to maximum");
-    //
-    //     stop = std::min(stop, mesh.handle.size);
-    //     bool sizechanged = updateSize && stop != mesh.size;
-    //
-    //     if (sizechanged)
-    //         mesh.size = stop;
-    //
-    //     for (size_t i = offset; i < stop; ++i)
-    //     {
-    //         sf::Vertex& v = *_vertices.get(mesh.handle.index + i);
-    //
-    //         if (copyflags & vertex_position) v.position  = vertices[i - offset].position;
-    //         if (copyflags & vertex_uv)       v.texCoords = vertices[i - offset].texCoords;
-    //         if (copyflags & vertex_color)    v.color     = vertices[i - offset].color;
-    //     }
-    //
-    //     if (copyflags & vertex_position || sizechanged)
-    //         _updateMeshBBox(handle);
-    // }
-
     auto RenderSystem::updateNodeMesh(
             NodeHandle handle, size_t size, size_t offset,
             const sf::Vector2f* vertices, const sf::Vector2f* uvs, const sf::Color* colors,
@@ -355,18 +324,26 @@ namespace gamelib
         return _numrendered;
 	}
 
-    auto RenderSystem::forceUpdate() -> void
+    auto RenderSystem::forceUpdate() const -> void
     {
-        _updateDirty();
-        _updateQueue();
+        // Should be safe, because why would you instantiate a const RenderSystem?
+        // Easier than to add mutable and const on half of the members.
+        RenderSystem* self = const_cast<RenderSystem*>(this);
+        self->_updateDirty();
+        self->_updateQueue();
     }
 
-    auto RenderSystem::render(sf::RenderTarget& target, const math::AABBf* rect) -> size_t
+    auto RenderSystem::render(sf::RenderTarget& target, const math::AABBf* rect) const -> size_t
     {
+        _numrendered = 0;
+
+        if (_root.flags & render_invisible)
+            return 0;
+
         forceUpdate();
 
-        _numrendered = 0;
         RenderOptions parent = _root;
+        LayerHandle currentlayer;
 
         for (NodeHandle handle : _renderqueue)
         {
@@ -376,19 +353,67 @@ namespace gamelib
             if (mesh.size == 0)
                 continue;
 
-            // TODO: layer
+            if (mesh.size == 1 && mesh.primitiveType != sf::Points)
+                continue;
 
-            if (!rect || math::intersect(*rect, node._globalBBox))
+            if (mesh.size == 2 && mesh.primitiveType != sf::Points
+                    && mesh.primitiveType != sf::Lines
+                    && mesh.primitiveType != sf::LineStrip)
+                continue;
+
+            // Update current layer
+            if (node.layer != currentlayer)
             {
-                RenderOptions options = node.options.inherited(parent);
-                // TODO: parallax, flags
-
-                target.draw(
-                        _vertices.get(mesh.handle.index), mesh.size, mesh.primitiveType,
-                        sf::RenderStates(options.blendMode, node.transform, options.texture, options.shader));
-
-                ++_numrendered;
+                auto layerptr = _layers.get(node.layer);
+                parent = !layerptr ? _root : layerptr->options.inherited(_root);
+                currentlayer = node.layer;
             }
+
+            RenderOptions options = node.options.inherited(parent);
+
+            if (!options.isVisible())
+                continue;
+
+            sf::Transform trans = node.transform;    // final transform including parallax
+            math::AABBf bbox = node._globalBBox;
+            float parallax = options.parallax;
+
+            if (!(options.flags & render_noparallax) && !math::almostEquals(parallax, 1.0f))
+            {
+                math::Point2f vcenter = (rect ? rect : &bbox)->getCenter();
+                math::Vec2f translate = (bbox.getCenter() - vcenter) * (parallax - 1);
+                bbox.pos += translate;
+
+                if (options.flags & render_scaleparallax)
+                {
+                    trans.scale(parallax, parallax, vcenter.x, vcenter.y);
+                    bbox.extend(bbox.size * parallax - bbox.size);
+                }
+                else
+                    trans.translate(translate.x, translate.y);
+
+                sf::RectangleShape noderect(convert(bbox.size));
+                noderect.setFillColor(sf::Color::Transparent);
+                noderect.setOutlineColor(sf::Color::White);
+                noderect.setOutlineThickness(1);
+                noderect.setPosition(convert(bbox.pos));
+                target.draw(noderect);
+            }
+
+            if (bbox.w == 0 || bbox.h == 0)
+                LOG_WARN("SceneNode bounding box has 0 width or height: ", bbox.w, "x", bbox.h);
+
+            // culling by bbox check
+            if (rect && !math::intersect(*rect, bbox))
+                continue;
+
+            // TODO: wireframe
+
+            target.draw(
+                    _vertices.get(mesh.handle.index), mesh.size, mesh.primitiveType,
+                    sf::RenderStates(options.blendMode, trans, options.texture, options.shader));
+
+            ++_numrendered;
         }
 
         return _numrendered;
@@ -396,7 +421,7 @@ namespace gamelib
 
     auto RenderSystem::getNodeAtPosition(const math::Point2f& pos) const -> NodeHandle
     {
-        // TODO: force update?
+        forceUpdate();
 
         for (auto it = _renderqueue.rbegin(), end = _renderqueue.rend(); it != end; ++it)
         {

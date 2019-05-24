@@ -1,4 +1,5 @@
 #include "gamelib/core/rendering/RenderStructs.hpp"
+#include "gamelib/core/rendering/flags.hpp"
 
 namespace gamelib
 {
@@ -45,6 +46,13 @@ namespace gamelib
 
         return *this;
     }
+
+    auto RenderOptions::isVisible() const -> bool
+    {
+        return !(flags & render_invisible ||
+                (flags & render_hidden && !(flags & render_drawhidden)));
+    }
+
 
     const RenderOptions RenderOptions::defaultOptions;
 }

@@ -22,12 +22,6 @@
 
 namespace gamelib
 {
-    // constexpr unsigned int vertex_position = 1;
-    // constexpr unsigned int vertex_uv       = 1 << 1;
-    // constexpr unsigned int vertex_color    = 1 << 2;
-    // constexpr unsigned int vertex_pos_uv   = vertex_position | vertex_uv;
-    // constexpr unsigned int vertex_all      = vertex_pos_uv | vertex_color;
-
     class RenderSystem : public Subsystem<RenderSystem>
     {
         public:
@@ -62,10 +56,6 @@ namespace gamelib
             auto setNodeMeshType(NodeHandle handle, sf::PrimitiveType type)             -> void;
             auto setNodeMeshSize(NodeHandle handle, size_t size)                        -> void;
 
-            // auto updateNodeMesh(NodeHandle handle, const sf::Vertex* vertices, size_t size,
-            //         size_t offset = 0, bool updateSize = true, unsigned int copyflags = vertex_all)
-            //     -> void;
-
             auto updateNodeMesh(
                     NodeHandle handle,
                     size_t size, size_t offset,
@@ -86,8 +76,8 @@ namespace gamelib
             auto setLayerOptions(LayerHandle handle, const RenderOptions& options) -> void;
             auto setLayerDepth(LayerHandle handle, int depth)                      -> void;
 
-            auto forceUpdate() -> void;
-            auto render(sf::RenderTarget& target, const math::AABBf* rect = nullptr) -> size_t;
+            auto forceUpdate() const -> void;   // NOTE: Debatable if this should be const, but makes things simpler
+            auto render(sf::RenderTarget& target, const math::AABBf* rect = nullptr) const -> size_t;
 
             auto getNodeAtPosition(const math::Point2f& pos) const -> NodeHandle;
             auto getNumObjectsRendered() const                     -> size_t;
@@ -106,9 +96,9 @@ namespace gamelib
             SlotMapShort<RenderLayer> _layers;
             SlotMapShort<SceneNode> _nodes;
             std::vector<NodeHandle> _renderqueue;
-            size_t _numrendered;
+            mutable size_t _numrendered;
 
-            std::vector<NodeHandle> _dirtylist; // used for global bbox updates
+            mutable std::vector<NodeHandle> _dirtylist; // used for global bbox updates
             bool _orderdirty;    // used to sort and filter render list
     };
 }
