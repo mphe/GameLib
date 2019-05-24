@@ -65,8 +65,15 @@ namespace gamelib
                     bool updateSize = true)
                 -> void;
 
-            auto setRootOptions(const RenderOptions& options) -> void;
             auto getRootOptions() const                       -> const RenderOptions&;
+            auto setRootOptions(const RenderOptions& options) -> void;
+            auto setRootOptions(
+                    const unsigned int* flags,
+                    const float* parallax = nullptr,
+                    const sf::BlendMode* blendMode = nullptr,
+                    const sf::Texture* texture = nullptr,
+                    const sf::Shader* shader = nullptr)
+                -> void;
 
             auto createLayer(const std::string& name)                              -> LayerHandle;
             auto removeLayer(LayerHandle handle)                                   -> void;
@@ -78,6 +85,7 @@ namespace gamelib
 
             auto forceUpdate() const -> void;   // NOTE: Debatable if this should be const, but makes things simpler
             auto render(sf::RenderTarget& target, const math::AABBf* rect = nullptr) const -> size_t;
+            auto render(sf::RenderTarget& target, const math::AABBf& rect) const -> size_t;
 
             auto getNodeAtPosition(const math::Point2f& pos) const -> NodeHandle;
             auto getNumObjectsRendered() const                     -> size_t;

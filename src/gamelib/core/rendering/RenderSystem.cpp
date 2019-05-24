@@ -313,6 +313,23 @@ namespace gamelib
         _root = options;
     }
 
+    auto RenderSystem::setRootOptions(
+            const unsigned int* flags,
+            const float* parallax,
+            const sf::BlendMode* blendMode,
+            const sf::Texture* texture,
+            const sf::Shader* shader)
+        -> void
+    {
+        RenderOptions options = _root;
+        if (flags)     options.flags = *flags;
+        if (parallax)  options.parallax = *parallax;
+        if (blendMode) options.blendMode = *blendMode;
+        if (texture)   options.texture = texture;
+        if (shader)    options.shader = shader;
+        setRootOptions(options);
+    }
+
     auto RenderSystem::getRootOptions() const -> const RenderOptions&
     {
         return _root;
@@ -331,6 +348,11 @@ namespace gamelib
         RenderSystem* self = const_cast<RenderSystem*>(this);
         self->_updateDirty();
         self->_updateQueue();
+    }
+
+    auto RenderSystem::render(sf::RenderTarget& target, const math::AABBf& rect) const -> size_t
+    {
+        return render(target, &rect);
     }
 
     auto RenderSystem::render(sf::RenderTarget& target, const math::AABBf* rect) const -> size_t

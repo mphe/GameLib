@@ -4,7 +4,7 @@
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/string.hpp"
 #include "gamelib/core/rendering/flags.hpp"
-#include "gamelib/core/rendering/Scene.hpp"
+#include "gamelib/core/rendering/RenderSystem.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
@@ -38,6 +38,13 @@ namespace gamelib
     // Strips PolygonBrushComponents from output
     void defaultExport(const std::string& fname);
 
+    void hideRenderSystem();
+    void showRenderSystem();
+
+    void addRenderSystemFlags(unsigned int flags);
+    void removeRenderSystemFlags(unsigned int flags);
+    void toggleRenderSystemFlags(unsigned int flags);
+
 
     Editor::Editor() :
         GameState(gamestate_freeze),
@@ -59,11 +66,7 @@ namespace gamelib
         LOG_DEBUG("Init Editor...");
         EditorShared::_editor = this;
 
-        // auto scene = getSubsystem<Scene>();
-        // auto cam = &scene->createCamera("editorcam");
         _cam.loadFromFile("assets/editorcam.json");
-        // scene->setDefaultCamera(cam);
-        // _camctrl.cam = cam;
 
         ImGui::SFML::Init(game->getWindow());
 
@@ -89,9 +92,6 @@ namespace gamelib
         auto evmgr = getSubsystem<EventManager>();
         evmgr->unregCallback<SFMLEvent>(_eventCallback, this);
 
-        // getSubsystem<Scene>()->removeCamera(_camctrl.cam);
-        // _camctrl.cam = nullptr;
-
         _currenttool = nullptr;
         for (auto& i : _tools)
             i.reset();
@@ -102,13 +102,12 @@ namespace gamelib
 
     void Editor::update(float elapsed)
     {
-        auto scene = getSubsystem<Scene>();
         auto input = getSubsystem<InputSystem>();
         _mouseSnapped = EditorShared::snap(input->getMouse().world);
 
-        // Temporary set Scene to visible, so that visible checks in SelectTool work
+        // Temporary set RenderSystem to visible, so that visible checks in SelectTool work
         if (!_run)
-            RMFLAG(scene->flags, render_invisible);
+            showRenderSystem();
 
         if (input->isKeyPressed(sf::Keyboard::F5))
         {
@@ -130,7 +129,7 @@ namespace gamelib
         {
             _handleInput();
             _camctrl.update(elapsed);
-            ADDFLAG(scene->flags, render_invisible);
+            hideRenderSystem();
         }
     }
 
@@ -144,11 +143,11 @@ namespace gamelib
             if (_snap && !_gridontop)
                 _grid.render(target);
 
-            auto scene = getSubsystem<Scene>();
+            auto rensys = getSubsystem<RenderSystem>();
             _cam.apply(target);
-            RMFLAG(scene->flags, render_invisible);
-            getSubsystem<Scene>()->renderDirect(target);
-            ADDFLAG(scene->flags, render_invisible);
+            showRenderSystem();
+            rensys->render(target, _cam.getCamRect());
+            hideRenderSystem();
 
             if (_snap && _gridontop)
                 _grid.render(target);
@@ -228,21 +227,19 @@ namespace gamelib
 
     void Editor::_updateRunFlags()
     {
-        auto scene = getSubsystem<Scene>();
         if (_run)
         {
-            RMFLAG(scene->flags, render_noparallax | render_drawhidden);
             RMFLAG(flags, gamestate_freeze);
-
-            RMFLAG(scene->flags, render_invisible);
+            removeRenderSystemFlags(render_noparallax | render_drawhidden);
+            showRenderSystem(); // show RenderSystem for ingame rendering
         }
         else
         {
-            ADDFLAG(scene->flags, render_noparallax | render_drawhidden);
             ADDFLAG(flags, gamestate_freeze);
+            addRenderSystemFlags(render_noparallax | render_drawhidden);
 
-            // Hack to prevent Scene from rendering so the editor can render it manually with its own camera
-            ADDFLAG(scene->flags, render_invisible);
+            // Hack to prevent RenderSystem from rendering so the editor can render it manually with its own camera
+            hideRenderSystem();
         }
     }
 
@@ -315,12 +312,14 @@ namespace gamelib
                 ImGui::MenuItem("Show mouse coordinates", nullptr, &_overlay.showCoords);
                 ImGui::MenuItem("Show cameras", nullptr, &_overlay.renderCams);
 
-                auto scene = getSubsystem<Scene>();
-                if (ImGui::MenuItem("Show hidden", nullptr, scene->flags & render_drawhidden))
-                    TOGGLEFLAG(scene->flags, render_drawhidden);
+                auto rensys = getSubsystem<RenderSystem>();
+                const auto& renflags = rensys->getRootOptions().flags;
 
-                if (ImGui::MenuItem("Enable parallax", nullptr, !(scene->flags & render_noparallax)))
-                    TOGGLEFLAG(scene->flags, render_noparallax);
+                if (ImGui::MenuItem("Show hidden", nullptr, renflags & render_drawhidden))
+                    toggleRenderSystemFlags(render_drawhidden);
+
+                if (ImGui::MenuItem("Enable parallax", nullptr, !(renflags & render_noparallax)))
+                    toggleRenderSystemFlags(render_noparallax);
 
                 ImGui::MenuItem("Hide Editor when running", nullptr, &_hidegui);
 
@@ -513,5 +512,39 @@ namespace gamelib
         // TODO: export as entity
         save(fname);
         LOG("Map exported to ", fname);
+    }
+
+    void hideRenderSystem()
+    {
+        addRenderSystemFlags(render_invisible);
+    }
+
+    void showRenderSystem()
+    {
+        removeRenderSystemFlags(render_invisible);
+    }
+
+    void addRenderSystemFlags(unsigned int flags)
+    {
+        auto rensys = getSubsystem<RenderSystem>();
+        auto renflags = rensys->getRootOptions().flags;
+        ADDFLAG(renflags, flags);
+        rensys->setRootOptions(&renflags);
+    }
+
+    void removeRenderSystemFlags(unsigned int flags)
+    {
+        auto rensys = getSubsystem<RenderSystem>();
+        auto renflags = rensys->getRootOptions().flags;
+        RMFLAG(renflags, flags);
+        rensys->setRootOptions(&renflags);
+    }
+
+    void toggleRenderSystemFlags(unsigned int flags)
+    {
+        auto rensys = getSubsystem<RenderSystem>();
+        auto renflags = rensys->getRootOptions().flags;
+        TOGGLEFLAG(renflags, flags);
+        rensys->setRootOptions(&renflags);
     }
 }

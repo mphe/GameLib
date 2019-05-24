@@ -69,14 +69,14 @@ namespace gamelib
     void Engine::update(float elapsed)
     {
         updatesystem.update(elapsed);
-        scene.update(elapsed);
+        // scene.update(elapsed);
         evmgr.update();
     }
 
     void Engine::render(sf::RenderTarget& target)
     {
-        auto numrendered = scene.render(target);
-        numrendered += rendersystem.render(target);
+        // auto numrendered = scene.render(target);
+        auto numrendered = rendersystem.render(target);
 
         if (_printstatus)
             // Insert blanks after \r for clean overwriting

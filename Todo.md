@@ -2,6 +2,8 @@
 
 ## Priority
 
+* fix collision component in polygon brush out of sync
+* remove collision_mask flag
 * adapt default snap distance in player entity
 * property flags (readonly!)
 * uint property
@@ -296,6 +298,9 @@ RenderSystem:
     * passed to every tool callback
   * region select
   * Fix negative scalebox in SelectTool
+  * save/restore editor settings (when running/returning to editor)
+    * render options (parallax, etc)
+    * camera position
 
 * make Engine a Subsystem
   * makes a backup of an existing active Engine
