@@ -38,6 +38,7 @@ if (CMAKE_COMPILER_IS_GNUCC)
         -Wsuggest-final-methods
         -Wsuggest-final-types
         -Werror=suggest-override
+        -Werror=return-type
         -fdiagnostics-color=always
         )
 elseif (MSVC)

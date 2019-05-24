@@ -8,6 +8,10 @@ using namespace math;
 
 namespace gamelib
 {
+    Camera::Camera() :
+        Camera("")
+    { }
+
     Camera::Camera(const std::string& name) :
         Camera(name, math::Point2f(), math::Vec2f())
     { }
@@ -25,13 +29,13 @@ namespace gamelib
 
     bool Camera::loadFromJson(const Json::Value& node)
     {
+        _name = node.get("name", _name).asString();
         gamelib::loadFromJson(node["pos"], pos);
         gamelib::loadFromJson(node["size"], size);
         gamelib::loadFromJson(node["velocity"], vel);
         zoom = node.get("zoom", zoom).asFloat();
         ratio = static_cast<AspectRatio>(node.get("ratio", ratio).asInt());
         active = node.get("active", active).asBool();
-        _name = node.get("name", _name).asString();
 
         if (size.x == 0 || size.y == 0)
             LOG_WARN("Camera size is 0");

@@ -12,6 +12,7 @@ namespace gamelib
     class Camera : public Updatable, public JsonSerializer
     {
         public:
+            Camera();
             Camera(const std::string& name);
             Camera(const std::string& name, const math::Point2f& pos, const math::Vec2f& size);
             virtual ~Camera() {}

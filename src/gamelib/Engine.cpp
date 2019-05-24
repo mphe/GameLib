@@ -57,6 +57,7 @@ namespace gamelib
         entmgr.clear();
         scene.destroy();
         rendersystem.destroy();
+        camsystem.clear();
         colsys.destroy();
         updatesystem.destroy();
         resmgr.clear();
@@ -69,19 +70,19 @@ namespace gamelib
     void Engine::update(float elapsed)
     {
         updatesystem.update(elapsed);
-        // scene.update(elapsed);
+        camsystem.update(elapsed);
         evmgr.update();
     }
 
     void Engine::render(sf::RenderTarget& target)
     {
         // auto numrendered = scene.render(target);
-        auto numrendered = rendersystem.render(target);
+        auto numrendered = camsystem.render(target);
 
         if (_printstatus)
             // Insert blanks after \r for clean overwriting
             LOG_RAW("\rRendered ", numrendered, " objects with ",
-                    // scene.getNumCameras(), " camera(s) at ",
+                    camsystem.size(), " camera(s) at ",
                     std::round(1.f / _game->getFrametime()), " FPS");
     }
 }

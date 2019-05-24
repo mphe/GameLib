@@ -25,6 +25,9 @@ namespace gamelib
     class RenderSystem : public Subsystem<RenderSystem>
     {
         public:
+            constexpr static const char* name = "RenderSystem";
+
+        public:
             RenderSystem();
 
             auto clear()   -> void; // Removes all nodes

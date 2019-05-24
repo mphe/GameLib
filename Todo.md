@@ -70,14 +70,6 @@
 RenderSystem:
   * Write an IPointSet adapter to edit meshes
 
-  * Consider splitting camera functionality to other class
-    * Scene
-      * stores cameras
-      * uses render hierachy from RenderSystem
-      * determines visibility
-      * renders for each camera
-        * render call to RenderSystem with camera rect?
-
 * SlotMap
   * add operator->() to SlotMapIterator
   * size() function
@@ -161,14 +153,6 @@ RenderSystem:
   * use a ComponentRemoved event
     * callback handler + pointer to property
 
-* Camera rewrite
-  * base Camera on sf::View
-  * give Camera an active flag
-  * inherit from Transformable
-  * rename to View to make clear it needs a controller to control its movement
-  * https://www.reddit.com/r/gamedev/comments/4o7w59/how_do_you_managing_scenes_with_a_dod_approach/d4aip2m/
-
-
 * imgui
   * imgui game state
   * imgui dialogues
@@ -193,6 +177,7 @@ RenderSystem:
   * Split Updatable in Updatable and BaseUpdatable
     * BaseUpdatable <- Updatable
     * BaseUpdatable <- PhysicsComponent
+  * CameraComponent
 
 * Support rendering to OSB in Game class
 
@@ -201,8 +186,6 @@ RenderSystem:
   * remove clear argument in json functions, except for Transform
   * add docs to make clear how functions behave in case of wrong json node type and defaults
   * use pointers in all loadFromJson functions instead of references
-  * improve camera serialization
-    * should be done by Camera not Scene
 
 * problems with lazy entity bounding box calculation
   * storing the bbox as reference
@@ -245,7 +228,6 @@ RenderSystem:
     * custom (load component directly from json (useful when adding components in the editor that aren't part of the entity))
   * shorten/rename component names
     * AABBComponent -> AABB
-    * PolygonShape -> BrushRenderer
   * include origin for sprites in ActorComponent
   * fix scale in ActorComponent to match the actual max scale and not 1
   * components should be more abstract

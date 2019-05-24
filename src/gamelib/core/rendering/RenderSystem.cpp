@@ -92,6 +92,7 @@ namespace gamelib
 
 
 
+    constexpr const char* RenderSystem::name;
 
 	RenderSystem::RenderSystem() :
         renderBoxes(false),

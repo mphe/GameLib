@@ -4,6 +4,7 @@
 #include "gamelib/core/GameState.hpp"
 #include "core/rendering/Scene.hpp"
 #include "core/rendering/RenderSystem.hpp"
+#include "core/rendering/CameraSystem.hpp"
 #include "core/geometry/CollisionSystem.hpp"
 #include "core/res/ResourceManager.hpp"
 #include "core/ecs/EntityManager.hpp"
@@ -30,6 +31,7 @@ namespace gamelib
         public:
             Scene scene;
             RenderSystem rendersystem;
+            CameraSystem camsystem;
             CollisionSystem colsys;
             ResourceManager resmgr;
             EntityManager entmgr;
