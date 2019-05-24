@@ -94,6 +94,7 @@ namespace gamelib
 
 
 	RenderSystem::RenderSystem() :
+        renderBoxes(false),
         _numrendered(0),
         _orderdirty(true)
 	{ }
@@ -107,6 +108,7 @@ namespace gamelib
         _dirtylist.clear();
         _renderqueue.clear();
         _orderdirty = false;
+        renderBoxes = false;
     }
 
     auto RenderSystem::destroy() -> void
@@ -396,7 +398,7 @@ namespace gamelib
             if (!options.isVisible())
                 continue;
 
-            sf::Transform trans = node.transform;    // final transform including parallax
+            sf::Transform trans;    // parallax transform 
             math::AABBf bbox = node._globalBBox;
             float parallax = options.parallax;
 
@@ -414,13 +416,20 @@ namespace gamelib
                 else
                     trans.translate(translate.x, translate.y);
 
-                sf::RectangleShape noderect(convert(bbox.size));
-                noderect.setFillColor(sf::Color::Transparent);
-                noderect.setOutlineColor(sf::Color::White);
-                noderect.setOutlineThickness(1);
-                noderect.setPosition(convert(bbox.pos));
-                target.draw(noderect);
+                trans *= node.transform;
+
+                if (renderBoxes)
+                {
+                    sf::RectangleShape noderect(convert(bbox.size));
+                    noderect.setFillColor(sf::Color::Transparent);
+                    noderect.setOutlineColor(sf::Color::White);
+                    noderect.setOutlineThickness(1);
+                    noderect.setPosition(convert(bbox.pos));
+                    target.draw(noderect);
+                }
             }
+            else
+                trans = node.transform;
 
             if (bbox.w == 0 || bbox.h == 0)
                 LOG_WARN("SceneNode bounding box has 0 width or height: ", bbox.w, "x", bbox.h);

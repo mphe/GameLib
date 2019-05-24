@@ -98,6 +98,9 @@ namespace gamelib
             auto _markBBoxDirty(NodeHandle handle)              -> void;
             auto _freeMesh(NodeHandle handle)                   -> void;
 
+        public:
+            bool renderBoxes;   // Render bounding boxes
+
         private:
             BatchAllocator<sf::Vertex> _vertices;
             RenderOptions _root;
