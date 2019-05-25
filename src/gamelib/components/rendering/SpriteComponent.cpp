@@ -72,7 +72,7 @@ namespace gamelib
             sf::Vector2f(_sprite->rect.w, _sprite->rect.h),
         };
 
-        _system->setNodeOptions(_handle, nullptr, nullptr, nullptr, _sprite->tex.get());
+        _system->setNodeOptions(_handle, nullptr, nullptr, nullptr, &_sprite->tex);
         _system->updateNodeMesh(_handle, 3, 1, vertices);
         _updateUV();
         setOrigin(sprite->origin);

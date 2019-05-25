@@ -50,7 +50,7 @@ namespace gamelib
                     const unsigned int* flags,
                     const float* parallax = nullptr,
                     const sf::BlendMode* blendMode = nullptr,
-                    const sf::Texture* texture = nullptr,
+                    const TextureResource::Handle* texture = nullptr,
                     const sf::Shader* shader = nullptr)
                 -> void;
 
@@ -58,7 +58,6 @@ namespace gamelib
             auto getNodeMesh(NodeHandle handle, size_t offset) const                    -> const sf::Vertex*;
             auto setNodeMeshType(NodeHandle handle, sf::PrimitiveType type)             -> void;
             auto setNodeMeshSize(NodeHandle handle, size_t size)                        -> void;
-
             auto updateNodeMesh(
                     NodeHandle handle,
                     size_t size, size_t offset,
@@ -74,7 +73,7 @@ namespace gamelib
                     const unsigned int* flags,
                     const float* parallax = nullptr,
                     const sf::BlendMode* blendMode = nullptr,
-                    const sf::Texture* texture = nullptr,
+                    const TextureResource::Handle* texture = nullptr,
                     const sf::Shader* shader = nullptr)
                 -> void;
 

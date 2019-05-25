@@ -5,6 +5,7 @@
 #include <SFML/Graphics/PrimitiveType.hpp>
 #include "gamelib/utils/BatchAllocator.hpp"
 #include "gamelib/utils/SlotMap.hpp"
+#include "gamelib/core/res/TextureResource.hpp"
 #include "math/geometry/AABB.hpp"
 
 namespace gamelib
@@ -29,7 +30,7 @@ namespace gamelib
             unsigned int flags;
             float parallax;
             sf::BlendMode blendMode;
-            const sf::Texture* texture;
+            TextureResource::Handle texture;
             const sf::Shader* shader;
 
         public:

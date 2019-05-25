@@ -193,7 +193,7 @@ namespace gamelib
             const unsigned int* flags,
             const float* parallax,
             const sf::BlendMode* blendMode,
-            const sf::Texture* texture,
+            const TextureResource::Handle* texture,
             const sf::Shader* shader)
         -> void
     {
@@ -202,7 +202,7 @@ namespace gamelib
         if (flags)     options.flags = *flags;
         if (parallax)  options.parallax = *parallax;
         if (blendMode) options.blendMode = *blendMode;
-        if (texture)   options.texture = texture;
+        if (texture)   options.texture = *texture;
         if (shader)    options.shader = shader;
         setNodeOptions(handle, options);
     }
@@ -320,7 +320,7 @@ namespace gamelib
             const unsigned int* flags,
             const float* parallax,
             const sf::BlendMode* blendMode,
-            const sf::Texture* texture,
+            const TextureResource::Handle* texture,
             const sf::Shader* shader)
         -> void
     {
@@ -328,7 +328,7 @@ namespace gamelib
         if (flags)     options.flags = *flags;
         if (parallax)  options.parallax = *parallax;
         if (blendMode) options.blendMode = *blendMode;
-        if (texture)   options.texture = texture;
+        if (texture)   options.texture = *texture;
         if (shader)    options.shader = shader;
         setRootOptions(options);
     }
@@ -443,7 +443,7 @@ namespace gamelib
 
             target.draw(
                     _vertices.get(mesh.handle.index), mesh.size, mesh.primitiveType,
-                    sf::RenderStates(options.blendMode, trans, options.texture, options.shader));
+                    sf::RenderStates(options.blendMode, trans, options.texture.get(), options.shader));
 
             ++_numrendered;
         }

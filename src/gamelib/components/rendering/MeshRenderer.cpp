@@ -91,7 +91,7 @@ namespace gamelib
     void MeshRenderer::setTexture(TextureResource::Handle tex)
     {
         _tex = tex;
-        _system->setNodeOptions(_handle, nullptr, nullptr, nullptr, _tex.get());
+        _system->setNodeOptions(_handle, nullptr, nullptr, nullptr, &_tex);
         _mapTexture();
     }
 

@@ -21,7 +21,6 @@ namespace gamelib
 	RenderOptions::RenderOptions() :
         flags(0),
         parallax(1),
-        texture(nullptr),
         shader(nullptr)
     { }
 
