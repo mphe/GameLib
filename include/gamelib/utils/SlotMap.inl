@@ -51,7 +51,7 @@ namespace gamelib
 
             _firstempty = key.index;
             ++_data[key.index].version;
-            if (std::is_class<T>::value)
+            if (!std::is_trivially_destructible<T>::value)
                 _data[key.index].data = T();
         }
     }
@@ -184,6 +184,12 @@ namespace gamelib
     ValueType& SlotMapIterator<T, IndexType, ValueType>::operator*()
     {
         return (*_vec)[_index].data;
+    }
+
+    template <typename T, typename IndexType, typename ValueType>
+    ValueType* SlotMapIterator<T, IndexType, ValueType>::operator->()
+    {
+        return &(this->operator*());
     }
 
     template <typename T, typename IndexType, typename ValueType>

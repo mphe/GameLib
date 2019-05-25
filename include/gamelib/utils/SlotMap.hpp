@@ -83,6 +83,11 @@ namespace gamelib
             return index == (IndexType)-1 && version == (VersionType)-1;
         }
 
+        explicit constexpr operator bool() const
+        {
+            return !isNull();
+        }
+
         constexpr bool operator==(const type& rhs) const
         {
             return index == rhs.index && version == rhs.version;
@@ -115,6 +120,7 @@ namespace gamelib
             auto operator!=(const type& rhs) const -> bool;
 
             auto operator*() -> ValueType&;
+            ValueType* operator->();
 
             auto handle() const -> Handle;
 
