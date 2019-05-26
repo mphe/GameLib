@@ -18,6 +18,23 @@ namespace gamelib
         return as<BaseResource>();
     }
 
+    template <typename T>
+    const ResourceHandle<BaseResource>* ResourceHandle<T>::asBasePtr() const
+    {
+        // This looks dangerous but it's safe, because
+        // * shared_ptr should only hold a pointer and reference count
+        // * T is guaranteed/required to be of Resource or BaseResource
+        // * Resource does not use multiple inheritance, therefore the
+        //   base pointer should be identical to the derived pointer
+        return reinterpret_cast<const BaseResourceHandle*>(this);
+    }
+
+    template <typename T>
+    ResourceHandle<BaseResource>* ResourceHandle<T>::asBasePtr()
+    {
+        return reinterpret_cast<BaseResourceHandle*>(this);
+    }
+
 
     template <typename T>
     T* ResourceHandle<T>::getResource() const

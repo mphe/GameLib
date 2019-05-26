@@ -2,9 +2,9 @@
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/imgui/inputs.hpp"
 #include "gamelib/imgui/resources.hpp"
+#include "gamelib/json/json-resources.hpp"
 #include "imgui.h"
 #include <climits>
-#include <boost/filesystem.hpp>
 
 namespace gamelib
 {
@@ -75,22 +75,12 @@ namespace gamelib
 
     bool PropResource::loadFromJson(const PropertyHandle& prop, BaseResourceHandle* ptr, const Json::Value& node) const
     {
-        *ptr = getSubsystem<ResourceManager>()->get(node.asString());
-        return true;
+        return ::gamelib::loadFromJson(node, ptr);
     }
 
     void PropResource::writeToJson(const PropertyHandle& prop, const BaseResourceHandle* ptr, Json::Value& node)   const
     {
-        if (*ptr)
-        {
-            auto resmgr = getSubsystem<ResourceManager>();
-            if (resmgr)
-                node = boost::filesystem::relative(ptr->getResource()->getPath(), resmgr->getSearchpath()).string();
-            else
-                node = ptr->getResource()->getPath();
-        }
-        else
-            node = "";
+        ::gamelib::writeToJson(node, *ptr);
     }
 
     bool PropResource::drawGui(const PropertyHandle& prop, const std::string& name, BaseResourceHandle* ptr) const

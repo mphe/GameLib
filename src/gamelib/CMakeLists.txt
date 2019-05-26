@@ -53,6 +53,7 @@ set(GAMELIB_SOURCES
     json/json-utils.cpp
     json/json-vector.cpp
     json/json-transformable.cpp
+    json/json-resources.cpp
 
     properties/PropertyContainer.cpp
     properties/PropertyHandle.cpp

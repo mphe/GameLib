@@ -9,9 +9,16 @@ namespace gamelib
 {
     class BaseResource;
 
+    template <typename T, ID id>
+    class Resource;
+
 
     /*
      * A handle to a Resource.
+     *
+     * T must be either BaseResource or Resource<...>!
+     * If this is not the case, things might break!
+     *
      * It's basically a wrapper around std::shared_ptr with some extra
      * functionality to allow easy access to the underlying resource.
      * To cast between BaseResource and the actual resource as() can be used.
@@ -23,7 +30,7 @@ namespace gamelib
     template <typename T>
     class ResourceHandle
     {
-        static_assert(std::is_base_of<BaseResource, T>(), "Type must be a Resource");
+        static_assert(std::is_base_of<BaseResource, T>::value, "Type must of type Resource");
 
         private:
             typedef typename T::WrappedType WrappedType;
@@ -40,6 +47,9 @@ namespace gamelib
             template <typename U>
             auto as() const     -> ResourceHandle<U>;
             auto asBase() const -> ResourceHandle<BaseResource>;
+
+            auto asBasePtr() const -> const ResourceHandle<BaseResource>*;
+            auto asBasePtr() -> ResourceHandle<BaseResource>*;
 
             auto getResource() const -> T*;
 
