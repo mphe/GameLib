@@ -1,25 +1,59 @@
 #include "gamelib/editor/ui/LayerUI.hpp"
 #include "gamelib/imgui/inputs.hpp"
 #include "gamelib/imgui/buttons.hpp"
-#include "gamelib/utils/string.hpp"
-#include "gamelib/core/rendering/Scene.hpp"
+#include "gamelib/core/rendering/RenderSystem.hpp"
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/utils/log.hpp"
 
 namespace gamelib
 {
+    bool inputLayerData(RenderSystem* sys, LayerHandle handle)
+    {
+        const RenderLayer* layer = sys->getLayer(handle);
+        if (!layer)
+            return false;
+
+        int depth = layer->depth;
+        float parallax = layer->options.parallax;
+        unsigned int flags = layer->options.flags;
+        bool changed = false;
+
+        if (inputBitflags("Render flags", &flags, num_renderflags, str_renderflags))
+            changed = true;
+
+        if (ImGui::InputFloat("Parallax", &parallax, 0.01, 0.1, 3))
+            changed = true;
+
+        // TODO: blendmode, layer, texture
+
+        if (changed)
+            sys->setLayerOptions(handle, &flags, &parallax);
+
+        if (ImGui::InputInt("Depth", &depth, 1, 100))
+        {
+            sys->setLayerDepth(handle, depth);
+            changed = true;
+        }
+
+        return changed;
+    }
+
     // Basically the same code as CameraUI.
     // If you make changes here, do it also in CameraUI.cpp.
     void drawLayerUI(bool* open)
     {
-        static Layer::Handle current;
+        static LayerHandle current;
         static char namebuf[256];
         static bool exists = false;
 
         if (ImGui::Begin("Layers", open, ImVec2(250, 285)))
         {
-            Scene& scene = *Scene::getActive();
-            Layer* layer = nullptr;
+            RenderSystem* sys = RenderSystem::getActive();
+            if (!sys)
+            {
+                ImGui::Text("Error: No RenderSystem available");
+                return;
+            }
 
             ImGui::Columns(2);
 
@@ -29,19 +63,26 @@ namespace gamelib
             ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
             if (ImGui::ListBoxHeader("##Layers", ImVec2(0, -ImGui::GetItemsLineHeightWithSpacing())))
             {
-                scene.foreachLayer([&](Layer::Handle handle, Layer& layer) {
-                        ImGui::PushID(layer.getName().c_str());
-                        bool visible = !(layer.flags & render_invisible);
-                        if (ImGui::Checkbox("##layervis", &visible))
-                            TOGGLEFLAG(layer.flags, render_invisible);
+                for (auto it = sys->beginLayers(), end = sys->endLayers(); it != end; ++it)
+                {
+                    const auto& handle = it.handle();
+                    const auto& layer = *it;
+                    bool visible = !(layer.options.flags & render_invisible);
 
-                        ImGui::SameLine();
+                    ImGui::PushID(layer.name.c_str());
+                    if (ImGui::Checkbox("##layervis", &visible))
+                    {
+                        auto newflags = toggleflag(layer.options.flags, render_invisible);
+                        sys->setLayerOptions(handle, &newflags);
+                    }
 
-                        if (ImGui::Selectable(layer.getName().c_str(), (handle == current)) || current.isNull())
-                            current = handle;
+                    ImGui::SameLine();
 
-                        ImGui::PopID();
-                    });
+                    if (ImGui::Selectable(layer.name.c_str(), (handle == current)) || current.isNull())
+                        current = handle;
+
+                    ImGui::PopID();
+                }
                 ImGui::ListBoxFooter();
             }
             ImGui::PopItemWidth();
@@ -57,20 +98,14 @@ namespace gamelib
 
             if (ImGui::Button("Delete") && !current.isNull())
             {
-                scene.deleteLayer(current);
-                current = Layer::Handle();
+                sys->removeLayer(current);
+                current = LayerHandle();
             }
 
-            // ImGui::Separator();
             ImGui::NextColumn();
 
             // Layer properties
-            layer = scene.getLayer(current);
-            if (layer)
-            {
-                // ImGui::Text("Name: %s", layer->getName().c_str());
-                inputSceneData(*layer);
-            }
+            inputLayerData(sys, current);
 
             ImGui::Columns(1);
 
@@ -82,10 +117,12 @@ namespace gamelib
                 if (ImGui::InputText("Name", namebuf, sizeof(namebuf)))
                 {
                     exists = false;
-                    scene.foreachLayer([&](Layer::Handle, Layer& layer) {
-                            if (layer.getName() == namebuf)
-                                exists = true;
-                        });
+                    for (auto it = sys->beginLayers(), end = sys->endLayers(); it != end; ++it)
+                        if (it->name == namebuf)
+                        {
+                            exists = true;
+                            break;
+                        }
                 }
 
                 if (exists)
@@ -95,13 +132,13 @@ namespace gamelib
 
                 if (okButton("Create") && strlen(namebuf) > 0 && !exists)
                 {
-                    scene.createLayer(std::string(namebuf));
+                    sys->createLayer(std::string(namebuf));
                     ImGui::CloseCurrentPopup();
                 }
 
                 ImGui::NextColumn();
 
-                if (cancelButton("Cancel"))
+                if (cancelButton())
                     ImGui::CloseCurrentPopup();
 
                 ImGui::Columns(1);

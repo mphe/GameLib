@@ -1,13 +1,11 @@
 #include "gamelib/imgui/inputs.hpp"
-#include "gamelib/imgui/resources.hpp"
 #include "gamelib/properties/PropertyContainer.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
-#include "gamelib/components/RenderComponent.hpp"
+#include "gamelib/components/NewRenderComponent.hpp"
+#include "gamelib/core/rendering/RenderSystem.hpp"
 #include "gamelib/core/rendering/flags.hpp"
-#include "gamelib/core/rendering/Scene.hpp"
-#include "gamelib/core/geometry/flags.hpp"
-#include "gamelib/utils/conversions.hpp"
+#include "gamelib/core/rendering/Camera.hpp"
 #include "imgui.h"
 #include "imgui_internal.h"
 
@@ -28,31 +26,47 @@ namespace gamelib
     }
 
 
-    bool inputLayer(const char* label, Layer::Handle* handle)
+    bool inputLayer(const char* label, LayerHandle* handle, const RenderSystem* sys)
     {
-        int selected = 0;
-        auto scene = Scene::getActive();
-        std::vector<Layer::Handle> cache;
+        sys = sys ? sys : RenderSystem::getActive();
+        if (!sys)
+        {
+            ImGui::Text("Error: No RenderSystem available");
+            return false;
+        }
 
+        // later needed for itemgetter
+        struct {
+            std::vector<LayerHandle> cache;
+            const RenderSystem* sys;
+        } context;
+
+        context.sys = sys;
+        auto& cache = context.cache;
+        cache.emplace_back();
         int i = 1;
-        cache.push_back(Layer::Handle());
-        scene->foreachLayer([&](Layer::Handle h, Layer&) {
-                if (handle && h == *handle)
-                    selected = i;
-                cache.push_back(h);
-                ++i;
-            });
+        int selected = 0;
 
-        auto itemgetter = [](void* cache_, int index, const char** name) {
-            auto& handles = *static_cast<decltype(cache)*>(cache_);
-            if (handles[index].isNull())
+
+        for (auto it = sys->beginLayers(), end = sys->endLayers(); it != end; ++it)
+        {
+            if (handle && it.handle() == *handle)
+                selected = i;
+            cache.push_back(it.handle());
+            ++i;
+        }
+
+        auto itemgetter = [](void* data, int index, const char** name) {
+            auto& context_ = *static_cast<decltype(context)*>(data);
+            auto handle = context_.cache[index];
+            if (handle.isNull())
                 *name = "default";
             else
-                *name = Scene::getActive()->getLayer(handles[index])->getName().c_str();
+                *name = context_.sys->getLayer(handle)->name.c_str();
             return true;
         };
 
-        if (ImGui::Combo(label, &selected, itemgetter, (void*)&cache, cache.size()))
+        if (ImGui::Combo(label, &selected, itemgetter, &context, cache.size()))
         {
             *handle = cache[selected];
             return true;
@@ -61,41 +75,19 @@ namespace gamelib
         return false;
     }
 
-
-    bool inputSceneData(SceneData& sd)
+    bool inputCamera(Camera& cam)
     {
-        int depth = sd.getDepth();
-        float parallax = sd.getParallax();
         bool changed = false;
-
-        inputBitflags("Render flags", &sd.flags, num_renderflags, str_renderflags);
-
-        if (ImGui::InputInt("Depth", &depth, 1, 100))
-        {
-            sd.setDepth(depth);
-            changed = true;
-        }
-
-        if (ImGui::InputFloat("Parallax", &parallax, 0.01, 0.1, 3))
-        {
-            sd.setParallax(parallax);
-            changed = true;
-        }
-
+        changed |= ImGui::InputFloat2("Pos", &cam.pos.x, 2);
+        changed |= ImGui::InputFloat2("Size", &cam.size.x, 2);
+        changed |= ImGui::InputFloat("Zoom", &cam.zoom, 0.5, 1, 2);
+        changed |= ImGui::Combo("Aspect Ratio", (int*)(&cam.ratio), str_aspectratios, NumRatios);
+        ImGui::NewLine();
+        changed |= ImGui::InputFloat2("Velocity", &cam.vel.x, 2);
+        ImGui::NewLine();
+        changed |= ImGui::InputFloat2("Viewport Start", &cam.viewport.x, 2);
+        changed |= ImGui::InputFloat2("Viewport Stop", &cam.viewport.w, 2);
         return changed;
-    }
-
-    void inputCamera(Camera& cam)
-    {
-        ImGui::InputFloat2("Pos", &cam.pos.x, 2);
-        ImGui::InputFloat2("Size", &cam.size.x, 2);
-        ImGui::InputFloat("Zoom", &cam.zoom, 0.5, 1, 2);
-        ImGui::Combo("Aspect Ratio", (int*)(&cam.ratio), str_aspectratios, NumRatios);
-        ImGui::NewLine();
-        ImGui::InputFloat2("Velocity", &cam.vel.x, 2);
-        ImGui::NewLine();
-        ImGui::InputFloat2("Viewport Start", &cam.viewport.x, 2);
-        ImGui::InputFloat2("Viewport Stop", &cam.viewport.w, 2);
     }
 
     bool inputTransform(Transformable& trans)

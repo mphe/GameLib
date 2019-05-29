@@ -2,23 +2,22 @@
 #define GAMELIB_IMGUI_INPUTS_HPP
 
 #include <string>
-#include "gamelib/core/rendering/Layer.hpp"
+#include "gamelib/core/rendering/RenderStructs.hpp"
 
 namespace gamelib
 {
-    class SceneData;
     class Camera;
     class Transformable;
     class PropertyHandle;
     class PropertyContainer;
     class Entity;
     class Component;
+    class RenderSystem;
 
     bool inputBitflags(const char* label, unsigned int* flags, int num, const char* const* names);
 
-    bool inputLayer(const char* label, Layer::Handle* handle);
-    bool inputSceneData(SceneData& sd);
-    void inputCamera(Camera& cam);
+    bool inputLayer(const char* label, LayerHandle* handle, const RenderSystem* sys);
+    bool inputCamera(Camera& cam);
 
     bool inputTransform(Transformable& trans);
 

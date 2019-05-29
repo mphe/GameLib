@@ -4,7 +4,7 @@
 #include "gamelib/utils/conversions.hpp"
 #include "math/geometry/PointSet.hpp"
 #include "math/geometry/mesh_intersect.hpp"
-#include <SFML/Graphics.hpp>
+#include "gamelib/json/json-rendering.hpp"
 
 // Enables setting a breakpoint inside a macro by breaking here
 template <typename... Args>
@@ -31,6 +31,15 @@ if (!_nodes[handle].mesh.handle.isValid() || (offset) >= _nodes[handle].mesh.han
 
 #define CHECK_MESH_BOUNDS(handle, offset) CHECK_MESH_BOUNDS_RET(handle, offset, )
 
+#define ASSURE_LAYER_VALID_RET(layerhandle, ret) \
+if (!_layers.isValid(layerhandle))    \
+{   \
+    _warn_macro("Trying to access invalid layer handle");   \
+    return ret; \
+}
+
+#define ASSURE_LAYER_VALID(layerhandle) ASSURE_LAYER_VALID_RET(layerhandle, )
+
 
 namespace gamelib
 {
@@ -54,7 +63,6 @@ namespace gamelib
 
         return math::AABBf(min.asPoint(), max - min);
     }
-
 
     class VertexPointSet: public math::AbstractPointSet<float>
     {
@@ -127,6 +135,7 @@ namespace gamelib
         NodeHandle handle = _nodes.acquire();
         _nodes[handle].owner = owner;
         // don't add to queue, because there's no mesh yet
+        LOG_DEBUG("Created SceneNode");
         return handle;
     }
 
@@ -399,7 +408,7 @@ namespace gamelib
             if (!options.isVisible())
                 continue;
 
-            sf::Transform trans;    // parallax transform 
+            sf::Transform trans;    // parallax transform
             math::AABBf bbox = node._globalBBox;
             float parallax = options.parallax;
 
@@ -491,6 +500,99 @@ namespace gamelib
         return NodeHandle();
     }
 
+    auto RenderSystem::createLayer(const std::string& name) -> LayerHandle
+    {
+        auto hnd = findLayer(name);
+        if (hnd.isNull())
+        {
+            hnd = _layers.acquire();
+            _layers[hnd] = RenderLayer();
+            _layers[hnd].name = name;
+            LOG_DEBUG("Created RenderLayer");
+        }
+        else
+            LOG_DEBUG_WARN("Layer already exists: ", name, " -> using existing one");
+
+        return hnd;
+    }
+
+    auto RenderSystem::removeLayer(LayerHandle handle) -> void
+    {
+        ASSURE_LAYER_VALID(handle);
+        _layers.destroy(handle);
+    }
+
+    auto RenderSystem::getLayer(LayerHandle handle) const -> const RenderLayer*
+    {
+        return _layers.get(handle);
+    }
+
+    auto RenderSystem::beginLayers() const -> LayerCollection::const_iterator
+    {
+        return _layers.begin();
+    }
+
+    auto RenderSystem::endLayers() const -> LayerCollection::const_iterator
+    {
+        return _layers.end();
+    }
+
+
+    auto RenderSystem::findLayer(const std::string& name) const -> LayerHandle
+    {
+        for (auto it = _layers.begin(), end = _layers.end(); it != end; ++it)
+            if (it->name == name)
+                return it.handle();
+        return LayerHandle();
+    }
+
+    auto RenderSystem::setLayerName(LayerHandle handle, const std::string& name) -> bool
+    {
+        ASSURE_LAYER_VALID_RET(handle, false);
+
+        if (findLayer(name))
+        {
+            LOG_ERROR("A layer with that name already exists");
+            return false;
+        }
+
+        _layers[handle].name = name;
+        return true;
+    }
+
+    auto RenderSystem::setLayerDepth(LayerHandle handle, int depth) -> void
+    {
+        ASSURE_LAYER_VALID(handle);
+        _layers[handle].depth = depth;
+        _orderdirty = true;
+    }
+
+    auto RenderSystem::setLayerOptions(LayerHandle handle, const RenderOptions& options) -> void
+    {
+        ASSURE_LAYER_VALID(handle);
+        _layers[handle].options = options;
+    }
+
+    auto RenderSystem::setLayerOptions(
+            LayerHandle handle,
+            const unsigned int* flags,
+            const float* parallax,
+            const sf::BlendMode* blendMode,
+            const TextureResource::Handle* texture,
+            const sf::Shader* shader)
+        -> void
+    {
+        ASSURE_LAYER_VALID(handle);
+        RenderOptions options = _layers[handle].options;
+        if (flags)     options.flags = *flags;
+        if (parallax)  options.parallax = *parallax;
+        if (blendMode) options.blendMode = *blendMode;
+        if (texture)   options.texture = *texture;
+        if (shader)    options.shader = shader;
+        setLayerOptions(handle, options);
+    }
+
+
     auto RenderSystem::_updateDirty() -> void
     {
         if (_dirtylist.empty())
@@ -566,17 +668,21 @@ namespace gamelib
              end = _renderqueue.end();
 
         std::stable_sort(begin, end, [this](NodeHandle a, NodeHandle b) {
-            // auto la = a->getLayer(),
-            //      lb = b->getLayer();
-            // const int da = _layers.isValid(la) ? _layers[la]._depth : 0,
-            //       db = _layers.isValid(lb) ? _layers[lb]._depth : 0;
-            // return (da != db) ? da > db : a->_depth > b->_depth;
             const SceneNode *nodea = _nodes.get(a),
                             *nodeb = _nodes.get(b);
+
             if (!nodea)
                 return false;
             if (!nodeb)
                 return true;
+
+            const RenderLayer *layera = getLayer(nodea->layer),
+                              *layerb = getLayer(nodeb->layer);
+            const int deptha = layera ? layera->depth : 0,
+                      depthb = layerb ? layerb->depth : 0;
+
+            if (deptha != depthb)
+                return deptha > depthb;
             return nodea->depth > nodeb->depth;
         });
 
@@ -590,4 +696,37 @@ namespace gamelib
 
         _orderdirty = false;
 	}
+
+    auto RenderSystem::loadFromJson(const Json::Value& node) -> bool
+    {
+        // TODO: load root options
+
+        if (node.isMember("layers"))
+        {
+            const auto& layers = node["layers"];
+            for (auto it = layers.begin(), end = layers.end(); it != end; ++it)
+            {
+                auto h = createLayer(it.key().asString());
+
+                if (!::gamelib::loadFromJson(*it, &_layers[h]))
+                    // Don't remove because code might rely on it
+                    LOG_ERROR("Couldn't load config for layer: ", getLayer(h)->name);
+            }
+        }
+
+        _updateQueue();
+        return true;
+    }
+
+    auto RenderSystem::writeToJson(Json::Value& node) const -> void
+    {
+        // TODO: write root options
+
+        if (_layers.begin() != _layers.end())
+        {
+            auto& layers = node["layers"];
+            for (const auto& i : _layers)
+                ::gamelib::writeToJson(layers[i.name], i);
+        }
+    }
 }

@@ -2,6 +2,7 @@
 
 ## Priority
 
+* rename isIdentifiable to isIdentifier
 * remove collision_mask flag
 * adapt default snap distance in player entity
 * property flags (readonly!)
@@ -13,6 +14,10 @@
 * ResourceManager
   * Implement multiple searchpath
   * Revert relative loads
+  * add getSearchpath() function to BaseResource
+    * getPath() returns path relative to searchpath (if any)
+    * makes it possible to determine if resource was loaded using resmgr
+    * can use and build path as needed
 * Make components more interface-y to prevent diamond problems
 
 ## All
@@ -81,6 +86,8 @@ RenderSystem:
     * provide function to get key/version combined as int
   * add function to get by index disregarding version
   * overwrite on delete only if not trivially destructable
+  * base on BatchAllocator
+
 
 * create documents defining standard behaviour and templates
   * .hpp/.cpp template for new component
@@ -186,6 +193,10 @@ RenderSystem:
   * remove clear argument in json functions, except for Transform
   * add docs to make clear how functions behave in case of wrong json node type and defaults
   * use pointers in all loadFromJson functions instead of references
+  * move all json stuff to static functions in gamelib/json subfolder
+    * decouples json from logic
+    * cleaner
+    * more consistent to have all in one place
 
 * problems with lazy entity bounding box calculation
   * storing the bbox as reference
@@ -306,6 +317,11 @@ RenderSystem:
   * remove custom resource related register functions
   * support getters
   * PropComponent needs to react if the component list changes
+  * rewrite resource property to be safer
+    * resource handle gets reinterpret_casted to BaseResourceHandle
+    * works fine as long as the resource is of type Resource<T>
+    * if not, things might break if the resource type uses multiple inheritance
+
 
 * log
   * warn if null

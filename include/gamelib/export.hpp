@@ -7,6 +7,7 @@
 #include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
 #include "gamelib/core/rendering/CameraSystem.hpp"
+#include "gamelib/core/rendering/RenderSystem.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
 
 namespace gamelib
@@ -49,6 +50,10 @@ namespace gamelib
         auto camsys = getSubsystem<CameraSystem>();
         if (camsys)
             camsys->writeToJson(node["cameras"]);
+
+        auto rensys = getSubsystem<RenderSystem>();
+        if (rensys)
+            rensys->writeToJson(node["rendersystem"]);
 
         auto entmgr = getSubsystem<EntityManager>();
         if (!entmgr)

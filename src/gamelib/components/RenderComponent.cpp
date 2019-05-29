@@ -21,15 +21,16 @@ namespace gamelib
 
             bool drawGui(const PropertyHandle& prop, const std::string& name, SceneObject* ptr) const final override
             {
-                bool changed = inputSceneData(*ptr);
-
-                Layer::Handle handle = ptr->getLayer();
-                if (inputLayer("Layer", &handle))
-                {
-                    ptr->setLayer(handle);
-                    changed = true;
-                }
-                return changed;
+                // bool changed = inputSceneData(*ptr);
+                //
+                // Layer::Handle handle = ptr->getLayer();
+                // if (inputLayer("Layer", &handle))
+                // {
+                //     ptr->setLayer(handle);
+                //     changed = true;
+                // }
+                // return changed;
+                return false;
             }
     } propSceneObject;
 

@@ -3,8 +3,6 @@
 #include <vector>
 #include <random>
 #include <ctime>
-
-#define private public
 #include "gamelib/core/rendering/RenderSystem.hpp"
 
 using namespace std;
@@ -15,8 +13,7 @@ constexpr int max_size = 20;
 
 void checkQueue(RenderSystem& rendersystem)
 {
-    rendersystem._updateDirty();
-    rendersystem._updateQueue();
+    rendersystem.forceUpdate();
 
     int lastdepth = __INT_MAX__;
     for (NodeHandle h : rendersystem._renderqueue)

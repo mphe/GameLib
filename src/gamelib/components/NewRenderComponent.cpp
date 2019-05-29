@@ -3,6 +3,7 @@
 #include "gamelib/core/rendering/RenderSystem.hpp"
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/imgui/inputs.hpp"
+#include "gamelib/json/json-rendering.hpp"
 #include "imgui.h"
 
 namespace gamelib
@@ -16,13 +17,23 @@ namespace gamelib
                 auto sys = self->_system;
                 const SceneNode& node = *sys->getNode(*ptr);
 
-                // TODO: blendmode, layer
-                auto depth = cfgnode.get("depth", node.depth).asInt();
-                auto flags = cfgnode.get("flags", node.options.flags).asUInt();
-                auto parallax = cfgnode.get("parallax", node.options.parallax).asFloat();
+                auto options = node.options;
+                ::gamelib::loadFromJson(cfgnode, &options);
+                sys->setNodeOptions(*ptr, options);
 
-                sys->setNodeOptions(*ptr, &flags, &parallax);
+                auto depth = cfgnode.get("depth", node.depth).asInt();
                 sys->setNodeDepth(*ptr, depth);
+
+                if (cfgnode.isMember("layer"))
+                {
+                    auto name = cfgnode["layer"].asString();
+                    if (!name.empty())
+                    {
+                        auto layer = sys->findLayer(name);
+                        if (layer)
+                            sys->setNodeLayer(*ptr, layer);
+                    }
+                }
 
                 return true;
             }
@@ -35,6 +46,9 @@ namespace gamelib
                 cfgnode["depth"] = node.depth;
                 cfgnode["flags"] = node.options.flags;
                 cfgnode["parallax"] = node.options.parallax;
+
+                const auto* layer = self->_system->getLayer(node.layer);
+                cfgnode["layer"] = !layer ? "" : layer->name;
             }
 
             bool drawGui(const PropertyHandle& prop, const std::string&, NodeHandle* ptr) const final override
@@ -43,21 +57,25 @@ namespace gamelib
                 auto sys = self->_system;
                 const SceneNode& node = *sys->getNode(*ptr);
 
+                LayerHandle handle = node.layer;
                 int depth = node.depth;
                 float parallax = node.options.parallax;
                 unsigned int flags = node.options.flags;
                 bool changed = false;
 
-                if (inputBitflags("Render flags", &flags, num_renderflags, str_renderflags))
-                    changed = true;
-
-                if (ImGui::InputFloat("Parallax", &parallax, 0.01, 0.1, 3))
-                    changed = true;
-
-                // TODO: blendmode, layer
+                changed |= inputBitflags("Render flags", &flags, num_renderflags, str_renderflags);
+                changed |= ImGui::InputFloat("Parallax", &parallax, 0.01, 0.1, 3);
 
                 if (changed)
                     sys->setNodeOptions(*ptr, &flags, &parallax);
+
+                // TODO: blendmode
+
+                if (inputLayer("Layer", &handle, sys))
+                {
+                    sys->setNodeLayer(*ptr, handle);
+                    changed = true;
+                }
 
                 if (ImGui::InputInt("Depth", &depth, 1, 100))
                 {

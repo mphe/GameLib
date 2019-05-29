@@ -34,6 +34,10 @@ namespace gamelib
         if (camsys && node.isMember("cameras"))
             camsys->loadFromJson(node["cameras"]);
 
+        auto rensys = getSubsystem<RenderSystem>();
+        if (rensys && node.isMember("rendersystem"))
+            rensys->loadFromJson(node["rendersystem"]);
+
         const auto& mgrnode = node["entmgr"];
 
         if (!mgrnode.isArray())
