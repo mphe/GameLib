@@ -1,7 +1,7 @@
 #ifndef GAMELIB_SPRITE_COMPONENT_HPP
 #define GAMELIB_SPRITE_COMPONENT_HPP
 
-#include "gamelib/components/NewRenderComponent.hpp"
+#include "gamelib/components/RenderComponent.hpp"
 #include "gamelib/components/update/AnimationComponent.hpp"
 #include "gamelib/core/res/SpriteResource.hpp"
 
@@ -20,7 +20,7 @@ namespace gamelib
 {
     class AnimationComponent;
 
-    class SpriteComponent : public NewRenderComponent
+    class SpriteComponent : public RenderComponent
     {
         friend class AnimationComponent;
 

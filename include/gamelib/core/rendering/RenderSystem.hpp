@@ -38,7 +38,7 @@ namespace gamelib
 
             auto createNode(Component* owner)                  -> NodeHandle;
             auto removeNode(NodeHandle handle)                 -> void;
-            auto getNode(NodeHandle handle) const              -> const SceneNode*;
+            auto getNode(NodeHandle handle) const              -> const RenderNode*;
             auto getNodeGlobalBBox(NodeHandle handle) const    -> const math::AABBf*;
             auto getNodeGlobalOptions(NodeHandle handle) const -> RenderOptions;
             auto getNodeVisible(NodeHandle handle) const       -> bool;
@@ -123,7 +123,7 @@ namespace gamelib
             BatchAllocator<sf::Vertex> _vertices;
             RenderOptions _root;
             LayerCollection _layers;
-            SlotMapShort<SceneNode> _nodes;
+            SlotMapShort<RenderNode> _nodes;
             std::vector<NodeHandle> _renderqueue;
             mutable size_t _numrendered;
 

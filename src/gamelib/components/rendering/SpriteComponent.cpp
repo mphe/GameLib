@@ -6,7 +6,7 @@
 namespace gamelib
 {
     SpriteComponent::SpriteComponent() :
-        NewRenderComponent(name),
+        RenderComponent(name),
         _ani(this)
     {
         _props.registerProperty("sprite", _sprite, PROP_METHOD(_sprite, change), this);
@@ -24,7 +24,7 @@ namespace gamelib
 
     bool SpriteComponent::_init()
     {
-        if (!NewRenderComponent::_init())
+        if (!RenderComponent::_init())
             return false;
         if (!_ani._init())
             return false;
@@ -36,7 +36,7 @@ namespace gamelib
 
     void SpriteComponent::_quit()
     {
-        NewRenderComponent::_quit();
+        RenderComponent::_quit();
         _ani._quit();
     }
 

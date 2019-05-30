@@ -18,7 +18,7 @@ void checkQueue(RenderSystem& rendersystem)
     int lastdepth = __INT_MAX__;
     for (NodeHandle h : rendersystem._renderqueue)
     {
-        const SceneNode* node = rendersystem.getNode(h);
+        const RenderNode* node = rendersystem.getNode(h);
         assert(node && "Invalid node in render queue");
         assert(node->depth <= lastdepth && "Wrong node order");
         lastdepth = node->depth;
@@ -39,7 +39,7 @@ int main()
     {
         NodeHandle handle = rendersystem.createNode(owner);
         handles.push_back(handle);
-        const SceneNode& node = *rendersystem.getNode(handle);
+        const RenderNode& node = *rendersystem.getNode(handle);
 
         if (rand() % 2 == 0)
         {

@@ -2,7 +2,7 @@
 #include "gamelib/properties/PropertyContainer.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
-#include "gamelib/components/NewRenderComponent.hpp"
+#include "gamelib/components/RenderComponent.hpp"
 #include "gamelib/core/rendering/RenderSystem.hpp"
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/core/rendering/Camera.hpp"

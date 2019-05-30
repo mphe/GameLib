@@ -67,7 +67,7 @@ namespace gamelib
     class VertexPointSet: public math::AbstractPointSet<float>
     {
         public:
-            VertexPointSet(const sf::Vertex* array, const SceneNode* node) :
+            VertexPointSet(const sf::Vertex* array, const RenderNode* node) :
                 _node(node),
                 _array(array)
             { }
@@ -94,7 +94,7 @@ namespace gamelib
             }
 
         private:
-            const SceneNode* _node;
+            const RenderNode* _node;
             const sf::Vertex* _array;
     };
 
@@ -111,7 +111,7 @@ namespace gamelib
 
     auto RenderSystem::clear() -> void
     {
-        LOG_DEBUG_WARN("Clearing all SceneNodes");
+        LOG_DEBUG_WARN("Clearing all RenderNodes");
         _nodes.clear();
         _vertices.clear();
         _dirtylist.clear();
@@ -135,7 +135,7 @@ namespace gamelib
         NodeHandle handle = _nodes.acquire();
         _nodes[handle].owner = owner;
         // don't add to queue, because there's no mesh yet
-        LOG_DEBUG("Created SceneNode");
+        LOG_DEBUG("Created RenderNode");
         return handle;
     }
 
@@ -146,7 +146,7 @@ namespace gamelib
         _orderdirty = true;
     }
 
-    auto RenderSystem::getNode(NodeHandle handle) const -> const SceneNode*
+    auto RenderSystem::getNode(NodeHandle handle) const -> const RenderNode*
     {
         return _nodes.get(handle);
     }
@@ -163,7 +163,7 @@ namespace gamelib
     {
         ASSURE_VALID_RET(handle, RenderOptions());
 
-        const SceneNode& node = *getNode(handle);
+        const RenderNode& node = *getNode(handle);
         const RenderLayer* layer = _layers.get(node.layer);
 
         RenderOptions options = node.options;
@@ -249,7 +249,7 @@ namespace gamelib
     {
         ASSURE_VALID(handle);
 
-        SceneNode& node = _nodes[handle];
+        RenderNode& node = _nodes[handle];
 
         // Add to queue if there was no mesh yet
         if (!node.mesh.handle.isValid())
@@ -381,7 +381,7 @@ namespace gamelib
 
         for (NodeHandle handle : _renderqueue)
         {
-            const SceneNode& node = _nodes[handle];
+            const RenderNode& node = _nodes[handle];
             const Mesh& mesh = node.mesh;
 
             if (mesh.size == 0)
@@ -442,7 +442,7 @@ namespace gamelib
                 trans = node.transform;
 
             if (bbox.w == 0 || bbox.h == 0)
-                LOG_WARN("SceneNode bounding box has 0 width or height: ", bbox.w, "x", bbox.h);
+                LOG_WARN("RenderNode bounding box has 0 width or height: ", bbox.w, "x", bbox.h);
 
             // culling by bbox check
             if (rect && !math::intersect(*rect, bbox))
@@ -471,7 +471,7 @@ namespace gamelib
             if (!getNodeVisible(handle))
                 continue;
 
-            const SceneNode* node = getNode(handle);
+            const RenderNode* node = getNode(handle);
             VertexPointSet pset(_vertices.get(node->mesh.handle.index), node);
             bool hit = false;
 
@@ -609,7 +609,7 @@ namespace gamelib
 
     auto RenderSystem::_updateNodeGlobalBBox(NodeHandle handle) const -> void
     {
-        const SceneNode& node = _nodes[handle];
+        const RenderNode& node = _nodes[handle];
 
         if (!node._bboxdirty)
             return;
@@ -625,7 +625,7 @@ namespace gamelib
 
     auto RenderSystem::_updateMeshBBox(NodeHandle handle) -> void
     {
-        SceneNode& node = _nodes[handle];
+        RenderNode& node = _nodes[handle];
         Mesh& mesh = node.mesh;
         mesh.bbox = calculateBBox(_vertices.get(mesh.handle.index), mesh.size);
         _markBBoxDirty(handle);
@@ -649,7 +649,7 @@ namespace gamelib
 
     auto RenderSystem::_markBBoxDirty(NodeHandle handle) -> void
     {
-        SceneNode& node = _nodes[handle];
+        RenderNode& node = _nodes[handle];
         if (!node._bboxdirty)
         {
             node._bboxdirty = true;
@@ -668,7 +668,7 @@ namespace gamelib
              end = _renderqueue.end();
 
         std::stable_sort(begin, end, [this](NodeHandle a, NodeHandle b) {
-            const SceneNode *nodea = _nodes.get(a),
+            const RenderNode *nodea = _nodes.get(a),
                             *nodeb = _nodes.get(b);
 
             if (!nodea)

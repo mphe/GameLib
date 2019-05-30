@@ -56,13 +56,13 @@ namespace gamelib
         Mesh();
     };
 
-    class SceneNode
+    class RenderNode
     {
         friend class RenderSystem;
         friend class VertexPointSet;
 
         public:
-            SceneNode();
+            RenderNode();
 
             RenderOptions options;
             sf::Transform transform;

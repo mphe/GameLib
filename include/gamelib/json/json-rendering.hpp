@@ -7,7 +7,7 @@ namespace gamelib
 {
     class RenderOptions;
     class RenderLayer;
-    class SceneNode;
+    class RenderNode;
     class RenderSystem;
 
     void writeToJson(Json::Value& node, const RenderOptions& options);

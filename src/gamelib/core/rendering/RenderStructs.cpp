@@ -11,7 +11,7 @@ namespace gamelib
         size(0)
     { }
 
-    SceneNode::SceneNode() :
+    RenderNode::RenderNode() :
         depth(0),
         owner(nullptr),
         _bboxdirty(false)

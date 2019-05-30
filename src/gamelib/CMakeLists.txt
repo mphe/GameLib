@@ -25,7 +25,7 @@ set(EXT_LIBRARIES
 set(GAMELIB_SOURCES
     events/ResourceReloadEvent.cpp
 
-    components/NewRenderComponent.cpp
+    components/RenderComponent.cpp
     components/CollisionComponent.cpp
     components/UpdateComponent.cpp
     components/update/QPhysics.cpp

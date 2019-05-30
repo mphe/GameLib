@@ -1,5 +1,5 @@
-#ifndef GAMELIB_NEW_RENDER_COMPONENT_HPP
-#define GAMELIB_NEW_RENDER_COMPONENT_HPP
+#ifndef GAMELIB_RENDER_COMPONENT_HPP
+#define GAMELIB_RENDER_COMPONENT_HPP
 
 #include "gamelib/core/Identifier.hpp"
 #include "gamelib/core/ecs/Component.hpp"
@@ -10,15 +10,15 @@ namespace gamelib
 {
     class RenderSystem;
 
-    class NewRenderComponent : public Identifier<0xa40fdfdd, Component>,
+    class RenderComponent : public Identifier<0xa40fdfdd, Component>,
                                public Transformable
     {
         friend class PropNodeHandle;
 
         public:
-            NewRenderComponent();
-            NewRenderComponent(const std::string& name);
-            virtual ~NewRenderComponent();
+            RenderComponent();
+            RenderComponent(const std::string& name);
+            virtual ~RenderComponent();
 
             virtual auto getTransform()       -> Transformable* override;
             virtual auto getTransform() const -> const Transformable* override;

@@ -6,7 +6,7 @@
 namespace gamelib
 {
     MeshRenderer::MeshRenderer() :
-        NewRenderComponent(name),
+        RenderComponent(name),
         reserveAhead(4),
         _texscale(1, 1),
         _mapping(MapInstance)
@@ -23,7 +23,7 @@ namespace gamelib
 
     auto MeshRenderer::_init() -> bool
     {
-        if (!NewRenderComponent::_init())
+        if (!RenderComponent::_init())
             return false;
 
         // Allocate at least one vertex to prevent out-of-bounds warnings from RenderSystem
@@ -145,7 +145,7 @@ namespace gamelib
 
     bool MeshRenderer::loadFromJson(const Json::Value& node)
     {
-        if (!NewRenderComponent::loadFromJson(node))
+        if (!RenderComponent::loadFromJson(node))
             return false;
 
         if (node.isMember("vertices"))
@@ -171,7 +171,7 @@ namespace gamelib
 
     void MeshRenderer::writeToJson(Json::Value& node) const
     {
-        NewRenderComponent::writeToJson(node);
+        RenderComponent::writeToJson(node);
 
         const sf::Vertex* mesh = _system->getNodeMesh(_handle, 0);
         auto& vertices = node["vertices"];
@@ -244,7 +244,7 @@ namespace gamelib
 
     void MeshRenderer::_onChanged(const sf::Transform& old)
     {
-        NewRenderComponent::_onChanged(old);
+        RenderComponent::_onChanged(old);
         _mapTexture();
     }
 

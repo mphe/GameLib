@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "math/geometry/PointSet.hpp"
-#include "gamelib/components/NewRenderComponent.hpp"
+#include "gamelib/components/RenderComponent.hpp"
 #include "gamelib/core/res/TextureResource.hpp"
 
 namespace gamelib
@@ -24,7 +24,7 @@ namespace gamelib
 
     constexpr const char* str_mappings[] = { "World", "Instance", "Line", /* "Fit", "Stretch", */ };
 
-    class MeshRenderer : public NewRenderComponent
+    class MeshRenderer : public RenderComponent
     {
         public:
             constexpr static const char* name = "MeshRenderer";

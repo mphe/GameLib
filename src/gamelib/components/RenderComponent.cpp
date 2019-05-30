@@ -1,4 +1,4 @@
-#include "gamelib/components/NewRenderComponent.hpp"
+#include "gamelib/components/RenderComponent.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/rendering/RenderSystem.hpp"
 #include "gamelib/core/rendering/flags.hpp"
@@ -13,9 +13,9 @@ namespace gamelib
         public:
             bool loadFromJson(const PropertyHandle& prop, NodeHandle* ptr, const Json::Value& cfgnode) const final override
             {
-                auto self = static_cast<NewRenderComponent*>(prop.getData());
+                auto self = static_cast<RenderComponent*>(prop.getData());
                 auto sys = self->_system;
-                const SceneNode& node = *sys->getNode(*ptr);
+                const RenderNode& node = *sys->getNode(*ptr);
 
                 auto options = node.options;
                 ::gamelib::loadFromJson(cfgnode, &options);
@@ -40,8 +40,8 @@ namespace gamelib
 
             void writeToJson(const PropertyHandle& prop, const NodeHandle* ptr, Json::Value& cfgnode) const final override
             {
-                auto self = static_cast<NewRenderComponent*>(prop.getData());
-                const SceneNode& node = *self->_system->getNode(*ptr);
+                auto self = static_cast<RenderComponent*>(prop.getData());
+                const RenderNode& node = *self->_system->getNode(*ptr);
                 // TODO: blendmode, layer
                 cfgnode["depth"] = node.depth;
                 cfgnode["flags"] = node.options.flags;
@@ -53,9 +53,9 @@ namespace gamelib
 
             bool drawGui(const PropertyHandle& prop, const std::string&, NodeHandle* ptr) const final override
             {
-                auto self = static_cast<NewRenderComponent*>(prop.getData());
+                auto self = static_cast<RenderComponent*>(prop.getData());
                 auto sys = self->_system;
-                const SceneNode& node = *sys->getNode(*ptr);
+                const RenderNode& node = *sys->getNode(*ptr);
 
                 LayerHandle handle = node.layer;
                 int depth = node.depth;
@@ -89,21 +89,21 @@ namespace gamelib
 
 
 
-    NewRenderComponent::NewRenderComponent() :
+    RenderComponent::RenderComponent() :
         _system(nullptr)
     { }
 
-    NewRenderComponent::NewRenderComponent(const std::string& name) :
+    RenderComponent::RenderComponent(const std::string& name) :
         Identifier(name),
         _system(nullptr)
     { }
 
-    NewRenderComponent::~NewRenderComponent()
+    RenderComponent::~RenderComponent()
     {
         quit();
     }
 
-    auto NewRenderComponent::_init() -> bool
+    auto RenderComponent::_init() -> bool
     {
         _system = getSubsystem<RenderSystem>();
         if (!_system)
@@ -112,7 +112,7 @@ namespace gamelib
         _handle = _system->createNode(this);
 
         _props.registerProperty("renderopts", _handle,
-                +[](NodeHandle* var, const NodeHandle* val, NewRenderComponent*)
+                +[](NodeHandle* var, const NodeHandle* val, RenderComponent*)
                 {
                     if (*var != *val)
                         LOG_ERROR("Can't set 'renderopts' property directly");
@@ -121,29 +121,29 @@ namespace gamelib
         return true;
     }
 
-    auto NewRenderComponent::_quit() -> void
+    auto RenderComponent::_quit() -> void
     {
         _system->removeNode(_handle);
         _handle.reset();
         _props.unregisterProperty("renderopts");
     }
 
-    auto NewRenderComponent::getTransform() -> Transformable*
+    auto RenderComponent::getTransform() -> Transformable*
     {
         return this;
     }
 
-    auto NewRenderComponent::getTransform() const -> const Transformable*
+    auto RenderComponent::getTransform() const -> const Transformable*
     {
         return this;
     }
 
-	auto NewRenderComponent::_onChanged(const sf::Transform&) -> void
+	auto RenderComponent::_onChanged(const sf::Transform&) -> void
 	{
         _system->setNodeTransform(_handle, getMatrix());
 	}
 
-    auto NewRenderComponent::getBBox() const -> const math::AABBf&
+    auto RenderComponent::getBBox() const -> const math::AABBf&
     {
         return *_system->getNodeGlobalBBox(_handle);
     }
