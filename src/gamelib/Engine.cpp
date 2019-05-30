@@ -55,7 +55,6 @@ namespace gamelib
     {
         _game = nullptr;
         entmgr.clear();
-        scene.destroy();
         rendersystem.destroy();
         camsystem.clear();
         colsys.destroy();
@@ -76,7 +75,6 @@ namespace gamelib
 
     void Engine::render(sf::RenderTarget& target)
     {
-        // auto numrendered = scene.render(target);
         auto numrendered = camsystem.render(target);
 
         if (_printstatus)

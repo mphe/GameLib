@@ -37,6 +37,8 @@
 * Message System
 * give flags a fixed width integer (int32, int64)
 * consistently use pointers for arguments that are modified in the function
+* Give GameState a virtual handleInput() function
+  * Game calls this function for every event
 
 * provide failsafe implementations in core subsystems
   * no crash when trying to create unknown entities/components

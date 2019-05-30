@@ -25,7 +25,6 @@ set(EXT_LIBRARIES
 set(GAMELIB_SOURCES
     events/ResourceReloadEvent.cpp
 
-    components/RenderComponent.cpp
     components/NewRenderComponent.cpp
     components/CollisionComponent.cpp
     components/UpdateComponent.cpp
@@ -83,10 +82,6 @@ set(GAMELIB_SOURCES
     core/res/JsonResource.cpp
     core/res/SpriteResource.cpp
     core/res/EntityConfigResource.cpp
-    core/rendering/Scene.cpp
-    core/rendering/SceneData.cpp
-    core/rendering/SceneObject.cpp
-    core/rendering/Layer.cpp
     core/rendering/Camera.cpp
     core/rendering/FreeCam.cpp
     core/rendering/RenderSystem.cpp

@@ -1,5 +1,5 @@
 #include "gamelib/editor/ui/JsonView.hpp"
-#include "gamelib/core/rendering/Scene.hpp"
+#include "gamelib/core/rendering/RenderSystem.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
@@ -14,7 +14,7 @@ namespace gamelib
 {
     static constexpr const char* items[] = {
         "Current Entity",
-        "Scene",
+        "RenderSystem",
         "ResourceManager",
     };
 
@@ -33,7 +33,7 @@ namespace gamelib
                 break;
 
             case 1:
-                obj = Scene::getActive();
+                obj = RenderSystem::getActive();
                 break;
 
             case 2:

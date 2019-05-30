@@ -1,6 +1,5 @@
 #include "gamelib/editor/tools/SelectTool.hpp"
 #include "gamelib/core/event/EventManager.hpp"
-#include "gamelib/components/RenderComponent.hpp"
 #include "gamelib/components/CollisionComponent.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/core/ecs/serialization.hpp"

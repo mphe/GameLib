@@ -2,7 +2,6 @@
 #define GAMELIB_ENGINE_HPP
 
 #include "gamelib/core/GameState.hpp"
-#include "core/rendering/Scene.hpp"
 #include "core/rendering/RenderSystem.hpp"
 #include "core/rendering/CameraSystem.hpp"
 #include "core/geometry/CollisionSystem.hpp"
@@ -29,7 +28,6 @@ namespace gamelib
             auto render(sf::RenderTarget& target) -> void final override;
 
         public:
-            Scene scene;
             RenderSystem rendersystem;
             CameraSystem camsystem;
             CollisionSystem colsys;
