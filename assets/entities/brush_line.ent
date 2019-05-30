@@ -10,7 +10,6 @@
         },
         "PolygonCollision#2": {
             "FillType": 2,
-            "flags": 2,
             "Normals": 1
         },
         "LineBrushComponent": {

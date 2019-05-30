@@ -15,7 +15,7 @@
             "airAccelerate": 25
         },
         "AABBCollision": {
-            "flags": 10,
+            "flags": 24,
             "size": [16, 32],
             "transform": {
                 "origin": [ 8, 16 ]

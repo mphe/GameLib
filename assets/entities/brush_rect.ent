@@ -3,7 +3,7 @@
     "components": {
         "PolygonCollision": {
             "FillType": 2,
-            "flags": 6,
+            "flags": 4,
             "Normals": 1
         },
         "MeshRenderer": {

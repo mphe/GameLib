@@ -7,14 +7,14 @@
 namespace gamelib
 {
     constexpr unsigned int collision_solid       = 1;
-    constexpr unsigned int collision_mask        = 1 << 1;
+    // Free slot
     constexpr unsigned int collision_noprecise   = 1 << 2;
     constexpr unsigned int collision_physicshull = 1 << 3;
     constexpr unsigned int collision_physicsdrag = 1 << 4;
 
     constexpr const char* str_colflags[] = {
         "Solid",
-        "Mask",
+        nullptr,
         "Unprecise",
         "Physics Hull",
         "Physics Drag"

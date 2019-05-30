@@ -3,7 +3,6 @@
 ## Priority
 
 * rename isIdentifiable to isIdentifier
-* remove collision_mask flag
 * adapt default snap distance in player entity
 * property flags (readonly!)
 * uint property
@@ -19,6 +18,7 @@
     * makes it possible to determine if resource was loaded using resmgr
     * can use and build path as needed
 * Make components more interface-y to prevent diamond problems
+  * remove Transform inheritance in base component classes
 
 ## All
 
