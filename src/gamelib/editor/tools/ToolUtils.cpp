@@ -95,40 +95,25 @@ namespace gamelib
 
     void drawCollisions(sf::RenderTarget& target, const Entity& ent, unsigned int flags, sf::Color col)
     {
-        sf::VertexArray vertices(sf::Lines);
-
         ent.findAllByType<CollisionComponent>([&](CollisionComponent* comp) {
                 if (comp->flags & flags)
                 {
                     if (comp->getName() == PolygonCollider::name && !(comp->flags & collision_noprecise))
                     {
                         auto pol = static_cast<PolygonCollider*>(comp);
+                        sf::VertexArray vertices(sf::Lines);
                         pol->getGlobal().foreachSegment([&](const math::Line2f seg) {
                                 vertices.append(sf::Vertex(sf::Vector2f(seg.p.x, seg.p.y), col));
                                 vertices.append(sf::Vertex(sf::Vector2f(seg.p.x + seg.d.x, seg.p.y + seg.d.y), col));
                                 return false;
                             });
+                        target.draw(vertices);
                     }
                     else
-                    {
-                        auto& rect = comp->getBBox();
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x, rect.y), col));
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x + rect.w, rect.y), col));
-
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x + rect.w, rect.y), col));
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x + rect.w, rect.y + rect.h), col));
-
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x, rect.y), col));
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x, rect.y + rect.h), col));
-
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x, rect.y + rect.h), col));
-                        vertices.append(sf::Vertex(sf::Vector2f(rect.x + rect.w, rect.y + rect.h), col));
-                    }
+                        drawRectOutline(target, comp->getBBox(), col);
                 }
                 return false;
             });
-
-        target.draw(vertices);
     }
 
     void drawNormals(sf::RenderTarget& target, const math::AbstractPolygon<float>& pol, sf::Color col)

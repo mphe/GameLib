@@ -63,10 +63,9 @@ namespace gamelib
         _global.setMatrix(getMatrix());
     }
 
-    const math::AABBf& PolygonCollider::getBBox() const
+    math::AABBf PolygonCollider::getBBox() const
     {
-        _bbox = _global.getBBox();
-        return _bbox;
+        return _global.getBBox();
     }
 
     const math::AbstractPolygon<float>& PolygonCollider::getGlobal() const

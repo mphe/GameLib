@@ -21,7 +21,7 @@ namespace gamelib
 
             auto sweep(const math::AABBf& rect, const math::Vec2f& vel) const -> Intersection final override;
 
-            auto getBBox() const -> const math::AABBf& final override;
+            auto getBBox() const -> math::AABBf final override;
 
             auto loadFromJson(const Json::Value& node) -> bool final override;
             auto writeToJson(Json::Value& node) const  -> void final override;
@@ -42,7 +42,6 @@ namespace gamelib
             PolygonTransformer _global;
             math::FillType _filltype; // needed for properties
             math::NormalDirection _normaldir; // needed for properties
-            mutable math::AABBf _bbox;
     };
 }
 

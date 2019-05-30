@@ -143,8 +143,8 @@ namespace gamelib
         _system->setNodeTransform(_handle, getMatrix());
 	}
 
-    auto RenderComponent::getBBox() const -> const math::AABBf&
+    auto RenderComponent::getBBox() const -> math::AABBf
     {
-        return *_system->getNodeGlobalBBox(_handle);
+        return _system->getNodeGlobalBBox(_handle);
     }
 }

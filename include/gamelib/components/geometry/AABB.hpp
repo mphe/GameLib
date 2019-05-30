@@ -25,7 +25,7 @@ namespace gamelib
             auto setSize(const math::Vec2f& size) -> void;
             auto setSize(float w, float h)        -> void;
 
-            auto getBBox() const     -> const math::AABBf& final override;
+            auto getBBox() const     -> math::AABBf final override;
 
         protected:
             virtual auto _onChanged(const sf::Transform& old) -> void override;

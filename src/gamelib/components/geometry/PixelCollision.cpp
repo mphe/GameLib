@@ -153,7 +153,7 @@ namespace gamelib
         _rect.pos = convert(getMatrix().transformPoint(0, 0));
     }
 
-    const math::AABBf& PixelCollision::getBBox() const
+    math::AABBf PixelCollision::getBBox() const
     {
         return _rect;
     }

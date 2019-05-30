@@ -46,7 +46,7 @@ namespace gamelib
         QPhysics(nullptr, interval)
     { }
 
-    QPhysics::QPhysics(const math::AABBf* box, int interval) :
+    QPhysics::QPhysics(Collidable* hull, int interval) :
         UpdateComponent(name, interval),
         overbounce(1),
         gravMultiplier(1),
@@ -56,7 +56,6 @@ namespace gamelib
         snapDist(5),
         keepMomentum(true),
         airFriction(false),
-        _bbox(box),
         _ground{ nullptr, math::Vec2f(), 0.f }
     {
         _props.registerProperty("basevel", basevel);
@@ -82,17 +81,18 @@ namespace gamelib
 
     CollisionComponent* QPhysics::moveIfContact(const math::Vec2f& dist)
     {
-        TraceResult tr = getSubsystem<CollisionSystem>()->trace(*_bbox, dist, _self, collision_solid);
+        auto hull = getHull();
+        TraceResult tr = getSubsystem<CollisionSystem>()->trace(hull, dist, _hull, collision_solid);
         if (!tr)
             return nullptr;
 
         if (tr.isec.time > 0) // else -> stuck
         {
-            auto box = *_bbox;
+            auto box = hull;
             box.pos += dist * (tr.isec.time - magic_unstuck);
             if (isStuck(box))
                 _nudge(&box);
-            _move(box.pos - _bbox->pos);
+            _move(box.pos - hull.pos);
         }
         return static_cast<CollisionComponent*>(tr.obj);
     }
@@ -106,7 +106,7 @@ namespace gamelib
     {
         auto colsys = getSubsystem<CollisionSystem>();
         float timeleft = elapsed;
-        math::AABBf box(*_bbox);
+        math::AABBf box = getHull();
         math::Vec2f originalvel = *vel_;
         math::Vec2f& vel = *vel_;
 
@@ -127,7 +127,7 @@ namespace gamelib
                 break;
 
             auto framevel = vel * timeleft;
-            TraceResult trace = colsys->trace(box, framevel, tracecb, _self, collision_solid | collision_physicsdrag);
+            TraceResult trace = colsys->trace(box, framevel, tracecb, _hull, collision_solid | collision_physicsdrag);
 
             { // Move objects, flagged to be moved on collision, by current speed
                 for (auto& i : collisions)
@@ -141,7 +141,7 @@ namespace gamelib
                         continue;
 
                     auto tmpvel = vel + basevel;
-                    bool selfdrag = _self->flags & collision_physicsdrag;
+                    bool selfdrag = _hull->flags & collision_physicsdrag;
 
                     // Add momentum
                     // NOTE: when an object is dragged along this will result
@@ -166,10 +166,10 @@ namespace gamelib
                     // Temporary unflag as physicsdrag (if needed) to prevent
                     // recursive "dragging"
                     if (selfdrag)
-                        RMFLAG(_self->flags, collision_physicsdrag);
+                        RMFLAG(_hull->flags, collision_physicsdrag);
                     phys->clipmove(&tmpvel, elapsed);
                     if (selfdrag)
-                        ADDFLAG(_self->flags, collision_physicsdrag);
+                        ADDFLAG(_hull->flags, collision_physicsdrag);
                 }
                 collisions.clear();
             }
@@ -216,15 +216,15 @@ namespace gamelib
             }
         }
 
-        _move(box.pos - _bbox->pos);
+        _move(box.pos - getHull().pos);
     }
 
     bool QPhysics::nudge(float size)
     {
-        auto box = *_bbox;
+        auto box = getHull();
         if (!_nudge(&box, size))
             return false;
-        _move(box.pos - _bbox->pos);
+        _move(box.pos - getHull().pos);
         return true;
     }
 
@@ -284,7 +284,7 @@ namespace gamelib
 
     void QPhysics::update(float elapsed)
     {
-        if (!_bbox)
+        if (!_hull)
             return;
 
         bool hasgravity = !gravityDirection.isZero() && gravMultiplier != 0.f;
@@ -327,24 +327,24 @@ namespace gamelib
 
     bool QPhysics::isStuck() const
     {
-        return isStuck(*_bbox);
+        return isStuck(getHull());
     }
 
     bool QPhysics::isStuck(float relx, float rely) const
     {
-        auto tmp = *_bbox;
+        auto tmp = getHull();
         tmp.pos += math::Vec2f(relx, rely);
         return isStuck(tmp);
     }
 
     bool QPhysics::isStuck(const math::AABBf& box) const
     {
-        return getSubsystem<CollisionSystem>()->intersect(box, _self, collision_solid);
+        return getSubsystem<CollisionSystem>()->intersect(box, _hull, collision_solid);
     }
 
-    const math::AABBf* QPhysics::getHull() const
+    math::AABBf QPhysics::getHull() const
     {
-        return _bbox;
+        return _hull->getBBox();
     }
 
     QPhysics::State QPhysics::getState() const
@@ -364,7 +364,7 @@ namespace gamelib
             _state = Stuck;
         else
         {
-            TraceResult tr = getSubsystem<CollisionSystem>()->trace(*_bbox, gravityDirection, _self, collision_solid);
+            TraceResult tr = getSubsystem<CollisionSystem>()->trace(getHull(), gravityDirection, _hull, collision_solid);
             if (tr && (1 - std::abs(tr.isec.normal.dot(gravityDirection))) <= maxSlope)
                 setGround(static_cast<CollisionComponent*>(tr.obj), tr.isec.normal);
             else
@@ -453,12 +453,13 @@ namespace gamelib
     {
         auto colsys = getSubsystem<CollisionSystem>();
         auto dist = gravityDirection * movingPlatformSnapDist;
-        TraceResult tr = colsys->trace(*_bbox, dist, _self, collision_solid);
+        auto hull = getHull();
+        TraceResult tr = colsys->trace(hull, dist, _hull, collision_solid);
 
         if (!tr || tr.isec.time <= 0)
         {
 #ifndef NLOGDEBUG
-            tr = colsys->trace(*_bbox, math::Vec2f(0, 1000), _self, collision_solid);
+            tr = colsys->trace(hull, math::Vec2f(0, 1000), _hull, collision_solid);
             if (tr && static_cast<CollisionComponent*>(tr.obj)->getEntity()->findByName<QPhysics>())
                 LOG_DEBUG("would snap with dist: ", 1000 * tr.isec.time);
 #endif
@@ -477,12 +478,12 @@ namespace gamelib
             if (std::abs(selfvel) > physvel)
                 return false;
 
-            auto box = *_bbox;
+            auto box = hull;
             box.pos += dist * (tr.isec.time - magic_unstuck);
             if (!isStuck(box) || _nudge(&box))
             {
                 vel -= gravityDirection * selfvel;
-                _move(box.pos - _bbox->pos);
+                _move(box.pos - hull.pos);
                 // LOG_DEBUG("snapped ", 10 * tr.isec.time);
                 return true;
             }
@@ -492,13 +493,11 @@ namespace gamelib
 
     void QPhysics::_refresh(RefreshType type, Component* comp)
     {
-        _bbox = nullptr;
-        _self = nullptr;
+        _hull = nullptr;
         getEntity()->findAllByType<CollisionComponent>([this](CollisionComponent* comp) {
                 if (comp->flags & collision_physicshull)
                 {
-                    _bbox = &comp->getBBox();
-                    _self = comp;
+                    _hull = comp;
                     return true;
                 }
                 return false;

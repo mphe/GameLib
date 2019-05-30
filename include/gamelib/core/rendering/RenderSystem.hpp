@@ -40,7 +40,7 @@ namespace gamelib
             auto createNode(Component* owner)                  -> NodeHandle;
             auto removeNode(NodeHandle handle)                 -> void;
             auto getNode(NodeHandle handle) const              -> const RenderNode*;
-            auto getNodeGlobalBBox(NodeHandle handle) const    -> const math::AABBf*;
+            auto getNodeGlobalBBox(NodeHandle handle) const    -> math::AABBf;
             auto getNodeGlobalOptions(NodeHandle handle) const -> RenderOptions;
             auto getNodeVisible(NodeHandle handle) const       -> bool;
 
@@ -101,7 +101,7 @@ namespace gamelib
 
             auto forceUpdate() const -> void;   // NOTE: Debatable if this should be const, but makes things simpler
             auto render(sf::RenderTarget& target, const math::AABBf* rect = nullptr) const -> size_t;
-            auto render(sf::RenderTarget& target, const math::AABBf& rect) const -> size_t;
+            auto render(sf::RenderTarget& target, const math::AABBf& rect) const           -> size_t;
 
             auto getNodeAtPosition(const math::Point2f& pos) const -> NodeHandle;
             auto getNumObjectsRendered() const                     -> size_t;

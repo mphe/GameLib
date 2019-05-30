@@ -20,7 +20,7 @@ namespace gamelib
 
             auto sweep(const math::AABBf& rect, const math::Vec2f& vel) const -> Intersection final override;
 
-            auto getBBox() const -> const math::AABBf& final override;
+            auto getBBox() const -> math::AABBf final override;
 
             auto setComponent(const Component* c) -> bool;
             auto getComponent() const             -> const Component*;

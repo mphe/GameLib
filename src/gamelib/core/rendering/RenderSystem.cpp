@@ -151,12 +151,12 @@ namespace gamelib
         return _nodes.get(handle);
     }
 
-    auto RenderSystem::getNodeGlobalBBox(NodeHandle handle) const -> const math::AABBf*
+    auto RenderSystem::getNodeGlobalBBox(NodeHandle handle) const -> math::AABBf
     {
-        ASSURE_VALID_RET(handle, nullptr);
+        ASSURE_VALID_RET(handle, math::AABBf());
 
         _updateNodeGlobalBBox(handle);
-        return &_nodes[handle]._globalBBox;
+        return _nodes[handle]._globalBBox;
     }
 
     auto RenderSystem::getNodeGlobalOptions(NodeHandle handle) const -> RenderOptions

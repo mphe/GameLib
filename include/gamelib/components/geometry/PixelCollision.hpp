@@ -27,7 +27,7 @@ namespace gamelib
             auto getNormal(float x, float y) const       -> math::Vec2f;
             auto getNormal(const math::Point2f& p) const -> math::Vec2f;
 
-            auto getBBox() const     -> const math::AABBf& final override;
+            auto getBBox() const     -> math::AABBf final override;
 
             auto loadFromJson(const Json::Value& node) -> bool final override;
             auto writeToJson(Json::Value& node) const  -> void final override;

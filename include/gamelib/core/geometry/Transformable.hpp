@@ -39,7 +39,7 @@ namespace gamelib
             Transformable(bool movable, bool scalable, bool rotatable);
             virtual ~Transformable() {};
 
-            virtual auto getBBox() const -> const math::AABBf& = 0;
+            virtual auto getBBox() const -> math::AABBf = 0;
 
             auto getLocalBBox() const -> math::AABBf;
 

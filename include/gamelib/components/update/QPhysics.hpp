@@ -43,7 +43,7 @@ namespace gamelib
 
         public:
             QPhysics(int interval = 1);
-            QPhysics(const math::AABBf* box, int interval = 1);
+            QPhysics(Collidable* hull, int interval = 1);
             virtual ~QPhysics() {};
 
             virtual auto update(float elapsed) -> void override;
@@ -65,7 +65,7 @@ namespace gamelib
             auto isStuck(float relx, float rely) const -> bool;
             auto isStuck() const                       -> bool;
 
-            auto getHull() const   -> const math::AABBf*;
+            auto getHull() const   -> math::AABBf;
             auto getState() const  -> State;
             auto getGround() const -> const GroundData&;
 
@@ -100,8 +100,7 @@ namespace gamelib
             // TODO: flags treated as solid
 
         protected:
-            const math::AABBf* _bbox;
-            Collidable* _self;
+            Collidable* _hull;    // must be non-const to temporary set/unset flags
             State _state;
             GroundData _ground;
     };

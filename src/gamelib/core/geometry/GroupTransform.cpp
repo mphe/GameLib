@@ -26,7 +26,7 @@ namespace gamelib
         }
     }
 
-    const math::AABBf& GroupTransform::getBBox() const
+    math::AABBf GroupTransform::getBBox() const
     {
         if (_dirty)
         {

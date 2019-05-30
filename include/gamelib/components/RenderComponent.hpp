@@ -23,7 +23,7 @@ namespace gamelib
             virtual auto getTransform()       -> Transformable* override;
             virtual auto getTransform() const -> const Transformable* override;
 
-            virtual auto getBBox() const -> const math::AABBf& override;
+            virtual auto getBBox() const -> math::AABBf override;
 
         protected:
             virtual auto _init() -> bool override;

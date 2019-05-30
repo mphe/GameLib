@@ -16,7 +16,7 @@ namespace gamelib
     }
 
 
-    const math::AABBf& AABBMask::getBBox() const
+    math::AABBf AABBMask::getBBox() const
     {
         return _comp->getTransform()->getBBox();
     }

@@ -38,7 +38,7 @@ namespace gamelib
     {
         if (_mode == mode_scale)
         {
-            auto& box = getSelected()->getTransform().getBBox();
+            auto box = getSelected()->getTransform().getBBox();
             size_t i = 0;
             for (float x : { 0.f, 0.5f, 1.f })
                 for (float y : { 0.f, 0.5f, 1.f })
@@ -75,7 +75,7 @@ namespace gamelib
             return;
 
         auto input = getSubsystem<InputSystem>();
-        auto& bbox = ent->getTransform().getBBox();
+        const auto bbox = ent->getTransform().getBBox();
 
         // Don't switch to next mode if something was dragged
         _switchmode = false;
@@ -166,7 +166,7 @@ namespace gamelib
 
         if (_mode == mode_scale)
         {
-            auto& bbox = ent->getTransform().getBBox();
+            const auto bbox = ent->getTransform().getBBox();
             size_t i = 0;
             for (float x : { 0.f, 0.5f, 1.f })
                 for (float y : { 0.f, 0.5f, 1.f })

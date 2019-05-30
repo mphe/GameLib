@@ -8,7 +8,6 @@
 * uint property
 * Component
   * Add enable()/disable() function
-* Return bbox copies instead of references in getBBox()
 * Use new name assignment system
 * ResourceManager
   * Implement multiple searchpath
@@ -19,6 +18,7 @@
     * can use and build path as needed
 * Make components more interface-y to prevent diamond problems
   * remove Transform inheritance in base component classes
+* use PropComponent in QPhysics for hull
 
 ## All
 
@@ -200,12 +200,6 @@ RenderSystem:
     * cleaner
     * more consistent to have all in one place
 
-* problems with lazy entity bounding box calculation
-  * storing the bbox as reference
-  * scale
-  * bbox doesn't adapt, because it's not evaluated
-  * should either return as copy or immediatelly evaluate
-
 * ResourceManager:
   * load all files from a folder
   * recursively load-once resource files
@@ -274,7 +268,6 @@ RenderSystem:
 * collisions
   * Remove Collidable and merge it into CollisionComponent
   * Return TraceResult in all line checks
-  * return a copy of the bbox -> solves the lazy evaluate problem
 
 * rendering
   * Consider making Renderable::render const

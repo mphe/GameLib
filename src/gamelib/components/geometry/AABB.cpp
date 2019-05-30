@@ -35,7 +35,7 @@ namespace gamelib
         setSize(math::Vec2f(w, h));
     }
 
-    const math::AABBf& AABB::getBBox() const
+    math::AABBf AABB::getBBox() const
     {
         return _rect;
     }
