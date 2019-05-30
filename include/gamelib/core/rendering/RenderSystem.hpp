@@ -29,6 +29,7 @@ namespace gamelib
             constexpr static const char* name = "RenderSystem";
 
             typedef SlotMapShort<RenderLayer> LayerCollection;
+            typedef std::vector<NodeHandle> RenderQueue;
 
         public:
             RenderSystem();
@@ -107,6 +108,10 @@ namespace gamelib
 
             auto loadFromJson(const Json::Value& node) -> bool final override;
             auto writeToJson(Json::Value& node) const  -> void final override;
+
+            // Iterate through the render queue from back to front
+            auto begin() const -> RenderQueue::const_iterator;
+            auto end() const   -> RenderQueue::const_iterator;
 
         private:
             auto _updateDirty()                                 -> void;

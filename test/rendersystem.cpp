@@ -16,7 +16,7 @@ void checkQueue(RenderSystem& rendersystem)
     rendersystem.forceUpdate();
 
     int lastdepth = __INT_MAX__;
-    for (NodeHandle h : rendersystem._renderqueue)
+    for (NodeHandle h : rendersystem)
     {
         const RenderNode* node = rendersystem.getNode(h);
         assert(node && "Invalid node in render queue");

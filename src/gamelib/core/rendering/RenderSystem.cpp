@@ -729,4 +729,14 @@ namespace gamelib
                 ::gamelib::writeToJson(layers[i.name], i);
         }
     }
+
+    auto RenderSystem::begin() const -> RenderQueue::const_iterator
+    {
+        return _renderqueue.begin();
+    }
+
+    auto RenderSystem::end() const -> RenderQueue::const_iterator
+    {
+        return _renderqueue.end();
+    }
 }
