@@ -2,7 +2,7 @@
 #define GAMELIB_PROPERTY_BASIC_TYPES_HPP
 
 #include "PropType.hpp"
-#include "gamelib/core/Identifier.hpp"
+#include "gamelib/utils/Identifier.hpp"
 #include "gamelib/json/json-natives.hpp"
 #include "gamelib/json/json-vector.hpp"
 #include "math/geometry/Vector.hpp"

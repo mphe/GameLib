@@ -1,7 +1,7 @@
 #ifndef GAMELIB_POLYGON_BRUSH_COMPONENT_HPP
 #define GAMELIB_POLYGON_BRUSH_COMPONENT_HPP
 
-#include "gamelib/core/Identifier.hpp"
+#include "gamelib/utils/Identifier.hpp"
 #include "gamelib/core/ecs/Component.hpp"
 #include "math/geometry/Point2.hpp"
 

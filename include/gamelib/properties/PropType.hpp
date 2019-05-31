@@ -1,7 +1,7 @@
 #ifndef GAMELIB_PROPERTY_SERIALIZER_HPP
 #define GAMELIB_PROPERTY_SERIALIZER_HPP
 
-#include "gamelib/core/Identifier.hpp"
+#include "gamelib/utils/Identifier.hpp"
 #include "json/json.h"
 #include "PropertyHandle.hpp"
 

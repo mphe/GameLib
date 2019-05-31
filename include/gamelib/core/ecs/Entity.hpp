@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 #include "gamelib/utils/SlotMap.hpp"
-#include "gamelib/core/Identifier.hpp"
+#include "gamelib/utils/Identifier.hpp"
 #include "gamelib/core/geometry/GroupTransform.hpp"
 #include "Component.hpp"
 #include "flags.hpp"

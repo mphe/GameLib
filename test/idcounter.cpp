@@ -1,4 +1,4 @@
-#include "gamelib/core/IDCounter.hpp"
+#include "gamelib/utils/IDCounter.hpp"
 #include "json/json.h"
 #include <cassert>
 

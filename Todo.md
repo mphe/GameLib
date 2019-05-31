@@ -3,8 +3,10 @@
 ## Priority
 
 * adapt default snap distance in player entity
-* property flags (readonly!)
-* uint property
+* property
+    * property flags (readonly!)
+    * uint property
+    * accessor lambdas (one lambda for get and set)
 * Component
     * Add enable()/disable() function
 * ResourceManager
@@ -236,8 +238,6 @@ RenderSystem:
         * AABBComponent -> AABB
     * include origin for sprites in ActorComponent
     * fix scale in ActorComponent to match the actual max scale and not 1
-    * components should be more abstract
-        * don't inherit Transformable
     * allow sub-IDs
         * allows differentiating between different specializations of the same base component
             * e.g., UpdateComponent and PhysicsComponent
@@ -308,13 +308,11 @@ RenderSystem:
     * ConstPropertyHandle
         * use in BasePropType loadFromJson, drawGui
     * remove custom resource related register functions
-    * support getters
     * PropComponent needs to react if the component list changes
     * rewrite resource property to be safer
         * resource handle gets reinterpret_casted to BaseResourceHandle
         * works fine as long as the resource is of type Resource<T>
         * if not, things might break if the resource type uses multiple inheritance
-
 
 * log
     * warn if null

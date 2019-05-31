@@ -3,7 +3,7 @@
 
 #include "PropType.hpp"
 #include "gamelib/utils/nametag.hpp"
-#include "gamelib/core/Identifier.hpp"
+#include "gamelib/utils/Identifier.hpp"
 
 namespace gamelib
 {

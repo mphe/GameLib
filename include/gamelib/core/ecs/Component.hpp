@@ -1,7 +1,7 @@
 #ifndef GAMELIB_COMPONENT_HPP
 #define GAMELIB_COMPONENT_HPP
 
-#include "gamelib/core/Identifiable.hpp"
+#include "gamelib/utils/Identifiable.hpp"
 #include "gamelib/utils/SlotMap.hpp"
 #include "gamelib/utils/nametag.hpp"
 #include "gamelib/properties/PropertyContainer.hpp"

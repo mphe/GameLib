@@ -1,7 +1,7 @@
 #ifndef GAMELIB_RENDER_COMPONENT_HPP
 #define GAMELIB_RENDER_COMPONENT_HPP
 
-#include "gamelib/core/Identifier.hpp"
+#include "gamelib/utils/Identifier.hpp"
 #include "gamelib/core/ecs/Component.hpp"
 #include "gamelib/core/rendering/RenderStructs.hpp"
 #include "gamelib/core/geometry/Transformable.hpp"

@@ -2,7 +2,7 @@
 #define GAMELIB_EVENT_HPP
 
 #include <memory>
-#include "../Identifier.hpp"
+#include "gamelib/utils/Identifier.hpp"
 
 namespace gamelib
 {

@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <string>
-#include "../Identifier.hpp"
+#include "gamelib/utils/Identifier.hpp"
 
 namespace gamelib
 {
