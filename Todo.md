@@ -2,7 +2,6 @@
 
 ## Priority
 
-* rename isIdentifiable to isIdentifier
 * adapt default snap distance in player entity
 * property flags (readonly!)
 * uint property

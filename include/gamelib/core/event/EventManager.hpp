@@ -35,14 +35,14 @@ namespace gamelib
             template <class E, class T>
             void regCallback(NiceEventCallback<T> callback, T* data)
             {
-                static_assert(isIdentifiable<E>::value, "Only works for types derived from gamelib::Identifier");
+                static_assert(has_identifier<E>::value, "Only works for types derived from gamelib::Identifier");
                 regCallback(E::id, callback, data);
             }
 
             template <class E, class T>
             void unregCallback(NiceEventCallback<T> callback, T* data)
             {
-                static_assert(isIdentifiable<E>::value, "Only works for types derived from gamelib::Identifier");
+                static_assert(has_identifier<E>::value, "Only works for types derived from gamelib::Identifier");
                 unregCallback(E::id, callback, data);
             }
 

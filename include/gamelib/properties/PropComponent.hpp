@@ -40,14 +40,14 @@ namespace gamelib
     }
 
     template <typename T, typename U,
-             typename std::enable_if<!has_nametag<T>() && isIdentifiable<T>::value, int>::type = 0>
+             typename std::enable_if<!has_nametag<T>() && has_identifier<T>::value, int>::type = 0>
     void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, NicePropSetterCallback<T*, U> setter = nullptr)
     {
         registerProperty(props, name, prop, self, setter, T::id);
     }
 
     template <typename T, typename U,
-             typename std::enable_if<!isIdentifiable<T>::value, int>::type = 0>
+             typename std::enable_if<!has_identifier<T>::value, int>::type = 0>
     void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, NicePropSetterCallback<T*, U> setter = nullptr)
     {
         registerProperty(props, name, prop, self, setter, 0);

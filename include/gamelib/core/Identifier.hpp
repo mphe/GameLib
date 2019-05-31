@@ -49,7 +49,7 @@ namespace gamelib
     // Based on http://stackoverflow.com/a/32489730/4778400
     // Check if a class is derived from Identifier.
     template <typename Derived>
-    struct isIdentifiable
+    struct has_identifier
     {
         using U = typename std::remove_cv<Derived>::type;
 
@@ -58,7 +58,7 @@ namespace gamelib
         static std::false_type test(void*);
 
         using type = decltype(test(std::declval<U*>()));
-        static constexpr bool value = isIdentifiable<Derived>::type::value;
+        static constexpr bool value = has_identifier<Derived>::type::value;
     };
 }
 

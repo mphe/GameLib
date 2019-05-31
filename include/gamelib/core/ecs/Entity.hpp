@@ -163,7 +163,7 @@ namespace gamelib
     template <typename T>
     auto Entity::findByType() const -> T*
     {
-        static_assert(isIdentifiable<T>::value, "Only works for types derived from gamelib::Identifier");
+        static_assert(has_identifier<T>::value, "Only works for types derived from gamelib::Identifier");
         return static_cast<T*>(find(T::id));
     }
 
@@ -177,7 +177,7 @@ namespace gamelib
     template <typename T, typename F>
     auto Entity::findAllByType(F callback) const -> void
     {
-        static_assert(isIdentifiable<T>::value, "Only works for types derived from gamelib::Identifier");
+        static_assert(has_identifier<T>::value, "Only works for types derived from gamelib::Identifier");
         findAll(T::id, [&](Component* comp) {
                 return callback(static_cast<T*>(comp));
             });
