@@ -19,7 +19,7 @@ namespace gamelib
                          public JsonSerializer
     {
         public:
-            constexpr static const char* name = "CameraSystem";
+            ASSIGN_NAMETAG("CameraSystem");
 
         public:
             CameraSystem();

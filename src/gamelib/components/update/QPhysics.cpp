@@ -11,8 +11,6 @@ namespace gamelib
     // Magic Quake engine number that prevents getting stuck
     constexpr float magic_unstuck = 0.03125;
 
-    constexpr const char* QConfig::name;
-
     // Statics
     math::Vec2f QPhysics::gravityDirection(0, 1);
     float QPhysics::gravity = 700;
@@ -30,8 +28,7 @@ namespace gamelib
     }
 
 
-    QConfig::QConfig() :
-        Identifier(name)
+    QConfig::QConfig()
     {
         _props.registerProperty("gravityDirection", QPhysics::gravityDirection);
         _props.registerProperty("gravity", QPhysics::gravity);
@@ -47,7 +44,7 @@ namespace gamelib
     { }
 
     QPhysics::QPhysics(Collidable* hull, int interval) :
-        UpdateComponent(name, interval),
+        UpdateComponent(interval),
         overbounce(1),
         gravMultiplier(1),
         fricMultiplier(1),

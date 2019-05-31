@@ -9,8 +9,6 @@
 
 namespace gamelib
 {
-    constexpr const char* Game::name;
-
     Game::Game() :
         bgcolor(sf::Color::Black),
         closebutton(true),

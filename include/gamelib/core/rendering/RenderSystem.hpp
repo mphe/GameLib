@@ -26,7 +26,7 @@ namespace gamelib
                          public JsonSerializer
     {
         public:
-            constexpr static const char* name = "RenderSystem";
+            ASSIGN_NAMETAG("RenderSystem");
 
             typedef SlotMapShort<RenderLayer> LayerCollection;
             typedef std::vector<NodeHandle> RenderQueue;

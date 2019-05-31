@@ -10,7 +10,7 @@ namespace gamelib
     class QController : public UpdateComponent
     {
         public:
-            constexpr static const char* name = "QController";
+            ASSIGN_NAMETAG("QController");
 
         public:
             QController();

@@ -3,8 +3,6 @@
 
 namespace gamelib
 {
-    constexpr const char* InputSystem::name;
-
     InputSystem::InputSystem() :
         _window(nullptr)
     { }

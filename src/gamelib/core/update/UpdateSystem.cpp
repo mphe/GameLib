@@ -4,8 +4,6 @@
 
 namespace gamelib
 {
-    constexpr const char* UpdateSystem::name;
-
     UpdateSystem::Handle UpdateSystem::add(UpdateComponent* obj, UpdateHookType hook)
     {
         assert(obj != nullptr && "UpdateComponent is null");

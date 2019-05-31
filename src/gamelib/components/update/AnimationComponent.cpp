@@ -8,7 +8,6 @@ namespace gamelib
     { }
 
     AnimationComponent::AnimationComponent(SpriteComponent* sprite_) :
-        UpdateComponent(name),
         sprite(sprite_)
     { }
 

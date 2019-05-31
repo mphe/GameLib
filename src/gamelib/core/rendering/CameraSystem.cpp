@@ -5,8 +5,6 @@
 
 namespace gamelib
 {
-    constexpr const char* CameraSystem::name;
-
     CameraSystem::CameraSystem() :
         _numrendered(0),
         _currentcam(nullptr)

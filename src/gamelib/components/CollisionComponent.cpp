@@ -3,12 +3,7 @@
 
 namespace gamelib
 {
-    CollisionComponent::CollisionComponent() :
-        CollisionComponent("")
-    { }
-
-    CollisionComponent::CollisionComponent(const std::string& name) :
-        Identifier(name)
+    CollisionComponent::CollisionComponent()
     {
         _props.registerProperty("flags", flags, 0, num_colflags, str_colflags);
     }

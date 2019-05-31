@@ -8,7 +8,7 @@ namespace gamelib
     class AABB : public CollisionComponent
     {
         public:
-            constexpr static const char* name = "AABBCollision";
+            ASSIGN_NAMETAG("AABBCollision");
 
         public:
             AABB();

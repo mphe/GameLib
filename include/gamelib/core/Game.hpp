@@ -18,7 +18,7 @@ namespace gamelib
     class Game : public gamelib::JsonSerializer, public Subsystem<Game>
     {
         public:
-            constexpr static const char* name = "Game";
+            ASSIGN_NAMETAG("Game");
 
         public:
             Game();

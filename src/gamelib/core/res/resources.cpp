@@ -4,6 +4,7 @@
 #include "gamelib/core/res/JsonResource.hpp"
 #include "gamelib/core/res/SpriteResource.hpp"
 #include "gamelib/core/res/EntityConfigResource.hpp"
+#include "gamelib/core/res/ResourceManager.hpp"
 
 
 namespace gamelib

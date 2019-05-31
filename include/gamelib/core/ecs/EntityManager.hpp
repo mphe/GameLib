@@ -14,7 +14,7 @@ namespace gamelib
             typedef SlotMapDequeShort<Entity> Container;
             typedef Container::Handle Handle;
 
-            constexpr static const char* name = "EntityManager";
+            ASSIGN_NAMETAG("EntityManager");
 
         public:
             auto add(const std::string& name = "unknown") -> Entity::Handle;

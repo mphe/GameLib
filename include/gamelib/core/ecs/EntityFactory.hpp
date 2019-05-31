@@ -19,7 +19,7 @@ namespace gamelib
         typedef Factory<Component, std::string> ComponentFactory;
 
         public:
-            constexpr static const char* name = "EntityFactory";
+            ASSIGN_NAMETAG("EntityFactory");
 
         public:
             EntityFactory();

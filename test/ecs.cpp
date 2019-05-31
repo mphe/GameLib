@@ -6,6 +6,7 @@ using namespace gamelib;
 class FooComponent : public Identifier<0x76d44c07, Component>
 {
     public:
+        ASSIGN_NAMETAG("FooComponent");
         FooComponent(int x_) : x(x_) {}
         int x;
 };
@@ -13,6 +14,7 @@ class FooComponent : public Identifier<0x76d44c07, Component>
 class BarComponent : public Identifier<0x650e189e, Component>
 {
     public:
+        ASSIGN_NAMETAG("BarComponent");
         BarComponent(int x_) : x(x_) {}
 
         void _refresh(RefreshType, Component* comp) final override

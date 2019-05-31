@@ -2,6 +2,8 @@
 #define GAMELIB_PROPCOMPONENT_HPP
 
 #include "PropType.hpp"
+#include "gamelib/utils/nametag.hpp"
+#include "gamelib/core/Identifier.hpp"
 
 namespace gamelib
 {
@@ -24,48 +26,28 @@ namespace gamelib
     template <typename T, typename U>
     using ComponentPropSetter = NicePropSetterCallback<T*, U>;
 
-    namespace detail
-    {
-        class general_ {};
-        class special_ : public general_ {};
-
-        template <typename T>
-        constexpr bool has_name(general_) { return false; };
-
-        template <typename T, typename = decltype(T::name)>
-        constexpr bool has_name(special_) { return true; };
-
-        template <typename T>
-        constexpr bool has_name() { return has_name<T>(special_()); }
-
-        template <typename T>
-        constexpr bool has_id(general_) { return false; };
-
-        template <typename T, typename = decltype(T::id)>
-        constexpr bool has_id(special_) { return true; };
-
-        template <typename T>
-        constexpr bool has_id() { return has_id<T>(special_()); }
-    }
-
 
     template <typename T, typename U>
-    void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, NicePropSetterCallback<T*, U> setter, unsigned int filter, int max = 0, const char* const* filternames = nullptr);
+    void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, NicePropSetterCallback<T*, U> setter,
+            unsigned int filter, int max = 0, const char* const* filternames = nullptr);
 
-    template <typename T, typename U, typename std::enable_if<detail::has_name<T>(), int>::type = 0>
+    template <typename T, typename U,
+             typename std::enable_if<has_nametag<T>(), int>::type = 0>
     void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, NicePropSetterCallback<T*, U> setter = nullptr)
     {
-        static constexpr const char* hints[] = { T::name };
+        static const char* hints[] = { T::name().c_str() };
         registerProperty(props, name, prop, self, setter, 0, 1, hints);
     }
 
-    template <typename T, typename U, typename std::enable_if<!detail::has_name<T>() && detail::has_id<T>(), int>::type = 0>
+    template <typename T, typename U,
+             typename std::enable_if<!has_nametag<T>() && isIdentifiable<T>::value, int>::type = 0>
     void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, NicePropSetterCallback<T*, U> setter = nullptr)
     {
         registerProperty(props, name, prop, self, setter, T::id);
     }
 
-    template <typename T, typename U, typename std::enable_if<!detail::has_id<T>(), int>::type = 0>
+    template <typename T, typename U,
+             typename std::enable_if<!isIdentifiable<T>::value, int>::type = 0>
     void registerProperty(PropertyContainer& props, const std::string& name, T*& prop, U& self, NicePropSetterCallback<T*, U> setter = nullptr)
     {
         registerProperty(props, name, prop, self, setter, 0);

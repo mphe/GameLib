@@ -5,11 +5,7 @@
 
 namespace gamelib
 {
-    Component::Component() : Component("")
-    { }
-
-    Component::Component(const std::string& name) :
-        _name(name),
+    Component::Component() :
         _entptr(nullptr),
         _initialized(false)
     {
@@ -37,11 +33,6 @@ namespace gamelib
     auto Component::isInitialized() const -> bool
     {
         return _initialized;
-    }
-
-    const std::string& Component::getName() const
-    {
-        return _name;
     }
 
     Entity* Component::getEntity() const

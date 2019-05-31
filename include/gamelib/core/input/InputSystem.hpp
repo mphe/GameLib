@@ -10,7 +10,7 @@ namespace gamelib
     class InputSystem : public Subsystem<InputSystem>
     {
         public:
-            static constexpr const char* name = "InputSystem";
+            ASSIGN_NAMETAG("InputSystem");
 
             enum ButtonState
             {

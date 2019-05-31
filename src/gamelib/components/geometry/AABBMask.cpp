@@ -4,10 +4,7 @@
 
 namespace gamelib
 {
-    constexpr const char* AABBMask::name;
-
     AABBMask::AABBMask(unsigned int flags_) :
-        CollisionComponent(name),
         _comp(nullptr)
     {
         flags = flags_;

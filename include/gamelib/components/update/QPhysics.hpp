@@ -15,7 +15,7 @@ namespace gamelib
     class QConfig : public Identifier<0xbfae3ffa, Component>
     {
         public:
-            constexpr static const char* name = "QConfig";
+            ASSIGN_NAMETAG("QConfig");
 
         public:
             QConfig();
@@ -25,7 +25,7 @@ namespace gamelib
     class QPhysics : public UpdateComponent
     {
         public:
-            constexpr static const char* name = "QPhysicsComponent";
+            ASSIGN_NAMETAG("QPhysicsComponent");
 
             enum State
             {

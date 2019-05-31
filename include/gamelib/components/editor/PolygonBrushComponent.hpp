@@ -13,11 +13,10 @@ namespace gamelib
     class PolygonBrushComponent : public Identifier<0xaece07e3, Component>
     {
         public:
-            constexpr static const char* name = "PolygonBrushComponent";
+            ASSIGN_NAMETAG("PolygonBrushComponent");
 
         public:
             PolygonBrushComponent();
-            PolygonBrushComponent(const std::string& name);
             virtual ~PolygonBrushComponent() {};
 
             auto add(const math::Point2f& p, bool raw = true) const            -> void;

@@ -9,7 +9,6 @@ namespace gamelib
     constexpr const char* ActorComponent::state_strings[];
 
     ActorComponent::ActorComponent() :
-        UpdateComponent(name),
         turnspeed(15),
         followMouse(false),
         freeze(false),

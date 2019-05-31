@@ -13,7 +13,6 @@ namespace gamelib
     { }
 
     AABB::AABB(const math::AABBf& aabb, unsigned int flags_) :
-        CollisionComponent(name),
         _size(aabb.size),
         _rect(aabb)
     {

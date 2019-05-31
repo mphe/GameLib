@@ -7,13 +7,15 @@ using namespace gamelib;
 class ComponentA : public Identifier<0x76d44c07, Component>
 {
     public:
-        ComponentA() : Identifier("ComponentA") {}
+        ASSIGN_NAMETAG("ComponentA");
+        ComponentA() {}
 };
 
 class ComponentB : public Identifier<0x650e189e, Component>
 {
     public:
-        ComponentB() : Identifier("ComponentB") {}
+        ASSIGN_NAMETAG("ComponentB");
+        ComponentB() {}
 
         bool loadFromJson(const Json::Value& node) final override
         {

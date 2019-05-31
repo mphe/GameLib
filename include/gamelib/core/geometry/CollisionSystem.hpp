@@ -33,7 +33,7 @@ namespace gamelib
     class CollisionSystem : public Subsystem<CollisionSystem>
     {
         public:
-            constexpr static const char* name = "CollisionSystem";
+            ASSIGN_NAMETAG("CollisionSystem");
 
         public:
             auto add(Collidable* col)    -> void;

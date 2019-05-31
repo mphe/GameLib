@@ -6,10 +6,7 @@
 
 namespace gamelib
 {
-    constexpr const char* LineBrushComponent::name;
-
     LineBrushComponent::LineBrushComponent() :
-        PolygonBrushComponent(name),
         _line(nullptr),
         _linewidth(32)
     {

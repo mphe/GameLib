@@ -8,7 +8,7 @@ namespace gamelib
     class LineBrushComponent : public PolygonBrushComponent
     {
         public:
-            constexpr static const char* name = "LineBrushComponent";
+            ASSIGN_NAMETAG("LineBrushComponent");
 
         public:
             LineBrushComponent();

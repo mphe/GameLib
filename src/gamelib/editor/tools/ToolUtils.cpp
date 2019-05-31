@@ -98,7 +98,7 @@ namespace gamelib
         ent.findAllByType<CollisionComponent>([&](CollisionComponent* comp) {
                 if (comp->flags & flags)
                 {
-                    if (comp->getName() == PolygonCollider::name && !(comp->flags & collision_noprecise))
+                    if (comp->getName() == PolygonCollider::name() && !(comp->flags & collision_noprecise))
                     {
                         auto pol = static_cast<PolygonCollider*>(comp);
                         sf::VertexArray vertices(sf::Lines);

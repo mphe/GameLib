@@ -170,7 +170,8 @@ namespace gamelib
     template <typename T>
     auto Entity::findByName() const -> T*
     {
-        return static_cast<T*>(find(T::name));
+        static_assert(has_nametag<T>(), "Only works for types with a nametag");
+        return static_cast<T*>(find(T::name()));
     }
 
     template <typename T, typename F>
@@ -185,7 +186,8 @@ namespace gamelib
     template <typename T, typename F>
     auto Entity::findAllByName(F callback) const -> void
     {
-        findAll(T::name, [&](Component* comp) {
+        static_assert(has_nametag<T>(), "Only works for types with a nametag");
+        findAll(T::name(), [&](Component* comp) {
                 return callback(static_cast<T*>(comp));
             });
     }

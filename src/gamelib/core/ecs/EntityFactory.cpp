@@ -5,8 +5,6 @@
 
 namespace gamelib
 {
-    constexpr const char* EntityFactory::name;
-
     Entity::Handle createEntity(const std::string& name)
     {
         return getSubsystem<EntityFactory>()->create(name);

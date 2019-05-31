@@ -93,11 +93,6 @@ namespace gamelib
         _system(nullptr)
     { }
 
-    RenderComponent::RenderComponent(const std::string& name) :
-        Identifier(name),
-        _system(nullptr)
-    { }
-
     RenderComponent::~RenderComponent()
     {
         quit();

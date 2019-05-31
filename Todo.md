@@ -8,7 +8,6 @@
 * uint property
 * Component
   * Add enable()/disable() function
-* Use new name assignment system
 * ResourceManager
   * Implement multiple searchpath
   * Revert relative loads
@@ -39,6 +38,7 @@
 * consistently use pointers for arguments that are modified in the function
 * Give GameState a virtual handleInput() function
   * Game calls this function for every event
+* use TextureResource::Handle in PixelCollision
 
 * provide failsafe implementations in core subsystems
   * no crash when trying to create unknown entities/components
@@ -250,7 +250,6 @@ RenderSystem:
   * use Point for AABB.pos
   * support sweep against filled polygon
   * consider removing the \_add, \_edit, \_remove, ... variants in BasePointSet and BasePolygon
-  * fix typename errors in Vector.inl
 
 * Physics
   * fix slope corners

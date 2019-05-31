@@ -1,6 +1,5 @@
 #include "gamelib/components/geometry/PixelCollision.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
-#include "gamelib/core/res/TextureResource.hpp"
 #include "gamelib/utils/conversions.hpp"
 #include "math/geometry/intersect.hpp"
 
@@ -15,7 +14,6 @@ namespace gamelib
     { }
 
     PixelCollision::PixelCollision(const math::AABBf& aabb, unsigned int flags_) :
-        CollisionComponent(name),
         _mask(sf::Color::Transparent),
         _rect(aabb)
     {

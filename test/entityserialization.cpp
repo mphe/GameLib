@@ -38,7 +38,8 @@ class PropTest : public PropType<0x4933b918, SomeStruct>
 class ComponentA : public Identifier<0x76d44c07, Component>
 {
     public:
-        ComponentA() : Identifier("ComponentA")
+        ASSIGN_NAMETAG("ComponentA");
+        ComponentA()
         {
             _props.registerProperty("x", x);
             _props.registerProperty("y", y, &propTest);
@@ -50,7 +51,8 @@ class ComponentA : public Identifier<0x76d44c07, Component>
 class ComponentB : public Identifier<0x650e189e, Component>
 {
     public:
-        ComponentB() : Identifier("ComponentB") { _props.registerProperty("x", x); }
+        ASSIGN_NAMETAG("ComponentB");
+        ComponentB() { _props.registerProperty("x", x); }
         int x;
 };
 

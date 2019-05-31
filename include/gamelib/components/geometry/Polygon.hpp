@@ -9,7 +9,7 @@ namespace gamelib
     class PolygonCollider : public CollisionComponent
     {
         public:
-            constexpr static const char* name = "PolygonCollision";
+            ASSIGN_NAMETAG("PolygonCollision");
 
         public:
             PolygonCollider(unsigned int flags = 0);

@@ -13,7 +13,7 @@ namespace gamelib
     class ActorComponent : public UpdateComponent
     {
         public:
-            constexpr static const char* name = "ActorComponent";
+            ASSIGN_NAMETAG("ActorComponent");
 
             enum State
             {

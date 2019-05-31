@@ -9,7 +9,6 @@ namespace gamelib
     constexpr const char* filltype_hints[] = { "Open", "Closed", "Filled" };
 
     PolygonCollider::PolygonCollider(unsigned int flags_) :
-        CollisionComponent(name),
         _global(_local),
         _filltype(_local.getFillType()),
         _normaldir(_local.getNormalDir())

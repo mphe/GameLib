@@ -6,7 +6,6 @@
 namespace gamelib
 {
     MeshRenderer::MeshRenderer() :
-        RenderComponent(name),
         reserveAhead(4),
         _texscale(1, 1),
         _mapping(MapInstance)

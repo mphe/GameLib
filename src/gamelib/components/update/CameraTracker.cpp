@@ -5,7 +5,7 @@
 namespace gamelib
 {
     CameraTracker::CameraTracker() :
-        UpdateComponent(name, 1, UpdateHookType::PostPostFrame),
+        UpdateComponent(1, UpdateHookType::PostPostFrame),
         camera(0),
         shakerad(5),
         _shake(false)

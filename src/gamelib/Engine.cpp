@@ -18,7 +18,7 @@ namespace gamelib
 {
     void registerComponents(EntityFactory& factory)
     {
-#define _REGISTER_COMPONENT(c) factory.addComponent<c>(c::name);
+#define _REGISTER_COMPONENT(c) factory.addComponent<c>(c::name());
         _REGISTER_COMPONENT(PolygonCollider);
         _REGISTER_COMPONENT(AABB);
         _REGISTER_COMPONENT(PixelCollision);

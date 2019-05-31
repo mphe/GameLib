@@ -39,7 +39,7 @@ namespace gamelib
         public:
             typedef SlotKeyShort Handle;
 
-            constexpr static const char* name = "UpdateSystem";
+            ASSIGN_NAMETAG("UpdateSystem");
 
         public:
             Handle add(UpdateComponent* obj, UpdateHookType hook);

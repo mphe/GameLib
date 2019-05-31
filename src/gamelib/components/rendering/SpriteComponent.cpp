@@ -6,7 +6,6 @@
 namespace gamelib
 {
     SpriteComponent::SpriteComponent() :
-        RenderComponent(name),
         _ani(this)
     {
         _props.registerProperty("sprite", _sprite, PROP_METHOD(_sprite, change), this);

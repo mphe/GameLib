@@ -23,7 +23,7 @@ namespace gamelib
         friend class SpriteComponent;
 
         public:
-            constexpr static const char* name = "AnimationComponent";
+            ASSIGN_NAMETAG("AnimationComponent");
 
         public:
             AnimationComponent();

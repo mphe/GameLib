@@ -56,7 +56,7 @@ namespace gamelib
         public:
             typedef BaseResourceHandle(*LoaderCallback)(const std::string& fname, ResourceManager* resmgr);
 
-            constexpr static const char* name = "ResourceManager";
+            ASSIGN_NAMETAG("ResourceManager");
 
         public:
             ResourceManager() {};

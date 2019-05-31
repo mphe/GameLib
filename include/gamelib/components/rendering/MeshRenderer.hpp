@@ -27,7 +27,7 @@ namespace gamelib
     class MeshRenderer : public RenderComponent
     {
         public:
-            constexpr static const char* name = "MeshRenderer";
+            ASSIGN_NAMETAG("MeshRenderer");
 
         public:
             MeshRenderer();

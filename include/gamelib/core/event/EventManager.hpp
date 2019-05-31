@@ -17,7 +17,7 @@ namespace gamelib
     class EventManager : public Subsystem<EventManager>
     {
         public:
-            constexpr static const char* name = "EventManager";
+            ASSIGN_NAMETAG("EventManager");
 
         public:
             template <class T>

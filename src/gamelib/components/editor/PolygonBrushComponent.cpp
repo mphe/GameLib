@@ -6,14 +6,7 @@
 
 namespace gamelib
 {
-    constexpr const char* PolygonBrushComponent::name;
-
     PolygonBrushComponent::PolygonBrushComponent() :
-        PolygonBrushComponent(name)
-    { }
-
-    PolygonBrushComponent::PolygonBrushComponent(const std::string& name_) :
-        Identifier(name_),
         _pol(nullptr),
         _shape(nullptr)
     {

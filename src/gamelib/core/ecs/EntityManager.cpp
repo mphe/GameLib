@@ -5,8 +5,6 @@
 
 namespace gamelib
 {
-    constexpr const char* EntityManager::name;
-
     Entity::Handle EntityManager::add(const std::string& name)
     {
         auto h = _entities.acquire();

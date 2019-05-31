@@ -10,7 +10,7 @@ namespace gamelib
     class PixelCollision : public CollisionComponent
     {
         public:
-            constexpr static const char* name = "PixelCollision";
+            ASSIGN_NAMETAG("PixelCollision");
 
         public:
             PixelCollision();

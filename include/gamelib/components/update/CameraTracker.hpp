@@ -10,7 +10,7 @@ namespace gamelib
     class CameraTracker : public UpdateComponent
     {
         public:
-            constexpr static const char* name = "CameraTracker";
+            ASSIGN_NAMETAG("CameraTracker");
 
         public:
             CameraTracker();

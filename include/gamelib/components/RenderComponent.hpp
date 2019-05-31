@@ -17,7 +17,6 @@ namespace gamelib
 
         public:
             RenderComponent();
-            RenderComponent(const std::string& name);
             virtual ~RenderComponent();
 
             virtual auto getTransform()       -> Transformable* override;

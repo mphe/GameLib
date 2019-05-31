@@ -3,8 +3,6 @@
 
 namespace gamelib
 {
-    constexpr const char* CollisionSystem::name;
-
     void CollisionSystem::add(Collidable* col)
     {
         _objs.push_back(col);

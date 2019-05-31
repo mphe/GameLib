@@ -6,8 +6,6 @@
 
 namespace gamelib
 {
-    constexpr const char* ResourceManager::name;
-
     ResourceManager::ResourceManager(const std::string& searchpath)
     {
         setSearchpath(searchpath);

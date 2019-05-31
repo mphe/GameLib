@@ -3,6 +3,7 @@
 
 #include "gamelib/core/Identifiable.hpp"
 #include "gamelib/utils/SlotMap.hpp"
+#include "gamelib/utils/nametag.hpp"
 #include "gamelib/properties/PropertyContainer.hpp"
 #include "gamelib/json/JsonSerializer.hpp"
 
@@ -18,7 +19,7 @@ namespace gamelib
         PostLoad,           // All configs were loaded (in entity creation)
     };
 
-    class Component : public Identifiable, public JsonSerializer
+    class Component : public Identifiable, public INameTag, public JsonSerializer
     {
         friend class Entity;
 
@@ -26,7 +27,6 @@ namespace gamelib
 
         public:
             Component();
-            Component(const std::string& name);
             Component(const Component&) = delete;   // Prevent shooting in the foot
             virtual ~Component() {};
 
@@ -34,7 +34,6 @@ namespace gamelib
             auto quit()                -> void;
             auto isInitialized() const -> bool;
 
-            auto getName() const         -> const std::string&;
             auto getEntity() const       -> Entity*;
             auto getEntityHandle() const -> Handle;
             auto getProperties() const   -> const PropertyContainer&;
@@ -54,7 +53,6 @@ namespace gamelib
 
         protected:
             PropertyContainer _props;
-            std::string _name;
 
         private:
             Handle _ent;   // Set by Entity
