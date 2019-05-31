@@ -16,6 +16,7 @@ namespace gamelib
 
     bool inputBitflags(const char* label, unsigned int* flags, int num, const char* const* names);
 
+    bool inputRenderOptions(const char* label, RenderOptions* options);
     bool inputLayer(const char* label, LayerHandle* handle, const RenderSystem* sys);
     bool inputCamera(Camera& cam);
 

@@ -6,7 +6,6 @@
 * property
     * property flags (readonly!)
     * uint property
-    * accessor lambdas (one lambda for get and set)
 * Component
     * Add enable()/disable() function
 * ResourceManager

@@ -25,6 +25,18 @@ namespace gamelib
         return changed;
     }
 
+    bool inputRenderOptions(const char* label, RenderOptions* options)
+    {
+        bool changed = false;
+        if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            // TODO: blendmode, shader
+            changed |= inputBitflags("Render flags", &options->flags, num_renderflags, str_renderflags);
+            changed |= ImGui::InputFloat("Parallax", &options->parallax, 0.01, 0.1, 3);
+            ImGui::TreePop();
+        }
+        return changed;
+    }
 
     bool inputLayer(const char* label, LayerHandle* handle, const RenderSystem* sys)
     {

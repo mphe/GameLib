@@ -11,7 +11,7 @@ namespace gamelib
     class RenderSystem;
 
     class RenderComponent : public Identifier<0xa40fdfdd, Component>,
-                               public Transformable
+                            public Transformable
     {
         friend class PropNodeHandle;
 
@@ -24,10 +24,18 @@ namespace gamelib
 
             virtual auto getBBox() const -> math::AABBf override;
 
+            auto setDepth(int depth) -> void;
+            auto getDepth() const    -> int;
+
+            auto setLayer(LayerHandle layer) -> void;
+            auto getLayer() const            -> LayerHandle;
+
         protected:
             virtual auto _init() -> bool override;
             virtual auto _quit() -> void override;
             virtual auto _onChanged(const sf::Transform& old) -> void override;
+
+            auto _getNode() const -> const RenderNode*;
 
         protected:
             NodeHandle _handle;

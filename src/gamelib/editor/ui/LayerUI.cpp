@@ -14,20 +14,14 @@ namespace gamelib
             return false;
 
         int depth = layer->depth;
-        float parallax = layer->options.parallax;
-        unsigned int flags = layer->options.flags;
+        auto options = layer->options;
         bool changed = false;
 
-        if (inputBitflags("Render flags", &flags, num_renderflags, str_renderflags))
+        if (inputRenderOptions("Options", &options))
+        {
+            sys->setLayerOptions(handle, options);
             changed = true;
-
-        if (ImGui::InputFloat("Parallax", &parallax, 0.01, 0.1, 3))
-            changed = true;
-
-        // TODO: blendmode, layer, texture
-
-        if (changed)
-            sys->setLayerOptions(handle, &flags, &parallax);
+        }
 
         if (ImGui::InputInt("Depth", &depth, 1, 100))
         {

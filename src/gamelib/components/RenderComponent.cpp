@@ -8,82 +8,67 @@
 
 namespace gamelib
 {
+    class PropLayerHandle : public PropType<0x3cf15fc5, LayerHandle>
+    {
+        public:
+            bool loadFromJson(const PropertyHandle& prop, LayerHandle* ptr, const Json::Value& node) const final override
+            {
+                // maybe allow passing a pointer
+                auto sys = getSubsystem<RenderSystem>();
+
+                auto name = node.asString();
+                if (!name.empty())
+                    *ptr = sys->findLayer(name);
+                return true;
+            }
+
+            void writeToJson(const PropertyHandle& prop, const LayerHandle* ptr, Json::Value& node) const final override
+            {
+                // maybe allow passing a pointer
+                auto sys = getSubsystem<RenderSystem>();
+
+                const auto* layer = sys->getLayer(*ptr);
+                node = !layer ? "" : layer->name;
+            }
+
+            bool drawGui(const PropertyHandle& prop, const std::string& name, LayerHandle* ptr) const final override
+            {
+                // maybe allow passing a pointer
+                auto sys = getSubsystem<RenderSystem>();
+
+                return inputLayer(name.c_str(), ptr, sys);
+            }
+    } propLayerHandle;
+
     class PropNodeHandle : public PropType<0xe56155ea, NodeHandle>
     {
         public:
             bool loadFromJson(const PropertyHandle& prop, NodeHandle* ptr, const Json::Value& cfgnode) const final override
             {
                 auto self = static_cast<RenderComponent*>(prop.getData());
-                auto sys = self->_system;
-                const RenderNode& node = *sys->getNode(*ptr);
-
-                auto options = node.options;
-                ::gamelib::loadFromJson(cfgnode, &options);
-                sys->setNodeOptions(*ptr, options);
-
-                auto depth = cfgnode.get("depth", node.depth).asInt();
-                sys->setNodeDepth(*ptr, depth);
-
-                if (cfgnode.isMember("layer"))
-                {
-                    auto name = cfgnode["layer"].asString();
-                    if (!name.empty())
-                    {
-                        auto layer = sys->findLayer(name);
-                        if (layer)
-                            sys->setNodeLayer(*ptr, layer);
-                    }
-                }
-
+                auto options = self->_getNode()->options;
+                if (!::gamelib::loadFromJson(cfgnode, &options))
+                    return false;
+                self->_system->setNodeOptions(*ptr, options);
                 return true;
             }
 
             void writeToJson(const PropertyHandle& prop, const NodeHandle* ptr, Json::Value& cfgnode) const final override
             {
                 auto self = static_cast<RenderComponent*>(prop.getData());
-                const RenderNode& node = *self->_system->getNode(*ptr);
-                // TODO: blendmode, layer
-                cfgnode["depth"] = node.depth;
-                cfgnode["flags"] = node.options.flags;
-                cfgnode["parallax"] = node.options.parallax;
-
-                const auto* layer = self->_system->getLayer(node.layer);
-                cfgnode["layer"] = !layer ? "" : layer->name;
+                ::gamelib::writeToJson(cfgnode, self->_getNode()->options);
             }
 
-            bool drawGui(const PropertyHandle& prop, const std::string&, NodeHandle* ptr) const final override
+            bool drawGui(const PropertyHandle& prop, const std::string& name, NodeHandle* ptr) const final override
             {
                 auto self = static_cast<RenderComponent*>(prop.getData());
-                auto sys = self->_system;
-                const RenderNode& node = *sys->getNode(*ptr);
+                RenderOptions options = self->_getNode()->options;
 
-                LayerHandle handle = node.layer;
-                int depth = node.depth;
-                float parallax = node.options.parallax;
-                unsigned int flags = node.options.flags;
-                bool changed = false;
+                if (!inputRenderOptions(name.c_str(), &options))
+                    return false;
 
-                changed |= inputBitflags("Render flags", &flags, num_renderflags, str_renderflags);
-                changed |= ImGui::InputFloat("Parallax", &parallax, 0.01, 0.1, 3);
-
-                if (changed)
-                    sys->setNodeOptions(*ptr, &flags, &parallax);
-
-                // TODO: blendmode
-
-                if (inputLayer("Layer", &handle, sys))
-                {
-                    sys->setNodeLayer(*ptr, handle);
-                    changed = true;
-                }
-
-                if (ImGui::InputInt("Depth", &depth, 1, 100))
-                {
-                    sys->setNodeDepth(*ptr, depth);
-                    changed = true;
-                }
-
-                return changed;
+                self->_system->setNodeOptions(*ptr, options);
+                return true;
             }
     } propNodeHandle;
 
@@ -106,11 +91,27 @@ namespace gamelib
 
         _handle = _system->createNode(this);
 
-        _props.registerProperty("renderopts", _handle,
+        auto depthcb = +[](const int* val, RenderComponent* self) -> const int*
+        {
+            if (val)
+                self->setDepth(*val);
+            return &self->_getNode()->depth;
+        };
+
+        auto layercb = +[](const LayerHandle* val, RenderComponent* self) -> const LayerHandle*
+        {
+            if (val)
+                self->setLayer(*val);
+            return &self->_getNode()->layer;
+        };
+
+        _props.registerProperty("depth", depthcb, this);
+        _props.registerProperty("layer", layercb, this, &propLayerHandle);
+        _props.registerProperty("options", _handle,
                 +[](const NodeHandle* val, RenderComponent* self)
                 {
                     if (self->_handle != *val)
-                        LOG_ERROR("Can't set 'renderopts' property directly");
+                        LOG_ERROR("Can't set 'options' property directly");
                 }, this, &propNodeHandle);
 
         return true;
@@ -141,5 +142,30 @@ namespace gamelib
     auto RenderComponent::getBBox() const -> math::AABBf
     {
         return _system->getNodeGlobalBBox(_handle);
+    }
+
+    auto RenderComponent::_getNode() const -> const RenderNode*
+    {
+        return _system->getNode(_handle);
+    }
+
+    auto RenderComponent::setDepth(int depth) -> void
+    {
+        _system->setNodeDepth(_handle, depth);
+    }
+
+    auto RenderComponent::getDepth() const -> int
+    {
+        return _getNode()->depth;
+    }
+
+    auto RenderComponent::setLayer(LayerHandle layer) -> void
+    {
+        _system->setNodeLayer(_handle, layer);
+    }
+
+    auto RenderComponent::getLayer() const -> LayerHandle
+    {
+        return _getNode()->layer;
     }
 }

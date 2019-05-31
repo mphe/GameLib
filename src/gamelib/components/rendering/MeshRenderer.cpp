@@ -1,6 +1,7 @@
 #include "gamelib/components/rendering/MeshRenderer.hpp"
 #include "gamelib/core/rendering/RenderSystem.hpp"
 #include "gamelib/utils/conversions.hpp"
+#include "gamelib/utils/utils.hpp"
 #include "gamelib/properties/PropDummy.hpp"
 #include "gamelib/properties/PropResource.hpp"
 
@@ -11,14 +12,19 @@ namespace gamelib
         _texscale(1, 1),
         _mapping(MapInstance)
     {
-        // TODO: primitiveType, needs getter
-        // _props.registerProperty("primitiveType", _primitiveType, PROP_METHOD(_primitiveType, setPrimitiveType), this, 0, ARRAY_SIZE(str_primitives), str_primitives);
+        auto primcb = +[](const sf::PrimitiveType* val, MeshRenderer* self) -> const sf::PrimitiveType*
+        {
+            if (val)
+                self->_system->setNodeMeshType(self->_handle, *val);
+            return &self->_getNode()->mesh.primitiveType;
+        };
+
+        _props.registerProperty("primitiveType", primcb, this, 0, ARRAY_SIZE(str_primitives), str_primitives);
         registerResourceProperty(_props, "texture", _tex, PROP_METHOD(_tex, setTexture), this);
         _props.registerProperty("texoffset", _texoffset, PROP_METHOD(_texoffset, setTexOffset), this);
         _props.registerProperty("texscale", _texscale, PROP_METHOD(_texscale, setTexScale), this);
         _props.registerProperty("mapping", _mapping, PROP_METHOD(_mapping, setMappingMethod), this, 0, NumMappingMethods, str_mappings);
         registerDummyProperty(_props, "vertices");
-        registerDummyProperty(_props, "primitiveType");
     }
 
     auto MeshRenderer::_init() -> bool
