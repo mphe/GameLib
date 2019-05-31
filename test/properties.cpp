@@ -13,10 +13,10 @@ struct SomeClass
     int x;
     int y;
 
-    static void setXNice(int* var, const int* value, SomeClass* self)
+    static void setXNice(const int* value, SomeClass* self)
     {
         self->x = *value;
-        self->y = *var;
+        self->y = self->x;
     };
 };
 
@@ -96,6 +96,17 @@ int main(int argc, char *argv[])
     assert(*props.getAs<int>("someobject") == 10 && "Wrong value");
     assert(someobject.x == someobject.y && "Wrong value");
 
+    // Test accessor
+    int accessorint = 0;
+    auto accessor = +[](const int* val, int* data) -> const int*
+    {
+        if (val)
+            *data = *val;
+        return data;
+    };
+    props.registerProperty("accessor", accessor, &accessorint);
+    props.set<int>("accessor", 50);
+    assert(*props.getAs<int>("accessor") == 50 && "Wrong value");
 
     // Test serialization
     Json::Value val;
@@ -107,18 +118,21 @@ int main(int argc, char *argv[])
     auto tmpsomevec2i = somevec2i;
     auto tmpsomestring = somestring;
     auto tmpsomeclass = someobject;
+    auto tmpaccessorint = accessorint;
 
     somefloat = 0;
     someint = 0;
     somevec2i.fill(0);
     somestring = "";
     someobject = {0, 0};
+    accessorint = 0;
 
     assert(*props.getAs<float>("somefloat")       == 0.f && "Wrong value");
     assert(*props.getAs<int>("someint")           == 0 && "Wrong value");
     assert(*props.getAs<math::Vec2i>("somevec2i") == math::Vec2i() && "Wrong value");
     assert(*props.getAs<string>("somestring")     == "" && "Wrong value");
     assert(*props.getAs<int>("someobject")        == 0 && "Wrong value");
+    assert(*props.getAs<int>("accessor")          == 0 && "Wrong value");
 
     props.loadFromJson(val);
 
@@ -128,6 +142,7 @@ int main(int argc, char *argv[])
     assert(*props.getAs<string>("somestring")     == tmpsomestring && "Wrong value");
     assert(*props.getAs<int>("someobject")        == tmpsomeclass.x && "Wrong value");
     assert(someobject.y                           == tmpsomeclass.y && "Wrong value");
+    assert(*props.getAs<int>("accessor")          == tmpaccessorint && "Wrong value");
 
     props.clear();
 

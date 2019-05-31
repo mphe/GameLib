@@ -3,6 +3,7 @@
 #include "gamelib/components/rendering/SpriteComponent.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
+#include "gamelib/properties/PropResource.hpp"
 
 namespace gamelib
 {
@@ -16,12 +17,12 @@ namespace gamelib
         _phys(nullptr),
         _current(Stand)
     {
+        registerResourceProperty(_props, "stand", _states[Stand]);
+        registerResourceProperty(_props, "walk", _states[Walk]);
+        registerResourceProperty(_props, "fall", _states[Fall]);
         _props.registerProperty("turnspeed", turnspeed);
         _props.registerProperty("followMouse", followMouse);
         _props.registerProperty("freeze", freeze);
-        _props.registerProperty("stand", _states[Stand]);
-        _props.registerProperty("walk", _states[Walk]);
-        _props.registerProperty("fall", _states[Fall]);
         _props.registerProperty("state", _current, PROP_METHOD(_current, changeState), this, 0, NumStates, state_strings);
     }
 

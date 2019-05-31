@@ -60,6 +60,7 @@ set(GAMELIB_SOURCES
     properties/basictypes.cpp
     properties/PropComponent.cpp
     properties/PropDummy.cpp
+    properties/PropResource.cpp
 
     imgui/inputs.cpp
     imgui/buttons.cpp

@@ -1,6 +1,7 @@
 #include "gamelib/components/rendering/SpriteComponent.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/core/rendering/RenderSystem.hpp"
+#include "gamelib/properties/PropResource.hpp"
 #include <SFML/Graphics/Vertex.hpp>
 
 namespace gamelib
@@ -8,7 +9,7 @@ namespace gamelib
     SpriteComponent::SpriteComponent() :
         _ani(this)
     {
-        _props.registerProperty("sprite", _sprite, PROP_METHOD(_sprite, change), this);
+        registerResourceProperty(_props, "sprite", _sprite, PROP_METHOD(_sprite, change), this);
 
         // Don't register these properties, because it can't be guaranteed after serializaion
         // that these are loaded _after_ sprite is loaded and therefore overwrite the default

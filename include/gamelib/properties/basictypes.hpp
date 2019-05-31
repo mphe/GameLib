@@ -6,7 +6,6 @@
 #include "gamelib/json/json-natives.hpp"
 #include "gamelib/json/json-vector.hpp"
 #include "math/geometry/Vector.hpp"
-#include "gamelib/core/res/Resource.hpp"
 #include <SFML/Graphics/Color.hpp>
 
 namespace gamelib
@@ -28,16 +27,6 @@ namespace gamelib
                 gamelib::writeToJson(node, *ptr);
             }
     };
-
-    class PropResource : public PropType<0xd41af3a9, BaseResourceHandle>
-    {
-        public:
-            bool loadFromJson(const PropertyHandle& prop, BaseResourceHandle* ptr, const Json::Value& node) const final override;
-            void writeToJson(const PropertyHandle& prop, const BaseResourceHandle* ptr, Json::Value& node) const final override;
-            bool drawGui(const PropertyHandle& prop, const std::string& name, BaseResourceHandle* ptr) const final override;
-    };
-
-    extern PropResource propResource;
 
     class PropColor : public PropType<0xf261806f, sf::Color>
     {
@@ -77,7 +66,6 @@ namespace gamelib
     GENERATE_BASIC_PROP(Vec2f, 0xf4598369, math::Vec2f);
     GENERATE_BASIC_PROP(Vec2i, 0xf55f0d17, math::Vec2i);
 
-    GENERATE_CATEGORIZER(Resource, BaseResourceHandle)
     GENERATE_CATEGORIZER(Color, sf::Color)
 
 #undef GENERATE_CATEGORIZER
@@ -90,12 +78,6 @@ namespace gamelib
     {
         static_assert(std::is_enum<T>(), "Type could not be auto-detected");
         return &propInt;
-    }
-
-    template <typename T>
-    const IPropType* categorizeProperty(const ResourceHandle<T>&)
-    {
-        return &propResource;
     }
 }
 

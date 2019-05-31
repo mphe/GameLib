@@ -13,13 +13,13 @@ namespace gamelib
         _filltype(_local.getFillType()),
         _normaldir(_local.getNormalDir())
     {
-        auto normalsetter = +[](math::NormalDirection* var, const math::NormalDirection* val, PolygonCollider* self) {
-            *var = *val;
+        auto normalsetter = +[](const math::NormalDirection* val, PolygonCollider* self) {
+            self->_normaldir = *val;
             self->_local.setNormalDir(*val);
         };
 
-        auto fillsetter = +[](math::FillType* var, const math::FillType* val, PolygonCollider* self) {
-            *var = *val;
+        auto fillsetter = +[](const math::FillType* val, PolygonCollider* self) {
+            self->_filltype = *val;
             self->_local.setFillType(*val);
         };
 

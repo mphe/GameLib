@@ -10,8 +10,8 @@ namespace gamelib
         _line(nullptr),
         _linewidth(32)
     {
-        auto cb = +[](PolygonCollider** var, PolygonCollider* const* val, LineBrushComponent* self) {
-            *var = *val;
+        auto cb = +[](PolygonCollider* const* val, LineBrushComponent* self) {
+            self->_line = *val;
             self->regenerate();
         };
 

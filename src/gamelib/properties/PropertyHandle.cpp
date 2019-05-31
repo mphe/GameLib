@@ -3,40 +3,58 @@
 namespace gamelib
 {
     PropertyHandle::PropertyHandle() :
-        PropertyHandle(nullptr, nullptr, nullptr)
+        PropertyHandle(nullptr)
     { }
 
     PropertyHandle::PropertyHandle(void* var, void* data) :
-        PropertyHandle(var, nullptr, data)
-    { }
-
-    PropertyHandle::PropertyHandle(const void* var, PropSetterCallback setter, void* self) :
         serializer(nullptr),
         hints(nullptr),
         min(0),
         max(0),
-        _constptr(var), // also sets _ptr (yes, yes, ugly)
-        _setter(setter),
-        _self(self)
+        _ptr(var),
+        _setter(nullptr),
+        _data(data)
     { }
 
-    bool PropertyHandle::isSetter() const
+    PropertyHandle::PropertyHandle(const void* var, PropSetterCallback setter, void* data) :
+        PropertyHandle()
     {
-        return _setter != nullptr;
+        _constptr = var;
+        _setter = setter;
+        _data = data;
     }
 
-    const void* PropertyHandle::get() const
+    PropertyHandle::PropertyHandle(PropAccessorCallback accessor, void* data) :
+        PropertyHandle()
     {
-        return _constptr;
+        _accessor = accessor;
+        _data = data;
+    }
+
+    bool PropertyHandle::hasSetter() const
+    {
+        return _constptr && _setter;
+    }
+
+    bool PropertyHandle::hasAccessor() const
+    {
+        return !_constptr && _accessor;
     }
 
     void* PropertyHandle::getMutableOrNull() const
     {
-        return isSetter() ? nullptr : _ptr;
+        return _ptr && !_setter ? _ptr : nullptr;
+    }
+
+    const void* PropertyHandle::get() const
+    {
+        if (hasAccessor())
+            return _accessor(nullptr, _data);
+        return _constptr;
     }
 
     void* PropertyHandle::getData() const
     {
-        return _self;
+        return _data;
     }
 }

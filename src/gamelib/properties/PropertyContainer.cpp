@@ -40,14 +40,21 @@ namespace gamelib
                 LOG_DEBUG_WARN("Property has no serializer: ", i.first);
     }
 
-    void PropertyContainer::_registerProperty(const std::string& name, const void* prop, PropSetterCallback setter, void* self, const IPropType* type, int min, int max, const char* const* hints)
+    void PropertyContainer::_registerProperty(const std::string& name, const void* constprop, void* prop,
+            PropSetterCallback setter, PropAccessorCallback accessor, void* data,
+            const IPropType* type, int min, int max, const char* const* hints)
     {
         if (_properties.find(name) != _properties.end())
             LOG_WARN("Overwriting existing property: ", name);
 
         auto& handle = _properties[name];
-        // A bit hacky to assume that when passing a const ptr but nullptr for callback will make the handle think it's a non-callback
-        handle = PropertyHandle(prop, setter, self);
+        if (setter)
+            handle = PropertyHandle(constprop, setter, data);
+        else if (accessor)
+            handle = PropertyHandle(accessor, data);
+        else
+            handle = PropertyHandle(prop, data);
+
         handle.serializer = type;
         handle.min = min;
         handle.max = max;

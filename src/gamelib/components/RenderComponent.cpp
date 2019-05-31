@@ -107,9 +107,9 @@ namespace gamelib
         _handle = _system->createNode(this);
 
         _props.registerProperty("renderopts", _handle,
-                +[](NodeHandle* var, const NodeHandle* val, RenderComponent*)
+                +[](const NodeHandle* val, RenderComponent* self)
                 {
-                    if (*var != *val)
+                    if (self->_handle != *val)
                         LOG_ERROR("Can't set 'renderopts' property directly");
                 }, this, &propNodeHandle);
 

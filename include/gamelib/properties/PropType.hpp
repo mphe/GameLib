@@ -57,7 +57,7 @@ namespace gamelib
     template <typename T>
     bool BasePropType<T>::loadFromJson(const PropertyHandle& prop, const Json::Value& node) const
     {
-        if (!prop.isSetter())
+        if (prop.getMutableOrNull())
             return loadFromJson(prop, static_cast<T*>(prop.getMutableOrNull()), node);
 
         // Make a temporary value and handle to provide a pointer that can be accessed without
@@ -80,7 +80,7 @@ namespace gamelib
     template <typename T>
     bool BasePropType<T>::drawGui(const PropertyHandle& prop, const std::string& name) const
     {
-        if (!prop.isSetter())
+        if (prop.getMutableOrNull())
             return drawGui(prop, name, static_cast<T*>(prop.getMutableOrNull()));
 
         // Same as in loadFromJson

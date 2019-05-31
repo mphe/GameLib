@@ -12,8 +12,8 @@
 // exactly the new value as argument,
 // Usage: props.registerProperty("size", _size, PROP_METHOD(_size, setSize), this);
 #define PROP_METHOD(T, F) PROP_METHOD_TYPE(decltype(T), F)
-#define PROP_METHOD_TYPE(T, F) +[](T*, T const* val, decltype(this) self) { self->F(*val); }
-#define PROP_METHOD_CLASS(T, F, C) +[](T*, T const* val, C* self) { self->F(*val); }
+#define PROP_METHOD_TYPE(T, F) +[](T const* val, decltype(this) self) { self->F(*val); }
+#define PROP_METHOD_CLASS(T, F, C) +[](T const* val, C* self) { self->F(*val); }
 
 
 namespace gamelib
@@ -45,16 +45,13 @@ namespace gamelib
             void registerProperty(const std::string& name, const T& prop, NicePropSetterCallback<T, U> setter, U* self, const IPropType* type,
                     int min = 0, int max = 0, const char* const* hints = nullptr);
 
-            // TODO: would be nice to get rid of those resource overloads
-            //       find another way of passing the expected resource ID to the prop?
-            template <typename T>
-            void registerProperty(const std::string& name, ResourceHandle<T>& prop,
-                    const char* const* hints = nullptr);
+            template <typename T, typename U>
+            void registerProperty(const std::string& name, NicePropAccessorCallback<T, U> accessor, U* self,
+                    int min = 0, int max = 0, const char* const* hints = nullptr);
 
             template <typename T, typename U>
-            void registerProperty(const std::string& name, const ResourceHandle<T>& prop, NicePropSetterCallback<ResourceHandle<T>, U> setter, U* self,
-                    const char* const* hints = nullptr);
-
+            void registerProperty(const std::string& name, NicePropAccessorCallback<T, U> accessor, U* self, const IPropType* type,
+                    int min = 0, int max = 0, const char* const* hints = nullptr);
 
             auto begin() const -> PropertyMap::const_iterator;
             auto begin()       -> PropertyMap::iterator;
@@ -75,7 +72,10 @@ namespace gamelib
             auto set(const std::string& name, const T& val) const -> void;
 
         private:
-            auto _registerProperty(const std::string& name, const void* prop, PropSetterCallback setter, void* self, const IPropType* type, int min, int max, const char* const* hints) -> void;
+            auto _registerProperty(const std::string& name, const void* constprop, void* prop,
+                    PropSetterCallback setter, PropAccessorCallback accessor, void* self,
+                    const IPropType* type, int min, int max, const char* const* hints)
+                -> void;
 
         private:
             PropertyMap _properties;
@@ -104,37 +104,40 @@ namespace gamelib
     template <typename T, typename U>
     void PropertyContainer::registerProperty(const std::string& name, T& prop, int min, int max, const char* const* hints, U* data)
     {
-        _registerProperty(name, &prop, nullptr, data, categorizeProperty(prop), min, max, hints);
-    }
-
-    template <typename T, typename U>
-    void PropertyContainer::registerProperty(const std::string& name, const T& prop, NicePropSetterCallback<T, U> setter, U* self, int min, int max, const char* const* hints)
-    {
-        _registerProperty(name, &prop, (PropSetterCallback)setter, static_cast<void*>(self), categorizeProperty(prop), min, max, hints);
+        _registerProperty(name, nullptr, &prop, nullptr, nullptr, data, categorizeProperty(prop), min, max, hints);
     }
 
     template <typename T, typename U>
     void PropertyContainer::registerProperty(const std::string& name, T& prop, const IPropType* type, int min, int max, const char* const* hints, U* data)
     {
-        _registerProperty(name, &prop, nullptr, data, type, min, max, hints);
+        _registerProperty(name, nullptr, &prop, nullptr, nullptr, data, type, min, max, hints);
+    }
+
+    template <typename T, typename U>
+    void PropertyContainer::registerProperty(const std::string& name, const T& prop, NicePropSetterCallback<T, U> setter, U* self, int min, int max, const char* const* hints)
+    {
+        _registerProperty(name, &prop, nullptr, (PropSetterCallback)setter, nullptr, self, categorizeProperty(prop), min, max, hints);
     }
 
     template <typename T, typename U>
     void PropertyContainer::registerProperty(const std::string& name, const T& prop, NicePropSetterCallback<T, U> setter, U* self, const IPropType* type, int min, int max, const char* const* hints)
     {
-        _registerProperty(name, &prop, (PropSetterCallback)setter, static_cast<void*>(self), type, min, max, hints);
-    }
-
-    template <typename T>
-    void PropertyContainer::registerProperty(const std::string& name, ResourceHandle<T>& prop, const char* const* hints)
-    {
-        _registerProperty(name, &prop, nullptr, nullptr, categorizeProperty(prop), T::id, T::id, hints);
+        _registerProperty(name, &prop, nullptr, (PropSetterCallback)setter, nullptr, self, type, min, max, hints);
     }
 
     template <typename T, typename U>
-    void PropertyContainer::registerProperty(const std::string& name, const ResourceHandle<T>& prop, NicePropSetterCallback<ResourceHandle<T>, U> setter, U* self, const char* const* hints)
+    void PropertyContainer::registerProperty(const std::string& name, NicePropAccessorCallback<T, U> accessor, U* self,
+            int min, int max, const char* const* hints)
     {
-        _registerProperty(name, &prop, (PropSetterCallback)setter, static_cast<void*>(self), categorizeProperty(prop), T::id, T::id, hints);
+        const T* emptyptr = nullptr;    // passed to categorizeProperty()
+        _registerProperty(name, nullptr, nullptr, nullptr, (PropAccessorCallback)accessor, self, categorizeProperty(*emptyptr), min, max, hints);
+    }
+
+    template <typename T, typename U>
+    void PropertyContainer::registerProperty(const std::string& name, NicePropAccessorCallback<T, U> accessor, U* self, const IPropType* type,
+            int min, int max, const char* const* hints)
+    {
+        _registerProperty(name, nullptr, nullptr, nullptr, (PropAccessorCallback)accessor, self, type, min, max, hints);
     }
 }
 

@@ -3,13 +3,25 @@
 
 namespace gamelib
 {
-    typedef void(*PropSetterCallback)(void* var, const void* value, void* self);
+    class IPropType;
 
     template <typename T, typename U>
-    using NicePropSetterCallback = void(*)(T* var, const T* value, U* self);
+    using NicePropSetterCallback = void(*)(const T* value, U* self);
+
+    typedef NicePropSetterCallback<void, void> PropSetterCallback;
 
 
-    class IPropType;
+    // Accessors are functions that provide get and set logic for this
+    // property. Those properties therefore don't need to store a pointer to
+    // the actual value but return it from their accessor function.
+    // If the value argument is null, the function is used as get() and should
+    // not set any values.
+    // It should return a pointer even when in set() mode.
+    template <typename T, typename U>
+    using NicePropAccessorCallback = const T*(*)(const T* value, U* data);
+
+    typedef NicePropAccessorCallback<void, void> PropAccessorCallback;
+
 
     // TODO: ConstPropertyHandle -> doesn't allow modification
 
@@ -18,9 +30,12 @@ namespace gamelib
         public:
             PropertyHandle();
             PropertyHandle(void* var, void* data = nullptr);
-            PropertyHandle(const void* var, PropSetterCallback setter, void* self);
+            PropertyHandle(const void* var, PropSetterCallback setter, void* data);
+            PropertyHandle(PropAccessorCallback accessor, void* data);
 
-            auto isSetter() const    -> bool;
+        public:
+            auto hasSetter() const   -> bool;
+            auto hasAccessor() const -> bool;
 
             auto get() const              -> const void*;
             auto getMutableOrNull() const -> void*;
@@ -35,8 +50,10 @@ namespace gamelib
             template <typename T>
             auto set(const T& val) const -> void
             {
-                if (isSetter())
-                    _setter(_ptr, &val, _self);
+                if (hasSetter())
+                    _setter(&val, _data);
+                else if (hasAccessor())
+                    _accessor(&val, _data);
                 else
                     *static_cast<T*>(_ptr) = val;
             }
@@ -46,19 +63,22 @@ namespace gamelib
             const char* const* hints;
 
             union {
-                unsigned int id;    // Resource ID
+                unsigned int id;    // e.g. Resource ID
                 struct { int min, max; };
             };
 
         private:
-            // Basically const_cast and not particulary nice, but makes things easier
             union {
-                void* _ptr;              // Pointer to the variable
-                const void* _constptr;   // Const pointer to the variable in case of setter
+                void* _ptr;             // Pointer for direct access
+                const void* _constptr;  // Const pointer when using callbacks
             };
 
-            PropSetterCallback _setter;  // Setter function if direct access isn't possible
-            void* _self;                 // Data pointer that will be passed to the setter
+            union {
+                PropSetterCallback _setter;  // Setter function
+                PropAccessorCallback _accessor;  // Accessor function
+            };
+
+            void* _data;    // Data pointer that will be passed to callbacks
     };
 }
 

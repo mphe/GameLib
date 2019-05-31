@@ -1,8 +1,5 @@
 #include "gamelib/properties/basictypes.hpp"
-#include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/imgui/inputs.hpp"
-#include "gamelib/imgui/resources.hpp"
-#include "gamelib/json/json-resources.hpp"
 #include "imgui.h"
 #include <climits>
 
@@ -15,7 +12,6 @@ namespace gamelib
     PropBool propBool;
     PropVec2f propVec2f;
     PropVec2i propVec2i;
-    PropResource propResource;
     PropColor propColor;
 
 
@@ -70,22 +66,6 @@ namespace gamelib
     bool PropVec2i::drawGui(const PropertyHandle& prop, const std::string& name, math::Vec2i* ptr) const
     {
         return ImGui::InputInt2(name.c_str(), &ptr->x, ImGuiInputTextFlags_EnterReturnsTrue);
-    }
-
-
-    bool PropResource::loadFromJson(const PropertyHandle& prop, BaseResourceHandle* ptr, const Json::Value& node) const
-    {
-        return ::gamelib::loadFromJson(node, ptr);
-    }
-
-    void PropResource::writeToJson(const PropertyHandle& prop, const BaseResourceHandle* ptr, Json::Value& node)   const
-    {
-        ::gamelib::writeToJson(node, *ptr);
-    }
-
-    bool PropResource::drawGui(const PropertyHandle& prop, const std::string& name, BaseResourceHandle* ptr) const
-    {
-        return inputResource(name.c_str(), ptr, prop.id);
     }
 
 

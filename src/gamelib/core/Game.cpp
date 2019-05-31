@@ -23,26 +23,26 @@ namespace gamelib
         _repeatkeys(false),
         _vsync(true)
     {
-        auto setSize = +[](math::Vec2i* var, const math::Vec2i* val, Game* self) {
+        auto setSize = +[](const math::Vec2i* val, Game* self) {
             self->resize(sf::Vector2u(val->x, val->y));
         };
-        auto setFPS = +[](int* var, const int* val, Game* self) {
-            *var = *val;
+        auto setFPS = +[](const int* val, Game* self) {
+            self->_maxfps = *val;
             if (self->_window.isOpen())
                 self->_window.setFramerateLimit(*val);
         };
-        auto setVsync = +[](bool* var, const bool* val, Game* self) {
-            *var = *val;
+        auto setVsync = +[](const bool* val, Game* self) {
+            self->_vsync = *val;
             if (self->_window.isOpen())
                 self->_window.setVerticalSyncEnabled(*val);
         };
-        auto setTitle = +[](std::string* var, const std::string* val, Game* self) {
-            *var = *val;
+        auto setTitle = +[](const std::string* val, Game* self) {
+            self->_title = *val;
             if (self->_window.isOpen())
                 self->_window.setTitle(*val);
         };
-        auto setRepeat = +[](bool* var, const bool* val, Game* self) {
-            *var = *val;
+        auto setRepeat = +[](const bool* val, Game* self) {
+            self->_repeatkeys = *val;
             if (self->_window.isOpen())
                 self->_window.setKeyRepeatEnabled(*val);
         };

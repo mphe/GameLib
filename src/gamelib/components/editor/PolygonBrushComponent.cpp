@@ -10,8 +10,8 @@ namespace gamelib
         _pol(nullptr),
         _shape(nullptr)
     {
-        auto cb = +[](PolygonCollider** var, PolygonCollider* const* val, PolygonBrushComponent* self) {
-            *var = *val;
+        auto cb = +[](PolygonCollider* const* val, PolygonBrushComponent* self) {
+            self->_pol = *val;
             self->regenerate();
         };
 
