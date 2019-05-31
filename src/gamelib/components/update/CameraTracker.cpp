@@ -24,6 +24,8 @@ namespace gamelib
         if (!cam)
             return;
 
+        math::Vec2f offset;
+
         if (_shake)
         {
             _secondsleft -= elapsed;
@@ -33,16 +35,11 @@ namespace gamelib
                 return;
             }
 
-            math::Vec2f off(-shakerad, -shakerad);
-            off += math::Vec2f(std::fmod(random(), shakerad * 2),
-                               std::fmod(random(), shakerad * 2));
-
-            cam->center(ent->getTransform().getBBox().getCenter() + off);
+            offset.fill(-shakerad);
+            offset += math::Vec2f(std::fmod(random(), shakerad * 2),
+                                  std::fmod(random(), shakerad * 2));
         }
-        else
-        {
-            cam->center(ent->getTransform().getBBox().getCenter());
-        }
+        cam->center(ent->getTransform().getPosition() + offset);
     }
 
     void CameraTracker::shake(float seconds)
