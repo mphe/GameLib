@@ -54,6 +54,9 @@ namespace gamelib
 
     void SpriteComponent::change(SpriteResource::Handle sprite)
     {
+        if (_sprite == sprite)
+            return;
+
         _sprite = sprite;
 
         if (!_sprite)
