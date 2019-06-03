@@ -52,10 +52,12 @@ namespace gamelib
             if (_type == Rect && pol.size() == 1)
             {
                 auto start = pol.get(0);
-                selected->add(math::Point2f(start.x, p.y), false);
                 selected->add(math::Point2f(p.x, start.y), false);
+                selected->add(p, false);
+                selected->add(math::Point2f(start.x, p.y), false);
             }
-            selected->add(p, false);
+            else
+                selected->add(p, false);
         }
         else
         {
