@@ -20,7 +20,7 @@ namespace gamelib
         return _name;    \
     }   \
     \
-    inline auto getName() const -> const std::string& override    \
+    inline virtual auto getName() const -> const std::string& override    \
     {   \
         return name();  \
     }
