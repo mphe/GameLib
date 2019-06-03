@@ -15,8 +15,13 @@ namespace gamelib
             self->regenerate();
         };
 
+        auto shapecb = +[](MeshRenderer* const* val, PolygonBrushComponent* self) {
+            self->_shape = *val;
+            self->regenerate();
+        };
+
         registerProperty(_props, "polygon", _pol, *this, cb);
-        registerProperty(_props, "shape", _shape, *this, (ComponentPropSetter<MeshRenderer, PolygonBrushComponent>)cb);
+        registerProperty(_props, "shape", _shape, *this, shapecb);
     }
 
     void PolygonBrushComponent::add(const math::Point2f& p, bool raw) const
