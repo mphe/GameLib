@@ -113,4 +113,14 @@ namespace gamelib
         };
         _system->updateNodeMesh(_handle, 4, 0, nullptr, uv);
     }
+
+    auto SpriteComponent::getAnimation() const -> const AnimationComponent&
+    {
+        return _ani;
+    }
+
+    auto SpriteComponent::getTexture() const -> TextureResource::Handle
+    {
+        return _sprite->tex;
+    }
 }
