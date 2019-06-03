@@ -4,16 +4,10 @@
 
 namespace gamelib
 {
-    void writeToJson(Json::Value& node, const BaseResourceHandle& handle, ResourceManager* resmgr)
+    void writeToJson(Json::Value& node, const BaseResourceHandle& handle, const ResourceManager* resmgr)
     {
         if (handle)
-        {
-            resmgr = resmgr ? resmgr : getSubsystem<ResourceManager>();
-            if (resmgr)
-                node = boost::filesystem::relative(handle.getResource()->getPath(), resmgr->getSearchpath()).string();
-            else
-                node = handle.getResource()->getPath();
-        }
+            node = handle.getResource()->getPath();
         else
             node = "";
     }

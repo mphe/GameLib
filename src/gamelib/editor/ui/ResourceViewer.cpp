@@ -48,7 +48,7 @@ namespace gamelib
         if (ImGui::Begin("Resource Manager", &_open))
         {
             if (ImGui::Button("Load"))
-                _dialog.open(getSubsystem<ResourceManager>()->getSearchpath().c_str());
+                _dialog.open(getSubsystem<ResourceManager>()->getSearchpaths().back().c_str());
 
             ImGui::SameLine();
             ImGui::Spacing();

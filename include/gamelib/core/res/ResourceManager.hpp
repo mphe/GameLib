@@ -3,10 +3,36 @@
 
 #include <string>
 #include <unordered_map>
+#include <boost/filesystem.hpp>
 #include "Resource.hpp"
 #include "gamelib/core/Subsystem.hpp"
 #include "gamelib/json/JsonSerializer.hpp"
 
+// ResourceManager loads resources from given searchpaths.
+//
+// The user can add new searchpaths with addSearchpath().
+//
+// When a file is requested, ResourceManager will go through
+// all searchpaths, from back to front, so that newer searchpaths
+// will be searched first, and look for the file.
+// If it does not exist in searchpath or the filename is absolute,
+// it will search for it relative to cwd or absolute.
+// If a absolute or relative file path turns out to lead to a searchpath,
+// it will be treated as such correctly.
+//
+// writeToJson() will save all loaded filepaths. If the file was found
+// in searchpath, it will be stored as relative path, otherwise absolute.
+//
+// If you want the cwd or executable location as searchpath, you need to
+// specify it manually.
+//
+// It is possible to load shadowed files (a file that was softly overriden
+// due to another file in a newer searchpath with the same name) by loading it
+// relative to cwd or absolute.
+//
+// BUT: shadowed files cannot be correctly serialized in writeToJson() and
+// appear as normal relative file paths, like other files found in searchpaths.
+// 
 // To prevent possible segfaults after calling clean(), objects should store
 // the corresponding resource handle to keep up the reference count.
 
@@ -15,7 +41,7 @@
 //
 // {
 //     # The searchpath
-//     "searchpath": "<searchpath>",
+//     "searchpath": [ "<searchpath>", ... ],
 //
 //     # Forces reloading of already loaded resources instead of reusing them
 //     # Default is false.
@@ -46,8 +72,6 @@
 // }
 
 
-// TODO: Iterators
-
 namespace gamelib
 {
     class ResourceManager : public JsonSerializer, public Subsystem<ResourceManager>
@@ -58,29 +82,28 @@ namespace gamelib
             ASSIGN_NAMETAG("ResourceManager");
 
         public:
-            ResourceManager() {};
-            ResourceManager(const std::string& searchpath);
+            ResourceManager();
 
             auto loadFromJson(const Json::Value& node) -> bool final override;
             auto writeToJson(Json::Value& node) const  -> void final override;
 
             // (Re-)Load a resource.
-            auto load(const std::string& fname) -> BaseResourceHandle;
+            auto load(const boost::filesystem::path& fname) -> BaseResourceHandle;
 
             // Same as load, but don't cache the resource
-            auto loadOnce(const std::string& fname) -> BaseResourceHandle;
+            auto loadOnce(const boost::filesystem::path& fname) -> BaseResourceHandle;
 
             // Free a resource (if it's not referenced anymore)
-            auto free(const std::string& fname) -> void;
+            auto free(const boost::filesystem::path& fname) -> void;
 
             // Return the resource and load it if it doesn't exist.
-            auto get(const std::string& fname) -> BaseResourceHandle;
+            auto get(const boost::filesystem::path& fname) -> BaseResourceHandle;
 
             // Same as get, but don't cache the resource
-            auto getOnce(const std::string& fname) -> BaseResourceHandle;
+            auto getOnce(const boost::filesystem::path& fname) -> BaseResourceHandle;
 
             // Check if the resource exists and return a (null)pointer to it.
-            auto find(const std::string& fname) -> BaseResourceHandle;
+            auto find(const boost::filesystem::path& fname) -> BaseResourceHandle;
 
             // Returns the first resource of the given type (if any).
             // If the type is InvalidID the first resource of any type is returned.
@@ -95,8 +118,9 @@ namespace gamelib
             // Link a file extension to a loader-callback
             auto registerFileType(const std::string& ext, LoaderCallback cb) -> void;
 
-            auto setSearchpath(const std::string& path) -> void;
-            auto getSearchpath() const                  -> const std::string&;
+            auto addSearchpath(const boost::filesystem::path& path)    -> bool;
+            auto removeSearchpath(const boost::filesystem::path& path) -> bool;
+            auto getSearchpaths() const -> const std::vector<boost::filesystem::path>&;
 
             // Free all resources that aren't referenced anywhere else
             auto clean() -> void;
@@ -120,12 +144,17 @@ namespace gamelib
             }
 
         private:
-            auto _preparePath(const std::string& fname) const -> std::string;
+            auto _canonicalize(const boost::filesystem::path& fname) const -> boost::filesystem::path;
+            auto _extractSearchpath(
+                    const boost::filesystem::path& fullpath,
+                    const boost::filesystem::path** searchpath,
+                    boost::filesystem::path* relfname) const
+                -> bool;
 
         private:
             std::unordered_map<std::string, BaseResourceHandle> _res;
             std::unordered_map<std::string, LoaderCallback> _typemap;
-            std::string _searchpath;
+            std::vector<boost::filesystem::path> _searchpaths;
     };
 }
 

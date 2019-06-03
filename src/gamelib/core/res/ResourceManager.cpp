@@ -3,19 +3,37 @@
 #include "gamelib/core/event/EventManager.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/string.hpp"
+#include "gamelib/json/json-resources.hpp"
 #include <boost/filesystem.hpp>
 
 namespace gamelib
 {
-    ResourceManager::ResourceManager(const std::string& searchpath)
+    // Requires both paths to be canonical
+    auto isUnderDirectory(const boost::filesystem::path& fname, const boost::filesystem::path& dir, boost::filesystem::path* relfname = nullptr) -> bool
     {
-        setSearchpath(searchpath);
+        boost::filesystem::path rel;
+        if (!relfname)
+            relfname = &rel;
+
+        *relfname = fname.lexically_relative(dir);
+        return !relfname->empty() && !relfname->begin()->filename_is_dot_dot();
+    }
+
+    ResourceManager::ResourceManager()
+    {
     }
 
     bool ResourceManager::loadFromJson(const Json::Value& node)
     {
         if (node.isMember("searchpath"))
-            setSearchpath(node["searchpath"].asString());
+        {
+            const auto& searchpathnode = node["searchpath"];
+            if (!searchpathnode.isArray())
+                LOG_ERROR("Wrong searchpath format, should be array");
+            else
+                for (Json::ArrayIndex i = 0; i < searchpathnode.size(); ++i)
+                    addSearchpath(searchpathnode[i].asString());
+        }
 
         bool reload = node.get("forcereload", false).asBool();
 
@@ -33,20 +51,18 @@ namespace gamelib
                 if (it->empty())
                     continue;
 
-                std::string subfolder = it.key().asString();
-                if (!subfolder.empty())
-                    assureDelimiter(&subfolder);
+                boost::filesystem::path subfolder = it.key().asString();
 
                 if (reload)
                 {
                     clean();
                     for (auto& fname : *it)
-                        load(subfolder + fname.asString());
+                        load(subfolder / fname.asString());
                 }
                 else
                 {
                     for (auto& fname : *it)
-                        res.push_back(get(subfolder + fname.asString()));
+                        res.push_back(get(subfolder / fname.asString()));
                     clean();
                 }
             }
@@ -60,16 +76,12 @@ namespace gamelib
                 if (it->empty())
                     continue;
 
-                std::string subfolder = it.key().asString();
-                if (!subfolder.empty())
-                    assureDelimiter(&subfolder);
-
-                if (reload)
-                    for (auto& fname : *it)
-                        loadOnce(subfolder + fname.asString());
-                else
-                    for (auto& fname : *it)
-                        getOnce(subfolder + fname.asString());
+                boost::filesystem::path subfolder = it.key().asString();
+                for (auto& fname : *it)
+                    if (reload)
+                        loadOnce(subfolder / fname.asString());
+                    else
+                        getOnce(subfolder / fname.asString());
             }
         }
 
@@ -78,7 +90,16 @@ namespace gamelib
 
     void ResourceManager::writeToJson(Json::Value& node) const
     {
-        node["searchpath"] = _searchpath;
+        auto& searchpathnode = node["searchpath"];
+        for (auto& i : _searchpaths)
+        {
+            boost::filesystem::path rel;
+            if (isUnderDirectory(i, boost::filesystem::current_path(), &rel))
+                searchpathnode.append(rel.string());
+            else
+                searchpathnode.append(i.string());
+        }
+
         node["forcereload"] = false;
 
         // TODO: group files by subfolders
@@ -87,76 +108,86 @@ namespace gamelib
 
         Json::ArrayIndex i = 0;
         for (auto& it : _res)
-            files[i++] = boost::filesystem::relative(it.first, _searchpath).string();
+            ::gamelib::writeToJson(files[i++], it.second, this);
     }
 
-    BaseResourceHandle ResourceManager::load(const std::string& fname)
+    BaseResourceHandle ResourceManager::load(const boost::filesystem::path& fname)
     {
         auto res = loadOnce(fname);
         if (!res)
             return nullptr;
 
-        auto path = res.getResource()->getPath();
+        auto path = _canonicalize(res.getResource()->getFullPath());
+        auto pathstring = path.string();
 
         // Fire a reload event if the resource was reloaded
-        auto evmgr = getSubsystem<EventManager>();
-        if (evmgr)
-        {
-            auto oldres = find(path);
-            if (oldres && oldres.use_count() > 1)
-                evmgr->queueEvent(ResourceReloadEvent::create(path, res));
-        }
+        auto oldres = find(path);
+        if (oldres && oldres.use_count() > 1)
+            queueEvent<ResourceReloadEvent>(pathstring, res);
 
-        _res[path] = res;
+        _res[pathstring] = res;
         return res;
     }
 
-    BaseResourceHandle ResourceManager::loadOnce(const std::string& fname)
+    BaseResourceHandle ResourceManager::loadOnce(const boost::filesystem::path& fname)
     {
-        LOG_DEBUG("Loading file ", fname, "...");
+        LOG("Loading file ", fname, "...");
 
-        auto pos = fname.find_last_of('.');
-        if (pos == std::string::npos)
+        const auto ext = fname.extension().string().substr(1);
+
+        if (ext.empty())
         {
-            LOG_ERROR("File has no extension: ", fname);
+            LOG_ERROR("File has no extension");
             return nullptr;
         }
 
-        auto ext = fname.substr(pos + 1);
         auto it = _typemap.find(ext);
         if (it == _typemap.end())
         {
-            LOG_ERROR("Unknown resource type: ", fname);
+            LOG_ERROR("Unknown resource type: ", ext);
             return nullptr;
         }
 
-        std::string path = _preparePath(fname);
+        auto loadpath = _canonicalize(fname);
+        if (loadpath.empty())
+            return nullptr;
 
         // Call the associated loader
-        auto res = it->second(path, this);
+        // TODO: make_preferred() ?
+        auto res = it->second(loadpath.string(), this);
         if (!res)
         {
-            LOG_ERROR("Failed to load resource ", path);
+            LOG_ERROR("Failed to load resource ", loadpath);
             return nullptr;
         }
 
-        // res.getResource()->_path = path.data() + _searchpath.size();
-        res.getResource()->_path = path;
+        // Set resource path attributes
+        BaseResource& meta = *res.getResource();
+        const boost::filesystem::path *searchpath = nullptr;
+        boost::filesystem::path relpath;
+
+        if (_extractSearchpath(loadpath, &searchpath, &relpath))
+        {
+            meta._searchpath = searchpath->string();
+            meta._path = relpath.string();
+        }
+        else
+            meta._path = loadpath.string();
+
         return res;
     }
 
-    void ResourceManager::free(const std::string& fname)
+    void ResourceManager::free(const boost::filesystem::path& fname)
     {
-        auto it = _res.find(_preparePath(fname));
-        if (it != _res.end())
-            if (it->second.use_count() == 1)
-            {
-                LOG_DEBUG_WARN("Freeing resource ", it->first);
-                _res.erase(it);
-            }
+        auto it = _res.find(_canonicalize(fname).string());
+        if (it != _res.end() && it->second.use_count() == 1)
+        {
+            LOG_DEBUG_WARN("Freeing resource ", it->first);
+            _res.erase(it);
+        }
     }
 
-    BaseResourceHandle ResourceManager::get(const std::string& fname)
+    BaseResourceHandle ResourceManager::get(const boost::filesystem::path& fname)
     {
         auto ptr = find(fname);
         if (ptr)
@@ -164,7 +195,7 @@ namespace gamelib
         return load(fname);
     }
 
-    BaseResourceHandle ResourceManager::getOnce(const std::string& fname)
+    BaseResourceHandle ResourceManager::getOnce(const boost::filesystem::path& fname)
     {
         auto ptr = find(fname);
         if (ptr)
@@ -172,9 +203,9 @@ namespace gamelib
         return loadOnce(fname);
     }
 
-    BaseResourceHandle ResourceManager::find(const std::string& fname)
+    BaseResourceHandle ResourceManager::find(const boost::filesystem::path& fname)
     {
-        auto it = _res.find(_preparePath(fname));
+        auto it = _res.find(_canonicalize(fname).string());
         if (it == _res.end())
             return nullptr;
         return it->second;
@@ -196,16 +227,33 @@ namespace gamelib
         LOG_DEBUG("Registered filetype ", ext);
     }
 
-    void ResourceManager::setSearchpath(const std::string& path)
+    auto ResourceManager::addSearchpath(const boost::filesystem::path& path) -> bool
     {
-        _searchpath = path;
-        adaptPath(&_searchpath);
-        assureDelimiter(&_searchpath);
+        if (boost::filesystem::exists(path))
+        {
+            _searchpaths.push_back(boost::filesystem::canonical(path));
+            return true;
+        }
+        LOG_ERROR("Searchpath does not exist: ", path);
+        return false;
     }
 
-    const std::string& ResourceManager::getSearchpath() const
+    auto ResourceManager::removeSearchpath(const boost::filesystem::path& path) -> bool
     {
-        return _searchpath;
+        if (boost::filesystem::exists(path))
+        {
+            auto it = std::find(_searchpaths.begin(), _searchpaths.end(), boost::filesystem::canonical(path));
+            if (it != _searchpaths.end())
+                _searchpaths.erase(it);
+            return true;
+        }
+        LOG_ERROR("Searchpath does not exist: ", path);
+        return false;
+    }
+
+    auto ResourceManager::getSearchpaths() const -> const std::vector<boost::filesystem::path>&
+    {
+        return _searchpaths;
     }
 
     void ResourceManager::clean()
@@ -244,24 +292,47 @@ namespace gamelib
     {
         _res.clear();
         _typemap.clear();
-        _searchpath.clear();
+        _searchpaths.clear();
         LOG_DEBUG_WARN("ResourceManager destroyed");
     }
 
-    std::string ResourceManager::_preparePath(const std::string& fname) const
+    auto ResourceManager::_canonicalize(const boost::filesystem::path& fname) const -> boost::filesystem::path
     {
-        std::string path;
-        if (boost::filesystem::path(fname).is_absolute())
-            path = _searchpath + boost::filesystem::relative(fname, _searchpath).string();
-        else
-            path = _searchpath + fname;
+        // TODO: maybe allow files not to exist
 
-        path = boost::filesystem::path(path).lexically_normal().string();
-        adaptPath(&path);
+        if (fname.is_relative())
+            for (auto it = _searchpaths.rbegin(), end = _searchpaths.rend(); it != end; ++it)
+                if (boost::filesystem::exists(*it / fname))
+                    return boost::filesystem::canonical(fname, *it);
 
-        if (!boost::filesystem::exists(path))
-            LOG_WARN("File does not exist locally: ", path);
+        if (boost::filesystem::exists(fname))
+            return boost::filesystem::canonical(fname);
 
-        return path;
+        LOG_ERROR("File does not exist: ", fname);
+        return boost::filesystem::path();
+    }
+
+    auto ResourceManager::_extractSearchpath(
+            const boost::filesystem::path& fullpath,
+            const boost::filesystem::path** searchpath,
+            boost::filesystem::path* relfname) const
+        -> bool
+    {
+        assert(searchpath && "Must not be null");
+        assert(relfname && "Must not be null");
+
+        for (auto it = _searchpaths.rbegin(), end = _searchpaths.rend(); it != end; ++it)
+        {
+            boost::filesystem::path rel;
+            if (isUnderDirectory(fullpath, *it, &rel))
+            {
+                *searchpath = &*it;
+                *relfname = std::move(rel);
+                return true;
+            }
+        }
+
+        LOG_WARN("File does not exist in any searchpath: ", fullpath);
+        return false;
     }
 }

@@ -8,13 +8,6 @@
     * uint property
 * Component
     * Add enable()/disable() function
-* ResourceManager
-    * Implement multiple searchpath
-    * Revert relative loads
-    * add getSearchpath() function to BaseResource
-        * getPath() returns path relative to searchpath (if any)
-        * makes it possible to determine if resource was loaded using resmgr
-        * can use and build path as needed
 * Make components more interface-y to prevent diamond problems
     * remove Transform inheritance in base component classes
 * use PropComponent in QPhysics for hull
@@ -225,12 +218,6 @@ RenderSystem:
     * load all files from a folder
     * recursively load-once resource files
     * write loaders for various config files
-    * revert back to loading only from searchpath
-        * makes things simpler
-        * less path hell
-    * support multiple searchpaths
-        * loading a resource will try all searchpaths from newest to oldest to find the file
-        * allows easy extending and soft-overriding resources
 
 * EntityFactory
     * handle json return values
@@ -262,6 +249,11 @@ RenderSystem:
         * allows differentiating between different specializations of the same base component
             * e.g., UpdateComponent and PhysicsComponent
         * can use a mask for searching by ID to specify which abstraction layer is wanted
+        * HierachyInfo class
+            * inherit Identifiable
+                * virtual getID()
+            * virtual getParent()
+            -> recursively iterate through hierachy and get IDs
 
 * math
     * get convex hull function
@@ -327,7 +319,6 @@ RenderSystem:
         * dummy (makes PropDummy obsolete)
     * ConstPropertyHandle
         * use in BasePropType loadFromJson, drawGui
-    * remove custom resource related register functions
     * PropComponent needs to react if the component list changes
     * rewrite resource property to be safer
         * resource handle gets reinterpret_casted to BaseResourceHandle

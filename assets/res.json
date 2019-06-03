@@ -1,5 +1,5 @@
 {
-    "searchpath": "assets",
+    "searchpath": [ "assets" ],
     "forcereload": false,
     "once": {
         "entities": [

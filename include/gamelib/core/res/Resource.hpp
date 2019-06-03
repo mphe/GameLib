@@ -104,16 +104,30 @@ namespace gamelib
             typedef ResourceHandle<BaseResource> Handle;
 
             BaseResource() {};
-            BaseResource(const std::string& path) : _path(path) {}
+            BaseResource(const std::string& path, const std::string& searchpath) :
+                _path(path), _searchpath(searchpath) {}
             virtual ~BaseResource() {}
 
-            inline const std::string& getPath() const
+            inline auto getFullPath() const -> std::string
+            {
+                if (_searchpath.empty())
+                    return _path;
+                return _searchpath + "/" + _path;
+            }
+
+            inline auto getPath() const -> const std::string&
             {
                 return _path;
             }
 
+            inline auto getSearchpath() const -> const std::string&
+            {
+                return _searchpath;
+            }
+
         private:
             std::string _path;
+            std::string _searchpath;
     };
 
     typedef BaseResource::Handle BaseResourceHandle;
@@ -146,10 +160,11 @@ namespace gamelib
             }
 
             template <typename... Args>
-            static Handle createWithPath(const std::string& path, Args&&... args)
+            static Handle createWithPath(const std::string& path, const std::string& searchpath, Args&&... args)
             {
                 auto handle = create(std::forward<Args>(args)...);
                 handle.getResource()->_path = path;
+                handle.getResource()->_searchpath = searchpath;
                 return handle;
             }
 

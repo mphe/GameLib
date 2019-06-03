@@ -8,7 +8,7 @@ namespace gamelib
 {
     class ResourceManager;
 
-    void writeToJson(Json::Value& node, const BaseResourceHandle& handle, ResourceManager* resmgr = nullptr);
+    void writeToJson(Json::Value& node, const BaseResourceHandle& handle, const ResourceManager* resmgr = nullptr);
     bool loadFromJson(const Json::Value& node, BaseResourceHandle* handle, ResourceManager* resmgr = nullptr);
 
     template <typename T>
