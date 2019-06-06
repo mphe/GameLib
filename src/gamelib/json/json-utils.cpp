@@ -72,6 +72,9 @@ namespace gamelib
     {
         assert(dest && "Destination node is null");
 
+        if (dest->isNull())
+            *dest = Json::Value(Json::objectValue);
+
         for (auto it = src.begin(), end = src.end(); it != end; ++it)
         {
             auto& out = (*dest)[it.key().asString()];
