@@ -139,7 +139,6 @@ namespace gamelib
 
                             if (selected && selected->getName() == name)
                             {
-                                Json::Value diff;
                                 getConfigDelta(*selected, norm, &diff);
                                 diffstring = diff.toStyledString();
                             }
