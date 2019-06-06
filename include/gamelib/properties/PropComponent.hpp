@@ -63,7 +63,10 @@ namespace gamelib
     {
         static_assert(std::is_base_of<Component, T>(), "Not a component");
         static_assert(std::is_base_of<Component, U>(), "Callback data must be the calling component or the component to search in");
-        props.registerProperty(name, prop, setter, &self, &propComponent, filter, max, filternames);
+        if (setter)
+            props.registerProperty(name, prop, setter, &self, &propComponent, filter, max, filternames);
+        else
+            props.registerProperty(name, prop, &propComponent, filter, max, filternames, &self);
     }
 }
 
