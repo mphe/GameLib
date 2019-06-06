@@ -1,7 +1,7 @@
 #ifndef GAMELIB_ENTITYCONFIGRESOURCE_HPP
 #define GAMELIB_ENTITYCONFIGRESOURCE_HPP
 
-#include "JsonResource.hpp"
+#include "Resource.hpp"
 
 /*
  * Provides an alternative loader for JsonResource that automatically registers

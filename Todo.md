@@ -31,7 +31,6 @@
 * return nullptr when dereferencing BaseResource instead of using static_assert
 * font resource
 * implement own frame capping mechanic to allow better time measurement
-* option to specify base entity in entity configs
 * move all resources to a "coreres" folder to allow easy symlinking when using the engine in a real project
 * Message System
 * give flags a fixed width integer (int32, int64)
