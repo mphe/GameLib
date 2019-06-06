@@ -65,6 +65,8 @@ namespace gamelib
     void EntityTool::drawGui()
     {
         ImGui::Combo("Entity", &_selected, _itemGetter, (void*)&_entities, _entities.size());
+        if (ImGui::Button("Refresh"))
+            refresh();
     }
 
     void EntityTool::render(sf::RenderTarget& target)
