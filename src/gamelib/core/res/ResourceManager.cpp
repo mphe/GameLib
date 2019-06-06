@@ -1,5 +1,6 @@
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/events/ResourceReloadEvent.hpp"
+#include "gamelib/core/event/EventManager.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/string.hpp"
 #include <boost/filesystem.hpp>

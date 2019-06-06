@@ -2,6 +2,21 @@
 
 namespace gamelib
 {
+    void triggerEvent(EventPtr event)
+    {
+        auto evmgr = EventManager::getActive();
+        if (evmgr)
+            evmgr->triggerEvent(event);
+    }
+
+    void queueEvent(EventPtr event)
+    {
+        auto evmgr = EventManager::getActive();
+        if (evmgr)
+            evmgr->queueEvent(event);
+    }
+
+
     void EventManager::triggerEvent(EventPtr event)
     {
         auto it = _callbacks.find(event->getID());

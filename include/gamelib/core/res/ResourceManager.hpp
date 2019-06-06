@@ -4,7 +4,6 @@
 #include <string>
 #include <unordered_map>
 #include "Resource.hpp"
-#include "gamelib/core/event/EventManager.hpp"
 #include "gamelib/core/Subsystem.hpp"
 #include "gamelib/json/JsonSerializer.hpp"
 

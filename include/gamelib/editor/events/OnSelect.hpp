@@ -6,11 +6,6 @@
 
 namespace gamelib
 {
-    class Entity;
-}
-
-namespace gamelib
-{
     class OnSelectEvent : public Event<0x69e801b0, OnSelectEvent>
     {
         public:

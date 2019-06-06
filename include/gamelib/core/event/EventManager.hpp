@@ -14,6 +14,16 @@ namespace gamelib
     template <typename T>
     using NiceEventCallback = void (*)(T*, EventPtr);
 
+    void triggerEvent(EventPtr event);
+    void queueEvent(EventPtr event);
+
+    // template <typename T, typename... Args>
+    // void triggerEvent(Args&&... args);
+    //
+    // template <typename T, typename... Args>
+    // void queueEvent(Args&&... args);
+
+
     class EventManager : public Subsystem<EventManager>
     {
         public:
@@ -52,6 +62,22 @@ namespace gamelib
             void triggerEvent(EventPtr event);
             void queueEvent(EventPtr event);
 
+            template <typename T, typename... Args>
+            void triggerEvent(Args&&... args)
+            {
+                static_assert(std::is_base_of<BaseEvent, T>::value, "T must be an Event");
+                EventPtr ptr(new T(std::forward<Args>(args)...));
+                triggerEvent(ptr);
+            }
+
+            template <typename T, typename... Args>
+            void queueEvent(Args&&... args)
+            {
+                static_assert(std::is_base_of<BaseEvent, T>::value, "T must be an Event");
+                EventPtr ptr(new T(std::forward<Args>(args)...));
+                queueEvent(ptr);
+            }
+
             void update();
 
             void clear();
@@ -60,6 +86,24 @@ namespace gamelib
             std::queue<EventPtr> _evqueue;
             std::unordered_map<EventID, CallbackHandler<void, EventPtr> > _callbacks;
     };
+
+
+    // Implementation
+    template <typename T, typename... Args>
+    void triggerEvent(Args&&... args)
+    {
+        auto evmgr = EventManager::getActive();
+        if (evmgr)
+            evmgr->triggerEvent<T>(std::forward<Args>(args)...);
+    }
+
+    template <typename T, typename... Args>
+    void queueEvent(Args&&... args)
+    {
+        auto evmgr = EventManager::getActive();
+        if (evmgr)
+            evmgr->queueEvent<T>(std::forward<Args>(args)...);
+    }
 }
 
 #endif
