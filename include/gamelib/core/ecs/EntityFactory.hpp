@@ -51,6 +51,13 @@ namespace gamelib
                 LOG_DEBUG("Registered component ", name);
             }
 
+            template <typename T, typename std::enable_if<has_nametag<T>(), int>::type = 0>
+            void addComponent()
+            {
+                _compfactory.add<T>(T::name());
+                LOG_DEBUG("Registered component ", T::name());
+            }
+
             // Signature: bool(const std::string&)
             // When true is returned, the loop breaks.
             template <typename F>
