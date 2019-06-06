@@ -96,23 +96,13 @@ namespace gamelib
         if (!_sprite)
             return;
 
-        // Adding this to the tex coords will prevent the 1px border glitch (hopefully)
-        // https://gamedev.stackexchange.com/a/75244
-        // https://stackoverflow.com/questions/19611745/opengl-black-lines-in-between-tiles
-        constexpr float magic = 0.375;
-
-        const auto& rect = _sprite->rect;
-        auto tsize = _sprite->tex->getSize();
-
-        int x = rect.x + (int)_ani.ani.offset * rect.w;
-        int y = (rect.y + (int)(x / tsize.x) * rect.h) % tsize.y;
-        x = x % tsize.x;
+        auto framerect = _sprite->getFrameRect((int)_ani.ani.offset);
 
         sf::Vector2f uv[] = {
-            sf::Vector2f(x + magic, y + magic),
-            sf::Vector2f(x + magic, y + rect.h - magic),
-            sf::Vector2f(x + rect.w - magic, y + magic),
-            sf::Vector2f(x + rect.w - magic, y + rect.h - magic),
+            sf::Vector2f(framerect.x, framerect.y),
+            sf::Vector2f(framerect.x, framerect.h),
+            sf::Vector2f(framerect.w, framerect.y),
+            sf::Vector2f(framerect.w, framerect.h),
         };
         _system->updateNodeMesh(_handle, 4, 0, nullptr, uv);
     }

@@ -33,6 +33,8 @@ namespace gamelib
         AnimationData ani;
         math::AABBi rect;
         math::Point2f origin;
+
+        auto getFrameRect(int index) -> math::AABBi;
     };
 
     typedef Resource<SpriteResourceData, 0xd5b8e3bf> SpriteResource;
