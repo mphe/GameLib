@@ -31,13 +31,12 @@ namespace gamelib
     bool PropString::drawGui(const PropertyHandle& prop, const std::string& name, std::string* ptr) const
     {
         static char buf[256];
-        auto str = ptr;
         auto size = std::min(prop.max > 0 ? (size_t)prop.max : INT_MAX, sizeof(buf) - 1);
-        strncpy(buf, str->c_str(), size);
+        strncpy(buf, ptr->c_str(), std::min(size, ptr->size()));
         buf[size] = '\0';
         if (ImGui::InputText(name.c_str(), buf, size, ImGuiInputTextFlags_EnterReturnsTrue))
         {
-            (*str).assign(buf, size);
+            ptr->assign(buf);
             return true;
         }
         return false;
