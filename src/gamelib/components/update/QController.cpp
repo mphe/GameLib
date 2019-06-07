@@ -14,6 +14,9 @@ namespace gamelib
         jumpDecelerate(500),
         phys(nullptr),
         slopejumps(true),
+        handleInput(true),
+        _input(0),
+        _oldinput(0),
         _canjump(true),
         _jumping(false)
     {
@@ -23,13 +26,30 @@ namespace gamelib
         _props.registerProperty("jumpspeed", jumpspeed);
         _props.registerProperty("jumpDecelerate", jumpDecelerate);
         _props.registerProperty("slopejumps", slopejumps);
+        _props.registerProperty("handleInput", handleInput);
     }
 
     void QController::update(float elapsed)
     {
-        if (phys)
+        if (handleInput)
         {
             auto input = InputSystem::getActive();
+            unsigned int buttons = 0;
+
+            if (input->isKeyDown(sf::Keyboard::A))
+                buttons |= input_left;
+
+            if (input->isKeyDown(sf::Keyboard::D))
+                buttons |= input_right;
+
+            if (!input->isKeyDown(sf::Keyboard::W))
+                buttons |= input_up;
+
+            setInput(buttons);
+        }
+
+        if (phys)
+        {
             bool onground = phys->getState() == QPhysics::Ground;
             auto acc = onground ? accelerate : airAccelerate;
             math::Vec2f wishdir(1, 0);
@@ -41,20 +61,20 @@ namespace gamelib
                 _jumping = false;
             }
 
-            if (input->isKeyDown(sf::Keyboard::A))
+            if (_input & input_left)
                 phys->accelerate(-wishdir, maxspeed, acc);
-            else if (!onground && input->isKeyReleased(sf::Keyboard::A))
+            else if (!onground && _released(input_left))
                 phys->airFriction = true;
 
-            if (input->isKeyDown(sf::Keyboard::D))
+            if (_input & input_right)
                 phys->accelerate(wishdir, maxspeed, acc);
-            else if (!onground && input->isKeyReleased(sf::Keyboard::D))
+            else if (!onground && _released(input_right))
                 phys->airFriction = true;
 
-            if (!input->isKeyDown(sf::Keyboard::W))
+            if (!(_input & input_up))
                 _canjump = true;
 
-            if (_canjump && onground && input->isKeyDown(sf::Keyboard::W))
+            if (_canjump && onground && _input & input_up)
             {
                 _canjump = false;
                 _jumping = true;
@@ -68,9 +88,27 @@ namespace gamelib
                     phys->basevel.y = 0;
             }
 
-            if (_jumping && !input->isKeyDown(sf::Keyboard::W))
+            if (_jumping && !(_input & input_up))
                 phys->vel.y += jumpDecelerate * elapsed;
         }
+
+        _oldinput = _input;
+        _input = 0;
+    }
+
+    auto QController::setInput(unsigned int input) -> void
+    {
+        _input = input;
+    }
+
+    auto QController::getInput() const -> unsigned int
+    {
+        return _input;
+    }
+
+    auto QController::_released(unsigned int button) const -> bool
+    {
+        return _oldinput & button && !(_input & button);
     }
 
     void QController::_refresh(RefreshType type, Component* comp)
