@@ -141,6 +141,21 @@ namespace gamelib
 
     auto getEntity(Entity::Handle handle) -> Entity*;
     auto findEntity(const std::string& name) -> Entity*;
+    auto findEntityHandle(const std::string& name) -> Entity::Handle;
+
+    template <typename T>
+    T* findComponentByName(const std::string& entname)
+    {
+        auto ent = findEntity(entname);
+        return ent ? ent->findByName<T>() : nullptr;
+    }
+
+    template <typename T>
+    T* findComponentByType(const std::string& entname)
+    {
+        auto ent = findEntity(entname);
+        return ent ? ent->findByType<T>() : nullptr;
+    }
 
 
 

@@ -14,6 +14,16 @@ namespace gamelib
         return getSubsystem<EntityManager>()->find(name);
     }
 
+    auto findEntityHandle(const std::string& name) -> Entity::Handle
+    {
+        auto ent = findEntity(name);
+        if (ent)
+            return ent->getHandle();
+        else
+            return Entity::Handle();
+    }
+
+
 
     Entity::Entity() :
         Entity("")
