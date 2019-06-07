@@ -11,13 +11,15 @@ namespace gamelib
     constexpr unsigned int collision_noprecise   = 1 << 2;
     constexpr unsigned int collision_physicshull = 1 << 3;
     constexpr unsigned int collision_physicsdrag = 1 << 4;
+    constexpr unsigned int collision_hitbox      = 1 << 5;
 
     constexpr const char* str_colflags[] = {
         "Solid",
         nullptr,
         "Unprecise",
         "Physics Hull",
-        "Physics Drag"
+        "Physics Drag",
+        "Hitbox",
     };
 
     constexpr unsigned int num_colflags = ARRAY_SIZE(str_colflags);
