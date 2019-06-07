@@ -8,9 +8,11 @@ namespace gamelib
         UpdateComponent(1, UpdateHookType::PostPostFrame),
         camera(0),
         shakerad(5),
+        shakeduration(0.25),
         _shake(false)
     {
         _props.registerProperty("shakeradius", shakerad);
+        _props.registerProperty("shakeduration", shakeduration);
         _props.registerProperty("camera", camera);
     }
 
@@ -46,6 +48,11 @@ namespace gamelib
     {
         _shake = true;
         _secondsleft = seconds;
+    }
+
+    void CameraTracker::shake()
+    {
+        shake(shakeduration);
     }
 
     Camera* CameraTracker::getCamera() const

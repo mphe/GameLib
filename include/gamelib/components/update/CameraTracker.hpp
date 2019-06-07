@@ -18,11 +18,14 @@ namespace gamelib
             auto update(float elapsed) -> void final override;
 
             auto shake(float seconds) -> void;
+            auto shake()              -> void;
+
             auto getCamera() const    -> Camera*;
 
         public:
             int camera;
             float shakerad;
+            float shakeduration;
 
         private:
             float _secondsleft;
