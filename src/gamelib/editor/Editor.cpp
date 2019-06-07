@@ -138,16 +138,20 @@ namespace gamelib
         // if (_run && _hidegui)
         //     return;
 
+        _cam.apply(target);
+
         if (!_run)
         {
             if (_snap && !_gridontop)
                 _grid.render(target);
 
             auto rensys = getSubsystem<RenderSystem>();
-            _cam.apply(target);
+
             showRenderSystem();
             rensys->render(target, _cam.getCamRect());
             hideRenderSystem();
+
+            _cam.apply(target);
 
             if (_snap && _gridontop)
                 _grid.render(target);
