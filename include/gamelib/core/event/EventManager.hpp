@@ -17,12 +17,6 @@ namespace gamelib
     void triggerEvent(EventPtr event);
     void queueEvent(EventPtr event);
 
-    // template <typename T, typename... Args>
-    // void triggerEvent(Args&&... args);
-    //
-    // template <typename T, typename... Args>
-    // void queueEvent(Args&&... args);
-
 
     class EventManager : public Subsystem<EventManager>
     {
@@ -88,7 +82,22 @@ namespace gamelib
     };
 
 
-    // Implementation
+    template <typename E, typename T>
+    void registerEvent(NiceEventCallback<T> callback, T* data)
+    {
+        auto evmgr = EventManager::getActive();
+        if (evmgr)
+            evmgr->regCallback<E>(callback, data);
+    }
+
+    template <typename E, typename T>
+    void unregisterEvent(NiceEventCallback<T> callback, T* data)
+    {
+        auto evmgr = EventManager::getActive();
+        if (evmgr)
+            evmgr->unregCallback<E>(callback, data);
+    }
+
     template <typename T, typename... Args>
     void triggerEvent(Args&&... args)
     {
