@@ -47,6 +47,11 @@ namespace gamelib
         _updateUV();
     }
 
+    auto SpriteComponent::setSpeed(float speed) -> void
+    {
+        _ani.ani.speed = speed;
+    }
+
     void SpriteComponent::change(const std::string& fname)
     {
         change(getSubsystem<ResourceManager>()->get(fname).as<SpriteResource>());

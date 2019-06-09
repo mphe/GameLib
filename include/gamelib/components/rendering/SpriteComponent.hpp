@@ -32,7 +32,8 @@ namespace gamelib
 
             auto change(const std::string& fname)      -> void;
             auto change(SpriteResource::Handle sprite) -> void;
-            auto setIndex(int index)              -> void;
+            auto setIndex(int index)                   -> void;
+            auto setSpeed(float speed)                 -> void;
 
             auto getSprite() const     -> SpriteResource::Handle;
             auto getSpriteName() const -> const std::string&;
