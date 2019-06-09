@@ -8,6 +8,7 @@ namespace gamelib
     { }
 
     AnimationComponent::AnimationComponent(SpriteComponent* sprite_) :
+        UpdateComponent(1, UpdateHookType::PreFrame),
         sprite(sprite_)
     { }
 
