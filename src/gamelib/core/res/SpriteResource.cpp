@@ -16,7 +16,8 @@ namespace gamelib
         // Adding this to the tex coords will prevent the 1px border glitch (hopefully)
         // https://gamedev.stackexchange.com/a/75244
         // https://stackoverflow.com/questions/19611745/opengl-black-lines-in-between-tiles
-        constexpr float magic = 0.375;
+        // constexpr float magic = 0.375;
+        constexpr float magic = 0;
 
         auto tsize = tex->getSize();
 
