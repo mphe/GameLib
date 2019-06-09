@@ -24,6 +24,7 @@ set(EXT_LIBRARIES
 #  gamelib sources {{{
 set(GAMELIB_SOURCES
     events/ResourceReloadEvent.cpp
+    events/CameraEvents.cpp
 
     components/RenderComponent.cpp
     components/CollisionComponent.cpp
