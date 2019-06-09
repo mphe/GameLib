@@ -1,6 +1,6 @@
 set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL)
-find_package(SFML 2.4 COMPONENTS system window graphics REQUIRED)
+find_package(SFML 2.4 COMPONENTS system window graphics audio REQUIRED)
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 
 macro(gen_binary BINNAME SOURCES)
@@ -10,6 +10,7 @@ endmacro()
 
 
 set(EXT_LIBRARIES
+    sfml-audio
     sfml-graphics
     sfml-window
     sfml-system
@@ -85,6 +86,7 @@ set(GAMELIB_SOURCES
     core/res/JsonResource.cpp
     core/res/SpriteResource.cpp
     core/res/EntityConfigResource.cpp
+    core/res/SoundResource.cpp
     core/rendering/Camera.cpp
     core/rendering/FreeCam.cpp
     core/rendering/RenderSystem.cpp

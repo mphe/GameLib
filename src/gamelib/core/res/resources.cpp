@@ -4,6 +4,7 @@
 #include "gamelib/core/res/JsonResource.hpp"
 #include "gamelib/core/res/SpriteResource.hpp"
 #include "gamelib/core/res/EntityConfigResource.hpp"
+#include "gamelib/core/res/SoundResource.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
 
 
@@ -22,5 +23,6 @@ namespace gamelib
         registerSpriteLoader(resmgr);
         registerJsonLoader(resmgr);
         registerEntityConfigLoader(resmgr);
+        registerSoundLoader(resmgr);
     }
 }
