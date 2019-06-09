@@ -20,6 +20,7 @@ namespace gamelib
             auto start()               -> void;
             auto stop()                -> void;
             auto getRemaining() const  -> float;
+            auto getPercent() const    -> float;
             auto isFinished() const    -> bool;
             auto isRunning() const     -> bool;
             auto isStopped() const     -> bool;

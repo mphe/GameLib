@@ -36,6 +36,11 @@ namespace gamelib
         return _left;
     }
 
+    auto Timer::getPercent() const -> float
+    {
+        return _left / seconds;
+    }
+
     auto Timer::isFinished() const -> bool
     {
         return _left == timer_finished;
