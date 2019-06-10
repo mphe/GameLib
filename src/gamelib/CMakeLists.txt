@@ -1,6 +1,6 @@
 set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL)
-find_package(SFML 2.4 COMPONENTS system window graphics audio REQUIRED)
+find_package(SFML 2.5 COMPONENTS system window graphics audio REQUIRED)
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 
 macro(gen_binary BINNAME SOURCES)
