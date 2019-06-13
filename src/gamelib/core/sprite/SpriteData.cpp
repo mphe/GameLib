@@ -29,7 +29,7 @@ namespace gamelib
 
     void AnimationData::randomize()
     {
-        offset = random() % length;
+        offset = rand() % length;
     }
 
 

@@ -70,6 +70,8 @@ endif()
 
 # }}}
 
+find_package(SFML 2.5 COMPONENTS system window graphics audio REQUIRED)
+
 # build external libraries first
 add_subdirectory(extlib)
 

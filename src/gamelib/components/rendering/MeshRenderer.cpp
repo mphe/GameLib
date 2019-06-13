@@ -4,6 +4,7 @@
 #include "gamelib/utils/utils.hpp"
 #include "gamelib/properties/PropDummy.hpp"
 #include "gamelib/properties/PropResource.hpp"
+#include <algorithm>
 
 namespace gamelib
 {
@@ -33,7 +34,7 @@ namespace gamelib
             return false;
 
         // Allocate at least one vertex to prevent out-of-bounds warnings from RenderSystem
-        _resize(std::max(reserveAhead, 1ul));
+        _resize(std::max(reserveAhead, (decltype(reserveAhead))1));
         return true;
     }
 

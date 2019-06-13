@@ -68,8 +68,8 @@ namespace gamelib
 
             auto radius = shakerad * shakeMultiplier;
             offset.fill(-radius);
-            offset += math::Vec2f(std::fmod(random(), radius * 2),
-                                  std::fmod(random(), radius * 2));
+            offset += math::Vec2f(std::fmod(rand(), radius * 2),
+                                  std::fmod(rand(), radius * 2));
         }
 
         if (centertrack)

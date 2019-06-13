@@ -12,3 +12,4 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/imgui-sfml/imconfig-SFML.h" "${IMGUI
 
 include_directories(imgui imgui-sfml imguifilesystem)
 add_library(imgui imgui/imgui.cpp imgui/imgui_draw.cpp imgui/imgui_demo.cpp imgui-sfml/imgui-SFML.cpp imguifilesystem/imguifilesystem.cpp)
+target_link_libraries(imgui sfml-graphics sfml-window sfml-system)

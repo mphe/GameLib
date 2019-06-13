@@ -2,6 +2,7 @@
 #define GAMELIB_CAMERAEVENTS_HPP
 
 #include "gamelib/core/event/Event.hpp"
+#include <string>
 
 namespace gamelib
 {
