@@ -19,6 +19,28 @@
     * remove Transform inheritance in base component classes
 * use PropComponent in QPhysics for hull
 
+## gamejam inspired
+* linked list based callback handler for in-entity events
+    * aka "signals"
+* move Component to component/ subdir
+* generic Controller class
+    * virtual handleInput()
+        * handles physical button presses
+        * writes to a bitflag member
+    * virtual inputToState()
+        * uses button bitflags to determine state
+    * virtual getState() -> int/string
+* generic Actor class
+    * takes a Controller component
+    * uses its getState() to determine correct sprite
+* return handle from EventManager->regCallback
+    * auto unregisters in destructor
+    * provides unregister method
+* sprite padding
+* entity custom names / tags
+* vibrate component
+* tracker component
+
 ## All
 
 * FPS scaling
