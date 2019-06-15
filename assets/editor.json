@@ -2,7 +2,7 @@
    "bgcolor" : [ 0, 43, 54, 0 ],
    "closebutton" : true,
    "escclose" : true,
-   "maxfps" : 0,
+   "maxfps" : 60,
    "repeatkeys" : false,
    "size" : [ 1280, 720 ],
    "title" : "Editor",
