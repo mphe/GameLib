@@ -8,7 +8,7 @@
 
 // Can be used to call the const overload from a non-const overload
 #define CALL_CONST_OVERLOAD(returntype, func, ...)    \
-const_cast<returntype*>(const_cast<   \
+const_cast<returntype>(const_cast<   \
         const typename std::remove_pointer<decltype(this)>::type*>    \
         (this)->func(__VA_ARGS__))
 

@@ -42,7 +42,7 @@ namespace gamelib
 
     Camera* CameraSystem::find(const std::string& name)
     {
-        return CALL_CONST_OVERLOAD(Camera, find, name);
+        return CALL_CONST_OVERLOAD(Camera*, find, name);
     }
 
     const Camera* CameraSystem::find(const std::string& name) const
@@ -53,7 +53,7 @@ namespace gamelib
 
     Camera* CameraSystem::get(size_t index)
     {
-        return CALL_CONST_OVERLOAD(Camera, get, index);
+        return CALL_CONST_OVERLOAD(Camera*, get, index);
     }
 
     const Camera* CameraSystem::get(size_t index) const
