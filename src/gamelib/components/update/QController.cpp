@@ -42,7 +42,7 @@ namespace gamelib
             if (input->isKeyDown(sf::Keyboard::D))
                 buttons |= input_right;
 
-            if (!input->isKeyDown(sf::Keyboard::W))
+            if (input->isKeyDown(sf::Keyboard::W))
                 buttons |= input_up;
 
             setInput(buttons);
