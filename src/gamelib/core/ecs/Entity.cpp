@@ -135,6 +135,14 @@ namespace gamelib
             }
     }
 
+    auto Entity::hasComponent(Component* comp) const -> bool
+    {
+        for (auto& i : _components)
+            if (i.ptr.get() == comp)
+                return true;
+        return false;
+    }
+
     Component* Entity::find(ID type) const
     {
         Component* ptr = nullptr;

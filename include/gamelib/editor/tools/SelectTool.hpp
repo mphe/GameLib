@@ -26,10 +26,13 @@ namespace gamelib
 
             void select(Entity::Handle enthandle);
             void select(Entity* ent);
+            void selectComponent(Component* comp);
             void select(float x, float y);
 
             auto getSelected() const -> const Entity*;
             auto getSelected()       -> Entity*;
+            auto getSelectedComponent() const -> const Component*;
+            auto getSelectedComponent()       -> Component*;
 
         public:
             bool renderBBox;
@@ -37,6 +40,7 @@ namespace gamelib
 
         private:
             Entity::Handle _selected;
+            Component* _selectedcomp;
             math::Vec2f _dragoffset;
             size_t _scaleselect;
             int _mode;

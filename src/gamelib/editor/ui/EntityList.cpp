@@ -1,8 +1,10 @@
 #include "gamelib/editor/ui/EntityList.hpp"
 #include "gamelib/imgui/buttons.hpp"
+#include "gamelib/imgui/inputs.hpp"
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/editor/tools/SelectTool.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
+#include "gamelib/core/ecs/serialization.hpp"
 #include "imgui.h"
 #include "imgui_internal.h"
 
@@ -71,62 +73,72 @@ namespace gamelib
 
     void drawEntityList(bool* open)
     {
-        SelectTool& select = EditorShared::getSelectTool();
+        auto entmgr = getSubsystem<EntityManager>();
+        if (!entmgr)
+            return;
+
         Entity::Handle current;
-        bool selectfirst = false;
+        SelectTool& select = EditorShared::getSelectTool();
 
         if (select.getSelected())
             current = select.getSelected()->getHandle();
 
-        if (ImGui::Begin("Entities", open, ImVec2(250, 285)))
+        if (ImGui::Begin("NewEntities", open, ImVec2(250, 285)))
         {
-            static char buf[256] = { 0 };
+            static ImGuiTextFilter filter;
+            filter.Draw();
 
-            if (okButton("Select"))
-                selectfirst = true;
-            ImGui::SameLine();
-            if (cancelButton("Clear"))
+            for (auto& i : *entmgr)
             {
-                memset(buf, 0, sizeof(buf));
-                ImGui::SetKeyboardFocusHere(-1);
-            }
+                auto entname = i.getName().c_str();
+                auto handle = i.getHandle();
 
-            ImGui::SameLine();
-            ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth());
-            ImGui::InputText("Filter", buf, sizeof(buf));
-            ImGui::PopItemWidth();
+                if (!filter.PassFilter(entname))
+                    continue;
 
-            if (ImGui::ListBoxHeader("##entities", ImVec2(-1, -1)))
-            {
-                auto entmgr = getSubsystem<EntityManager>();
-                if (entmgr)
+                ImGui::PushID(handle.index);
+                auto flags = current == handle ? ImGuiTreeNodeFlags_Selected : 0;
+                bool open = ImGui::TreeNodeEx(entname, flags);
+
+                if (ImGui::IsItemClicked())
+                    select.select(handle);
+
+                if (open)
                 {
-                    for (auto& i : *entmgr)
+                    for (auto& comp : i)
                     {
-                        if (strlen(buf) > 0 && i.getName().find(buf) == std::string::npos)
-                            continue;
-
-                        auto handle = i.getHandle();
-
-                        if (selectfirst)
-                        {
-                            selectfirst = false;
-                            current = handle;
-                            select.select(handle);
-                        }
-
-                        ImGui::PushID(handle.index);
-                        if (ImGui::Selectable(i.getName().c_str(), current == handle))
-                        {
-                            current = handle;
-                            select.select(handle);
-                        }
+                        ImGui::PushID(comp.ptr.get());
+                        auto name = generateName(comp.ptr->getName(), comp.id);
+                        flags = select.getSelectedComponent() == comp.ptr.get()? ImGuiTreeNodeFlags_Selected : 0;
+                        ImGui::TreeNodeEx(name.c_str(), flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Bullet);
+                        if (ImGui::IsItemClicked())
+                            select.selectComponent(comp.ptr.get());
                         ImGui::PopID();
                     }
+                    ImGui::TreePop();
                 }
-
-                ImGui::ListBoxFooter();
+                ImGui::PopID();
             }
+        }
+        ImGui::End();
+    }
+
+    void drawEntityProperties(bool* open)
+    {
+        SelectTool& select = EditorShared::getSelectTool();
+        auto ent = select.getSelected();
+
+        if (!ent)
+            return;
+
+        auto comp = select.getSelectedComponent();
+
+        if (ImGui::Begin("NewProperties", open, ImVec2(250, 285)))
+        {
+            if (comp)
+                inputComponent(*comp);
+            else
+                inputEntityProps(*ent);
         }
         ImGui::End();
     }

@@ -179,16 +179,7 @@ namespace gamelib
 
     void inputEntityProps(Entity& ent)
     {
-        // static constexpr const char* entityFlags[] { "Persistent (Unimplemented)", "Static (Unimplemented)" };
-
-        ImGui::InputText("name", const_cast<char*>(ent.getName().c_str()), ent.getName().size(), ImGuiInputTextFlags_ReadOnly);
-        ImGui::NewLine();
-
-        if (ImGui::CollapsingHeader("Geometry", ImGuiTreeNodeFlags_DefaultOpen))
-            inputTransform(ent.getTransform());
-
-        // if (ImGui::CollapsingHeader("Flags"))
-        //     inputBitflags(&ent.flags, 2, entityFlags);
+        inputEntity(ent);
 
         if (ImGui::CollapsingHeader("Components", ImGuiTreeNodeFlags_DefaultOpen))
         {
@@ -198,7 +189,6 @@ namespace gamelib
             // ImGui::SameLine();
             // ImGui::Button("Add");
 
-            ImGui::PushItemWidth(0.5 * ImGui::GetWindowContentRegionWidth());
             ent.foreach([](Component* comp) {
                 ImGui::PushID(comp);
                 if (ImGui::TreeNode(comp->getName().c_str()))
@@ -209,20 +199,35 @@ namespace gamelib
                 ImGui::PopID();
                 return true;
             });
-            ImGui::PopItemWidth();
         }
+    }
+
+    void inputEntity(Entity& ent)
+    {
+        // static constexpr const char* entityFlags[] { "Persistent (Unimplemented)", "Static (Unimplemented)" };
+        ImGui::PushItemWidth(0.5 * ImGui::GetWindowContentRegionWidth());
+
+        ImGui::InputText("name", const_cast<char*>(ent.getName().c_str()), ent.getName().size(), ImGuiInputTextFlags_ReadOnly);
+        ImGui::NewLine();
+
+        if (ImGui::CollapsingHeader("Geometry", ImGuiTreeNodeFlags_DefaultOpen))
+            inputTransform(ent.getTransform());
+
+        // if (ImGui::CollapsingHeader("Flags"))
+        //     inputBitflags(&ent.flags, 2, entityFlags);
+        ImGui::PopItemWidth();
     }
 
     void inputComponent(Component& comp)
     {
+        ImGui::PushItemWidth(0.5 * ImGui::GetWindowContentRegionWidth());
         if (comp.getTransform())
-            if (ImGui::TreeNodeEx("Geometry", ImGuiTreeNodeFlags_DefaultOpen))
-            {
+            if (ImGui::CollapsingHeader("Geometry", ImGuiTreeNodeFlags_DefaultOpen))
                 inputTransform(*comp.getTransform());
-                ImGui::TreePop();
-            }
 
-        inputProperties(comp.getProperties());
+        if (ImGui::CollapsingHeader("Properties", ImGuiTreeNodeFlags_DefaultOpen))
+            inputProperties(comp.getProperties());
+        ImGui::PopItemWidth();
     }
 
     bool inputComponentSelect(const std::string& name, Component** ptr, const Entity& ent, const Component* self, unsigned int filter, int numfilters, const char* const* namefilters)

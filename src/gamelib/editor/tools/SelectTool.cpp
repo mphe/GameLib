@@ -9,6 +9,7 @@
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/editor/events/OnSelect.hpp"
 #include "gamelib/editor/tools/ToolUtils.hpp"
+#include "gamelib/utils/utils.hpp"
 #include "imgui.h"
 
 namespace gamelib
@@ -16,6 +17,7 @@ namespace gamelib
     SelectTool::SelectTool() :
         renderBBox(true),
         renderAllBoxes(false),
+        _selectedcomp(nullptr),
         _scaleselect(-1),
         _mode(mode_move),
         _cloned(false),
@@ -214,6 +216,7 @@ namespace gamelib
             LOG("Selection cleared");
         }
 
+        _selectedcomp = nullptr;
         EventManager::getActive()->triggerEvent(OnSelectEvent::create(old, _selected));
     }
 
@@ -223,6 +226,15 @@ namespace gamelib
             select(ent->getHandle());
         else
             select(Entity::Handle());
+    }
+
+    void SelectTool::selectComponent(Component* comp)
+    {
+        if (_selectedcomp == comp)
+            return;
+        if (comp)
+            select(comp->getEntity());
+        _selectedcomp = comp;
     }
 
     void SelectTool::select(float x, float y)
@@ -251,5 +263,18 @@ namespace gamelib
     Entity* SelectTool::getSelected()
     {
         return getEntity(_selected);
+    }
+
+    auto SelectTool::getSelectedComponent() const -> const Component*
+    {
+        auto ent = getEntity(_selected);
+        if (!ent || ent->hasComponent(_selectedcomp))
+            return _selectedcomp;
+        return nullptr;
+    }
+
+    auto SelectTool::getSelectedComponent() -> Component*
+    {
+        return CALL_CONST_OVERLOAD(Component*, getSelectedComponent);
     }
 }

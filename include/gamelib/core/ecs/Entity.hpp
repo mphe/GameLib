@@ -69,6 +69,7 @@ namespace gamelib
 
             auto add(ComponentPtr comp)              -> Component*;
             auto remove(Component* comp)             -> void;
+            auto hasComponent(Component* comp) const -> bool;
             auto find(ID type) const                 -> Component*;
             auto find(const std::string& name) const -> Component*;
             auto size() const                        -> size_t;

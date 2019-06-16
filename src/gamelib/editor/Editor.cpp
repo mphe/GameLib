@@ -401,6 +401,9 @@ namespace gamelib
             if (gamecfg)
                 drawGameConfig(&gamecfg);
 
+            if (entprops)
+                drawEntityProperties(&entprops);
+
             _resviewer.draw();
             _overlay.drawGui();
 
@@ -415,14 +418,6 @@ namespace gamelib
 
                     _currenttool->drawGui();
                 }
-                ImGui::End();
-            }
-
-            auto selected = getSelectTool().getSelected();
-            if (entprops && selected)
-            {
-                if (ImGui::Begin("Properties", &entprops))
-                    inputEntityProps(*selected);
                 ImGui::End();
             }
         }
