@@ -96,6 +96,12 @@ namespace gamelib
                 auto evmgr = getSubsystem<EventManager>();
                 if (evmgr)
                     evmgr->triggerEvent(SFMLEvent::create(ev));
+
+                if (closebutton && ev.type == sf::Event::Closed)
+                {
+                    close();
+                    return;
+                }
             }
 
             if (_window.hasFocus() || !unfocusPause)
