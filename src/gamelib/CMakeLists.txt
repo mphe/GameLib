@@ -50,6 +50,7 @@ set(GAMELIB_SOURCES
     utils/string.cpp
     utils/aspectratio.cpp
     utils/Timer.cpp
+    utils/Signal.cpp
 
     json/json-file.cpp
     json/JsonSerializer.cpp

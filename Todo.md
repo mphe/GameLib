@@ -13,8 +13,6 @@
 * use PropComponent in QPhysics for hull
 
 ## gamejam inspired
-* linked list based callback handler for in-entity events
-    * aka "signals"
 * move Component to component/ subdir
 * generic Controller class
     * virtual handleInput()

@@ -29,6 +29,7 @@ gen_test_full(entityfactory entityfactory.cpp)
 gen_test_full(entityserialization entityserialization.cpp)
 gen_test_full(idcounter idcounter.cpp)
 gen_test_full(rendersystem rendersystem.cpp)
+gen_test_full(signal signal.cpp)
 
 if (GAMELIB_BUILD_TOOLS)
     find_program(BASH_PROGRAM bash)
