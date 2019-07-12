@@ -4,17 +4,13 @@
 
 using namespace gamelib;
 
-class Foo : public IDCounter<Foo>
-{
-    public:
-        using IDCounter::_invalidateID;
-};
+class Foo : public IDCounter<Foo> { };
 
 class Bar : public IDCounter<Bar, 10> { };
 class Global1 : public GlobalIDCounter { };
 class Global2 : public GlobalIDCounter { };
 
-int main(int argc, char *argv[])
+int main()
 {
     Foo foos[3];
     for (size_t i = 0; i < 3; ++i)
@@ -24,7 +20,7 @@ int main(int argc, char *argv[])
     for (size_t i = 0; i < 3; ++i)
         assert(bars[i].getID() == Bar::IDOffset + i && "Wrong ID");
 
-    foos[0]._invalidateID();
+    foos[0].invalidateID();
     assert(foos[0].getID() == invalidID && "Wrong ID");
 
     Global1 globals[3];

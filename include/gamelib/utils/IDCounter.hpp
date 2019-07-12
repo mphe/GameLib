@@ -23,9 +23,9 @@ namespace gamelib
             virtual auto loadFromJson(const Json::Value& node) -> bool override;
             virtual auto writeToJson(Json::Value& node) const  -> void override;
 
+            auto invalidateID() -> void;
+
         protected:
-            // Maybe make this public if really needed, but seems dangerous to do so
-            auto _invalidateID() -> void;
             static auto _resetCounter() -> void;
 
         private:
@@ -64,7 +64,7 @@ namespace gamelib
     }
 
     template <typename T, ID offset>
-    void IDCounter<T, offset>::_invalidateID()
+    void IDCounter<T, offset>::invalidateID()
     {
         _id = invalidID;
     }
