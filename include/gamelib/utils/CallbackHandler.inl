@@ -6,7 +6,7 @@ namespace gamelib
     template <class Ret, class... Args>
     void CallbackHandler<Ret, Args...>::regCallback(CallbackFunction callback, void* me)
     {
-        _callbacks.emplace_back(CallbackInfo(me, callback));
+        _callbacks.emplace_back(me, callback);
     };
 
     template <class Ret, class... Args>
@@ -14,26 +14,17 @@ namespace gamelib
     {
         auto it = std::find(_callbacks.begin(), _callbacks.end(), CallbackInfo(me, callback));
         if (it != _callbacks.end())
-            it->remove = true;
+            it->callback = nullptr;
     };
 
     template <class Ret, class... Args>
     template <class... Args2>
     void CallbackHandler<Ret, Args...>::call(Args2&&... args)
     {
-        // Don't use iterators here, you need to maintain size and position yourself
-        // otherwise problems could occur when new elements are added.
-        for (size_t i = 0, size = _callbacks.size(); i < size; ++i) // save size because it could change when new elements are added
-        {
-            CallbackInfo* info = &_callbacks[i];
-            while (info->remove)
-            {
-                _callbacks.erase(_callbacks.begin() + i);
-                if (i >= --size) // end of list reached (new elements might have been added, but they must not be called)
-                    return;
-            }
-            info->callback(info->me, std::forward<Args2>(args)...);
-        }
+        for (auto& info : _callbacks)
+            if (info)
+                info.callback(info.me, std::forward<Args2>(args)...);
+        clean();
     };
 
     template <class Ret, class... Args>
@@ -45,12 +36,8 @@ namespace gamelib
     template <class Ret, class... Args>
     void CallbackHandler<Ret, Args...>::clean()
     {
-        for (auto i = _callbacks.begin(); i != _callbacks.end(); ++i)
-        {
-            while (i->remove)
-                if ((i = _callbacks.erase(i)) == _callbacks.end())
-                    return;
-        }
+        std::remove_if(_callbacks.begin(), _callbacks.end(),
+                [](const CallbackInfo& info) { return info; });
     }
 
     template <class Ret, class... Args>

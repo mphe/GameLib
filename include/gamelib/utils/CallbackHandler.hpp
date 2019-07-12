@@ -18,17 +18,20 @@ namespace gamelib
             {
                 void* me;
                 CallbackFunction callback;
-                bool remove;
 
-                CallbackInfo(void* me_, CallbackFunction callback_) :
+                inline CallbackInfo(void* me_, CallbackFunction callback_) :
                     me(me_),
-                    callback(callback_),
-                    remove(false)
+                    callback(callback_)
                 {}
 
-                bool operator==(const CallbackInfo& ci) const
+                inline bool operator==(const CallbackInfo& ci) const
                 {
-                    return me == ci.me && callback == ci.callback && remove == ci.remove;
+                    return me == ci.me && callback == ci.callback;
+                }
+
+                inline explicit operator bool() const
+                {
+                    return callback;
                 }
             };
 
@@ -48,7 +51,6 @@ namespace gamelib
             // DON'T CALL THIS INSIDE CALL() OR A KITTEN WILL DIE AND SEGFAULTS MAY RAIN UPON YOU!
             void clean();
 
-            // Might not always report the correct size, because there could still be entrys marked for removal, that haven't been removed yet.
             size_t size() const;
 
         private:
