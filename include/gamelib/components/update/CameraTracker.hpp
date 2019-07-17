@@ -3,6 +3,7 @@
 
 #include "gamelib/components/UpdateComponent.hpp"
 #include "gamelib/core/geometry/Transformable.hpp"
+#include "gamelib/core/event/EventHandle.hpp"
 
 namespace gamelib
 {
@@ -31,7 +32,6 @@ namespace gamelib
 
         protected:
             auto _init() -> bool final override;
-            auto _quit() -> void final override;
             auto _onChanged(const sf::Transform& old) -> void final override;
 
         public:
@@ -43,6 +43,7 @@ namespace gamelib
             bool centertrack;
 
         private:
+            EventHandle _triggerShake;
             float _secondsleft;
             bool _shake;
     };

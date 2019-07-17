@@ -38,12 +38,13 @@ namespace gamelib
         }
     }
 
-    void EventManager::regCallback(EventID id, void (*callback)(void*, EventPtr), void* data)
+    EventHandle EventManager::regCallback(EventID id, void (*callback)(void*, EventPtr), void* data)
     {
         _callbacks[id].regCallback(callback, data);
+        return EventHandle(*this, id, (void*)callback, data);
     }
 
-    void EventManager::unregCallback(EventID id, void (*callback)(void*, EventPtr), void* data)
+    void EventManager::_unregCallback(EventID id, void (*callback)(void*, EventPtr), void* data)
     {
         auto it = _callbacks.find(id);
         if (it == _callbacks.end())
@@ -55,10 +56,16 @@ namespace gamelib
             _callbacks.erase(it);
     }
 
-    void EventManager::clear()
+    void EventManager::clearQueue()
     {
-        _callbacks.clear();
         while (!_evqueue.empty())
             _evqueue.pop();
     }
+
+    // void EventManager::clear()
+    // {
+    //     _callbacks.clear();
+    //     while (!_evqueue.empty())
+    //         _evqueue.pop();
+    // }
 }

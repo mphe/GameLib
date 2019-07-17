@@ -70,8 +70,7 @@ namespace gamelib
 
         ImGui::SFML::Init(game->getWindow());
 
-        auto evmgr = getSubsystem<EventManager>();
-        evmgr->regCallback<SFMLEvent>(_eventCallback, this);
+        _sfmlEvent = registerEvent<SFMLEvent>(_eventCallback, this);
 
         _updateRunFlags();
 
@@ -89,8 +88,7 @@ namespace gamelib
     {
         _resviewer.close();
 
-        auto evmgr = getSubsystem<EventManager>();
-        evmgr->unregCallback<SFMLEvent>(_eventCallback, this);
+        _sfmlEvent.unregister();
 
         _currenttool = nullptr;
         for (auto& i : _tools)

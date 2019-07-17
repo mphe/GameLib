@@ -4,7 +4,8 @@
 #include <queue>
 #include <unordered_map>
 #include "Event.hpp"
-#include "CallbackHandler.hpp"
+#include "EventHandle.hpp"
+#include "gamelib/utils/CallbackHandler.hpp"
 #include "gamelib/core/Subsystem.hpp"
 
 namespace gamelib
@@ -17,47 +18,41 @@ namespace gamelib
     void triggerEvent(EventPtr event);
     void queueEvent(EventPtr event);
 
+    // template <typename T, typename U,
+    //          typename = decltype(std::static_pointer_cast<U>(std::declval<EventPtr>()))>
+    // using NiceEventCallback = void (*)(T*, EventPtr);
 
     class EventManager : public Subsystem<EventManager>
     {
+        friend class EventHandle;
+
         public:
             ASSIGN_NAMETAG("EventManager");
 
         public:
             template <class T>
-            void regCallback(EventID id, NiceEventCallback<T> callback, T* data)
+            __attribute__((warn_unused_result))
+            auto regCallback(EventID id, NiceEventCallback<T> callback, T* data) -> EventHandle
             {
-                regCallback(id, (EventCallback)callback, data);
-            }
-
-            template <class T>
-            void unregCallback(EventID id, NiceEventCallback<T> callback, T* data)
-            {
-                unregCallback(id, (EventCallback)callback, data);
+                return regCallback(id, (EventCallback)callback, data);
             }
 
             template <class E, class T>
-            void regCallback(NiceEventCallback<T> callback, T* data)
+            __attribute__((warn_unused_result))
+            auto regCallback(NiceEventCallback<T> callback, T* data) -> EventHandle
             {
                 static_assert(has_identifier<E>::value, "Only works for types derived from gamelib::Identifier");
-                regCallback(E::id, callback, data);
+                return regCallback(E::id, callback, data);
             }
 
-            template <class E, class T>
-            void unregCallback(NiceEventCallback<T> callback, T* data)
-            {
-                static_assert(has_identifier<E>::value, "Only works for types derived from gamelib::Identifier");
-                unregCallback(E::id, callback, data);
-            }
+            __attribute__((warn_unused_result))
+            auto regCallback(EventID id, void (*callback)(void*, EventPtr), void* data) -> EventHandle;
 
-            void regCallback(EventID id, void (*callback)(void*, EventPtr), void* data);
-            void unregCallback(EventID id, void (*callback)(void*, EventPtr), void* data);
-
-            void triggerEvent(EventPtr event);
-            void queueEvent(EventPtr event);
+            auto triggerEvent(EventPtr event) -> void;
+            auto queueEvent(EventPtr event) -> void;
 
             template <typename T, typename... Args>
-            void triggerEvent(Args&&... args)
+            auto triggerEvent(Args&&... args) -> void
             {
                 static_assert(std::is_base_of<BaseEvent, T>::value, "T must be an Event");
                 EventPtr ptr(new T(std::forward<Args>(args)...));
@@ -65,16 +60,40 @@ namespace gamelib
             }
 
             template <typename T, typename... Args>
-            void queueEvent(Args&&... args)
+            auto queueEvent(Args&&... args) -> void
             {
                 static_assert(std::is_base_of<BaseEvent, T>::value, "T must be an Event");
                 EventPtr ptr(new T(std::forward<Args>(args)...));
                 queueEvent(ptr);
             }
 
-            void update();
+            auto update() -> void;
 
-            void clear();
+            auto clearQueue() -> void;
+
+            // Disabled because it would bypass all existing EventHandles,
+            // resulting in possible unexpected eventhandler deregistrations
+            // when a, now invalid, handle gets unregistered and unregisters
+            // a new handler.
+            // auto clear() -> void;
+
+            // template <class T>
+            // auto unregCallback(EventID id, NiceEventCallback<T> callback, T* data) -> void
+            // {
+            //     unregCallback(id, (EventCallback)callback, data);
+            // }
+            //
+            // template <class E, class T>
+            // auto unregCallback(NiceEventCallback<T> callback, T* data) -> void
+            // {
+            //     static_assert(has_identifier<E>::value, "Only works for types derived from gamelib::Identifier");
+            //     unregCallback(E::id, callback, data);
+            // }
+            //
+            // auto unregCallback(EventID id, void (*callback)(void*, EventPtr), void* data) -> void;
+
+            protected:
+                auto _unregCallback(EventID id, void (*callback)(void*, EventPtr), void* data) -> void;
 
         private:
             std::queue<EventPtr> _evqueue;
@@ -83,19 +102,13 @@ namespace gamelib
 
 
     template <typename E, typename T>
-    void registerEvent(NiceEventCallback<T> callback, T* data)
+    __attribute__((warn_unused_result))
+    EventHandle registerEvent(NiceEventCallback<T> callback, T* data)
     {
         auto evmgr = EventManager::getActive();
         if (evmgr)
-            evmgr->regCallback<E>(callback, data);
-    }
-
-    template <typename E, typename T>
-    void unregisterEvent(NiceEventCallback<T> callback, T* data)
-    {
-        auto evmgr = EventManager::getActive();
-        if (evmgr)
-            evmgr->unregCallback<E>(callback, data);
+            return evmgr->regCallback<E>(callback, data);
+        return EventHandle();
     }
 
     template <typename T, typename... Args>
@@ -113,6 +126,14 @@ namespace gamelib
         if (evmgr)
             evmgr->queueEvent<T>(std::forward<Args>(args)...);
     }
+
+    // template <typename E, typename T>
+    // void unregisterEvent(NiceEventCallback<T> callback, T* data)
+    // {
+    //     auto evmgr = EventManager::getActive();
+    //     if (evmgr)
+    //         evmgr->unregCallback<E>(callback, data);
+    // }
 }
 
 #endif

@@ -9,6 +9,9 @@ namespace gamelib
 {
     void TriggerCameraShake_Handler(CameraTracker* self, EventPtr event)
     {
+        if (!self->isInitialized())
+            return;
+
         auto ev = event->get<TriggerCameraShake>();
 
         auto cam = self->getCamera();
@@ -125,15 +128,9 @@ namespace gamelib
         if (cam)
             size = cam->size;
 
-        registerEvent<TriggerCameraShake>(TriggerCameraShake_Handler, this);
+        _triggerShake = registerEvent<TriggerCameraShake>(TriggerCameraShake_Handler, this);
 
         return true;
-    }
-
-    auto CameraTracker::_quit() -> void
-    {
-        UpdateComponent::_quit();
-        unregisterEvent<TriggerCameraShake>(TriggerCameraShake_Handler, this);
     }
 
     auto CameraTracker::_onChanged(const sf::Transform& old) -> void

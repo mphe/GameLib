@@ -61,7 +61,7 @@ namespace gamelib
         updatesystem.destroy();
         resmgr.clear();
         entfactory.clear();
-        evmgr.clear();
+        // evmgr.clear();
         inputsys.beginFrame();
     }
 

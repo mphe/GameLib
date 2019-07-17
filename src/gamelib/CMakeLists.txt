@@ -75,6 +75,7 @@ set(GAMELIB_SOURCES
     core/input/InputSystem.cpp
     core/Game.cpp
     core/event/EventManager.cpp
+    core/event/EventHandle.cpp
     core/sprite/AnimatedSprite.cpp
     core/sprite/SpriteData.cpp
     core/geometry/CollisionSystem.cpp
@@ -146,14 +147,14 @@ if (GAMELIB_BUILD_EDITOR)
 
     if (NOT TARGET run)
         add_custom_target(run
-            COMMAND editor assets/testmap.json
+            COMMAND editor assets/newtestmap.json
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         )
     endif()
 
     if (NOT TARGET gdbrun)
         add_custom_target(gdbrun
-            COMMAND gdb --args $<TARGET_FILE:editor> assets/testmap.json
+            COMMAND gdb --args $<TARGET_FILE:editor> assets/newtestmap.json
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         )
     endif()

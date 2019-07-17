@@ -7,7 +7,7 @@
 #include "gamelib/core/GameState.hpp"
 #include "gamelib/core/rendering/FreeCam.hpp"
 #include "gamelib/core/rendering/Camera.hpp"
-#include "gamelib/core/event/Event.hpp"
+#include "gamelib/core/event/EventHandle.hpp"
 #include "ui/Grid.hpp"
 #include "ui/ResourceViewer.hpp"
 #include "gamelib/editor/ui/Overlay.hpp"
@@ -84,6 +84,8 @@ namespace gamelib
 
             bool _run;
             bool _hidegui;
+
+            EventHandle _sfmlEvent;
     };
 }
 

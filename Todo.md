@@ -24,13 +24,11 @@
 * generic Actor class
     * takes a Controller component
     * uses its getState() to determine correct sprite
-* return handle from EventManager->regCallback
-    * auto unregisters in destructor
-    * provides unregister method
 * sprite padding
 * entity custom names / tags
 * vibrate component
 * tracker component
+* sound system
 
 ## All
 
