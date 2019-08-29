@@ -1,17 +1,9 @@
 {
-    "searchpath": [ "assets" ],
+    "searchpath": [
+        "assets",
+        "assets/entities"
+    ],
     "forcereload": false,
-    "once": {
-        "entities": [
-            "brush_line.ent",
-            "brush_polygon.ent",
-            "brush_sprite.ent",
-            "brush_rect.ent",
-            "player.ent",
-            "globalconfig.ent",
-            "box.ent"
-        ]
-    },
     "preload": {
         "tex" : [
             "dirt.png",

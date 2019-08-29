@@ -1,6 +1,7 @@
 #include "gamelib/core/ecs/EntityFactory.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
+#include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/utils/log.hpp"
 
 namespace gamelib
@@ -163,7 +164,20 @@ namespace gamelib
     auto EntityFactory::_findTemplate(const std::string& name) -> const Json::Value*
     {
         auto found = findEntity(name);
-        // TODO: query resource manager
+        if (!found)
+        {
+            auto resmgr = ResourceManager::getActive();
+            if (resmgr)
+            {
+                // loadOnce, because it auto-registers here.
+                // Won't work if EntityFactory::getActive() returns another factory than this.
+                auto handle = resmgr->loadOnce(name + ".ent");
+                if (!handle)
+                    handle = resmgr->loadOnce(name + ".entity");
+                if (handle)
+                    found = findEntity(name);
+            }
+        }
         return found;
     }
 }
