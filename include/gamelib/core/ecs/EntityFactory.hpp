@@ -10,8 +10,8 @@
 
 namespace gamelib
 {
-    auto createEntity(const std::string& name)                   -> Entity::Handle;
-    auto createEntity(const std::string& name, float x, float y) -> Entity::Handle;
+    auto createEntity(const std::string& name)                   -> EntityHandle;
+    auto createEntity(const std::string& name, float x, float y) -> EntityHandle;
 
 
     class EntityFactory : public Subsystem<EntityFactory> //: public JsonSerializer
@@ -24,13 +24,14 @@ namespace gamelib
         public:
             EntityFactory();
 
-            auto createWithDelta(const std::string& name, const Json::Value& node)              -> Entity::Handle;
-            auto createWithDelta(const std::string& name, const Json::Value& node, Entity* ent) -> void;
-            auto createFromJson(const Json::Value& node)              -> Entity::Handle;
-            auto createFromJson(const Json::Value& node, Entity* ent) -> void;
-            auto create(const std::string& name)                      -> Entity::Handle;
-            auto create(const std::string& name, Entity* ent)         -> void;
-            auto createComponent(const std::string& name)             -> ComponentPtr;
+            auto createWithDelta(const std::string& name, const Json::Value& node)              -> EntityHandle;
+            auto createWithDelta(const std::string& name, const Json::Value& node, Entity* ent) -> bool;
+            auto createFromJson(const Json::Value& node)              -> EntityHandle;
+            auto createFromJson(const Json::Value& node, Entity* ent) -> bool;
+            auto create(const std::string& name)                      -> EntityHandle;
+            auto create(const std::string& name, Entity* ent)         -> bool;
+
+            auto createComponent(const std::string& name)                                  -> ComponentPtr;
             auto createComponentFromJson(const std::string& name, const Json::Value& node) -> ComponentPtr;
 
             auto add(const Json::Value& cfg)                          -> void;
@@ -42,7 +43,7 @@ namespace gamelib
             auto clear()       -> void;
             auto size() const  -> size_t;
 
-            auto findEntity(const std::string& name) -> const Json::Value*;
+            auto findEntity(const std::string& name) const -> const Json::Value*;
 
             template <typename T>
             void addComponent(const std::string& name)
@@ -67,6 +68,9 @@ namespace gamelib
                     if (callback(i.first))
                         break;
             }
+
+        private:
+            auto _findTemplate(const std::string& name) -> const Json::Value*;
 
         private:
             std::unordered_map<std::string, Json::Value> _entdata;

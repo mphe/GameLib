@@ -1,5 +1,6 @@
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
+#include "gamelib/core/ecs/EntityManager.hpp"
 #include <cassert>
 
 using namespace gamelib;
@@ -86,6 +87,7 @@ int main()
         }", shortenedres2);
 
 
+    EntityManager manager;
     EntityFactory factory;
     factory.addComponent<ComponentA>("ComponentA");
     factory.addComponent<ComponentB>("ComponentB");
@@ -94,8 +96,6 @@ int main()
     Entity entity;
     factory.create("testentity", &entity);
     testEntity(entity);
-
-    factory.removeEntity("testentity");
 
     entity.destroy();
     factory.createFromJson(res, &entity);
@@ -108,6 +108,25 @@ int main()
     entity.destroy();
     factory.createFromJson(shortenedres2, &entity);
     // no special tests, just to see if it handles incomplete configs correctly
+
+    entity.destroy();
+
+    // Check error handling
+    assert(!factory.create("asdaf", &entity) && "should return nullptr");
+
+    // test with EntityManager
+    auto handle = factory.create("testentity");
+    assert(handle && "handle should be valid");
+    testEntity(*getEntity(handle));
+    manager.destroy(handle);
+
+    factory.removeEntity("testentity");
+
+    handle = factory.create("testentity");
+    assert(!handle && "handle should be invalid");
+
+    handle = factory.create("asdaf");
+    assert(!handle && "handle should be invalid");
 
     return 0;
 }

@@ -5,15 +5,16 @@
 
 namespace gamelib
 {
-    Entity::Handle createEntity(const std::string& name)
+    EntityHandle createEntity(const std::string& name)
     {
         return getSubsystem<EntityFactory>()->create(name);
     }
 
-    Entity::Handle createEntity(const std::string& name, float x, float y)
+    EntityHandle createEntity(const std::string& name, float x, float y)
     {
         auto h = createEntity(name);
-        getEntity(h)->getTransform().setPosition(x, y);
+        if (h)
+            getEntity(h)->getTransform().setPosition(x, y);
         return h;
     }
 
@@ -21,55 +22,74 @@ namespace gamelib
     { }
 
 
-    Entity::Handle EntityFactory::createWithDelta(const std::string& name, const Json::Value& node)
+    EntityHandle EntityFactory::createWithDelta(const std::string& name, const Json::Value& node)
     {
-        auto handle = getSubsystem<EntityManager>()->add();
-        createWithDelta(name, node, getEntity(handle));
+        auto entmgr = getSubsystem<EntityManager>();
+        auto handle = entmgr->add();
+
+        if (!createWithDelta(name, node, getEntity(handle)))
+        {
+            entmgr->destroy(handle);
+            handle.reset();
+        }
+
         return handle;
     }
 
-    void EntityFactory::createWithDelta(const std::string& name, const Json::Value& node, Entity* ent)
+    bool EntityFactory::createWithDelta(const std::string& name, const Json::Value& node, Entity* ent)
     {
         // Possible segfaults when EntityManager reallocates and
         // the given ent pointer becomes invalid.
         // See also note in create(const Json::Value&).
-        create(name, ent);
-        extendFromJson(node, *ent);
+        if (create(name, ent) && extendFromJson(node, *ent))
+            return true;
+        return false;
     }
 
 
-    Entity::Handle EntityFactory::create(const std::string& name)
+    EntityHandle EntityFactory::create(const std::string& name)
     {
-        assert(_entdata.find(name) != _entdata.end());
-        return createFromJson(_entdata.find(name)->second);
+        auto found = _findTemplate(name);
+        if (found)
+            return createFromJson(*found);
+        return EntityHandle();
     }
 
-    Entity::Handle EntityFactory::createFromJson(const Json::Value& node)
+    bool EntityFactory::create(const std::string& name, Entity* ent)
+    {
+        auto found = _findTemplate(name);
+        if (found)
+            return createFromJson(*found, ent);
+        return false;
+    }
+
+    EntityHandle EntityFactory::createFromJson(const Json::Value& node)
     {
         // NOTE: this could go wrong when the EntityManager needs to reallocate
         //       during the creation process, for example when a component
         //       creates new entities.
         //       In that case, creating entities during component initialization
         //       is not supported.
-        auto handle = getSubsystem<EntityManager>()->add();
-        createFromJson(node, getEntity(handle));
+        auto entmgr = getSubsystem<EntityManager>();
+        auto handle = entmgr->add();
+
+        if (!createFromJson(node, getEntity(handle)))
+        {
+            entmgr->destroy(handle);
+            handle.reset();
+        }
         return handle;
     }
 
-    void EntityFactory::create(const std::string& name, Entity* ent)
+    bool EntityFactory::createFromJson(const Json::Value& node, Entity* ent)
     {
-        assert(_entdata.find(name) != _entdata.end());
-        createFromJson(_entdata.find(name)->second, ent);
-    }
-
-    void EntityFactory::createFromJson(const Json::Value& node, Entity* ent)
-    {
+        assert(ent && "ent is null");
         // Possible segfaults when EntityManager reallocates and
         // the given ent pointer becomes invalid.
         // See also note in create(const Json::Value&).
-        assert(ent);
-        loadFromJson(node, *ent);
+        return loadFromJson(node, *ent);
     }
+
 
     ComponentPtr EntityFactory::createComponent(const std::string& name)
     {
@@ -132,11 +152,18 @@ namespace gamelib
         return _entdata.size();
     }
 
-    const Json::Value* EntityFactory::findEntity(const std::string& name)
+    const Json::Value* EntityFactory::findEntity(const std::string& name) const
     {
         auto it = _entdata.find(name);
         if (it != _entdata.end())
             return &it->second;
         return nullptr;
+    }
+
+    auto EntityFactory::_findTemplate(const std::string& name) -> const Json::Value*
+    {
+        auto found = findEntity(name);
+        // TODO: query resource manager
+        return found;
     }
 }

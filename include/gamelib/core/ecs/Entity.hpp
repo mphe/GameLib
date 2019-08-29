@@ -35,6 +35,8 @@ namespace gamelib
 
     typedef std::unique_ptr<Component> ComponentPtr;
 
+    typedef SlotKeyShort EntityHandle;
+
     class Entity
     {
         friend class EntityManager;
@@ -47,7 +49,7 @@ namespace gamelib
             };
 
         public:
-            typedef SlotKeyShort Handle;
+            typedef EntityHandle Handle;    // for backwards compatibility
             typedef std::vector<ComponentData> ComponentList;
 
         public:
