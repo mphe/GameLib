@@ -169,11 +169,11 @@ namespace gamelib
             auto resmgr = ResourceManager::getActive();
             if (resmgr)
             {
-                // loadOnce, because it auto-registers here.
+                // If found, the entity autoregisters at the factory.
                 // Won't work if EntityFactory::getActive() returns another factory than this.
-                auto handle = resmgr->loadOnce(name + ".ent");
+                auto handle = resmgr->getOnce(name + ".ent");
                 if (!handle)
-                    handle = resmgr->loadOnce(name + ".entity");
+                    handle = resmgr->getOnce(name + ".entity");
                 if (handle)
                     found = findEntity(name);
             }
