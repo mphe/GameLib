@@ -68,8 +68,8 @@ namespace gamelib
 
     void Engine::update(float elapsed)
     {
-        updatesystem.update(elapsed);
         camsystem.update(elapsed);
+        updatesystem.update(elapsed);
         evmgr.update();
     }
 
