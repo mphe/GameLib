@@ -9,7 +9,6 @@
 #include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
 #include "gamelib/core/event/EventManager.hpp"
-#include "gamelib/events/SFMLEvent.hpp"
 #include "gamelib/editor/tools/SpriteTool.hpp"
 #include "gamelib/editor/tools/BrushTool.hpp"
 #include "gamelib/editor/tools/VertexTool.hpp"
@@ -23,7 +22,7 @@
 #include "gamelib/editor/ui/EntityList.hpp"
 #include "gamelib/editor/ui/GlobalGameConfig.hpp"
 #include "gamelib/editor/EditorShared.hpp"
-#include "imgui-SFML.h"
+#include "imgui.h"
 
 namespace gamelib
 {
@@ -68,10 +67,6 @@ namespace gamelib
 
         _cam.loadFromFile("assets/editorcam.json");
 
-        ImGui::SFML::Init(game->getWindow());
-
-        _sfmlEvent = registerEvent<SFMLEvent>(_eventCallback, this);
-
         _updateRunFlags();
 
         _tools[ToolSelect].reset(new SelectTool());
@@ -94,7 +89,6 @@ namespace gamelib
         for (auto& i : _tools)
             i.reset();
 
-        ImGui::SFML::Shutdown();
         LOG_DEBUG("Editor unloaded");
     }
 
@@ -113,15 +107,10 @@ namespace gamelib
             _updateRunFlags();
         }
 
-        ImGui::SFML::Update(getSubsystem<Game>()->getWindow(), sf::seconds(elapsed));
         _overlay.drawDebugOverlay();
 
         if (!_run || !_hidegui)
-        {
-            input->markConsumed(ImGui::GetIO().WantCaptureKeyboard,
-                                ImGui::GetIO().WantCaptureMouse);
             _drawGui();
-        }
 
         if (!_run)
         {
@@ -167,9 +156,6 @@ namespace gamelib
 
             _overlay.render(target);
         }
-
-        ImGui::SFML::Render(target);
-        ImGui::Render();
     }
 
 
@@ -246,12 +232,6 @@ namespace gamelib
         }
     }
 
-
-    void Editor::_eventCallback(Editor* self, EventPtr ev)
-    {
-        sf::Event& sfev = ev->get<SFMLEvent>()->ev;
-        ImGui::SFML::ProcessEvent(sfev);
-    }
 
     void Editor::_drawGui()
     {

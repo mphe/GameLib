@@ -2,19 +2,25 @@
 #include "gamelib/core/Game.hpp"
 #include "gamelib/editor/Editor.hpp"
 #include <cstring>
+#include "imgui.h"
 
 using namespace gamelib;
 
 int main(int argc, char *argv[])
 {
     Game game;
-    GameStatePtr engineState(new Engine(false));
-    auto engine = static_cast<Engine*>(engineState.get());
-
-    engine->resmgr.loadFromFile("assets/res.json");
 
     game.loadFromFile("assets/editor.json");
     game.init();
+
+    ImGui::GetStyle().WindowBorderSize = 0;
+    ImGui::GetStyle().WindowRounding = 0;
+    ImGui::StyleColorsClassic();
+
+    GameStatePtr engineState(new Engine(false));
+    auto engine = static_cast<Engine*>(engineState.get());
+    engine->resmgr.loadFromFile("assets/res.json");
+
     game.pushState(std::move(engineState));
     game.pushState(GameStatePtr(new Editor()));
 

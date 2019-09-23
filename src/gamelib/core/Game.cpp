@@ -6,6 +6,8 @@
 #include "gamelib/core/event/EventManager.hpp"
 #include "gamelib/events/SFMLEvent.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
+#include "imgui-SFML.h"
+#include "imgui.h"
 
 namespace gamelib
 {
@@ -21,7 +23,8 @@ namespace gamelib
         _maxfps(60),
         _title("Unnamed Game"),
         _repeatkeys(false),
-        _vsync(true)
+        _vsync(true),
+        _initialized(false)
     {
         auto setSize = +[](const math::Vec2i* val, Game* self) {
             self->resize(sf::Vector2u(val->x, val->y));
@@ -71,11 +74,27 @@ namespace gamelib
         _window.setFramerateLimit(_maxfps);
         _window.setVerticalSyncEnabled(_vsync);
         _window.setKeyRepeatEnabled(_repeatkeys);
+
+        ImGui::SFML::Init(_window);
+
+        _initialized = true;
+
         return true;
+    }
+
+    auto Game::isInitialized() const -> bool
+    {
+        return _initialized;
     }
 
     void Game::run()
     {
+        if (!isInitialized())
+        {
+            LOG_ERROR("Game is not initialized");
+            return;
+        }
+
         sf::Clock clock, detailclock;
         sf::Event ev;
 
@@ -93,6 +112,10 @@ namespace gamelib
                 if (inputsys)
                     inputsys->process(ev);
 
+                ImGui::SFML::ProcessEvent(ev);
+
+                // TODO: clear keyboard
+
                 auto evmgr = getSubsystem<EventManager>();
                 if (evmgr)
                     evmgr->triggerEvent(SFMLEvent::create(ev));
@@ -106,6 +129,8 @@ namespace gamelib
 
             if (_window.hasFocus() || !unfocusPause)
             {
+                ImGui::SFML::Update(_window, sf::seconds(_frametime));
+
                 bool frozen = false;
                 for (auto it = _states.rbegin(), end = _states.rend(); it != end; ++it)
                 {
@@ -139,6 +164,8 @@ namespace gamelib
             for (auto& i : _states)
                 i->render(_window);
 
+            ImGui::SFML::Render(_window);
+
             // TODO: implement own fps capping.
             // SFML caps inside window.display(), so it's impossible to get the exact render time
             if (!_vsync)
@@ -165,7 +192,11 @@ namespace gamelib
 
     void Game::destroy()
     {
+        if (!isInitialized())
+            return;
+
         close();
+
         if (!_states.empty())
         {
             LOG_DEBUG("Closing game states...");
@@ -173,6 +204,9 @@ namespace gamelib
                 i->quit();
             _states.clear();
         }
+
+        ImGui::SFML::Shutdown();
+        _initialized = false;
     }
 
 

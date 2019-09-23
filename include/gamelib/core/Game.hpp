@@ -26,6 +26,7 @@ namespace gamelib
 
             auto init() -> bool;
             auto run()  -> void;
+            auto isInitialized() const -> bool;
 
             // Closes the windows -> stops the game loop.
             // Use this inside the game loop to quit the game.
@@ -69,6 +70,7 @@ namespace gamelib
             sf::RenderWindow _window;
             std::vector<GameStatePtr> _states;
             PropertyContainer _props;
+            bool _initialized;
     };
 }
 

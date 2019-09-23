@@ -1,5 +1,6 @@
 #include "gamelib/core/input/InputSystem.hpp"
 #include "gamelib/utils/conversions.hpp"
+#include "imgui.h"
 
 namespace gamelib
 {
@@ -89,12 +90,12 @@ namespace gamelib
 
     bool InputSystem::isKeyboardConsumed() const
     {
-        return _consumedKeyboard;
+        return _consumedKeyboard || ImGui::GetIO().WantCaptureKeyboard;
     }
 
     bool InputSystem::isMouseConsumed() const
     {
-        return _consumedMouse;
+        return _consumedMouse || ImGui::GetIO().WantCaptureMouse;
     }
 
 
@@ -171,7 +172,7 @@ namespace gamelib
 
     bool InputSystem::_check(bool keyboard, bool mouse) const
     {
-        if ((keyboard && _consumedKeyboard) || (mouse && _consumedMouse))
+        if ((keyboard && isKeyboardConsumed()) || (mouse && isMouseConsumed()))
             return false;
         return _window->hasFocus();
     }
