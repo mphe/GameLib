@@ -168,6 +168,7 @@ namespace gamelib
             _overlay.render(target);
         }
 
+        ImGui::SFML::Render(target);
         ImGui::Render();
     }
 
@@ -376,7 +377,7 @@ namespace gamelib
 
         { // Dialogues
             if (testwindow)
-                ImGui::ShowTestWindow(&testwindow);
+                ImGui::ShowDemoWindow(&testwindow);
 
             if (jsonwindow)
                 drawJsonView(&jsonwindow);
