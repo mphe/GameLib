@@ -51,6 +51,7 @@ set(GAMELIB_SOURCES
     utils/aspectratio.cpp
     utils/Timer.cpp
     utils/Signal.cpp
+    utils/LifetimeTracker.cpp
 
     json/json-file.cpp
     json/JsonSerializer.cpp
