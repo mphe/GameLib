@@ -148,7 +148,8 @@ if (GAMELIB_BUILD_EDITOR)
 
     if (NOT TARGET run)
         add_custom_target(run
-            COMMAND editor assets/newtestmap.json
+            # COMMAND editor assets/newtestmap.json
+            COMMAND gdb -ex run --args $<TARGET_FILE:editor> assets/newtestmap.json
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         )
     endif()
