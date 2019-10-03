@@ -68,6 +68,11 @@ int main()
         tmp->x = 5;
         (*tmp).x = 5;
 
+        // check nullptr assignment
+        tmp = nullptr;
+        checkHandle(tmp, &a3, false);
+
+        tmp = &a3;
         tmp.reset();
         checkHandle(tmp, &a3, false);
     }

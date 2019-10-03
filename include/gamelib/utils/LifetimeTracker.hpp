@@ -135,7 +135,10 @@ namespace gamelib
             template <typename U = T, typename = typename std::enable_if<std::is_base_of<LifetimeTracker<U>, U>::value>::type>
             auto operator=(T const* rhs) -> LifetimeReference&
             {
-                handle = rhs->getLTHandle();
+                if (rhs)
+                    handle = rhs->getLTHandle();
+                else
+                    this->reset();
                 return *this;
             }
 
