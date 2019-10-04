@@ -1,41 +1,41 @@
 #ifndef GAMELIB_ENTITYMANAGER_HPP
 #define GAMELIB_ENTITYMANAGER_HPP
 
-#include <memory>
-#include "gamelib/utils/SlotMap.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/Subsystem.hpp"
 
 namespace gamelib
 {
+    constexpr const char* root_entity_name = "__root__";
+
+    auto findEntity(const std::string& name) -> EntityReference;
+
+
     class EntityManager : public Subsystem<EntityManager>
     {
         public:
-            typedef SlotMapDequeShort<Entity> Container;
-            typedef Container::Handle Handle;
-
             ASSIGN_NAMETAG("EntityManager");
 
         public:
-            auto add(const std::string& name = "unknown") -> Entity::Handle;
-            // auto add(Entity&& ent)                        -> Entity&;
-            auto destroy(Handle handle)                   -> void;
-            auto get(Handle handle) const                 -> const Entity*;
-            auto get(Handle handle)                       -> Entity*;
+            EntityManager();
 
-            auto clear() -> void;
+            auto add(const std::string& name = "unknown") -> EntityReference;
+            auto getRoot() const                          -> EntityReference;
+            auto find(const std::string& name) const      -> EntityReference;
+            auto clear()                                  -> void;
 
-            // Returns the first entity with the given name
-            auto find(const std::string& name) const -> const Entity*;
-            auto find(const std::string& name)       -> Entity*;
-
-            auto begin() const -> Container::const_iterator;
-            auto begin()       -> Container::iterator;
-            auto end() const   -> Container::const_iterator;
-            auto end()         -> Container::iterator;
+            // Iterate over the hierachy.
+            // Returns the entity breaked at, otherwise null.
+            // Return true to break loop, otherwise false.
+            // Signature: (EntityReference) -> bool
+            template <typename F>
+            auto foreach(F f) const -> EntityReference
+            {
+                return _root.iterSubtree(f);
+            }
 
         private:
-            Container _entities;
+            Entity _root;
     };
 }
 

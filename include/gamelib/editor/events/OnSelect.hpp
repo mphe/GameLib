@@ -2,7 +2,7 @@
 #define EDITOR_EVENT_ONSELECT_HPP
 
 #include "gamelib/core/event/Event.hpp"
-#include "gamelib/core/ecs/Entity.hpp"
+#include "gamelib/core/ecs/ecsmeta.hpp"
 
 namespace gamelib
 {
@@ -10,14 +10,11 @@ namespace gamelib
     {
         public:
             OnSelectEvent() {};
-            OnSelectEvent(Entity::Handle old, Entity::Handle ent);
-
-            auto getOld() const -> Entity*;
-            auto getNew() const -> Entity*;
+            OnSelectEvent(EntityReference old, EntityReference ent);
 
         public:
-            Entity::Handle old;
-            Entity::Handle entity;
+            EntityReference old;
+            EntityReference entity;
     };
 }
 

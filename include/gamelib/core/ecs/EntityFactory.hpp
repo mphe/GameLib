@@ -10,11 +10,11 @@
 
 namespace gamelib
 {
-    auto createEntity(const std::string& name)                   -> EntityHandle;
-    auto createEntity(const std::string& name, float x, float y) -> EntityHandle;
+    auto createEntity(const std::string& name)                   -> EntityReference;
+    auto createEntity(const std::string& name, float x, float y) -> EntityReference;
 
 
-    class EntityFactory : public Subsystem<EntityFactory> //: public JsonSerializer
+    class EntityFactory : public Subsystem<EntityFactory>
     {
         typedef Factory<Component, std::string> ComponentFactory;
 
@@ -24,11 +24,11 @@ namespace gamelib
         public:
             EntityFactory();
 
-            auto createWithDelta(const std::string& name, const Json::Value& node)              -> EntityHandle;
+            auto createWithDelta(const std::string& name, const Json::Value& node)              -> EntityReference;
             auto createWithDelta(const std::string& name, const Json::Value& node, Entity* ent) -> bool;
-            auto createFromJson(const Json::Value& node)              -> EntityHandle;
+            auto createFromJson(const Json::Value& node)              -> EntityReference;
             auto createFromJson(const Json::Value& node, Entity* ent) -> bool;
-            auto create(const std::string& name)                      -> EntityHandle;
+            auto create(const std::string& name)                      -> EntityReference;
             auto create(const std::string& name, Entity* ent)         -> bool;
 
             auto createComponent(const std::string& name)                                  -> ComponentPtr;

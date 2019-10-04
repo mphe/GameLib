@@ -18,7 +18,7 @@ namespace gamelib
 
     void VertexTool::onMousePressed()
     {
-        auto brush = getIfBrush(EditorShared::getSelectTool().getSelected());
+        auto brush = getIfBrush(EditorShared::getSelected());
         if (brush)
             selectDragBoxes(brush->getBrushPolygon()->getGlobal(), &_selected);
 

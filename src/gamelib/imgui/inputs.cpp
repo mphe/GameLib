@@ -189,7 +189,9 @@ namespace gamelib
             // ImGui::SameLine();
             // ImGui::Button("Add");
 
-            ent.foreach([](Component* comp) {
+            for (auto& i : ent)
+            {
+                Component* comp = i.ptr.get();
                 ImGui::PushID(comp);
                 if (ImGui::TreeNode(comp->getName().c_str()))
                 {
@@ -197,8 +199,7 @@ namespace gamelib
                     ImGui::TreePop();
                 }
                 ImGui::PopID();
-                return true;
-            });
+            }
         }
     }
 

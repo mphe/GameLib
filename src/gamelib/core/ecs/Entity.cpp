@@ -1,26 +1,14 @@
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
+#include "gamelib/core/ecs/Component.hpp"
 #include "gamelib/utils/log.hpp"
+#include <cassert>
 
 namespace gamelib
 {
-    Entity* getEntity(Entity::Handle handle)
+    EntityHandle getEntity(Entity::Handle handle)
     {
-        return getSubsystem<EntityManager>()->get(handle);
-    }
-
-    Entity* findEntity(const std::string& name)
-    {
-        return getSubsystem<EntityManager>()->find(name);
-    }
-
-    auto findEntityHandle(const std::string& name) -> Entity::Handle
-    {
-        auto ent = findEntity(name);
-        if (ent)
-            return ent->getHandle();
-        else
-            return Entity::Handle();
+        return handle;
     }
 
 
@@ -31,41 +19,171 @@ namespace gamelib
 
     Entity::Entity(const std::string& name) :
         flags(0),
-        _entmgr(nullptr),
         _name(name),
-        _quitting(false)
+        _clearing(false),
+        _parent(nullptr)
     { }
 
-    Entity::Entity(Entity&& other) :
-        flags(other.flags),
-        _entmgr(std::move(other._entmgr)),
-        _handle(std::move(other._handle)),
-        _name(std::move(other._name)),
-        _transform(std::move(other._transform)),
-        _quitting(std::move(other._quitting)),
-        _components(std::move(other._components))
-    {
-        other._entmgr = nullptr;
-        other._handle = Handle();
-    }
+    // Entity::Entity(Entity&& other)
+    // {
+    //     *this = std::move(other);
+    // }
 
     Entity::~Entity()
     {
-        destroy();
+        _quit();
+        LOG_DEBUG("Entity destroyed: ", getName());
+    }
+
+
+//     Entity& Entity::operator=(Entity&& other)
+//     {
+//         // This is completely broken and hard to fix with planned changes
+//         // TODO: remove move constructor
+// #warning "remove move constructor"
+//
+//         other.getParent()->addChild(this);
+//
+//         for (auto& i : other.getChildren())
+//             addChild(i);
+//
+//         flags = other.flags;
+//         _entmgr = other._entmgr;
+//         _clearing = other._clearing;
+//         _handle = other._handle;
+//         _name = std::move(other._name);
+//         _transform = std::move(other._transform);
+//         _components = std::move(other._components);
+//
+//         other._parent = nullptr;
+//         other._entmgr = nullptr;
+//         other._handle.reset();
+//
+//         return *this;
+//     }
+
+
+    auto Entity::addChild(EntityPtr ent) -> EntityReference
+    {
+        { // Sanity checks
+            if (!ent)
+            {
+                LOG_ERROR("Can't add child entity: nullptr");
+                return nullptr;
+            }
+
+            if (ent.get() == this)
+            {
+                LOG_ERROR("Can't add child entity: child == this");
+                return nullptr;
+            }
+
+            // Can't set a parent as child
+            if (isChildOf(ent.get()))
+            {
+                LOG_ERROR("Can't add child entity: child is parent");
+                return nullptr;
+            }
+
+            if (ent->getParent())
+            {
+                LOG_ERROR("New child entity should not have a parent. This should never happen!");
+                return nullptr;
+            }
+        }
+
+        Entity* tmp = ent.get();    // ent is no longer valid after moving
+        _children.push_back(std::move(ent));
+        tmp->_parent = this;
+        getTransform().add(&tmp->getTransform());
+
+        return tmp;
+    }
+
+    auto Entity::popChild(EntityReference ent) -> EntityPtr
+    {
+        for (size_t i = 0; i < _children.size(); ++i)
+            if (_children[i].get() == ent.get())
+                return popChild(i);
+        return nullptr;
+    }
+
+    auto Entity::popChild(size_t index) -> EntityPtr
+    {
+        if (index >= _children.size())
+            return nullptr;
+
+        EntityPtr ptr = std::move(_children[index]);
+        ptr->_parent = nullptr;
+        _children.erase(_children.begin() + index);
+        getTransform().remove(&ptr->getTransform());
+        return ptr;
+    }
+
+    auto Entity::reparent(EntityReference ent) -> EntityReference
+    {
+        { // Sanity checks
+            if (!ent)
+            {
+                LOG_ERROR("Can't change parent: parent is nullptr");
+                return nullptr;
+            }
+
+            if (ent.get() == this)
+            {
+                LOG_ERROR("Can't change parent: parent == this");
+                return nullptr;
+            }
+
+            // Can't set a parent as child
+            if (ent->isChildOf(this))
+            {
+                LOG_ERROR("Can't change parent: parent is child");
+                return nullptr;
+            }
+
+            if (!getParent())
+            {
+                LOG_ERROR("Can't change parent: root node");
+                return nullptr;
+            }
+        }
+
+        ent->addChild(getParent()->popChild(this));
+        return this;
+    }
+
+    auto Entity::getChildren() const -> const std::vector<EntityPtr>&
+    {
+        return _children;
+    }
+
+    auto Entity::getParent() const -> EntityReference
+    {
+        return _parent;
+    }
+
+    auto Entity::isChildOf(EntityReference ent) const -> bool
+    {
+        // Always child of root
+        if (!ent)
+            return true;
+
+        for (EntityReference parent = getParent(); parent; parent = parent->getParent())
+            if (parent == ent)
+                return true;
+        return false;
     }
 
 
     void Entity::destroy()
     {
-        if (_entmgr)
-            _entmgr->destroy(_handle);
-        else
-            clear();
-    }
+        _quit();
 
-    Entity::Handle Entity::getHandle() const
-    {
-        return _handle;
+        if (getParent())
+            getParent()->popChild(this); // Suicide - Don't run any code after this
+        else
+            LOG_WARN("Can't free root entity automatically, but clear all children and components");
     }
 
     const std::string& Entity::getName() const
@@ -93,10 +211,7 @@ namespace gamelib
             return nullptr;
         }
 
-        if (_entmgr)
-            comp->_ent = _handle;
-        else
-            comp->_entptr = this;
+        comp->_entptr = this;
 
         if (comp->getTransform())
             getTransform().add(comp->getTransform());
@@ -123,13 +238,11 @@ namespace gamelib
 
                 if (comp->getTransform())
                     getTransform().remove(comp->getTransform());
-
-                it->ptr->_ent.reset();
-                it->ptr->_entptr = nullptr;
+                it->ptr->_entptr.reset();
                 it->ptr->quit();
                 it->ptr.reset();
 
-                if (!_quitting)
+                if (!_clearing)
                     _components.erase(it);
                 return;
             }
@@ -170,23 +283,26 @@ namespace gamelib
 
     void Entity::clear()
     {
-        _quit();
-        _transform.reset();
-        flags = 0;
-    }
-
-    void Entity::_quit()
-    {
-        // Set _quitting to true to prevent possible segfaults when a
+        // Set _clearing to true to prevent possible segfaults when a
         // component removes another component during his _quit().
         // remove() will not remove components from the list, when
-        // _quitting is set, but reset the pointer instead.
-        _quitting = true;
+        // _clearing is set, but reset the pointer instead.
+
+        if (_clearing)
+            return;
+
+        _clearing = true;
         for (auto& i : _components)
             if (i.ptr)
                 i.ptr->quit();
         _components.clear();
-        _quitting = false;
+        _clearing = false;
+    }
+
+    void Entity::_quit()
+    {
+        _children.clear();
+        clear();
     }
 
     void Entity::_refresh(RefreshType type, Component* comp)
@@ -205,20 +321,5 @@ namespace gamelib
     Entity::ComponentList::const_iterator Entity::end() const
     {
         return _components.end();
-    }
-
-
-    Entity& Entity::operator=(Entity&& other)
-    {
-        flags = other.flags;
-        _entmgr = other._entmgr;
-        _quitting = other._quitting;
-        _handle = other._handle;
-        _name = std::move(other._name);
-        _transform = std::move(other._transform);
-        _components = std::move(other._components);
-        other._entmgr = nullptr;
-        other._handle.reset();
-        return *this;
     }
 }

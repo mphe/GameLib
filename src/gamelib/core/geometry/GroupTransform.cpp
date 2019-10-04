@@ -6,14 +6,23 @@ namespace gamelib
         _dirty(false)
     { }
 
-    void GroupTransform::add(Transformable* trans)
+    GroupTransform::~GroupTransform()
     {
+        while (!_objs.empty())
+            remove(_objs[0]);
+    }
+
+    void GroupTransform::add(Transformable* trans, bool keepOrientation)
+    {
+        if (keepOrientation)
+            (*trans) -= getTransformation();
+
         _objs.push_back(trans);
         trans->_setParent(this);
         _dirty = true;
     }
 
-    void GroupTransform::remove(Transformable* trans)
+    void GroupTransform::remove(Transformable* trans, bool keepOrientation)
     {
         auto it = std::find(_objs.begin(), _objs.end(), trans);
         if (it != _objs.end())
@@ -21,7 +30,11 @@ namespace gamelib
             if (_objs.size() > 1)
                 std::swap(*it, _objs.back());
             _objs.pop_back();
+
             trans->_setParent(nullptr);
+            if (keepOrientation)
+                (*trans) += getTransformation();
+
             _dirty = true;
         }
     }

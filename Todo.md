@@ -29,6 +29,8 @@
 * vibrate component
 * tracker component
 * sound system
+* collision layers and layer masks
+* cameras as resources
 
 ## All
 
@@ -49,6 +51,9 @@
 * Give GameState a virtual handleInput() function
     * Game calls this function for every event
 * use TextureResource::Handle in PixelCollision
+* Support rendering to OSB in Game class
+* Delay entity destroy to begin frame or end frame to prevent possible segfaults
+* Aseprite import
 
 * provide failsafe implementations in core subsystems
     * no crash when trying to create unknown entities/components
@@ -122,25 +127,6 @@ RenderSystem:
             * reference by handle or instantiates a Transform
             * acts as a client to Transform
 
-* ECS parent system
-    * maybe new base class: Parentable
-    * provide new virtual functions
-        * setParent(parent) -> ptr:    sets the parent and returns or pointer or nullptr if not possible
-        * tryParent(parent) -> bool: checks if setting this parent is possible
-    * components and entities implement this interface
-    * what the entity/component does with the parent is implementation dependant
-        * Inherit transformation
-        * Inherit flags
-    * consider making all components use the parent transform (as in unity)
-        * no child transforms
-        * pros
-            * simplifies system
-            * doesn't require maintaining another transform-parent system (for components)
-        * cons
-            * requires a prefab loading system
-                * loading/saving entity hierachies, not just whole levels
-        * maybe keep both but don't implement parent system for components?
-
 
 * remove ambiguous component referencing
     1. use a component (A) with PropComponent
@@ -198,26 +184,17 @@ RenderSystem:
         * BaseUpdatable <- PhysicsComponent
     * CameraComponent
 
-* Support rendering to OSB in Game class
-
 * json
     * loadFromJson update bool to differentiate between load and update from json
     * remove clear argument in json functions, except for Transform
     * add docs to make clear how functions behave in case of wrong json node type and defaults
     * use pointers in all loadFromJson functions instead of references
-    * move all json stuff to static functions in gamelib/json subfolder
-        * decouples json from logic
-        * cleaner
-        * more consistent to have all in one place
+    * reset filename when JsonSerializer::loadFromJson() is called without loadFromFile
 
 * ResourceManager:
     * load all files from a folder
     * recursively load-once resource files
     * write loaders for various config files
-
-* EntityFactory
-    * handle json return values
-    * query ResourceManager if entity name not found
 
 * SpriteComponent
     * loadFromJson fix overrides by tmp saving overrides and applying afterwards (again)
@@ -268,12 +245,14 @@ RenderSystem:
     * move airFriction code to QController
     * make snap distance fps independent
         * snap only if speed and gravity point in the same direction
-    * fix jitter when standing on a horizontal platform and the platform changes directions
-        -> player moves a bit to the old direction instead of following the platform precisely
 
 * collisions
     * Remove Collidable and merge it into CollisionComponent
     * Return TraceResult in all line checks
+    * Merge CollisonSystem and physics to PhysicsSystem
+        * Moving objects can cause collisions along the way with non-solid objects
+        -> handling physics should not be separated from collisions 
+        * https://www.gamedev.net/forums/topic/669494-dealing-with-different-collision-responses-in-an-entity-component-system/
 
 * rendering
     * Consider making Renderable::render const

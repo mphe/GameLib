@@ -37,7 +37,13 @@ namespace gamelib
         public:
             Transformable();
             Transformable(bool movable, bool scalable, bool rotatable);
-            virtual ~Transformable() {};
+            virtual ~Transformable();
+
+            // Diable move/copy
+            Transformable(const Transformable&) = delete;
+            Transformable(Transformable&&)      = delete;
+            auto operator=(const Transformable&) -> Transformable& = delete;
+            auto operator=(Transformable&&)      -> Transformable& = delete;
 
             virtual auto getBBox() const -> math::AABBf = 0;
 

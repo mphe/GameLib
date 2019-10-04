@@ -12,13 +12,13 @@ namespace gamelib
 {
     void drawSearchPopup(bool* open)
     {
-        static char buf[256] = { 0 };
-        static Entity::Handle ent;
+        static ImGuiTextFilter filter;
+        static EntityReference ent;
 
         auto close = [&]() {
             *open = false;
-            ent = Entity::Handle();
-            memset(buf, 0, sizeof(buf));
+            ent = nullptr;
+            filter.Clear();
         };
 
         if (ImGui::Begin("Find entity", open, ImGuiWindowFlags_AlwaysAutoResize))
@@ -29,29 +29,19 @@ namespace gamelib
             if (ImGui::IsWindowAppearing())
                 ImGui::SetKeyboardFocusHere();
 
-
-            if (ImGui::InputText("Search", buf, sizeof(buf)))
-            {
-                ent = Entity::Handle();
-                if (strlen(buf) > 0)
-                    for (auto& i : *entmgr)
-                        if (i.getName().find(buf) != std::string::npos)
-                        {
-                            ent = i.getHandle();
-                            break;
-                        }
-            }
-
-            auto entptr = getEntity(ent);
+            if (filter.Draw())
+                ent = entmgr->foreach([&](EntityReference ent) {
+                    return filter.PassFilter(ent->getName().c_str());
+                });
 
             ImGui::SameLine();
 
             if (okButton("Select"))
             {
-                if (entptr)
+                if (ent)
                 {
-                    select.select(entptr);
-                    if (entptr && open)
+                    select.select(ent);
+                    if (ent && open)
                         close();
                 }
                 else
@@ -63,12 +53,77 @@ namespace gamelib
             if (open && cancelButton("Cancel"))
                 close();
 
-            if (!entptr)
+            if (!ent)
                 ImGui::TextColored(sf::Color::Red, "No entity found");
             else
-                ImGui::Text("%s", entptr->getName().c_str());
+                ImGui::Text("%s", ent->getName().c_str());
         }
         ImGui::End();
+    }
+
+    bool drawEntityNode(EntityReference ent, EntityReference current, const ImGuiTextFilter& filter)
+    {
+        SelectTool& select = EditorShared::getSelectTool();
+        auto entname = ent->getName().c_str();
+        bool ret = false;
+
+        ImGui::PushID(ent.get());
+        auto flags = current == ent ? ImGuiTreeNodeFlags_Selected : 0;
+        bool open = ImGui::TreeNodeEx(entname,
+                flags | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow);
+
+        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoHoldToOpenOthers))
+        {
+            ImGui::SetDragDropPayload("dnd_entity_tree", &ent, sizeof(ent));
+            ImGui::EndDragDropSource();
+        }
+        else
+        {
+            const ImGuiPayload* payload = ImGui::GetDragDropPayload();
+            if (payload)
+            {
+                EntityReference child = *static_cast<EntityReference*>(payload->Data);
+
+                if (child != ent && !ent->isChildOf(child) && ImGui::BeginDragDropTarget())
+                {
+                    if (ImGui::AcceptDragDropPayload("dnd_entity_tree"))
+                    {
+                        child->reparent(ent);
+                        ret = true;
+                    }
+                    ImGui::EndDragDropTarget();
+                }
+            }
+            else if (!ImGui::IsMouseDragging() && ImGui::IsItemHovered() && ImGui::IsMouseReleased(0))
+                select.select(ent);
+        }
+
+        if (open)
+        {
+            for (auto& i : ent->getChildren())
+                if (drawEntityNode(i.get(), current, filter))
+                {
+                    ret = true;
+                    break;
+                }
+#if 0
+            // Show Components
+            for (auto& comp : *ent)
+            {
+                ImGui::PushID(comp.ptr.get());
+                auto name = generateName(comp.ptr->getName(), comp.id);
+                flags = select.getSelectedComponent() == comp.ptr.get()? ImGuiTreeNodeFlags_Selected : 0;
+                ImGui::TreeNodeEx(name.c_str(), flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Bullet);
+                if (ImGui::IsItemClicked())
+                    select.selectComponent(comp.ptr.get());
+                ImGui::PopID();
+            }
+#endif
+            ImGui::TreePop();
+        }
+
+        ImGui::PopID();
+        return ret;
     }
 
     void drawEntityList(bool* open)
@@ -77,47 +132,23 @@ namespace gamelib
         if (!entmgr)
             return;
 
-        Entity::Handle current;
-        SelectTool& select = EditorShared::getSelectTool();
+        EntityReference current = EditorShared::getSelected();
 
-        if (select.getSelected())
-            current = select.getSelected()->getHandle();
-
-        if (ImGui::Begin("NewEntities", open, ImVec2(250, 285)))
+        if (ImGui::Begin("Entities", open, ImVec2(250, 285)))
         {
             static ImGuiTextFilter filter;
+
+            ImGui::PushItemWidth(0.5 * ImGui::GetWindowContentRegionWidth());
             filter.Draw();
+            ImGui::PopItemWidth();
 
-            for (auto& i : *entmgr)
+            for (auto& i : entmgr->getRoot()->getChildren())
             {
-                auto entname = i.getName().c_str();
-                auto handle = i.getHandle();
+                // if (!filter.PassFilter(i.getName().c_str()))
+                //     continue;
 
-                if (!filter.PassFilter(entname))
-                    continue;
-
-                ImGui::PushID(handle.index);
-                auto flags = current == handle ? ImGuiTreeNodeFlags_Selected : 0;
-                bool open = ImGui::TreeNodeEx(entname, flags);
-
-                if (ImGui::IsItemClicked())
-                    select.select(handle);
-
-                if (open)
-                {
-                    for (auto& comp : i)
-                    {
-                        ImGui::PushID(comp.ptr.get());
-                        auto name = generateName(comp.ptr->getName(), comp.id);
-                        flags = select.getSelectedComponent() == comp.ptr.get()? ImGuiTreeNodeFlags_Selected : 0;
-                        ImGui::TreeNodeEx(name.c_str(), flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Bullet);
-                        if (ImGui::IsItemClicked())
-                            select.selectComponent(comp.ptr.get());
-                        ImGui::PopID();
-                    }
-                    ImGui::TreePop();
-                }
-                ImGui::PopID();
+                if (drawEntityNode(i.get(), current, filter))
+                    break;
             }
         }
         ImGui::End();
@@ -133,7 +164,7 @@ namespace gamelib
 
         auto comp = select.getSelectedComponent();
 
-        if (ImGui::Begin("NewProperties", open, ImVec2(250, 285)))
+        if (ImGui::Begin("Properties", open, ImVec2(250, 285)))
         {
             if (comp)
                 inputComponent(*comp);

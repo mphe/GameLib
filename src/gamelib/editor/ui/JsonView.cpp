@@ -21,7 +21,7 @@ namespace gamelib
     void refresh(int selected, Json::Value* out, std::string* stringout)
     {
         JsonSerializer* obj = nullptr;
-        Entity* ent = nullptr;
+        EntityReference ent;
         out->clear();
         stringout->clear();
 
@@ -29,7 +29,7 @@ namespace gamelib
         {
             default:
             case 0:
-                ent = EditorShared::getSelectTool().getSelected();
+                ent = EditorShared::getSelected();
                 break;
 
             case 1:

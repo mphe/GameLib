@@ -71,6 +71,15 @@ namespace gamelib
         _parent(nullptr)
     { }
 
+    Transformable::~Transformable()
+    {
+        if (_parent)
+        {
+            _parent->remove(this);
+            _parent = nullptr;
+        }
+    }
+
 
     // --- set local ---
     void Transformable::setLocalPosition(const math::Point2f& pos)

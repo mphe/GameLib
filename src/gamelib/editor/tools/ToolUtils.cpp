@@ -154,7 +154,7 @@ namespace gamelib
         return EditorShared::snap(p);
     }
 
-    PolygonBrushComponent* getIfBrush(Entity* ent)
+    PolygonBrushComponent* getIfBrush(EntityReference ent)
     {
         if (ent)
             return ent->findByType<PolygonBrushComponent>();

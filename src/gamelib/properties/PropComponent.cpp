@@ -84,6 +84,6 @@ namespace gamelib
     Entity* PropComponent::getEntity(const PropertyHandle& prop)
     {
         auto c = static_cast<Component*>(prop.getData());
-        return c ? c->getEntity() : nullptr;
+        return c ? c->getEntity().get() : nullptr;
     }
 }

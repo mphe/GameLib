@@ -4,11 +4,11 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "gamelib/utils/SlotMap.hpp"
 #include "gamelib/utils/Identifier.hpp"
 #include "gamelib/core/geometry/GroupTransform.hpp"
-#include "Component.hpp"
 #include "flags.hpp"
+#include "ecsmeta.hpp"
+#include "json/json.h"
 
 /*
  * Config file structure:
@@ -31,16 +31,14 @@
 
 namespace gamelib
 {
-    class EntityManager;
+    // Deprecated
+    typedef EntityReference EntityHandle;
 
-    typedef std::unique_ptr<Component> ComponentPtr;
+    auto getEntity(EntityHandle handle) -> EntityHandle;
 
-    typedef SlotKeyShort EntityHandle;
 
-    class Entity
+    class Entity : public LifetimeTracker<Entity>
     {
-        friend class EntityManager;
-
         private:
             struct ComponentData
             {
@@ -55,15 +53,17 @@ namespace gamelib
         public:
             Entity();
             Entity(const std::string& name);
-            Entity(Entity&& ent);
             ~Entity();
 
-            auto operator=(Entity&& rhs) -> Entity&;
+            // Disable move/copy
+            Entity(const Entity&) = delete;
+            Entity(Entity&& ent) = delete;
+            auto operator=(const Entity&) -> Entity& = delete;
+            auto operator=(Entity&& rhs) -> Entity& = delete;
 
             // auto clone()   -> Entity; // TODO Explicit copy might be better here than copy constructor
             auto destroy() -> void;
 
-            auto getHandle() const    -> Handle;
             auto getName() const      -> const std::string&;
 
             auto getTransform() const -> const GroupTransform&;
@@ -80,11 +80,21 @@ namespace gamelib
             auto begin() const -> ComponentList::const_iterator;
             auto end() const   -> ComponentList::const_iterator;
 
-            // Iterate over each component
-            // Signature: bool(Component*)
-            // If the lambda returns false, the loop breaks. To continue return true.
+            auto addChild(EntityPtr ent)              -> EntityReference;
+            auto popChild(EntityReference ent)        -> EntityPtr;
+            auto popChild(size_t index)               -> EntityPtr;
+            auto reparent(EntityReference ent)        -> EntityReference;
+            auto getChildren() const                  -> const std::vector<EntityPtr>&;
+            auto getParent() const                    -> EntityReference;
+            auto isChildOf(EntityReference ent) const -> bool;
+
+            // Iterate over the hierachy.
+            // Returns the entity breaked at, otherwise null.
+            // Return true to break loop, otherwise false.
+            // Signature: (EntityReference) -> bool
             template <typename F>
-            auto foreach(F f) const -> void;
+            auto iterSubtree(F f) const -> EntityReference;
+
 
             template <typename T, typename... Args>
             auto add(Args&&... args) -> T*;
@@ -120,55 +130,47 @@ namespace gamelib
             auto findAllByName(F callback) const -> void;
 
         public:
-            unsigned int flags;
-
-        private:
-            auto _init() -> void;   // Called by EntityManager when entity was added
-            auto _quit() -> void;   // Called by EntityManager when entity was removed
-            auto _refresh(RefreshType type, Component* comp) -> void;
-
-        private:
-            EntityManager* _entmgr; // Set by EntityManager
-            Handle _handle;         // Set by EntityManager
-            std::string _name;
-            GroupTransform _transform;
-            bool _quitting;
-            ComponentList _components;
-
-        public:
             template <typename F>
             friend void writeToJson(Json::Value&, const Entity&, F);
             friend bool extendFromJson(const Json::Value&, Entity&, bool);
+
+        private:
+            auto _quit() -> void;
+            auto _refresh(RefreshType type, Component* comp) -> void;
+
+        public:
+            unsigned int flags;
+
+        private:
+            std::string _name;
+            GroupTransform _transform;
+            bool _clearing;
+            ComponentList _components;
+            EntityReference _parent;
+            std::vector<EntityPtr> _children;
     };
+}
+
+#include "Component.hpp"
+
+namespace gamelib
+{
+
+    // template <typename T>
+    // T* findComponentByName(const std::string& entname)
+    // {
+    //     auto ent = findEntity(entname);
+    //     return ent ? ent->findByName<T>() : nullptr;
+    // }
+
+    // template <typename T>
+    // T* findComponentByType(const std::string& entname)
+    // {
+    //     auto ent = findEntity(entname);
+    //     return ent ? ent->findByType<T>() : nullptr;
+    // }
 
 
-    auto getEntity(Entity::Handle handle) -> Entity*;
-    auto findEntity(const std::string& name) -> Entity*;
-    auto findEntityHandle(const std::string& name) -> Entity::Handle;
-
-    template <typename T>
-    T* findComponentByName(const std::string& entname)
-    {
-        auto ent = findEntity(entname);
-        return ent ? ent->findByName<T>() : nullptr;
-    }
-
-    template <typename T>
-    T* findComponentByType(const std::string& entname)
-    {
-        auto ent = findEntity(entname);
-        return ent ? ent->findByType<T>() : nullptr;
-    }
-
-
-
-    template <typename F>
-    auto Entity::foreach(F f) const -> void
-    {
-        for (const auto& i : _components)
-            if (!f(i.ptr.get()))
-                return;
-    }
 
     template <typename T, typename... Args>
     auto Entity::add(Args&&... args) -> T*
@@ -227,6 +229,21 @@ namespace gamelib
             if (i.ptr->getName() == name)
                 if (callback(i.ptr.get()))
                     break;
+    }
+
+    template <typename F>
+    auto Entity::iterSubtree(F f) const -> EntityReference
+    {
+        for (auto& i : _children)
+        {
+            if (f(i.get()))
+                return i.get();
+
+            auto tmp = i->iterSubtree(f);
+            if (tmp)
+                return tmp;
+        }
+        return nullptr;
     }
 }
 

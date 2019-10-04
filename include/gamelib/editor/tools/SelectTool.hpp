@@ -24,22 +24,19 @@ namespace gamelib
             void render(sf::RenderTarget& target) final override;
             void drawGui() final override;
 
-            void select(Entity::Handle enthandle);
-            void select(Entity* ent);
+            void select(EntityReference ent);
             void selectComponent(Component* comp);
             void select(float x, float y);
 
-            auto getSelected() const -> const Entity*;
-            auto getSelected()       -> Entity*;
-            auto getSelectedComponent() const -> const Component*;
-            auto getSelectedComponent()       -> Component*;
+            auto getSelected() const          -> EntityReference;
+            auto getSelectedComponent() const -> Component*;
 
         public:
             bool renderBBox;
             bool renderAllBoxes;
 
         private:
-            Entity::Handle _selected;
+            EntityReference _selected;
             Component* _selectedcomp;
             math::Vec2f _dragoffset;
             size_t _scaleselect;

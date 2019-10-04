@@ -32,7 +32,7 @@ namespace gamelib
         return _editor->getSelectTool();
     }
 
-    Entity* EditorShared::getSelected()
+    EntityReference EditorShared::getSelected()
     {
         return getSelectTool().getSelected();
     }

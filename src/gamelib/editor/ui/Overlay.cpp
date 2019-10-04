@@ -82,7 +82,7 @@ namespace gamelib
             }
         }
 
-        const auto* ent = EditorShared::getSelected();
+        const auto ent = EditorShared::getSelected();
         if (!ent)
             return;
 

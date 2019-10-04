@@ -62,8 +62,9 @@ namespace gamelib
         auto factory = getSubsystem<EntityFactory>();
         auto& mgrnode = node["entmgr"];
 
-        for (auto& i : *entmgr)
-        {
+        entmgr->foreach([&](EntityReference ent){
+            Entity& i = *ent;
+
             auto& name = i.getName();
             Json::Value entcfg;
 
@@ -82,7 +83,9 @@ namespace gamelib
 
             if (callback(entcfg, i) && !entcfg.isNull())
                 mgrnode.append(entcfg);
-        }
+
+            return false;
+        });
 
         LOG("Saving finished");
         return true;

@@ -1,12 +1,10 @@
 #include "gamelib/core/ecs/Component.hpp"
-#include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/json/json-transformable.hpp"
 #include "gamelib/properties/PropDummy.hpp"
 
 namespace gamelib
 {
     Component::Component() :
-        _entptr(nullptr),
         _initialized(false)
     {
         registerDummyProperty(_props, "transform");
@@ -35,16 +33,9 @@ namespace gamelib
         return _initialized;
     }
 
-    Entity* Component::getEntity() const
+    EntityReference Component::getEntity() const
     {
-        if (_entptr || _ent.isNull())
-            return _entptr;
-        return getSubsystem<EntityManager>()->get(_ent);
-    }
-
-    Component::Handle Component::getEntityHandle() const
-    {
-        return _ent;
+        return _entptr;
     }
 
     const PropertyContainer& Component::getProperties() const

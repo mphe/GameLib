@@ -12,10 +12,10 @@ namespace gamelib
 
         public:
             GroupTransform();
-            virtual ~GroupTransform() {};
+            virtual ~GroupTransform();
 
-            auto add(Transformable* trans)    -> void;
-            auto remove(Transformable* trans) -> void;
+            auto add(Transformable* trans, bool keepOrientation = true)    -> void;
+            auto remove(Transformable* trans, bool keepOrientation = true) -> void;
 
             auto getChildren() const -> const std::vector<Transformable*>&;
 

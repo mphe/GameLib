@@ -2,12 +2,12 @@
 #define EDITOR_SHARED_HPP
 
 #include "math/geometry/Point2.hpp"
+#include "gamelib/core/ecs/ecsmeta.hpp"
 
 namespace gamelib
 {
     class Editor;
     class SelectTool;
-    class Entity;
 
     class EditorShared
     {
@@ -21,7 +21,7 @@ namespace gamelib
             static auto snap(const math::Point2f& p) -> math::Point2f;
 
             static auto getSelectTool() -> SelectTool&;
-            static auto getSelected()   -> Entity*;
+            static auto getSelected()   -> EntityReference;
 
         private:
             static Editor* _editor; // Set by Editor

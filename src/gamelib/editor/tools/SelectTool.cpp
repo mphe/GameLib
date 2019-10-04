@@ -72,7 +72,7 @@ namespace gamelib
 
     void SelectTool::onDrag()
     {
-        auto* ent = getSelected();
+        auto ent = getSelected();
         if (!ent)
             return;
 
@@ -141,7 +141,7 @@ namespace gamelib
         {
             Json::Value cfg;
             writeToJson(cfg, *ent);
-            ent = getEntity(getSubsystem<EntityManager>()->add());
+            ent = getSubsystem<EntityManager>()->add();
             if (!loadFromJson(cfg, *ent))
                 LOG_ERROR("Failed to clone entity");
             select(ent);
@@ -154,7 +154,7 @@ namespace gamelib
 
     void SelectTool::render(sf::RenderTarget& target)
     {
-        auto* ent = getSelected();
+        auto ent = getSelected();
         if (!ent)
             return;
 
@@ -196,36 +196,23 @@ namespace gamelib
         ImGui::Text("Mode: %i", _mode);
     }
 
-    void SelectTool::select(Entity::Handle enthandle)
+    void SelectTool::select(EntityReference ent)
     {
-        if (enthandle == _selected)
+        if (ent == _selected)
             return;
         else
             _mode = mode_move;
 
         auto old = _selected;
-
-        if (getEntity(enthandle))
-        {
-            _selected = enthandle;
-            LOG("Selected entity ", enthandle.index, enthandle.version);
-        }
-        else
-        {
-            _selected = Entity::Handle();
-            LOG("Selection cleared");
-        }
-
+        _selected = ent;
         _selectedcomp = nullptr;
-        EventManager::getActive()->triggerEvent(OnSelectEvent::create(old, _selected));
-    }
 
-    void SelectTool::select(Entity* ent)
-    {
         if (ent)
-            select(ent->getHandle());
+            LOG("Selected entity ", ent.get());
         else
-            select(Entity::Handle());
+            LOG("Selection cleared");
+
+        EventManager::getActive()->triggerEvent(OnSelectEvent::create(old, _selected));
     }
 
     void SelectTool::selectComponent(Component* comp)
@@ -255,26 +242,15 @@ namespace gamelib
             select(nullptr);
     }
 
-    const Entity* SelectTool::getSelected() const
+    EntityReference SelectTool::getSelected() const
     {
-        return getEntity(_selected);
+        return _selected;
     }
 
-    Entity* SelectTool::getSelected()
+    auto SelectTool::getSelectedComponent() const -> Component*
     {
-        return getEntity(_selected);
-    }
-
-    auto SelectTool::getSelectedComponent() const -> const Component*
-    {
-        auto ent = getEntity(_selected);
-        if (!ent || ent->hasComponent(_selectedcomp))
+        if (!_selected || _selected->hasComponent(_selectedcomp))
             return _selectedcomp;
         return nullptr;
-    }
-
-    auto SelectTool::getSelectedComponent() -> Component*
-    {
-        return CALL_CONST_OVERLOAD(Component*, getSelectedComponent);
     }
 }

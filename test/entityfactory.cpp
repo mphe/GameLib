@@ -115,18 +115,18 @@ int main()
     assert(!factory.create("asdaf", &entity) && "should return nullptr");
 
     // test with EntityManager
-    auto handle = factory.create("testentity");
-    assert(handle && "handle should be valid");
-    testEntity(*getEntity(handle));
-    manager.destroy(handle);
+    auto ent = factory.create("testentity");
+    assert(ent && "ent should be valid");
+    testEntity(*ent);
+    ent->destroy();
 
     factory.removeEntity("testentity");
 
-    handle = factory.create("testentity");
-    assert(!handle && "handle should be invalid");
+    ent = factory.create("testentity");
+    assert(!ent && "ent should be null");
 
-    handle = factory.create("asdaf");
-    assert(!handle && "handle should be invalid");
+    ent = factory.create("asdaf");
+    assert(!ent && "ent should be null");
 
     return 0;
 }
