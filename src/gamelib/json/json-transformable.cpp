@@ -5,11 +5,21 @@
 
 namespace gamelib
 {
-    bool loadFromJson(const Json::Value& node, Transformable& transform, bool clear)
+    bool loadFromJson(const Json::Value& node, Transformable& transform, bool clear, bool global)
     {
-        TransformData data = transform.getLocalTransformation();
+        TransformData data;
+        if (global)
+            data = transform.getTransformation();
+        else
+            data = transform.getLocalTransformation();
+
         bool success = loadFromJson(node, data, clear);
-        transform.setLocalTransformation(data);
+
+        if (global)
+            transform.setTransformation(data);
+        else
+            transform.setLocalTransformation(data);
+
         return success;
     }
 
@@ -29,9 +39,12 @@ namespace gamelib
         return true;
     }
 
-    void writeToJson(Json::Value& node, const Transformable& transform)
+    void writeToJson(Json::Value& node, const Transformable& transform, bool global)
     {
-        writeToJson(node, transform.getLocalTransformation());
+        if (global)
+            writeToJson(node, transform.getTransformation());
+        else
+            writeToJson(node, transform.getLocalTransformation());
     }
 
     void writeToJson(Json::Value& node, const TransformData& data)

@@ -26,7 +26,7 @@ namespace gamelib
 
     void EntityManager::clear()
     {
-        _root.clear();
+        _root.destroy();
     }
 
     auto EntityManager::getRoot() const -> EntityReference

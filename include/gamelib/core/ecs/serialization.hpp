@@ -42,15 +42,14 @@ namespace gamelib
     // If createMissing is set, missing components will be created.
     auto extendFromJson(const Json::Value& node, Entity& ent, bool createMissing = false) -> bool;
 
+    // Writes entity state to json, not including children
     auto writeToJson(Json::Value& node, const Entity& ent) -> void;
 
-    // Extracts the id and removes the id part from the string
+    // Extracts the component id and removes the id part from the string
     auto extractID(std::string* name)                           -> unsigned int;
     auto generateName(const std::string& name, unsigned int id) -> std::string;
 
-    auto getDefaultComponentConfig(const std::string& name, Json::Value* out, EntityFactory& factory) -> void;
-
-    // Returns true if the config has no errors / warnings, otherwise false.
+    // Normalizes config and returns true if the config has no errors / warnings, otherwise false.
     // This does not mean that the given config equals the normalized config!
     auto normalizeConfig(const Json::Value& node, Json::Value* out, EntityFactory& factory) -> bool;
 
@@ -59,32 +58,7 @@ namespace gamelib
     auto getConfigDelta(const Entity& ent, const Json::Value& normalized, Json::Value* out) -> bool;
 
     auto getNormalizedEntityTemplate(const Entity& ent, Json::Value* out, EntityFactory& factory) -> bool;
-
-    // Calls a callback for each component about to be serialized.
-    // The callback handles the serialization (or not).
-    // If the callback returns false or the json node is null, the
-    // component will be skipped.
-    // Signature: bool(Json::Value&, Component&)
-    template <typename F>
-    auto writeToJson(Json::Value& node, const Entity& ent, F callback) -> void
-    {
-        node["name"] = ent.getName();
-        node["flags"] = ent.flags;
-        gamelib::writeToJson(node["transform"], ent.getTransform());
-
-        auto& comps = node["components"];
-        comps = Json::Value(Json::objectValue);
-
-        for (const auto& i : ent._components)
-        {
-            if (i.ptr)
-            {
-                Json::Value comp(Json::objectValue);
-                if (callback(comp, *i.ptr) && !comp.isNull())
-                    comps[generateName(i.ptr->getName(), i.id)] = comp;
-            }
-        }
-    }
+    auto getDefaultComponentConfig(const std::string& name, Json::Value* out, EntityFactory& factory) -> void;
 }
 
 

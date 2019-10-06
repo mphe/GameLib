@@ -163,7 +163,7 @@ int main()
     ent2.destroy();
     factory.removeEntity("testentity");
     factory.add(res2);
-    factory.createWithDelta("testentity", out, &ent2);
+    factory.createWithDelta(out, &ent2);
 
     // Should also output warnings that it can't find some extra components that aren't in the entity config
 

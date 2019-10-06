@@ -178,12 +178,13 @@ namespace gamelib
 
     void Entity::destroy()
     {
+        if (!getParent())
+            LOG_WARN("Can't free root entity automatically, but clear all children and components");
+
         _quit();
 
         if (getParent())
             getParent()->popChild(this); // Suicide - Don't run any code after this
-        else
-            LOG_WARN("Can't free root entity automatically, but clear all children and components");
     }
 
     const std::string& Entity::getName() const
@@ -281,7 +282,7 @@ namespace gamelib
         return _components.size();
     }
 
-    void Entity::clear()
+    void Entity::clearComponents()
     {
         // Set _clearing to true to prevent possible segfaults when a
         // component removes another component during his _quit().
@@ -302,7 +303,7 @@ namespace gamelib
     void Entity::_quit()
     {
         _children.clear();
-        clear();
+        clearComponents();
     }
 
     void Entity::_refresh(RefreshType type, Component* comp)

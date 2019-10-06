@@ -23,21 +23,25 @@ namespace gamelib
     { }
 
 
-    EntityReference EntityFactory::createWithDelta(const std::string& name, const Json::Value& node)
+    EntityReference EntityFactory::createWithDelta(const Json::Value& node)
     {
-        auto ent = getSubsystem<EntityManager>()->add(name);
+        EntityPtr ent(new Entity());
 
-        if (!createWithDelta(name, node, ent.get()))
-        {
-            ent->destroy();
-            ent = nullptr;
-        }
-
-        return ent;
+        if (createWithDelta(node, ent.get()))
+            return getSubsystem<EntityManager>()->getRoot()->addChild(std::move(ent));
+        return nullptr;
     }
 
-    bool EntityFactory::createWithDelta(const std::string& name, const Json::Value& node, Entity* ent)
+    bool EntityFactory::createWithDelta(const Json::Value& node, Entity* ent)
     {
+        if (!node.isMember("name"))
+        {
+            LOG_ERROR("Invalid entity config format: No name specified");
+            return false;
+        }
+
+        auto name = node["name"].asString();
+
         if (create(name, ent) && extendFromJson(node, *ent))
             return true;
         return false;

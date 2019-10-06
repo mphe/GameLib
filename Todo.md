@@ -54,6 +54,8 @@
 * Support rendering to OSB in Game class
 * Delay entity destroy to begin frame or end frame to prevent possible segfaults
 * Aseprite import
+* Unregister properties from base classes if not needed
+    * e.g. SpriteComponent doesn't need RenderComponents's "texture" property, because it defines its own "sprite"
 
 * provide failsafe implementations in core subsystems
     * no crash when trying to create unknown entities/components

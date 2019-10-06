@@ -21,8 +21,11 @@
                "linewidth" : 64
             },
             "MeshRenderer#1" : {
-               "primitiveType" : 4,
                "depth" : -1,
+               "options" : {
+                  "texture" : "tex/grass.png"
+               },
+               "primitiveType" : 4,
                "texture" : "tex/grass.png",
                "vertices" : [
                   [ -7.7611393928527832, -31.044557571411133 ],
@@ -77,6 +80,9 @@
             },
             "SpriteComponent#1" : {
                "depth" : -2,
+               "options" : {
+                  "texture" : "tex/sheet.png"
+               },
                "sprite" : "spr/player_stand.spr",
                "transform" : {
                   "origin" : [ 16, 16 ]
@@ -94,7 +100,8 @@
                "depth" : -3,
                "options" : {
                   "flags" : 16,
-                  "parallax" : 1.0399999618530273
+                  "parallax" : 1.0399999618530273,
+                  "texture" : "tex/tree.png"
                },
                "sprite" : "spr/tree.spr"
             }
@@ -109,7 +116,8 @@
             "SpriteComponent#1" : {
                "options" : {
                   "flags" : 16,
-                  "parallax" : 0.90000009536743164
+                  "parallax" : 0.90000009536743164,
+                  "texture" : "tex/tree.png"
                },
                "sprite" : "spr/tree.spr"
             }
@@ -124,7 +132,8 @@
             "SpriteComponent#1" : {
                "options" : {
                   "flags" : 16,
-                  "parallax" : 0.96000003814697266
+                  "parallax" : 0.96000003814697266,
+                  "texture" : "tex/tree2.png"
                },
                "sprite" : "spr/tree2.spr"
             }
@@ -140,11 +149,12 @@
                "linewidth" : 64
             },
             "MeshRenderer#1" : {
-               "primitiveType" : 4,
                "depth" : -12,
                "options" : {
-                  "parallax" : 1.0799999237060547
+                  "parallax" : 1.0799999237060547,
+                  "texture" : "tex/grass.png"
                },
+               "primitiveType" : 4,
                "texture" : "tex/grass.png",
                "vertices" : [
                   [ -7.7611393928527832, -31.044557571411133 ],
@@ -198,9 +208,12 @@
                "linewidth" : 64
             },
             "MeshRenderer#1" : {
-               "primitiveType" : 4,
                "depth" : -1,
                "layer" : "bg",
+               "options" : {
+                  "texture" : "tex/grass.png"
+               },
+               "primitiveType" : 4,
                "texture" : "tex/grass.png",
                "vertices" : [
                   [ -57.599998474121094, 44.799999237060547 ],
@@ -268,8 +281,11 @@
       {
          "components" : {
             "MeshRenderer#1" : {
-               "primitiveType" : 5,
                "layer" : "bg",
+               "options" : {
+                  "texture" : "tex/dirt2.png"
+               },
+               "primitiveType" : 5,
                "texture" : "tex/dirt2.png",
                "vertices" : [
                   [ 0, 0 ],

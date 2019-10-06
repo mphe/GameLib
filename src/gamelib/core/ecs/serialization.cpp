@@ -149,7 +149,7 @@ namespace gamelib
 
     bool loadFromJson(const Json::Value& node, Entity& ent)
     {
-        ent.clear();
+        ent.clearComponents();
         return extendFromJson(node, ent, true);
     }
 
@@ -252,9 +252,16 @@ namespace gamelib
 
     void writeToJson(Json::Value& node, const Entity& ent)
     {
-        writeToJson(node, ent, [](Json::Value& compnode, Component& comp) {
-                comp.writeToJson(compnode);
-                return true;
-            });
+        node["name"] = ent.getName();
+        node["flags"] = ent.flags;
+        gamelib::writeToJson(node["transform"], ent.getTransform());
+
+        auto& comps = node["components"];
+        comps = Json::Value(Json::objectValue);
+
+        for (const auto& i : ent)
+            if (i.ptr)
+                i.ptr->writeToJson(
+                        comps[generateName(i.ptr->getName(), i.id)]);
     }
 }

@@ -24,9 +24,15 @@ namespace gamelib
             res = baseres;
         }
 
+        if (res->isMember("children"))
+        {
+            LOG_ERROR("Can't define children in entity configs -> removing");
+            res->removeMember("children");
+        }
+
         auto factory = getSubsystem<EntityFactory>();
         if (factory)
-            factory->add(*res.as<JsonResource>());
+            factory->add(*res);
 
         return res;
     }

@@ -75,7 +75,7 @@ namespace gamelib
             auto find(ID type) const                 -> Component*;
             auto find(const std::string& name) const -> Component*;
             auto size() const                        -> size_t;
-            auto clear()                             -> void;
+            auto clearComponents()                   -> void;
 
             auto begin() const -> ComponentList::const_iterator;
             auto end() const   -> ComponentList::const_iterator;
@@ -130,8 +130,6 @@ namespace gamelib
             auto findAllByName(F callback) const -> void;
 
         public:
-            template <typename F>
-            friend void writeToJson(Json::Value&, const Entity&, F);
             friend bool extendFromJson(const Json::Value&, Entity&, bool);
 
         private:
