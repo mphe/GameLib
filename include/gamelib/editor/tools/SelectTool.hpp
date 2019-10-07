@@ -24,9 +24,10 @@ namespace gamelib
             void render(sf::RenderTarget& target) final override;
             void drawGui() final override;
 
-            void select(EntityReference ent);
-            void selectComponent(Component* comp);
-            void select(float x, float y);
+            auto select(EntityReference ent)      -> EntityReference;
+            auto selectComponent(Component* comp) -> Component*;
+            auto select(float x, float y)         -> EntityReference;
+            auto find(float x, float y)           -> EntityReference;
 
             auto getSelected() const          -> EntityReference;
             auto getSelectedComponent() const -> Component*;
@@ -43,6 +44,7 @@ namespace gamelib
             int _mode;
             bool _cloned;
             bool _switchmode;
+            bool _dragged;
     };
 }
 

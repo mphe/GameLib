@@ -21,13 +21,18 @@ namespace gamelib
         _scaleselect(-1),
         _mode(mode_move),
         _cloned(false),
-        _switchmode(false)
+        _switchmode(false),
+        _dragged(false)
     { }
 
     void SelectTool::onMouseRelease()
     {
+        // LOG("release");
         _scaleselect = -1;
         _cloned = false;
+
+        if (!_dragged && getSelected())
+            select(EditorShared::getMouse().x, EditorShared::getMouse().y);
 
         if (_switchmode)
         {
@@ -38,9 +43,35 @@ namespace gamelib
 
     void SelectTool::onMousePressed()
     {
+        // LOG("press");
+        _dragged = false;
+
+        { // Select
+            // If there's an entity under the mouse, select it.
+            // If it's the selected entity, switch transform mode.
+            // If there's no entity, keep the old selected for dragging.
+
+            auto old = getSelected();
+            auto ent = find(EditorShared::getMouse().x, EditorShared::getMouse().y);
+
+            if (ent)
+            {
+                if (ent == old)
+                    _switchmode = true;
+                else
+                    select(ent);
+            }
+        }
+
+        auto ent = getSelected();
+        if (!ent)
+            return;
+
+        _dragoffset = EditorShared::getMouse() - ent->getTransform().getPosition();
+
         if (_mode == mode_scale)
         {
-            auto box = getSelected()->getTransform().getBBox();
+            auto box = ent->getTransform().getBBox();
             size_t i = 0;
             for (float x : { 0.f, 0.5f, 1.f })
                 for (float y : { 0.f, 0.5f, 1.f })
@@ -54,24 +85,13 @@ namespace gamelib
                         ++i;
                     }
         }
-
-        auto old = getSelected();
-        select(EditorShared::getMouse().x, EditorShared::getMouse().y);
-
-        auto ent = getSelected();
-        if (ent)
-        {
-            _dragoffset = EditorShared::getMouse() - ent->getTransform().getPosition();
-
-            if (old == ent)
-                _switchmode = true;
-        }
-        else    // deselected
-            _mode = mode_move;
     }
 
     void SelectTool::onDrag()
     {
+        // LOG("drag");
+        _dragged = true;
+
         auto ent = getSelected();
         if (!ent)
             return;
@@ -196,10 +216,10 @@ namespace gamelib
         ImGui::Text("Mode: %i", _mode);
     }
 
-    void SelectTool::select(EntityReference ent)
+    EntityReference SelectTool::select(EntityReference ent)
     {
         if (ent == _selected)
-            return;
+            return ent;
         else
             _mode = mode_move;
 
@@ -213,33 +233,37 @@ namespace gamelib
             LOG("Selection cleared");
 
         EventManager::getActive()->triggerEvent(OnSelectEvent::create(old, _selected));
+        return _selected;
     }
 
-    void SelectTool::selectComponent(Component* comp)
+    Component* SelectTool::selectComponent(Component* comp)
     {
         if (_selectedcomp == comp)
-            return;
+            return comp;
         if (comp)
             select(comp->getEntity());
         _selectedcomp = comp;
+        return comp;
     }
 
-    void SelectTool::select(float x, float y)
+    EntityReference SelectTool::select(float x, float y)
+    {
+        return select(find(x, y));
+    }
+
+    auto SelectTool::find(float x, float y) -> EntityReference
     {
         auto rensys = getSubsystem<RenderSystem>();
         if (!rensys)
-        {
-            select(nullptr);
-            return;
-        }
+            return nullptr;
 
         auto node = rensys->getNode(
                 rensys->getNodeAtPosition(math::Point2f(x, y)));
 
         if (node && node->owner)
-            select(node->owner->getEntity());
+            return node->owner->getEntity();
         else
-            select(nullptr);
+            return nullptr;
     }
 
     EntityReference SelectTool::getSelected() const
