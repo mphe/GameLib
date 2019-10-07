@@ -455,16 +455,16 @@ namespace gamelib
 
             if (!input->isMouseConsumed())
             {
-                if (input->getMouse().moved)
-                {
-                    if (_drag)
-                        _currenttool->onDrag();
-                    else
-                        _currenttool->onMouseMove();
-                }
-
                 if (mouse.wheel)
                     _cam.zoomTowards(mouse.world.x, mouse.world.y, mouse.wheel / -10.0);
+            }
+
+            if (input->getMouse().moved)
+            {
+                if (_drag)
+                    _currenttool->onDrag();
+                else
+                    _currenttool->onMouseMove();
             }
 
             if (input->isMousePressed(sf::Mouse::Left))
@@ -472,7 +472,7 @@ namespace gamelib
                 _currenttool->onMousePressed();
                 _drag = true;
             }
-            else if (!input->isMouseDown(sf::Mouse::Left))
+            else if (_drag && !input->isMouseDown(sf::Mouse::Left))
                 // Use !mouseDown because if mouse is consumed, mouseReleased will never be true
             {
                 _currenttool->onMouseRelease();
