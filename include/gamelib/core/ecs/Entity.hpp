@@ -93,7 +93,7 @@ namespace gamelib
             // Return true to break loop, otherwise false.
             // Signature: (EntityReference) -> bool
             template <typename F>
-            auto iterSubtree(F f) const -> EntityReference;
+            auto iterSubtree(F f, bool skipself = false) const -> EntityReference;
 
 
             template <typename T, typename... Args>
@@ -230,14 +230,15 @@ namespace gamelib
     }
 
     template <typename F>
-    auto Entity::iterSubtree(F f) const -> EntityReference
+    auto Entity::iterSubtree(F f, bool skipself) const -> EntityReference
     {
+        if (!skipself)
+            if (f(const_cast<Entity*>(this)))
+                return const_cast<Entity*>(this);
+
         for (auto& i : _children)
         {
-            if (f(i.get()))
-                return i.get();
-
-            auto tmp = i->iterSubtree(f);
+            auto tmp = i->iterSubtree(f, false);
             if (tmp)
                 return tmp;
         }

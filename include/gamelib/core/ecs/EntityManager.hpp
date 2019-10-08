@@ -31,7 +31,7 @@ namespace gamelib
             template <typename F>
             auto foreach(F f) const -> EntityReference
             {
-                return _root.iterSubtree(f);
+                return _root.iterSubtree(f, true);
             }
 
         private:
