@@ -6,6 +6,7 @@
 #include "gamelib/core/input/InputSystem.hpp"
 #include "gamelib/core/Game.hpp"
 #include "gamelib/core/rendering/CameraSystem.hpp"
+#include "gamelib/core/rendering/RenderSystem.hpp"
 #include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/components/update/QPhysics.hpp"
 #include "imgui.h"
@@ -38,7 +39,11 @@ namespace gamelib
                 ImGui::Text("Real frametime: %i ms", (int)(game->getRealFrametime() * 1000));
                 ImGui::Text("Render time: %f ms", game->getRenderTime() * 1000);
                 ImGui::Text("Update time: %f ms", game->getUpdateTime() * 1000);
-                ImGui::Text("Objects rendered: %lu", getSubsystem<CameraSystem>()->getNumRendered());
+
+                auto numrendered = getSubsystem<CameraSystem>()->getNumRendered();
+                if (!numrendered)
+                    numrendered = RenderSystem::getActive()->getNumObjectsRendered();
+                ImGui::Text("Objects rendered: %lu", numrendered);
             }
             ImGui::End();
             ImGui::PopStyleColor();

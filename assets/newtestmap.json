@@ -203,6 +203,42 @@
          }
       },
       {
+         "children" : [
+            {
+               "components" : {
+                  "MeshRenderer#1" : {
+                     "layer" : "bg",
+                     "options" : {
+                        "texture" : "tex/dirt2.png"
+                     },
+                     "primitiveType" : 5,
+                     "texture" : "tex/dirt2.png",
+                     "vertices" : [
+                        [ 0, 0 ],
+                        [ 96, -128 ],
+                        [ 320, -160 ],
+                        [ 608, -32 ],
+                        [ 704, 64 ],
+                        [ 160, 64 ]
+                     ]
+                  },
+                  "PolygonCollision#1" : {
+                     "vertices" : [
+                        [ 0, 0 ],
+                        [ 96, -128 ],
+                        [ 320, -160 ],
+                        [ 608, -32 ],
+                        [ 704, 64 ],
+                        [ 160, 64 ]
+                     ]
+                  }
+               },
+               "name" : "brush_polygon",
+               "transform" : {
+                  "pos" : [ -128, 288 ]
+               }
+            }
+         ],
          "components" : {
             "LineBrushComponent#1" : {
                "linewidth" : 64
@@ -276,40 +312,6 @@
          "name" : "brush_line",
          "transform" : {
             "pos" : [ -96, 224 ]
-         }
-      },
-      {
-         "components" : {
-            "MeshRenderer#1" : {
-               "layer" : "bg",
-               "options" : {
-                  "texture" : "tex/dirt2.png"
-               },
-               "primitiveType" : 5,
-               "texture" : "tex/dirt2.png",
-               "vertices" : [
-                  [ 0, 0 ],
-                  [ 96, -128 ],
-                  [ 320, -160 ],
-                  [ 608, -32 ],
-                  [ 704, 64 ],
-                  [ 160, 64 ]
-               ]
-            },
-            "PolygonCollision#1" : {
-               "vertices" : [
-                  [ 0, 0 ],
-                  [ 96, -128 ],
-                  [ 320, -160 ],
-                  [ 608, -32 ],
-                  [ 704, 64 ],
-                  [ 160, 64 ]
-               ]
-            }
-         },
-         "name" : "brush_polygon",
-         "transform" : {
-            "pos" : [ -128, 288 ]
          }
       }
    ],

@@ -7,6 +7,7 @@
 #include "gamelib/core/ecs/serialization.hpp"
 #include "imgui.h"
 #include "imgui_internal.h"
+#include <SFML/Window/Mouse.hpp>
 
 namespace gamelib
 {
@@ -72,6 +73,14 @@ namespace gamelib
         bool open = ImGui::TreeNodeEx(entname,
                 flags | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow);
 
+        if (ImGui::BeginPopupContextItem("Context Menu##enttree", sf::Mouse::Right))
+        {
+            if (ImGui::Selectable("Ungroup"))
+                while (!ent->getChildren().empty())
+                    ent->getChildren()[0]->reparent(ent->getParent());
+            ImGui::EndPopup();
+        }
+
         if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoHoldToOpenOthers))
         {
             ImGui::SetDragDropPayload("dnd_entity_tree", &ent, sizeof(ent));
@@ -94,8 +103,11 @@ namespace gamelib
                     ImGui::EndDragDropTarget();
                 }
             }
-            else if (!ImGui::IsMouseDragging() && ImGui::IsItemHovered() && ImGui::IsMouseReleased(0))
-                select.select(ent);
+            else if (!ImGui::IsMouseDragging() && ImGui::IsItemHovered())
+            {
+                if (ImGui::IsMouseReleased(0))
+                    select.select(ent);
+            }
         }
 
         if (open)
@@ -158,17 +170,13 @@ namespace gamelib
     {
         SelectTool& select = EditorShared::getSelectTool();
         auto ent = select.getSelected();
-
-        if (!ent)
-            return;
-
         auto comp = select.getSelectedComponent();
 
-        if (ImGui::Begin("Properties", open, ImVec2(250, 285)))
+        if (ImGui::Begin(entity_properties_window_name, open, ImVec2(250, 285)))
         {
             if (comp)
                 inputComponent(*comp);
-            else
+            else if (ent)
                 inputEntityProps(*ent);
         }
         ImGui::End();

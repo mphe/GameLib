@@ -9,6 +9,7 @@
 #include "gamelib/core/ecs/serialization.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
 #include "gamelib/core/event/EventManager.hpp"
+#include "gamelib/editor/events/OnSelect.hpp"
 #include "gamelib/editor/tools/SpriteTool.hpp"
 #include "gamelib/editor/tools/BrushTool.hpp"
 #include "gamelib/editor/tools/VertexTool.hpp"
@@ -23,6 +24,7 @@
 #include "gamelib/editor/ui/GlobalGameConfig.hpp"
 #include "gamelib/editor/EditorShared.hpp"
 #include "imgui.h"
+// #include "imgui_internal.h"
 
 namespace gamelib
 {
@@ -76,6 +78,11 @@ namespace gamelib
         _tools[ToolEntity].reset(new EntityTool());
         setTool(ToolBrush);
 
+        _evSelected = registerEvent<OnSelectEvent>(+[](Editor*, EventPtr ev) {
+            if (ev->get<OnSelectEvent>()->entity)
+                ImGui::SetWindowFocus(entity_properties_window_name);
+        }, this);
+
         return true;
     }
 
@@ -83,7 +90,7 @@ namespace gamelib
     {
         _resviewer.close();
 
-        _sfmlEvent.unregister();
+        _evSelected.unregister();
 
         _currenttool = nullptr;
         for (auto& i : _tools)
@@ -237,7 +244,8 @@ namespace gamelib
     {
         static bool testwindow = false;
         static bool jsonwindow = false;
-        static bool toolbox = true;
+        static bool toolbar = true;
+        static bool toolprops = true;
         static bool layerbox = false;
         static bool cambox = false;
         static bool entprops = true;
@@ -251,7 +259,30 @@ namespace gamelib
         auto selected = getSelectTool().getSelected();
         auto input = getSubsystem<InputSystem>();
 
-        if (ImGui::BeginMainMenuBar())
+        auto viewport = ImGui::GetMainViewport();
+        ImGuiID dockspace_id = ImGui::GetID("editorDockSpace");
+
+        { // Setup docking window
+            ImGui::SetNextWindowPos(viewport->Pos);
+            ImGui::SetNextWindowSize(viewport->Size);
+            ImGui::SetNextWindowViewport(viewport->ID);
+
+            ImGuiWindowFlags host_window_flags = 0;
+            host_window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDocking;
+            host_window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+            host_window_flags |= ImGuiWindowFlags_NoBackground;
+            host_window_flags |= ImGuiWindowFlags_MenuBar;
+
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+            ImGui::Begin("editor_viewport", NULL, host_window_flags);
+            ImGui::PopStyleVar(3);
+
+            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+        }
+
+        if (ImGui::BeginMenuBar())
         {
             if (ImGui::BeginMenu("File"))
             {
@@ -309,7 +340,8 @@ namespace gamelib
             }
             if (ImGui::BeginMenu("Tools"))
             {
-                ImGui::MenuItem("Toolbox", nullptr, &toolbox);
+                ImGui::MenuItem("Toolbar", nullptr, &toolbar);
+                ImGui::MenuItem("Tool properties", nullptr, &toolprops);
                 ImGui::MenuItem("Entity properties", nullptr, &entprops);
                 ImGui::MenuItem("Entity list", nullptr, &entlist);
                 ImGui::MenuItem("Layer settings", nullptr, &layerbox);
@@ -334,7 +366,37 @@ namespace gamelib
                     _grid.decrease();
                 ImGui::EndMenu();
             }
-            ImGui::EndMainMenuBar();
+            ImGui::EndMenuBar();
+        }
+
+        // End docking window
+        ImGui::End();
+
+        { // Toolbar
+            // ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetItemRectSize().y));
+            // ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, -1));
+            // ImGui::SetNextWindowSize(ImVec2(-1, -1));
+
+            if (toolbar && ImGui::Begin("toolbar", &toolbar, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize |
+                        ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoFocusOnAppearing))
+            {
+                for (size_t i = 0; i < NumTools; ++i)
+                {
+                    if (ImGui::Button(buttonStrings[i]))
+                    {
+                        setTool(static_cast<Tools>(i));
+                        ImGui::SetNextWindowFocus();
+                    }
+                    ImGui::SameLine();
+                    ImGui::Spacing();
+                    ImGui::SameLine();
+                }
+            }
+            ImGui::End();
+
+            if (toolprops && ImGui::Begin("Tool Properties", &toolprops, ImVec2(250, 125)))
+                _currenttool->drawGui();
+            ImGui::End();
         }
 
         { // Loading / Saving
@@ -385,20 +447,6 @@ namespace gamelib
 
             _resviewer.draw();
             _overlay.drawGui();
-
-            if (toolbox)
-            {
-                if (ImGui::Begin("Toolbox", &toolbox, ImVec2(250, 125)))
-                {
-                    for (size_t i = 0; i < NumTools; ++i)
-                        if (ImGui::Button(buttonStrings[i]))
-                            setTool(static_cast<Tools>(i));
-                    ImGui::Separator();
-
-                    _currenttool->drawGui();
-                }
-                ImGui::End();
-            }
         }
     }
 

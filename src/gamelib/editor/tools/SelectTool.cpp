@@ -178,13 +178,21 @@ namespace gamelib
         if (!ent)
             return;
 
-        if (renderBBox)
-        {
-            auto box = ent->getTransform().getBBox();
+        ent->iterSubtree([&](EntityReference ent) {
             if (renderAllBoxes)
-                box.extend(math::AABBf(0, 0, 0.5, 0.5));
-            drawRectOutline(target, box);
-        }
+                for (auto& i : ent->getTransform().getChildren())
+                    drawRectOutline(target, i->getBBox(), sf::Color::Green);
+
+            if (renderBBox)
+            {
+                auto box = ent->getTransform().getBBox();
+                if (renderAllBoxes)
+                    box.extend(math::AABBf(0, 0, 0.5, 0.5));
+                drawRectOutline(target, box);
+            }
+
+            return false;
+        });
 
         if (_mode == mode_scale)
         {
@@ -195,10 +203,6 @@ namespace gamelib
                     if (x != 0.5f || y != 0.5f)
                         drawDragBox(target, bbox.pos.asPoint() + math::Vec2f(x, y) * bbox.size, _scaleselect == (i++));
         }
-
-        if (renderAllBoxes)
-            for (auto& i : ent->getTransform().getChildren())
-                drawRectOutline(target, i->getBBox(), sf::Color::Green);
 
         auto& pos = ent->getTransform().getPosition();
         sf::Vertex cross[4];

@@ -13,10 +13,6 @@ int main(int argc, char *argv[])
     game.loadFromFile("assets/editor.json");
     game.init();
 
-    ImGui::GetStyle().WindowBorderSize = 0;
-    ImGui::GetStyle().WindowRounding = 0;
-    ImGui::StyleColorsClassic();
-
     GameStatePtr engineState(new Engine(false));
     auto engine = static_cast<Engine*>(engineState.get());
     engine->resmgr.loadFromFile("assets/res.json");

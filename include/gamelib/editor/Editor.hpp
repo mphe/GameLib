@@ -56,7 +56,6 @@ namespace gamelib
             auto registerExportCallback(ExportFunction callback) -> void;
 
         private:
-            static auto _eventCallback(Editor* self, EventPtr ev) -> void;
             auto _drawGui() -> void;
             auto _handleInput() -> void;
             auto _updateRunFlags() -> void;
@@ -85,7 +84,7 @@ namespace gamelib
             bool _run;
             bool _hidegui;
 
-            EventHandle _sfmlEvent;
+            EventHandle _evSelected;
     };
 }
 

@@ -56,6 +56,14 @@
 * Aseprite import
 * Unregister properties from base classes if not needed
     * e.g. SpriteComponent doesn't need RenderComponents's "texture" property, because it defines its own "sprite"
+* Hierachy clone
+* EventManager: Allow respective event pointer in callbacks instead of EventPtr
+
+RenderSystem:
+    * Write an IPointSet adapter to edit meshes
+    * Wireframe support
+
+* Entity: remove deprecated getEntity() stuff
 
 * provide failsafe implementations in core subsystems
     * no crash when trying to create unknown entities/components
@@ -90,9 +98,6 @@
             * ensure component manipulation does not alter the gamestate
         * allow no ambiguous properties and config values
 
-
-RenderSystem:
-    * Write an IPointSet adapter to edit meshes
 
 * SlotMap
     * add operator->() to SlotMapIterator
@@ -161,15 +166,10 @@ RenderSystem:
         * callback handler + pointer to property
 
 * imgui
-    * imgui game state
     * imgui dialogues
-    * disabled widgets
-        * update imgui to upstream
-        * https://github.com/ocornut/imgui/issues/1889
 
 * classes
     * LineRenderer class
-    * EntityRef/ComponentRef/EntCompRef class
     * Render parent like GroupTransform but for RenderComponents
     * ScopedIterator
     * Background entity
