@@ -8,8 +8,11 @@ struct A : public LifetimeTracker<A> { int x; };
 
 struct B : public LifetimeTracker<B> { };
 
+struct C : public A {};
+
 typedef A::LTRef ARef;
 typedef B::LTRef BRef;
+typedef LifetimeReference<C> CRef;
 
 template <typename T>
 void checkHandle(const LifetimeReference<T>& ref, T* ptr, bool expectedValid = true)
@@ -79,6 +82,42 @@ int main()
 
     // a3 should be destroyed now because out of scope
     checkHandle(a3ref, (A*)nullptr, false);
+
+    { // Test cast
+        assert((std::is_assignable<ARef, A*>::value) && "Should be assignable");
+        assert((!std::is_assignable<A*, ARef>::value) && "Should not be assignable");
+#define ASSERT_ASSIGN(lhs, rhs, expected) assert((std::is_assignable<lhs, rhs>::value) == expected && (expected ? "Should be assignable" : "Should not be assignable"));
+
+        ASSERT_ASSIGN(A*, ARef, false);
+
+        ASSERT_ASSIGN(ARef, A*, true);
+        ASSERT_ASSIGN(ARef, B*, false);
+        ASSERT_ASSIGN(ARef, C*, true);
+
+        ASSERT_ASSIGN(ARef, ARef, true);
+        ASSERT_ASSIGN(ARef, BRef, false);
+        ASSERT_ASSIGN(ARef, CRef, true);
+
+        ASSERT_ASSIGN(CRef, A*, false);
+        ASSERT_ASSIGN(CRef, B*, false);
+        ASSERT_ASSIGN(CRef, C*, true);
+
+        ASSERT_ASSIGN(CRef, ARef, false);
+        ASSERT_ASSIGN(CRef, BRef, false);
+        ASSERT_ASSIGN(CRef, CRef, true);
+
+        A a;
+        B b;
+        C c;
+        ARef aref;
+        BRef bref;
+        CRef cref;
+
+        aref = cref.as<A>();
+        assert(aref.get() == static_cast<A*>(cref.get()) && "Reference points to wrong address");
+        cref = aref.as<C>();
+        assert(cref.get() == static_cast<C*>(aref.get()) && "Reference points to wrong address");
+    }
 
     return 0;
 }

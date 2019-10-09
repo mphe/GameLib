@@ -157,6 +157,18 @@ namespace gamelib
                 return this->get();
             }
 
+            template <typename NT, typename U = T, typename = typename std::enable_if<std::is_base_of<NT, U>::value>::type>
+            operator LifetimeReference<NT>() const
+            {
+                return LifetimeReference<NT>(handle);
+            }
+
+            template <typename NT, typename U = T, typename = decltype(static_cast<NT*>(std::declval<U*>()))>
+            auto as() const -> LifetimeReference<NT>
+            {
+                return LifetimeReference<NT>(handle);
+            }
+
         public:
             LifetimeHandle handle;
     };
