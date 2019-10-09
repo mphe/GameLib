@@ -38,9 +38,9 @@ namespace gamelib
         return math::sweep(rect, vel, getBBox());
     }
 
-    bool AABBMask::setComponent(const Component* c)
+    bool AABBMask::setComponent(BaseCompRef c)
     {
-        if (static_cast<Component*>(this) == c)
+        if (static_cast<Component*>(this) == c.get())
         {
             LOG_ERROR("Can't assign self");
             return false;
@@ -57,7 +57,7 @@ namespace gamelib
         }
     }
 
-    const Component* AABBMask::getComponent() const
+    BaseCompRef AABBMask::getComponent() const
     {
         return _comp;
     }

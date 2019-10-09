@@ -65,11 +65,6 @@ RenderSystem:
 
 * Entity: remove deprecated getEntity() stuff
 
-* provide failsafe implementations in core subsystems
-    * no crash when trying to create unknown entities/components
-    * no crash with missing components
-    * etc
-
 * config normalization problem
     * related to c6d84f340805c911d58c15af3d198d16f56ffa2d
     * entity configurations are usually handwritten
@@ -153,17 +148,6 @@ RenderSystem:
         * force usage of Component#ID notation and drop support for short notation
         * use a new naming scheme for components that removes ambiguity
 
-
-* find a way to inform references about component removal
-    1. somewhere a pointer to a component is stored
-    2. the component gets deleted
-    3. the reference holder segfaults on next access
-    * could be done by a weak_ptr equivalent for unique_ptr
-        * store components as shared_ptr?
-    * check validity in \_refresh()
-        * wouldn't work if the reference is not held by a component or it references a component from another entity
-    * use a ComponentRemoved event
-        * callback handler + pointer to property
 
 * imgui
     * imgui dialogues
@@ -296,14 +280,11 @@ RenderSystem:
         * dummy (makes PropDummy obsolete)
     * ConstPropertyHandle
         * use in BasePropType loadFromJson, drawGui
-    * PropComponent needs to react if the component list changes
     * rewrite resource property to be safer
         * resource handle gets reinterpret_casted to BaseResourceHandle
         * works fine as long as the resource is of type Resource<T>
         * if not, things might break if the resource type uses multiple inheritance
-
-* log
-    * warn if null
+* log * warn if null
     * assert
     * live update support (e.g. currently rendered instances)
         * "log entry\r" fix

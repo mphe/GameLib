@@ -19,7 +19,7 @@ class BarComponent : public Identifier<0x650e189e, Component>
 
         void _refresh(RefreshType, Component* comp) final override
         {
-            FooComponent* foo = getEntity()->findByType<FooComponent>();
+            auto foo = getEntity()->findByType<FooComponent>();
             assert(foo && "FooComponent not found");
             x = foo->x;
         }

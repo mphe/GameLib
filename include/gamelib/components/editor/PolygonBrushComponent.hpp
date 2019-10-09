@@ -31,8 +31,8 @@ namespace gamelib
             virtual auto regenerate() const -> void;
 
         protected:
-            PolygonCollider* _pol;
-            MeshRenderer* _shape;
+            ComponentReference<PolygonCollider> _pol;
+            ComponentReference<MeshRenderer> _shape;
     };
 }
 

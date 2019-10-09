@@ -36,7 +36,7 @@ namespace gamelib
     // Returns the snapped vertex or the grid snapped input point in case it wasn't snapped
     math::Point2f snap(const math::AbstractPolygon<float>& pol, const math::Point2f& p, size_t ignoreindex = -1);
 
-    PolygonBrushComponent* getIfBrush(EntityReference ent);
+    CompRef<PolygonBrushComponent> getIfBrush(EntityReference ent);
 }
 
 #endif

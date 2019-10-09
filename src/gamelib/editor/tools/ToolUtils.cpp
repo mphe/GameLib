@@ -95,12 +95,12 @@ namespace gamelib
 
     void drawCollisions(sf::RenderTarget& target, const Entity& ent, unsigned int flags, sf::Color col)
     {
-        ent.findAllByType<CollisionComponent>([&](CollisionComponent* comp) {
+        ent.findAllByType<CollisionComponent>([&](CompRef<CollisionComponent> comp) {
                 if (comp->flags & flags)
                 {
                     if (comp->getName() == PolygonCollider::name() && !(comp->flags & collision_noprecise))
                     {
-                        auto pol = static_cast<PolygonCollider*>(comp);
+                        auto pol = comp.as<PolygonCollider>();
                         sf::VertexArray vertices(sf::Lines);
                         pol->getGlobal().foreachSegment([&](const math::Line2f seg) {
                                 vertices.append(sf::Vertex(sf::Vector2f(seg.p.x, seg.p.y), col));
@@ -154,7 +154,7 @@ namespace gamelib
         return EditorShared::snap(p);
     }
 
-    PolygonBrushComponent* getIfBrush(EntityReference ent)
+    ComponentReference<PolygonBrushComponent> getIfBrush(EntityReference ent)
     {
         if (ent)
             return ent->findByType<PolygonBrushComponent>();

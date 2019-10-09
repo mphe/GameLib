@@ -12,7 +12,6 @@ namespace gamelib
         maxspeed(100),
         jumpspeed(100),
         jumpDecelerate(500),
-        phys(nullptr),
         slopejumps(true),
         handleInput(true),
         _input(0),

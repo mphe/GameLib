@@ -7,10 +7,9 @@
 namespace gamelib
 {
     LineBrushComponent::LineBrushComponent() :
-        _line(nullptr),
         _linewidth(32)
     {
-        auto cb = +[](PolygonCollider* const* val, LineBrushComponent* self) {
+        auto cb = +[](const ComponentReference<PolygonCollider>* val, LineBrushComponent* self) {
             self->_line = *val;
             self->regenerate();
         };
@@ -35,7 +34,7 @@ namespace gamelib
 
     PolygonCollider* LineBrushComponent::getBrushPolygon() const
     {
-        return _line;
+        return _line.get();
     }
 
     void LineBrushComponent::regenerate() const

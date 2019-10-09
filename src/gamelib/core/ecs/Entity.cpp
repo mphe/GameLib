@@ -36,33 +36,6 @@ namespace gamelib
     }
 
 
-//     Entity& Entity::operator=(Entity&& other)
-//     {
-//         // This is completely broken and hard to fix with planned changes
-//         // TODO: remove move constructor
-// #warning "remove move constructor"
-//
-//         other.getParent()->addChild(this);
-//
-//         for (auto& i : other.getChildren())
-//             addChild(i);
-//
-//         flags = other.flags;
-//         _entmgr = other._entmgr;
-//         _clearing = other._clearing;
-//         _handle = other._handle;
-//         _name = std::move(other._name);
-//         _transform = std::move(other._transform);
-//         _components = std::move(other._components);
-//
-//         other._parent = nullptr;
-//         other._entmgr = nullptr;
-//         other._handle.reset();
-//
-//         return *this;
-//     }
-
-
     auto Entity::addChild(EntityPtr ent) -> EntityReference
     {
         { // Sanity checks
@@ -202,7 +175,7 @@ namespace gamelib
         return _transform;
     }
 
-    Component* Entity::add(ComponentPtr comp)
+    BaseCompRef Entity::add(ComponentPtr comp)
     {
         assert(comp && "Component is nullptr");
 
@@ -230,10 +203,10 @@ namespace gamelib
         return ptr;
     }
 
-    void Entity::remove(Component* comp)
+    void Entity::remove(BaseCompRef comp)
     {
         for (auto it = _components.begin(), end = _components.end(); it != end; ++it)
-            if (it->ptr.get() == comp)
+            if (it->ptr.get() == comp.get())
             {
                 _refresh(ComponentRemoved, it->ptr.get());
 
@@ -249,32 +222,19 @@ namespace gamelib
             }
     }
 
-    auto Entity::hasComponent(Component* comp) const -> bool
+    auto Entity::hasComponent(BaseCompRef comp) const -> bool
     {
-        for (auto& i : _components)
-            if (i.ptr.get() == comp)
-                return true;
-        return false;
+        return comp && comp->getEntity().get() == this;
     }
 
-    Component* Entity::find(ID type) const
+    BaseCompRef Entity::find(ID type) const
     {
-        Component* ptr = nullptr;
-        findAll(type, [&ptr](Component* comp) {
-                ptr = comp;
-                return true; // Break after first found
-            });
-        return ptr;
+        return findAll(type, [](BaseCompRef) { return true; });
     }
 
-    Component* Entity::find(const std::string& name) const
+    BaseCompRef Entity::find(const std::string& name) const
     {
-        Component* ptr = nullptr;
-        findAll(name, [&ptr](Component* comp) {
-                ptr = comp;
-                return true; // Break after first found
-            });
-        return ptr;
+        return findAll(name, [](BaseCompRef) { return true; });
     }
 
     size_t Entity::size() const

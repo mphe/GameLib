@@ -24,13 +24,13 @@ namespace gamelib
             void render(sf::RenderTarget& target) final override;
             void drawGui() final override;
 
-            auto select(EntityReference ent)      -> EntityReference;
-            auto selectComponent(Component* comp) -> Component*;
-            auto select(float x, float y)         -> EntityReference;
-            auto find(float x, float y)           -> EntityReference;
+            auto select(EntityReference ent)         -> EntityReference;
+            auto selectComponent(BaseCompRef comp) -> BaseCompRef;
+            auto select(float x, float y)            -> EntityReference;
+            auto find(float x, float y)              -> EntityReference;
 
             auto getSelected() const          -> EntityReference;
-            auto getSelectedComponent() const -> Component*;
+            auto getSelectedComponent() const -> BaseCompRef;
 
         public:
             bool renderBBox;
@@ -38,7 +38,7 @@ namespace gamelib
 
         private:
             EntityReference _selected;
-            Component* _selectedcomp;
+            BaseCompRef _selectedcomp;
             math::Vec2f _dragoffset;
             size_t _scaleselect;
             int _mode;

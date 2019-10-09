@@ -3,6 +3,7 @@
 
 #include "Tool.hpp"
 #include "gamelib/core/res/TextureResource.hpp"
+#include "gamelib/core/ecs/ecsmeta.hpp"
 #include "math/geometry/Point2.hpp"
 
 namespace gamelib
@@ -28,8 +29,8 @@ namespace gamelib
             void render(sf::RenderTarget& target) final override;
 
         private:
-            PolygonBrushComponent* _getIfSame() const;
-            void _apply(PolygonBrushComponent* brush) const;
+            auto _getIfSame() const -> ComponentReference<PolygonBrushComponent>;
+            auto _apply(ComponentReference<PolygonBrushComponent> brush) const -> void;
 
         private:
             bool _showdraggers;

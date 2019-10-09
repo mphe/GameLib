@@ -43,8 +43,8 @@ namespace gamelib
 
         private:
             SpriteResource::Handle _states[NumStates];
-            SpriteComponent* _sprite;
-            QPhysics* _phys;
+            ComponentReference<SpriteComponent> _sprite;
+            ComponentReference<QPhysics> _phys;
             State _current;
     };
 }

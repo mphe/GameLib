@@ -21,7 +21,7 @@ namespace gamelib
             auto regenerate() const -> void final override;
 
         private:
-            PolygonCollider* _line;
+            ComponentReference<PolygonCollider> _line;
             int _linewidth;
     };
 }

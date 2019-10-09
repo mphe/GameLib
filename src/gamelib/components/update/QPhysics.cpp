@@ -68,7 +68,7 @@ namespace gamelib
     }
 
 
-    CollisionComponent* QPhysics::moveToContact(const math::Vec2f& dist)
+    ComponentReference<CollisionComponent> QPhysics::moveToContact(const math::Vec2f& dist)
     {
         auto other = moveIfContact(dist);
         if (!other)
@@ -76,7 +76,7 @@ namespace gamelib
         return other;
     }
 
-    CollisionComponent* QPhysics::moveIfContact(const math::Vec2f& dist)
+    ComponentReference<CollisionComponent> QPhysics::moveIfContact(const math::Vec2f& dist)
     {
         auto hull = getHull();
         TraceResult tr = getSubsystem<CollisionSystem>()->trace(hull, dist, _hull, collision_solid);
@@ -388,7 +388,7 @@ namespace gamelib
         }
     }
 
-    void QPhysics::setGround(CollisionComponent* ground, const math::Vec2f& normal)
+    void QPhysics::setGround(ComponentReference<CollisionComponent> ground, const math::Vec2f& normal)
     {
         _ground.hull = ground;
         _ground.normal = normal;
@@ -491,10 +491,10 @@ namespace gamelib
     void QPhysics::_refresh(RefreshType type, Component* comp)
     {
         _hull = nullptr;
-        getEntity()->findAllByType<CollisionComponent>([this](CollisionComponent* comp) {
+        getEntity()->findAllByType<CollisionComponent>([this](ComponentReference<CollisionComponent> comp) {
                 if (comp->flags & collision_physicshull)
                 {
-                    _hull = comp;
+                    _hull = &(*comp);
                     return true;
                 }
                 return false;

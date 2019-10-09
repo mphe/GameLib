@@ -36,7 +36,7 @@ namespace gamelib
 
             struct GroundData
             {
-                CollisionComponent* hull;
+                ComponentReference<CollisionComponent> hull;
                 math::Vec2f normal;
                 float slope;
             };
@@ -53,8 +53,8 @@ namespace gamelib
             // Accelerates in a 1 / accel second to the desired speed.
             auto accelerate(const math::Vec2f& wishdir, float wishspeed, float accel) -> void;
 
-            auto moveToContact(const math::Vec2f& dist)    -> CollisionComponent*;
-            auto moveIfContact(const math::Vec2f& dist)    -> CollisionComponent*;
+            auto moveToContact(const math::Vec2f& dist)    -> ComponentReference<CollisionComponent>;
+            auto moveIfContact(const math::Vec2f& dist)    -> ComponentReference<CollisionComponent>;
             auto clipmove(math::Vec2f* vel, float elapsed) -> void;
             auto clipmove(math::Vec2f* vel)                -> void;
             auto nudge(float size = 0.5)                   -> bool;
@@ -70,7 +70,7 @@ namespace gamelib
             auto getGround() const -> const GroundData&;
 
             auto categorizePosition() -> void;
-            auto setGround(CollisionComponent* ground, const math::Vec2f& normal) -> void;
+            auto setGround(ComponentReference<CollisionComponent> ground, const math::Vec2f& normal) -> void;
 
         protected:
             virtual auto _refresh(RefreshType type, Component* comp) -> void override;

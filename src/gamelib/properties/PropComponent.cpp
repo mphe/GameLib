@@ -10,7 +10,7 @@ namespace gamelib
 {
     PropComponent propComponent;
 
-    bool PropComponent::loadFromJson(const PropertyHandle& prop, Component** ptr, const Json::Value& node) const
+    bool PropComponent::loadFromJson(const PropertyHandle& prop, BaseCompRef* ptr, const Json::Value& node) const
     {
         if (!getEntity(prop))
         {
@@ -52,7 +52,7 @@ namespace gamelib
         return false;
     }
 
-    void PropComponent::writeToJson(const PropertyHandle& prop, Component* const* ptr, Json::Value& node) const
+    void PropComponent::writeToJson(const PropertyHandle& prop, BaseCompRef const* ptr, Json::Value& node) const
     {
         if (!*ptr)
         {
@@ -64,26 +64,32 @@ namespace gamelib
         }
 
         for (auto& i : *(*ptr)->getEntity())
-            if (i.ptr.get() == *ptr)
+            if (i.ptr.get() == ptr->get())
             {
                 node = generateName((*ptr)->getName(), i.id);
                 return;
             }
     }
 
-    bool PropComponent::drawGui(const PropertyHandle& prop, const std::string& name, Component** ptr) const
+    bool PropComponent::drawGui(const PropertyHandle& prop, const std::string& name, BaseCompRef* ptr) const
     {
         if (!getEntity(prop) || !prop.getData())
         {
             LOG_ERROR("No entity pointer passed to component property");
             return false;
         }
-        return inputComponentSelect(name, ptr, *getEntity(prop), static_cast<Component*>(prop.getData()), prop.min, prop.max, prop.hints);
+        Component* comp = ptr->get();
+        if (inputComponentSelect(name, &comp, *getEntity(prop), static_cast<Component*>(prop.getData()), prop.min, prop.max, prop.hints))
+        {
+            (*ptr) = comp;
+            return true;
+        }
+        return false;
     }
 
-    Entity* PropComponent::getEntity(const PropertyHandle& prop)
+    EntityReference PropComponent::getEntity(const PropertyHandle& prop)
     {
         auto c = static_cast<Component*>(prop.getData());
-        return c ? c->getEntity().get() : nullptr;
+        return c ? c->getEntity() : nullptr;
     }
 }

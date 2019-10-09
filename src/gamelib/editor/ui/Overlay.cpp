@@ -106,12 +106,10 @@ namespace gamelib
         }
 
         if (renderNormals)
-        {
-            ent->findAllByName<PolygonCollider>([&](PolygonCollider* pol) {
-                    if (pol->flags & collision_solid)
-                        drawNormals(target, pol->getGlobal());
-                    return false;
-                });
-        }
+            ent->findAllByName<PolygonCollider>([&](CompRef<PolygonCollider> pol) {
+                if (pol->flags & collision_solid)
+                    drawNormals(target, pol->getGlobal());
+                return false;
+            });
     }
 }

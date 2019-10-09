@@ -17,7 +17,6 @@ namespace gamelib
     SelectTool::SelectTool() :
         renderBBox(true),
         renderAllBoxes(false),
-        _selectedcomp(nullptr),
         _scaleselect(-1),
         _mode(mode_move),
         _cloned(false),
@@ -229,7 +228,7 @@ namespace gamelib
 
         auto old = _selected;
         _selected = ent;
-        _selectedcomp = nullptr;
+        _selectedcomp.reset();
 
         if (ent)
             LOG("Selected entity ", ent.get());
@@ -240,7 +239,7 @@ namespace gamelib
         return _selected;
     }
 
-    Component* SelectTool::selectComponent(Component* comp)
+    BaseCompRef SelectTool::selectComponent(BaseCompRef comp)
     {
         if (_selectedcomp == comp)
             return comp;
@@ -275,10 +274,8 @@ namespace gamelib
         return _selected;
     }
 
-    auto SelectTool::getSelectedComponent() const -> Component*
+    auto SelectTool::getSelectedComponent() const -> BaseCompRef
     {
-        if (!_selected || _selected->hasComponent(_selectedcomp))
-            return _selectedcomp;
-        return nullptr;
+        return _selectedcomp;
     }
 }

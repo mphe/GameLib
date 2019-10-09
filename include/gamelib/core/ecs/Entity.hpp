@@ -69,13 +69,13 @@ namespace gamelib
             auto getTransform() const -> const GroupTransform&;
             auto getTransform()       -> GroupTransform&;
 
-            auto add(ComponentPtr comp)              -> Component*;
-            auto remove(Component* comp)             -> void;
-            auto hasComponent(Component* comp) const -> bool;
-            auto find(ID type) const                 -> Component*;
-            auto find(const std::string& name) const -> Component*;
-            auto size() const                        -> size_t;
-            auto clearComponents()                   -> void;
+            auto add(ComponentPtr comp)                 -> BaseCompRef;
+            auto remove(BaseCompRef comp)             -> void;
+            auto hasComponent(BaseCompRef comp) const -> bool;
+            auto find(ID type) const                    -> BaseCompRef;
+            auto find(const std::string& name) const    -> BaseCompRef;
+            auto size() const                           -> size_t;
+            auto clearComponents()                      -> void;
 
             auto begin() const -> ComponentList::const_iterator;
             auto end() const   -> ComponentList::const_iterator;
@@ -97,37 +97,33 @@ namespace gamelib
 
 
             template <typename T, typename... Args>
-            auto add(Args&&... args) -> T*;
+            auto add(Args&&... args) -> ComponentReference<T>;
 
             template <typename T>
-            auto findByType() const -> T*;
+            auto findByType() const -> ComponentReference<T>;
 
             template <typename T>
-            auto findByName() const -> T*;
+            auto findByName() const -> ComponentReference<T>;
 
             // Calls a callback for each found component.
-            // Signature: bool(Component*)
-            // If the lambda returns true, the loop breaks. To continue return false.
+            // Signature: bool(BaseCompRef)
+            // If the lambda returns true, the loop breaks.
+            // Returns the component where the loop breaked, otherwise null.
             template <typename F>
-            auto findAll(ID type, F callback) const -> void;
+            auto findAll(ID type, F callback) const -> BaseCompRef;
 
-            // Calls a callback for each found component.
-            // Signature: bool(Component*)
-            // If the lambda returns true, the loop breaks. To continue return false.
             template <typename F>
-            auto findAll(const std::string& name, F callback) const -> void;
+            auto findAll(const std::string& name, F callback) const -> BaseCompRef;
 
             // Calls a callback for each found T component.
-            // Signature: bool(T*)
-            // If the lambda returns true, the loop breaks. To continue return false.
+            // Signature: bool(ComponentReference<T>)
+            // If the lambda returns true, the loop breaks.
+            // Returns the component where the loop breaked, otherwise null.
             template <typename T, typename F>
-            auto findAllByType(F callback) const -> void;
+            auto findAllByType(F callback) const -> ComponentReference<T>;
 
-            // Calls a callback for each found T component.
-            // Signature: bool(T*)
-            // If the lambda returns true, the loop breaks. To continue return false.
             template <typename T, typename F>
-            auto findAllByName(F callback) const -> void;
+            auto findAllByName(F callback) const -> ComponentReference<T>;
 
         public:
             friend bool extendFromJson(const Json::Value&, Entity&, bool);
@@ -153,80 +149,62 @@ namespace gamelib
 
 namespace gamelib
 {
-
-    // template <typename T>
-    // T* findComponentByName(const std::string& entname)
-    // {
-    //     auto ent = findEntity(entname);
-    //     return ent ? ent->findByName<T>() : nullptr;
-    // }
-
-    // template <typename T>
-    // T* findComponentByType(const std::string& entname)
-    // {
-    //     auto ent = findEntity(entname);
-    //     return ent ? ent->findByType<T>() : nullptr;
-    // }
-
-
-
     template <typename T, typename... Args>
-    auto Entity::add(Args&&... args) -> T*
+    auto Entity::add(Args&&... args) -> ComponentReference<T>
     {
-        auto comp = add(ComponentPtr(new T(std::forward<Args>(args)...)));
-        return static_cast<T*>(comp);
+        return add(ComponentPtr(new T(std::forward<Args>(args)...))).as<T>();
     }
 
 
     template <typename T>
-    auto Entity::findByType() const -> T*
+    auto Entity::findByType() const -> ComponentReference<T>
     {
         static_assert(has_identifier<T>::value, "Only works for types derived from gamelib::Identifier");
-        return static_cast<T*>(find(T::id));
+        return find(T::id).template as<T>();
     }
 
     template <typename T>
-    auto Entity::findByName() const -> T*
+    auto Entity::findByName() const -> ComponentReference<T>
     {
         static_assert(has_nametag<T>(), "Only works for types with a nametag");
-        return static_cast<T*>(find(T::name()));
+        return find(T::name()).template as<T>();
     }
 
     template <typename T, typename F>
-    auto Entity::findAllByType(F callback) const -> void
+    auto Entity::findAllByType(F callback) const -> ComponentReference<T>
     {
         static_assert(has_identifier<T>::value, "Only works for types derived from gamelib::Identifier");
-        findAll(T::id, [&](Component* comp) {
-                return callback(static_cast<T*>(comp));
-            });
+        return findAll(T::id, [&](BaseCompRef comp) {
+                return callback(comp.as<T>());
+            }).template as<T>();
     }
 
     template <typename T, typename F>
-    auto Entity::findAllByName(F callback) const -> void
+    auto Entity::findAllByName(F callback) const -> ComponentReference<T>
     {
         static_assert(has_nametag<T>(), "Only works for types with a nametag");
-        findAll(T::name(), [&](Component* comp) {
-                return callback(static_cast<T*>(comp));
-            });
+        return findAll(T::name(), [&](BaseCompRef comp) {
+                return callback(comp.as<T>());
+            }).template as<T>();
     }
 
 
     template <typename F>
-    auto Entity::findAll(ID type, F callback) const -> void
+    auto Entity::findAll(ID type, F callback) const -> BaseCompRef
     {
         for (const auto& i : _components)
-            if (i.ptr->getID() == type)
-                if (callback(i.ptr.get()))
-                    break;
+            if (i.ptr->getID() == type && callback(i.ptr.get()))
+                return i.ptr.get();
+        return nullptr;
     }
 
     template <typename F>
-    auto Entity::findAll(const std::string& name, F callback) const -> void
+    auto Entity::findAll(const std::string& name, F callback) const -> BaseCompRef
     {
         for (const auto& i : _components)
-            if (i.ptr->getName() == name)
-                if (callback(i.ptr.get()))
-                    break;
+            if (i.ptr->getName() == name && callback(i.ptr.get()))
+                return i.ptr.get();
+        return nullptr;
     }
 
     template <typename F>

@@ -22,14 +22,14 @@ namespace gamelib
 
             auto getBBox() const -> math::AABBf final override;
 
-            auto setComponent(const Component* c) -> bool;
-            auto getComponent() const             -> const Component*;
+            auto setComponent(BaseCompRef c) -> bool;
+            auto getComponent() const             -> BaseCompRef;
 
         protected:
             auto _onChanged(const sf::Transform&) -> void final override {};
 
         private:
-            const Component* _comp;
+            BaseCompRef _comp;
     };
 }
 

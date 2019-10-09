@@ -13,8 +13,6 @@ namespace gamelib
         turnspeed(15),
         followMouse(false),
         freeze(false),
-        _sprite(nullptr),
-        _phys(nullptr),
         _current(Stand)
     {
         registerResourceProperty(_props, "stand", _states[Stand]);

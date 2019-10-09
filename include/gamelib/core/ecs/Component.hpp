@@ -3,6 +3,7 @@
 
 #include "gamelib/utils/Identifiable.hpp"
 #include "gamelib/utils/nametag.hpp"
+#include "gamelib/utils/LifetimeTracker.hpp"
 #include "gamelib/properties/PropertyContainer.hpp"
 #include "gamelib/json/JsonSerializer.hpp"
 #include "ecsmeta.hpp"
@@ -12,13 +13,14 @@ namespace gamelib
 {
     class Transformable;
 
-    class Component : public Identifiable, public INameTag, public JsonSerializer
+    class Component : public Identifiable, public INameTag, public JsonSerializer, public LifetimeTracker<Component>
     {
         friend class Entity;
 
         public:
             Component();
             Component(const Component&) = delete;   // Prevent shooting in the foot
+            Component(Component&&) = delete;   // Prevent shooting in the foot
             virtual ~Component() {};
 
             auto init()                -> bool;

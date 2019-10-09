@@ -6,16 +6,14 @@
 
 namespace gamelib
 {
-    PolygonBrushComponent::PolygonBrushComponent() :
-        _pol(nullptr),
-        _shape(nullptr)
+    PolygonBrushComponent::PolygonBrushComponent()
     {
-        auto cb = +[](PolygonCollider* const* val, PolygonBrushComponent* self) {
+        auto cb = +[](const ComponentReference<PolygonCollider>* val, PolygonBrushComponent* self) {
             self->_pol = *val;
             self->regenerate();
         };
 
-        auto shapecb = +[](MeshRenderer* const* val, PolygonBrushComponent* self) {
+        auto shapecb = +[](const ComponentReference<MeshRenderer>* val, PolygonBrushComponent* self) {
             self->_shape = *val;
             self->regenerate();
         };
@@ -43,12 +41,12 @@ namespace gamelib
 
     PolygonCollider* PolygonBrushComponent::getBrushPolygon() const
     {
-        return _pol;
+        return _pol.get();
     }
 
     MeshRenderer* PolygonBrushComponent::getBrushShape() const
     {
-        return _shape;
+        return _shape.get();
     }
 
     void PolygonBrushComponent::regenerate() const

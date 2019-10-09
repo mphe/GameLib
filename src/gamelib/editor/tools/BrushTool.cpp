@@ -141,10 +141,10 @@ namespace gamelib
             _apply(brush);
     }
 
-    void BrushTool::_apply(PolygonBrushComponent* brush) const
+    void BrushTool::_apply(ComponentReference<PolygonBrushComponent> brush) const
     {
         if (brush->getEntity()->getName() == brushEntities[Line])
-            static_cast<LineBrushComponent*>(brush)->setWidth(_linewidth);
+            brush.as<LineBrushComponent>()->setWidth(_linewidth);
 
         brush->getBrushShape()->setTexture(_tex);
         brush->getBrushShape()->setTexOffset(_offset);
@@ -155,7 +155,7 @@ namespace gamelib
             RMFLAG(brush->getBrushPolygon()->flags, collision_solid);
     }
 
-    PolygonBrushComponent* BrushTool::_getIfSame() const
+    ComponentReference<PolygonBrushComponent> BrushTool::_getIfSame() const
     {
         auto selected = getIfBrush(EditorShared::getSelected());
         if (selected && brushEntities[_type] == selected->getEntity()->getName())

@@ -35,7 +35,7 @@ namespace gamelib
             float maxspeed;
             float jumpspeed;
             float jumpDecelerate;
-            QPhysics* phys;
+            ComponentReference<QPhysics> phys;
             bool slopejumps;
             bool handleInput;
 
