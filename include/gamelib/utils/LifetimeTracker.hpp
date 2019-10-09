@@ -109,9 +109,6 @@ namespace gamelib
             LifetimeReference(const LifetimeReference<T>&) = default;
             LifetimeReference(LifetimeReference<T>&&) = default;
 
-            auto operator=(const LifetimeReference& rhs) -> LifetimeReference& = default;
-            auto operator=(LifetimeReference&& rhs)      -> LifetimeReference& = default;
-
             auto get() const -> T*
             {
                 return static_cast<T*>(LifetimeTrackerManager::get(handle));
@@ -122,8 +119,9 @@ namespace gamelib
                 handle.reset();
             }
 
-            auto assign(T const* rhs) -> void
+            auto assign(const T* rhs) -> void
             {
+                // Only works if T inherits from LifetimeTracker<T>
                 if (rhs)
                     handle = rhs->getLTHandle();
                 else
@@ -146,14 +144,19 @@ namespace gamelib
                 return this->get();
             }
 
+            auto operator=(const LifetimeReference& rhs) -> LifetimeReference&
+            {
+                handle = rhs.handle;
+                return *this;
+            }
+
             auto operator=(const LifetimeHandle& rhs) -> LifetimeReference&
             {
                 handle = rhs;
                 return *this;
             }
 
-            template <typename U = T, typename = typename std::enable_if<std::is_base_of<LifetimeTracker<U>, U>::value>::type>
-            auto operator=(T const* rhs) -> LifetimeReference&
+            auto operator=(const T* rhs) -> LifetimeReference&
             {
                 this->assign(rhs);
                 return *this;
