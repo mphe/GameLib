@@ -22,8 +22,7 @@ namespace gamelib
         {
             auto& pos = EditorShared::getMouseSnapped();
             auto handle = createEntity("brush_sprite", pos.x, pos.y);
-            auto sprite = getEntity(handle)->findByName<SpriteComponent>();
-            sprite->change(_sprite);
+            handle->findByName<SpriteComponent>()->change(_sprite);
             EditorShared::getSelectTool().select(handle);
         }
     }

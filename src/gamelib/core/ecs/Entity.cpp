@@ -1,18 +1,10 @@
 #include "gamelib/core/ecs/Entity.hpp"
-#include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/core/ecs/Component.hpp"
 #include "gamelib/utils/log.hpp"
 #include <cassert>
 
 namespace gamelib
 {
-    EntityHandle getEntity(Entity::Handle handle)
-    {
-        return handle;
-    }
-
-
-
     Entity::Entity() :
         Entity("")
     { }
@@ -23,11 +15,6 @@ namespace gamelib
         _clearing(false),
         _parent(nullptr)
     { }
-
-    // Entity::Entity(Entity&& other)
-    // {
-    //     *this = std::move(other);
-    // }
 
     Entity::~Entity()
     {

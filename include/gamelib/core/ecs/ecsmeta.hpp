@@ -9,9 +9,10 @@ namespace gamelib
     class Component;
     class Entity;
 
-    typedef std::unique_ptr<Component> ComponentPtr;
-    typedef std::unique_ptr<Entity> EntityPtr;
-    typedef LifetimeReference<Entity> EntityReference;
+    typedef std::unique_ptr<Component>   ComponentPtr;
+    typedef std::unique_ptr<Entity>      EntityPtr;
+    typedef LifetimeReference<Entity>    EntityReference;
+    typedef EntityReference              EntRef;
     typedef LifetimeReference<Component> BaseCompRef;
 
     template <typename T = Component> //, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type> (doesn't work -> incomplete type)

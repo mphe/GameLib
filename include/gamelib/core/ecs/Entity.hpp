@@ -3,10 +3,8 @@
 
 #include <string>
 #include <vector>
-#include <memory>
 #include "gamelib/utils/Identifier.hpp"
 #include "gamelib/core/geometry/GroupTransform.hpp"
-#include "flags.hpp"
 #include "ecsmeta.hpp"
 #include "json/json.h"
 
@@ -31,12 +29,6 @@
 
 namespace gamelib
 {
-    // Deprecated
-    typedef EntityReference EntityHandle;
-
-    auto getEntity(EntityHandle handle) -> EntityHandle;
-
-
     class Entity : public LifetimeTracker<Entity>
     {
         private:
@@ -47,7 +39,6 @@ namespace gamelib
             };
 
         public:
-            typedef EntityHandle Handle;    // for backwards compatibility
             typedef std::vector<ComponentData> ComponentList;
 
         public:

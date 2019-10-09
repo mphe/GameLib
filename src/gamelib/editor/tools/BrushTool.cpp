@@ -62,7 +62,7 @@ namespace gamelib
         }
         else
         {
-            auto brush = getEntity(createEntity(brushEntities[_type], snapped.x, snapped.y));
+            auto brush = createEntity(brushEntities[_type], snapped.x, snapped.y);
             _apply(brush->findByType<PolygonBrushComponent>());
             EditorShared::getSelectTool().select(brush);
             onMousePressed();
