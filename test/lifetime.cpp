@@ -119,5 +119,9 @@ int main()
         assert(cref.get() == static_cast<C*>(aref.get()) && "Reference points to wrong address");
     }
 
+    // test create from nullptr
+    ARef aref(nullptr);
+    CRef cref(nullptr);
+
     return 0;
 }

@@ -103,8 +103,14 @@ namespace gamelib
             LifetimeReference(LifetimeHandle handle_) : handle(handle_) {}
             LifetimeReference(T const* ptr)
             {
-                *this = ptr;
+                this->assign(ptr);
             }
+
+            LifetimeReference(const LifetimeReference<T>&) = default;
+            LifetimeReference(LifetimeReference<T>&&) = default;
+
+            auto operator=(const LifetimeReference& rhs) -> LifetimeReference& = default;
+            auto operator=(LifetimeReference&& rhs)      -> LifetimeReference& = default;
 
             auto get() const -> T*
             {
@@ -114,6 +120,20 @@ namespace gamelib
             auto reset() -> void
             {
                 handle.reset();
+            }
+
+            auto assign(T const* rhs) -> void
+            {
+                if (rhs)
+                    handle = rhs->getLTHandle();
+                else
+                    this->reset();
+            }
+
+            template <typename NT, typename U = T, typename = decltype(static_cast<NT*>(std::declval<U*>()))>
+            auto as() const -> LifetimeReference<NT>
+            {
+                return LifetimeReference<NT>(handle);
             }
 
             auto operator*() const -> T&
@@ -135,10 +155,7 @@ namespace gamelib
             template <typename U = T, typename = typename std::enable_if<std::is_base_of<LifetimeTracker<U>, U>::value>::type>
             auto operator=(T const* rhs) -> LifetimeReference&
             {
-                if (rhs)
-                    handle = rhs->getLTHandle();
-                else
-                    this->reset();
+                this->assign(rhs);
                 return *this;
             }
 
@@ -159,12 +176,6 @@ namespace gamelib
 
             template <typename NT, typename U = T, typename = typename std::enable_if<std::is_base_of<NT, U>::value>::type>
             operator LifetimeReference<NT>() const
-            {
-                return LifetimeReference<NT>(handle);
-            }
-
-            template <typename NT, typename U = T, typename = decltype(static_cast<NT*>(std::declval<U*>()))>
-            auto as() const -> LifetimeReference<NT>
             {
                 return LifetimeReference<NT>(handle);
             }
