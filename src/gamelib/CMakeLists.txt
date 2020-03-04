@@ -151,6 +151,7 @@ if (GAMELIB_BUILD_EDITOR)
             # COMMAND editor assets/newtestmap.json
             COMMAND gdb -ex run --args $<TARGET_FILE:editor> assets/newtestmap.json
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            USES_TERMINAL
         )
     endif()
 
@@ -158,6 +159,7 @@ if (GAMELIB_BUILD_EDITOR)
         add_custom_target(gdbrun
             COMMAND gdb --args $<TARGET_FILE:editor> assets/newtestmap.json
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            USES_TERMINAL
         )
     endif()
 endif()
