@@ -40,6 +40,7 @@ if (CMAKE_COMPILER_IS_GNUCC)
         -Wsuggest-final-types
         -Werror=suggest-override
         -Werror=return-type
+        -Wmaybe-uninitialized
         -fdiagnostics-color=always
         )
 elseif (MSVC)
