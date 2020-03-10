@@ -3,7 +3,7 @@
       {
          "active" : true,
          "name" : "main",
-         "pos" : [ 220.2923583984375, 120.63818359375 ],
+         "pos" : [ 18.280914306640625, 90.897674560546875 ],
          "ratio" : 1,
          "size" : [ 640, 360 ],
          "velocity" : [ 0, 0 ],
@@ -16,6 +16,57 @@
    ],
    "entmgr" : [
       {
+         "children" : [
+            {
+               "components" : {
+                  "SpriteComponent#1" : {
+                     "depth" : -3,
+                     "options" : {
+                        "flags" : 16,
+                        "parallax" : 1.0399999618530273,
+                        "texture" : "tex/tree.png"
+                     },
+                     "sprite" : "spr/tree.spr"
+                  }
+               },
+               "name" : "brush_sprite",
+               "transform" : {
+                  "pos" : [ 176, 114.40000915527344 ]
+               }
+            },
+            {
+               "components" : {
+                  "SpriteComponent#1" : {
+                     "options" : {
+                        "flags" : 16,
+                        "parallax" : 0.96000003814697266,
+                        "texture" : "tex/tree2.png"
+                     },
+                     "sprite" : "spr/tree2.spr"
+                  }
+               },
+               "name" : "brush_sprite",
+               "transform" : {
+                  "pos" : [ 320, 64 ]
+               }
+            },
+            {
+               "components" : {
+                  "SpriteComponent#1" : {
+                     "options" : {
+                        "flags" : 16,
+                        "parallax" : 0.90000009536743164,
+                        "texture" : "tex/tree.png"
+                     },
+                     "sprite" : "spr/tree.spr"
+                  }
+               },
+               "name" : "brush_sprite",
+               "transform" : {
+                  "pos" : [ 607.50006103515625, 109.30000305175781 ]
+               }
+            }
+         ],
          "components" : {
             "LineBrushComponent#1" : {
                "linewidth" : 64
@@ -91,56 +142,7 @@
          },
          "name" : "player",
          "transform" : {
-            "pos" : [ 540.2923583984375, 300.63818359375 ]
-         }
-      },
-      {
-         "components" : {
-            "SpriteComponent#1" : {
-               "depth" : -3,
-               "options" : {
-                  "flags" : 16,
-                  "parallax" : 1.0399999618530273,
-                  "texture" : "tex/tree.png"
-               },
-               "sprite" : "spr/tree.spr"
-            }
-         },
-         "name" : "brush_sprite",
-         "transform" : {
-            "pos" : [ 176, 114.40000915527344 ]
-         }
-      },
-      {
-         "components" : {
-            "SpriteComponent#1" : {
-               "options" : {
-                  "flags" : 16,
-                  "parallax" : 0.90000009536743164,
-                  "texture" : "tex/tree.png"
-               },
-               "sprite" : "spr/tree.spr"
-            }
-         },
-         "name" : "brush_sprite",
-         "transform" : {
-            "pos" : [ 607.50006103515625, 109.30000305175781 ]
-         }
-      },
-      {
-         "components" : {
-            "SpriteComponent#1" : {
-               "options" : {
-                  "flags" : 16,
-                  "parallax" : 0.96000003814697266,
-                  "texture" : "tex/tree2.png"
-               },
-               "sprite" : "spr/tree2.spr"
-            }
-         },
-         "name" : "brush_sprite",
-         "transform" : {
-            "pos" : [ 320, 64 ]
+            "pos" : [ 338.28091430664062, 270.89767456054688 ]
          }
       },
       {
@@ -312,6 +314,20 @@
          "name" : "brush_line",
          "transform" : {
             "pos" : [ -96, 224 ]
+         }
+      },
+      {
+         "components" : {
+            "SpriteComponent#1" : {
+               "depth" : -6,
+               "options" : {
+                  "texture" : "tex/sheet.png"
+               }
+            }
+         },
+         "name" : "box",
+         "transform" : {
+            "pos" : [ 500.84231567382812, 285.81509399414062 ]
          }
       }
    ],
