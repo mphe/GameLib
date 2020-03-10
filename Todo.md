@@ -2,6 +2,9 @@
 
 ## Priority
 
+* Come up with a better name for SignalWrapper
+* Rename SignalHandle unregister() to disconnect()
+* Transforms should be serialized to local transform for proper deltaing
 * adapt default snap distance in player entity
 * property
     * property flags (readonly!)
@@ -31,6 +34,15 @@
 * sound system
 * collision layers and layer masks
 * cameras as resources
+
+## improvements
+
+* property ordering
+    * create an individual PropertyContainer in each derived Component (as necessary)
+    -> allows grouping properties according to base classes (as in godot)
+    -> fixes load order problem (see SpriteComponent)
+    * but: probably larger memory usage
+
 
 ## All
 
@@ -245,6 +257,11 @@ RenderSystem:
     * render offset shader
     * render repeat shader (for texture regions)
     * Scene force redraw
+    * RenderBuffer
+        * used for batch rendering
+        * allocates large chunk of vertices
+        * all child entities' render components register at this component
+        * all children can be rendered in one batch if possible
 
 * editor
     * grid numbers
