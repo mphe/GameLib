@@ -159,7 +159,7 @@ namespace gamelib
         ent.flags = node.get("flags", ent.flags).asUInt();
 
         if (node.isMember("transform"))
-            loadFromJson(node["transform"], ent.getTransform(), false);
+            loadFromJson(node["transform"], ent.getTransform(), false, false);
 
         if (node.isMember("components"))
         {
@@ -254,7 +254,7 @@ namespace gamelib
     {
         node["name"] = ent.getName();
         node["flags"] = ent.flags;
-        gamelib::writeToJson(node["transform"], ent.getTransform());
+        gamelib::writeToJson(node["transform"], ent.getTransform(), false);
 
         auto& comps = node["components"];
         comps = Json::Value(Json::objectValue);

@@ -23,7 +23,7 @@ namespace gamelib
     }
 
 
-    auto Entity::addChild(EntityPtr ent) -> EntityReference
+    auto Entity::addChild(EntityPtr ent, bool keepTransform) -> EntityReference
     {
         { // Sanity checks
             if (!ent)
@@ -55,20 +55,20 @@ namespace gamelib
         Entity* tmp = ent.get();    // ent is no longer valid after moving
         _children.push_back(std::move(ent));
         tmp->_parent = this;
-        getTransform().add(&tmp->getTransform());
+        getTransform().add(&tmp->getTransform(), keepTransform);
 
         return tmp;
     }
 
-    auto Entity::popChild(EntityReference ent) -> EntityPtr
+    auto Entity::popChild(EntityReference ent, bool keepTransform) -> EntityPtr
     {
         for (size_t i = 0; i < _children.size(); ++i)
             if (_children[i].get() == ent.get())
-                return popChild(i);
+                return popChild(i, keepTransform);
         return nullptr;
     }
 
-    auto Entity::popChild(size_t index) -> EntityPtr
+    auto Entity::popChild(size_t index, bool keepTransform) -> EntityPtr
     {
         if (index >= _children.size())
             return nullptr;
@@ -76,11 +76,11 @@ namespace gamelib
         EntityPtr ptr = std::move(_children[index]);
         ptr->_parent = nullptr;
         _children.erase(_children.begin() + index);
-        getTransform().remove(&ptr->getTransform());
+        getTransform().remove(&ptr->getTransform(), keepTransform);
         return ptr;
     }
 
-    auto Entity::reparent(EntityReference ent) -> EntityReference
+    auto Entity::reparent(EntityReference ent, bool keepTransform) -> EntityReference
     {
         { // Sanity checks
             if (!ent)
@@ -109,7 +109,7 @@ namespace gamelib
             }
         }
 
-        ent->addChild(getParent()->popChild(this));
+        ent->addChild(getParent()->popChild(this, keepTransform), keepTransform);
         return this;
     }
 

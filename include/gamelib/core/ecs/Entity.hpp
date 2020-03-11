@@ -71,13 +71,13 @@ namespace gamelib
             auto begin() const -> ComponentList::const_iterator;
             auto end() const   -> ComponentList::const_iterator;
 
-            auto addChild(EntityPtr ent)              -> EntityReference;
-            auto popChild(EntityReference ent)        -> EntityPtr;
-            auto popChild(size_t index)               -> EntityPtr;
-            auto reparent(EntityReference ent)        -> EntityReference;
-            auto getChildren() const                  -> const std::vector<EntityPtr>&;
-            auto getParent() const                    -> EntityReference;
-            auto isChildOf(EntityReference ent) const -> bool;
+            auto addChild(EntityPtr ent, bool keepTransform = true)       -> EntityReference;
+            auto popChild(size_t index, bool keepTransform = true)        -> EntityPtr;
+            auto popChild(EntityReference ent, bool keepTransform = true) -> EntityPtr;
+            auto reparent(EntityReference ent, bool keepTransform = true) -> EntityReference;
+            auto getChildren() const                                      -> const std::vector<EntityPtr>&;
+            auto getParent() const                                        -> EntityReference;
+            auto isChildOf(EntityReference ent) const                     -> bool;
 
             // Iterate over the hierachy.
             // Returns the entity breaked at, otherwise null.

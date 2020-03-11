@@ -100,7 +100,7 @@ namespace gamelib
             {
                 auto child = createHierachyFromJson(i, direct);
                 if (child)
-                    child->reparent(ent);
+                    child->reparent(ent, false);
             }
         }
 

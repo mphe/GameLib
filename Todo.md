@@ -2,7 +2,6 @@
 
 ## Priority
 
-* Transforms should be serialized to local transform for proper deltaing
 * adapt default snap distance in player entity
 * property
     * property flags (readonly!)
