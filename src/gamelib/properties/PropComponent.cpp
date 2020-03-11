@@ -52,7 +52,7 @@ namespace gamelib
         return false;
     }
 
-    void PropComponent::writeToJson(const PropertyHandle& prop, BaseCompRef const* ptr, Json::Value& node) const
+    void PropComponent::writeToJson(UNUSED const PropertyHandle& prop, BaseCompRef const* ptr, Json::Value& node) const
     {
         if (!*ptr)
         {

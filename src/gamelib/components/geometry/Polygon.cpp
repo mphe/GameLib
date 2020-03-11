@@ -2,6 +2,7 @@
 #include "gamelib/utils/log.hpp"
 #include "gamelib/properties/PropDummy.hpp"
 #include "math/geometry/intersect.hpp"
+#include "gamelib/utils/utils.hpp"
 
 namespace gamelib
 {
@@ -57,7 +58,7 @@ namespace gamelib
         return math::sweep(rect, vel, _global);
     }
 
-    void PolygonCollider::_onChanged(const sf::Transform& old)
+    void PolygonCollider::_onChanged(UNUSED const sf::Transform& old)
     {
         _global.setMatrix(getMatrix());
     }

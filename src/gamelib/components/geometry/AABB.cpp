@@ -1,5 +1,6 @@
 #include "gamelib/components/geometry/AABB.hpp"
 #include "gamelib/utils/conversions.hpp"
+#include "gamelib/utils/utils.hpp"
 #include "math/geometry/intersect.hpp"
 
 namespace gamelib
@@ -39,7 +40,7 @@ namespace gamelib
         return _rect;
     }
 
-    void AABB::_onChanged(const sf::Transform& old)
+    void AABB::_onChanged(UNUSED const sf::Transform& old)
     {
         _rect.pos = convert(getMatrix().transformPoint(0, 0));
         _rect.size = _size * getScale();

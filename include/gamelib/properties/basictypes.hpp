@@ -3,6 +3,7 @@
 
 #include "PropType.hpp"
 #include "gamelib/utils/Identifier.hpp"
+#include "gamelib/utils/utils.hpp"
 #include "gamelib/json/json-natives.hpp"
 #include "gamelib/json/json-vector.hpp"
 #include "math/geometry/Vector.hpp"
@@ -16,13 +17,13 @@ namespace gamelib
         public:
             virtual ~BasicTypeSerializer() {};
 
-            bool loadFromJson(const PropertyHandle& prop, T* ptr, const Json::Value& node) const final override
+            bool loadFromJson(UNUSED const PropertyHandle& prop, T* ptr, const Json::Value& node) const final override
             {
                 gamelib::loadFromJson(node, *ptr);
                 return true;
             }
 
-            void writeToJson(const PropertyHandle& prop, const T* ptr, Json::Value& node) const final override
+            void writeToJson(UNUSED const PropertyHandle& prop, const T* ptr, Json::Value& node) const final override
             {
                 gamelib::writeToJson(node, *ptr);
             }

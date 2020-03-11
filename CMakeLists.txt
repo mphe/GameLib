@@ -31,7 +31,6 @@ if (CMAKE_COMPILER_IS_GNUCC)
     add_definitions(
         -Wall
         -Wextra
-        -Wno-unused-parameter
         -Wno-switch
         -Wno-sign-compare
         -Wno-parentheses

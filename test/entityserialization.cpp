@@ -21,7 +21,7 @@ class PropTest : public PropType<0x4933b918, SomeStruct>
             return true;
         }
 
-        void writeToJson(const PropertyHandle& prop, const SomeStruct* ptr, Json::Value& node) const final override
+        void writeToJson(UNUSED const PropertyHandle& prop, const SomeStruct* ptr, Json::Value& node) const final override
         {
             node["a"] = ptr->a;
             node["b"] = ptr->b;

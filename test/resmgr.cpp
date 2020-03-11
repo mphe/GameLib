@@ -1,13 +1,14 @@
 #include <cassert>
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/utils/string.hpp"
+#include "gamelib/utils/utils.hpp"
 
 using namespace gamelib;
 
 typedef Resource<int, 0x312601c1> TestResource;
 
 template <int testval>
-BaseResourceHandle testLoader(const std::string& fname, ResourceManager* resmgr)
+BaseResourceHandle testLoader(const std::string& fname, UNUSED ResourceManager* resmgr)
 {
     LOG("fname ", fname);
     return TestResource::create(testval).as<BaseResource>();

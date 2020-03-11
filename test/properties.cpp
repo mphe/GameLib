@@ -3,6 +3,7 @@
 #include <iostream>
 #include "gamelib/properties/PropertyContainer.hpp"
 #include "gamelib/properties/basictypes.hpp"
+#include "gamelib/utils/utils.hpp"
 #include "math/geometry/Vector.hpp"
 
 using namespace gamelib;
@@ -22,27 +23,27 @@ struct SomeClass
 
 struct SomeClassSerializer : public PropType<0x13a51995, SomeClass>
 {
-    auto loadFromJson(const PropertyHandle& prop, SomeClass* ptr, const Json::Value& node) const -> bool final override
+    auto loadFromJson(UNUSED const PropertyHandle& prop, SomeClass* ptr, const Json::Value& node) const -> bool final override
     {
         ptr->x = node["x"].asInt();
         ptr->y = node["y"].asInt();
         return true;
     }
 
-    auto writeToJson(const PropertyHandle& prop, const SomeClass* ptr, Json::Value& node) const -> void final override
+    auto writeToJson(UNUSED const PropertyHandle& prop, UNUSED const SomeClass* ptr, Json::Value& node) const -> void final override
     {
         node["x"] = prop.getAs<int>();
         node["y"] = prop.getAs<int>();
     }
 
-    auto drawGui(const PropertyHandle& prop, const std::string& name, SomeClass* ptr) const -> bool final override
+    auto drawGui(UNUSED const PropertyHandle& prop, UNUSED const std::string& name, UNUSED SomeClass* ptr) const -> bool final override
     {
         return false;
     }
 } someClassSerializer;
 
 
-int main(int argc, char *argv[])
+int main()
 {
     PropertyContainer props;
     float somefloat = 5.5;

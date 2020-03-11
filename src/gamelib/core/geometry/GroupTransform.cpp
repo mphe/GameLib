@@ -1,4 +1,5 @@
 #include "gamelib/core/geometry/GroupTransform.hpp"
+#include "gamelib/utils/utils.hpp"
 
 namespace gamelib
 {
@@ -57,7 +58,7 @@ namespace gamelib
         return _objs;
     }
 
-    void GroupTransform::_onChanged(const sf::Transform& old)
+    void GroupTransform::_onChanged(UNUSED const sf::Transform& old)
     {
         for (auto& i : _objs)
             i->_updateMatrix();

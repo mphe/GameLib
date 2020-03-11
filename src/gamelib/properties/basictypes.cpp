@@ -1,5 +1,6 @@
 #include "gamelib/properties/basictypes.hpp"
 #include "gamelib/imgui/inputs.hpp"
+#include "gamelib/utils/utils.hpp"
 #include "imgui.h"
 #include <climits>
 
@@ -23,7 +24,7 @@ namespace gamelib
             return ImGui::InputInt(name.c_str(), ptr, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue);
     }
 
-    bool PropFloat::drawGui(const PropertyHandle& prop, const std::string& name, float* ptr) const
+    bool PropFloat::drawGui(UNUSED const PropertyHandle& prop, const std::string& name, float* ptr) const
     {
         return ImGui::InputFloat(name.c_str(), ptr, 1, 10, 2, ImGuiInputTextFlags_EnterReturnsTrue);
     }
@@ -42,7 +43,7 @@ namespace gamelib
         return false;
     }
 
-    bool PropBool::drawGui(const PropertyHandle& prop, const std::string& name, bool* ptr) const
+    bool PropBool::drawGui(UNUSED const PropertyHandle& prop, const std::string& name, bool* ptr) const
     {
         return ImGui::Checkbox(name.c_str(), ptr);
     }
@@ -57,18 +58,18 @@ namespace gamelib
         //     return ImGui::InputInt(name.c_str(), ptr, ImGuiInputTextFlags_EnterReturnsTrue);
     }
 
-    bool PropVec2f::drawGui(const PropertyHandle& prop, const std::string& name, math::Vec2f* ptr) const
+    bool PropVec2f::drawGui(UNUSED const PropertyHandle& prop, const std::string& name, math::Vec2f* ptr) const
     {
         return ImGui::InputFloat2(name.c_str(), &ptr->x, 2, ImGuiInputTextFlags_EnterReturnsTrue);
     }
 
-    bool PropVec2i::drawGui(const PropertyHandle& prop, const std::string& name, math::Vec2i* ptr) const
+    bool PropVec2i::drawGui(UNUSED const PropertyHandle& prop, const std::string& name, math::Vec2i* ptr) const
     {
         return ImGui::InputInt2(name.c_str(), &ptr->x, ImGuiInputTextFlags_EnterReturnsTrue);
     }
 
 
-    bool PropColor::loadFromJson(const PropertyHandle& prop, sf::Color* ptr, const Json::Value& node) const
+    bool PropColor::loadFromJson(UNUSED const PropertyHandle& prop, sf::Color* ptr, const Json::Value& node) const
     {
         math::Vec4f tmpvec;
         gamelib::loadFromJson(node, tmpvec);
@@ -76,12 +77,12 @@ namespace gamelib
         return true;
     }
 
-    void PropColor::writeToJson(const PropertyHandle& prop, const sf::Color* ptr, Json::Value& node)   const
+    void PropColor::writeToJson(UNUSED const PropertyHandle& prop, const sf::Color* ptr, Json::Value& node)   const
     {
         gamelib::writeToJson(node, math::Vec4f(ptr->r, ptr->g, ptr->b, ptr->a));
     }
 
-    bool PropColor::drawGui(const PropertyHandle& prop, const std::string& name, sf::Color* ptr) const
+    bool PropColor::drawGui(UNUSED const PropertyHandle& prop, const std::string& name, sf::Color* ptr) const
     {
         auto tmp = math::Vec4f(ptr->r, ptr->g, ptr->b, ptr->a) / 255.f;
         if (ImGui::ColorEdit4(name.c_str(), &tmp.r))

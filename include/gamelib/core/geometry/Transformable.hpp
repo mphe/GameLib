@@ -1,6 +1,7 @@
 #ifndef GAMELIB_TRANSFORMABLE_HPP
 #define GAMELIB_TRANSFORMABLE_HPP
 
+#include "gamelib/utils/utils.hpp"
 #include "math/geometry/Vector.hpp"
 #include "math/geometry/AABB.hpp"
 #include <SFML/Graphics/Transform.hpp>
@@ -95,7 +96,7 @@ namespace gamelib
             auto operator+=(const TransformData& rhs) -> Transformable&;
 
         protected:
-            virtual auto _onChanged(const sf::Transform& old) -> void {};
+            virtual auto _onChanged(UNUSED const sf::Transform& old) -> void {};
 
             // Tell parent to update its bounding box
             auto _markDirty() const -> void;

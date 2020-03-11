@@ -12,6 +12,14 @@ const_cast<returntype>(const_cast<   \
         const typename std::remove_pointer<decltype(this)>::type*>    \
         (this)->func(__VA_ARGS__))
 
+// Unused macro (only on linux)
+// e.g. void foobar(UNUSED int foo)
+#ifdef __GNUC__ 
+#define UNUSED __attribute__((unused))
+#else
+#define UNUSED
+#endif
+
 
 namespace gamelib
 {

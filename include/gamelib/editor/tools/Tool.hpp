@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "gamelib/core/rendering/Renderable.hpp"
+#include "gamelib/utils/utils.hpp"
 #include "math/geometry/Point2.hpp"
 
 namespace gamelib
@@ -17,7 +18,7 @@ namespace gamelib
             virtual void onMouseMove() {};
             virtual void onDrag() {};
             virtual void drawGui() {};
-            virtual void render(sf::RenderTarget& target) override {};
+            virtual void render(UNUSED sf::RenderTarget& target) override {};
     };
 }
 

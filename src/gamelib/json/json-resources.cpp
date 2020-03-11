@@ -1,10 +1,11 @@
 #include "gamelib/json/json-resources.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
+#include "gamelib/utils/utils.hpp"
 #include <boost/filesystem.hpp>
 
 namespace gamelib
 {
-    void writeToJson(Json::Value& node, const BaseResourceHandle& handle, const ResourceManager* resmgr)
+    void writeToJson(Json::Value& node, const BaseResourceHandle& handle, UNUSED const ResourceManager* resmgr)
     {
         if (handle)
             node = handle.getResource()->getPath();

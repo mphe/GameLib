@@ -133,7 +133,7 @@ namespace gamelib
         return true;
     }
 
-    auto CameraTracker::_onChanged(const sf::Transform& old) -> void
+    auto CameraTracker::_onChanged(UNUSED const sf::Transform& old) -> void
     {
         setSize(size);
     }

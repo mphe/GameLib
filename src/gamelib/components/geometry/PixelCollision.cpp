@@ -2,6 +2,7 @@
 #include "gamelib/core/res/ResourceManager.hpp"
 #include "gamelib/utils/conversions.hpp"
 #include "math/geometry/intersect.hpp"
+#include "gamelib/utils/utils.hpp"
 
 namespace gamelib
 {
@@ -146,7 +147,7 @@ namespace gamelib
     }
 
 
-    void PixelCollision::_onChanged(const sf::Transform& old)
+    void PixelCollision::_onChanged(UNUSED const sf::Transform& old)
     {
         _rect.pos = convert(getMatrix().transformPoint(0, 0));
     }

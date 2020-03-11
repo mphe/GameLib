@@ -77,7 +77,7 @@ namespace gamelib
         }
     }
 
-    void ActorComponent::_refresh(RefreshType type, Component* comp)
+    void ActorComponent::_refresh(UNUSED RefreshType type, UNUSED Component* comp)
     {
         _sprite = getEntity()->findByName<SpriteComponent>();
         _phys = getEntity()->findByName<QPhysics>();

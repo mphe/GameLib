@@ -1,5 +1,6 @@
 #include "gamelib/core/res/TextureResource.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
+#include "gamelib/utils/utils.hpp"
 
 namespace gamelib
 {
@@ -9,7 +10,7 @@ namespace gamelib
             resmgr.registerFileType(i, textureLoader);
     }
 
-    BaseResourceHandle textureLoader(const std::string& fname, ResourceManager* resmgr)
+    BaseResourceHandle textureLoader(const std::string& fname, UNUSED ResourceManager* resmgr)
     {
         auto tex = TextureResource::create();
         if (!tex->loadFromFile(fname))

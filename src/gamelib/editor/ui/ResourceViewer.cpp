@@ -1,6 +1,7 @@
 #include "gamelib/editor/ui/ResourceViewer.hpp"
 #include "gamelib/imgui/resources.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
+#include "gamelib/utils/utils.hpp"
 #include "imgui.h"
 #include <boost/filesystem.hpp>
 
@@ -93,7 +94,7 @@ namespace gamelib
         if (!resmgr)
             return;
 
-        resmgr->foreach([&](const std::string& fname, BaseResourceHandle res) {
+        resmgr->foreach([&](UNUSED const std::string& fname, BaseResourceHandle res) {
                 auto id = res.getResource()->getID();
                 if (std::find_if(_cache.begin(), _cache.end(), [id](const CacheEntry& entry) {
                             return entry.id == id;

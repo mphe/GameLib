@@ -1,5 +1,6 @@
 #include "gamelib/core/res/SoundResource.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
+#include "gamelib/utils/utils.hpp"
 
 namespace gamelib
 {
@@ -9,7 +10,7 @@ namespace gamelib
             resmgr.registerFileType(i, soundLoader);
     }
 
-    BaseResourceHandle soundLoader(const std::string& fname, ResourceManager* resmgr)
+    BaseResourceHandle soundLoader(const std::string& fname, UNUSED ResourceManager* resmgr)
     {
         auto sound = SoundResource::create();
         if (!sound->loadFromFile(fname))

@@ -3,7 +3,7 @@
 
 using namespace gamelib;
 
-int main(int argc, char *argv[])
+int main()
 {
     StableVector<int> sv;
 

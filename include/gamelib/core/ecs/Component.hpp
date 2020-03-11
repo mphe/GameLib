@@ -1,6 +1,7 @@
 #ifndef GAMELIB_COMPONENT_HPP
 #define GAMELIB_COMPONENT_HPP
 
+#include "gamelib/utils/utils.hpp"
 #include "gamelib/utils/Identifiable.hpp"
 #include "gamelib/utils/nametag.hpp"
 #include "gamelib/utils/LifetimeTracker.hpp"
@@ -41,7 +42,7 @@ namespace gamelib
             virtual auto _quit() -> void {};
 
             // Called by Entity
-            virtual auto _refresh(RefreshType type, Component* comp) -> void {};
+            virtual auto _refresh(UNUSED RefreshType type, UNUSED Component* comp) -> void {};
 
         protected:
             PropertyContainer _props;

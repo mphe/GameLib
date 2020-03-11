@@ -17,7 +17,7 @@ class BarComponent : public Identifier<0x650e189e, Component>
         ASSIGN_NAMETAG("BarComponent");
         BarComponent(int x_) : x(x_) {}
 
-        void _refresh(RefreshType, Component* comp) final override
+        void _refresh(RefreshType, UNUSED Component* comp) final override
         {
             auto foo = getEntity()->findByType<FooComponent>();
             assert(foo && "FooComponent not found");
@@ -31,7 +31,7 @@ class BarComponent : public Identifier<0x650e189e, Component>
 class NotAComponent {};
 
 
-int main(int argc, char *argv[])
+int main()
 {
     Entity entity;
 

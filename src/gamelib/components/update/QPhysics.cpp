@@ -5,6 +5,7 @@
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/components/CollisionComponent.hpp"
 #include "gamelib/core/Game.hpp"
+#include "gamelib/utils/utils.hpp"
 
 namespace gamelib
 {
@@ -43,7 +44,7 @@ namespace gamelib
         QPhysics(nullptr, interval)
     { }
 
-    QPhysics::QPhysics(Collidable* hull, int interval) :
+    QPhysics::QPhysics(UNUSED Collidable* hull, int interval) :
         UpdateComponent(interval),
         overbounce(1),
         gravMultiplier(1),
@@ -109,7 +110,7 @@ namespace gamelib
 
         // Save all intersections but use only solids for actual collisions
         std::vector<TraceResult> collisions;
-        auto tracecb = [this, &collisions](Collidable* col, const Intersection& isec) {
+        auto tracecb = [&collisions](Collidable* col, const Intersection& isec) {
             collisions.emplace_back(col, isec);
             return col->flags & collision_solid;
         };
@@ -488,7 +489,7 @@ namespace gamelib
         return false;
     }
 
-    void QPhysics::_refresh(RefreshType type, Component* comp)
+    void QPhysics::_refresh(UNUSED RefreshType type, UNUSED Component* comp)
     {
         _hull = nullptr;
         getEntity()->findAllByType<CollisionComponent>([this](ComponentReference<CollisionComponent> comp) {

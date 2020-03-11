@@ -62,7 +62,7 @@ namespace gamelib
         _hidegui(true)
     { }
 
-    bool Editor::init(Game* game)
+    bool Editor::init(UNUSED Game* game)
     {
         LOG_DEBUG("Init Editor...");
         EditorShared::_editor = this;

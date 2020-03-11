@@ -4,6 +4,7 @@
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/imgui/inputs.hpp"
 #include "gamelib/json/json-rendering.hpp"
+#include "gamelib/utils/utils.hpp"
 #include "imgui.h"
 
 namespace gamelib
@@ -11,7 +12,7 @@ namespace gamelib
     class PropLayerHandle : public PropType<0x3cf15fc5, LayerHandle>
     {
         public:
-            bool loadFromJson(const PropertyHandle& prop, LayerHandle* ptr, const Json::Value& node) const final override
+            bool loadFromJson(UNUSED const PropertyHandle& prop, LayerHandle* ptr, const Json::Value& node) const final override
             {
                 // maybe allow passing a pointer
                 auto sys = getSubsystem<RenderSystem>();
@@ -22,7 +23,7 @@ namespace gamelib
                 return true;
             }
 
-            void writeToJson(const PropertyHandle& prop, const LayerHandle* ptr, Json::Value& node) const final override
+            void writeToJson(UNUSED const PropertyHandle& prop, const LayerHandle* ptr, Json::Value& node) const final override
             {
                 // maybe allow passing a pointer
                 auto sys = getSubsystem<RenderSystem>();
@@ -31,7 +32,7 @@ namespace gamelib
                 node = !layer ? "" : layer->name;
             }
 
-            bool drawGui(const PropertyHandle& prop, const std::string& name, LayerHandle* ptr) const final override
+            bool drawGui(UNUSED const PropertyHandle& prop, const std::string& name, LayerHandle* ptr) const final override
             {
                 // maybe allow passing a pointer
                 auto sys = getSubsystem<RenderSystem>();
@@ -53,7 +54,7 @@ namespace gamelib
                 return true;
             }
 
-            void writeToJson(const PropertyHandle& prop, const NodeHandle* ptr, Json::Value& cfgnode) const final override
+            void writeToJson(const PropertyHandle& prop, UNUSED const NodeHandle* ptr, Json::Value& cfgnode) const final override
             {
                 auto self = static_cast<RenderComponent*>(prop.getData());
                 ::gamelib::writeToJson(cfgnode, self->_getNode()->options);

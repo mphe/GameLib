@@ -2,6 +2,7 @@
 #include "gamelib/components/update/QPhysics.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
 #include "gamelib/core/input/InputSystem.hpp"
+#include "gamelib/utils/utils.hpp"
 
 namespace gamelib
 {
@@ -110,7 +111,7 @@ namespace gamelib
         return _oldinput & button && !(_input & button);
     }
 
-    void QController::_refresh(RefreshType type, Component* comp)
+    void QController::_refresh(UNUSED RefreshType type, UNUSED Component* comp)
     {
         phys = getEntity()->findByName<QPhysics>();
     }
