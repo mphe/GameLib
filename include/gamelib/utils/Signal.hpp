@@ -14,20 +14,20 @@
 // // safe
 // void callback(void* arg, SignalHandle* handle)
 // {
-//     handle->unregister();    // safe
+//     handle->disconnect();    // safe
 // }
 //
 // // safe
 // void callback(void* arg, SignalHandle* handle)
 // {
 //     // <unregister other handlers from same signal>
-//     handle->unregister();
+//     handle->disconnect();
 // }
 //
 // // NOT SAFE
 // void callback(void* arg, SignalHandle* handle)
 // {
-//     handle->unregister();
+//     handle->disconnect();
 //     // <unregister other handlers from same signal>
 // }
 //
@@ -52,7 +52,7 @@ namespace gamelib
             SignalHandle(const SignalHandle&) = delete;
             ~SignalHandle();
 
-            auto unregister() -> void;
+            auto disconnect() -> void;
             auto setData(void* data) -> void;
             auto getData() const -> void*;
 
@@ -102,8 +102,9 @@ namespace gamelib
             SignalHandle _listeners;
     };
 
+    // Template wrapper around Signal to avoid the void* argument
     template <typename T>
-    class SignalWrapper : public Signal
+    class SignalT : public Signal
     {
         public:
             auto trigger(T* arg) const -> void

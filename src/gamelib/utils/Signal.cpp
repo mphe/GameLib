@@ -17,10 +17,10 @@ namespace gamelib
 
     SignalHandle::~SignalHandle()
     {
-        unregister();
+        disconnect();
     }
 
-    auto SignalHandle::unregister() -> void
+    auto SignalHandle::disconnect() -> void
     {
         if (!*this)
             return;
@@ -50,7 +50,7 @@ namespace gamelib
 
     auto SignalHandle::operator=(SignalHandle&& other) -> SignalHandle&
     {
-        unregister();
+        disconnect();
 
         _callback = other._callback;
         _data = other._data;
@@ -59,7 +59,7 @@ namespace gamelib
 
         // First reset, then update pointers, so that the old handle does not
         // unregister the new one
-        other.unregister();
+        other.disconnect();
 
         // fix others' pointers to this handle
         if (*this)
@@ -133,6 +133,6 @@ namespace gamelib
     auto Signal::clear() -> void
     {
         while (_listeners._next)
-            _listeners._next->unregister();
+            _listeners._next->disconnect();
     }
 }

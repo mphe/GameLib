@@ -45,7 +45,7 @@ int main()
         if (rand() % 2 == 0)
             handles.erase(handles.begin() + i);
         else
-            handles[i].unregister();
+            handles[i].disconnect();
 
         testtrigger(signal, left);
     }
@@ -64,20 +64,20 @@ int main()
         if (i % 3 == 0) // randomly unregister others
             handle = signal.connect(+[](void*, decltype(handles)* handles)
                     {
-                        (*handles)[rand() % handles->size()].unregister();
+                        (*handles)[rand() % handles->size()].disconnect();
                     }, &handles);
         else    // unregister self
             handle = signal.connect(+[](void*, SignalHandle* handle)
                     {
-                        handle->unregister();
+                        handle->disconnect();
                     }, handles.data() + i);
         handles.push_back(std::move(handle));
     }
 
     signal.trigger(nullptr);
 
-    // test SignalWrapper
-    SignalWrapper<int> intsignal;
+    // test SignalT
+    SignalT<int> intsignal;
     auto handle = intsignal.connect(+[](int* arg, void*) { (*arg)++; }, (void*)nullptr);
     testtrigger(intsignal, 1);
 

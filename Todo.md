@@ -2,8 +2,6 @@
 
 ## Priority
 
-* Come up with a better name for SignalWrapper
-* Rename SignalHandle unregister() to disconnect()
 * Transforms should be serialized to local transform for proper deltaing
 * adapt default snap distance in player entity
 * property
