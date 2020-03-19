@@ -16,7 +16,8 @@ namespace gamelib
 {
     SelectTool::SelectTool() :
         renderBBox(true),
-        renderAllBoxes(false),
+        renderComponentBoxes(false),
+        renderChildBoxes(false),
         _scaleselect(-1),
         _mode(mode_move),
         _cloned(false),
@@ -178,19 +179,28 @@ namespace gamelib
             return;
 
         ent->iterSubtree([&](EntityReference ent) {
-            if (renderAllBoxes)
-                for (auto& i : ent->getTransform().getChildren())
-                    drawRectOutline(target, i->getBBox(), sf::Color::Green);
+            math::AABBf box(ent->getTransform().getPosition(), math::Vec2f());
+
+            for (auto& i : *ent)
+                if (i.ptr->getTransform())
+                {
+                    const auto compbox = i.ptr->getTransform()->getBBox();
+                    if (renderBBox)
+                        box.combine(compbox);
+                    if (renderComponentBoxes)
+                        drawRectOutline(target, compbox, sf::Color::Green);
+                }
 
             if (renderBBox)
             {
-                auto box = ent->getTransform().getBBox();
-                if (renderAllBoxes)
+                // auto box = ent->getTransform().getBBox();
+                if (renderComponentBoxes)
                     box.extend(math::AABBf(0, 0, 0.5, 0.5));
                 drawRectOutline(target, box);
             }
 
-            return false;
+            // Returns false to continue drawing child boxes
+            return !renderChildBoxes;
         });
 
         if (_mode == mode_scale)
@@ -215,7 +225,8 @@ namespace gamelib
     void SelectTool::drawGui()
     {
         ImGui::Checkbox("Show bounding box", &renderBBox);
-        ImGui::Checkbox("Show child bounding boxes", &renderAllBoxes);
+        ImGui::Checkbox("Show component bounding boxes", &renderComponentBoxes);
+        ImGui::Checkbox("Show child bounding boxes", &renderChildBoxes);
         ImGui::Text("Mode: %i", _mode);
     }
 

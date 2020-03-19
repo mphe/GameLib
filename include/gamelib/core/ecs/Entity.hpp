@@ -79,7 +79,7 @@ namespace gamelib
             auto getParent() const                                        -> EntityReference;
             auto isChildOf(EntityReference ent) const                     -> bool;
 
-            // Iterate over the hierachy.
+            // Iterate over the hierachy, including this entity.
             // Returns the entity breaked at, otherwise null.
             // Return true to break loop, otherwise false.
             // Signature: (EntityReference) -> bool

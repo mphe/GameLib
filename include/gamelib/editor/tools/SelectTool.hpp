@@ -34,7 +34,8 @@ namespace gamelib
 
         public:
             bool renderBBox;
-            bool renderAllBoxes;
+            bool renderComponentBoxes;
+            bool renderChildBoxes;
 
         private:
             EntityReference _selected;
