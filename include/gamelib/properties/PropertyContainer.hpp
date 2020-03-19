@@ -12,9 +12,46 @@
 // exactly the new value as argument,
 // Usage: props.registerProperty("size", _size, PROP_METHOD(_size, setSize), this);
 #define PROP_METHOD(T, F) PROP_METHOD_TYPE(decltype(T), F)
-#define PROP_METHOD_TYPE(T, F) +[](T const* val, decltype(this) self) { self->F(*val); }
+#define PROP_METHOD_TYPE(T, F) PROP_METHOD_CLASS(T, F, std::remove_pointer_t<decltype(this)>)
+// #define PROP_METHOD_TYPE(T, F) +[](T const* val, decltype(this) self) { self->F(*val); }
 #define PROP_METHOD_CLASS(T, F, C) +[](T const* val, C* self) { self->F(*val); }
 
+// Helpers for registering properties that don't have direct variable access,
+// but use getter and setter functions.
+// The setter takes exactly the new value as argument.
+// The getter takes no arguments and returns a const reference (const T&).
+// If the getter returns a copy, use PROP_ACCESSOR_BUFFERED.
+// Other getter return values are not supported by these macros.
+// Usage:
+//     props.registerProperty("size", PROP_ACCESSOR(setSize, getSize), this);
+//     props.registerProperty("somefloat", PROP_ACCESSOR_BUFFERED(setFloat, getFloat), this);
+#define PROP_ACCESSOR(S, G) \
+    PROP_ACCESSOR_TYPES(S, G, std::remove_pointer_t<decltype(this)>, \
+            std::remove_reference_t<std::remove_pointer_t<decltype(G())>>)
+
+// Same as PROP_ACCESSOR but for getter functions that return a copy instead of a const reference.
+#define PROP_ACCESSOR_BUFFERED(S, G) \
+    PROP_ACCESSOR_TYPES_BUFFERED(S, G, std::remove_pointer_t<decltype(this)>, \
+            std::remove_reference_t<std::remove_pointer_t<decltype(G())>>)
+
+#define PROP_ACCESSOR_TYPES_BUFFERED(S, G, C, T) \
++[](T const* val, C* self) -> T const* { \
+    static T tmp; \
+    if (val) \
+        self->S(*val); \
+    tmp = self->G(); \
+    return &tmp; \
+}
+
+#define PROP_ACCESSOR_TYPES(S, G, C, T) \
++[](T const* val, C* self) -> T const* { \
+    if (val) \
+        self->S(*val); \
+    return &self->G(); \
+}
+
+
+        
 
 namespace gamelib
 {
