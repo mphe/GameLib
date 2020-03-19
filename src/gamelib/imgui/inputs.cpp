@@ -104,21 +104,20 @@ namespace gamelib
 
     bool inputTransform(Transformable& trans)
     {
-        static int mode = 0;
-
-        bool any = trans.isMovable() || trans.isScalable() || trans.isRotatable();
-
-        if (!any)
+        if (!(trans.isMovable() || trans.isScalable() || trans.isRotatable()))
             return false;
 
         TransformData data;
         bool changed = false;
 
-        ImGui::RadioButton("Local", &mode, 0);
-        ImGui::SameLine();
-        ImGui::RadioButton("Global", &mode, 1);
+        const ImGuiID modeid = ImGui::GetID(&trans);
+        int* modeptr = ImGui::GetStateStorage()->GetIntRef(modeid, 0);
 
-        if (mode == 0)
+        ImGui::RadioButton("Local", modeptr, 0);
+        ImGui::SameLine();
+        ImGui::RadioButton("Global", modeptr, 1);
+
+        if (*modeptr == 0)
             data = trans.getLocalTransformation();
         else
             data = trans.getTransformation();
@@ -135,7 +134,7 @@ namespace gamelib
             if (ImGui::InputFloat("Rotation", &data.angle, 1, 10, 2))
                 changed = true;
 
-        if (mode == 0)
+        if (*modeptr == 0)
         {
             if (ImGui::InputFloat2("Origin", &data.origin[0], 2))
                 changed = true;
@@ -150,7 +149,7 @@ namespace gamelib
 
         if (changed)
         {
-            if (mode == 0)
+            if (*modeptr == 0)
                 trans.setLocalTransformation(data);
             else
                 trans.setTransformation(data);
