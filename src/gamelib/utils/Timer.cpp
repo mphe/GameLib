@@ -15,9 +15,10 @@ namespace gamelib
         _left(timer_stopped)
     { }
 
-    auto Timer::start(float seconds) -> void
+    auto Timer::start(float seconds, bool setDefault) -> void
     {
-        this->seconds = seconds;
+        if (setDefault)
+            this->seconds = seconds;
         _left = seconds;
     }
 
