@@ -34,7 +34,6 @@ set(GAMELIB_SOURCES
     components/update/QPhysics.cpp
     components/update/QController.cpp
     components/update/AnimationComponent.cpp
-    components/update/CameraTracker.cpp
     components/update/ActorComponent.cpp
     components/geometry/AABB.cpp
     components/geometry/Polygon.cpp
@@ -44,6 +43,7 @@ set(GAMELIB_SOURCES
     components/rendering/SpriteComponent.cpp
     components/editor/PolygonBrushComponent.cpp
     components/editor/LineBrushComponent.cpp
+    components/CameraComponent.cpp
 
     utils/SpriteBatch.cpp
     utils/DebugGui.cpp
@@ -123,7 +123,6 @@ if (GAMELIB_BUILD_EDITOR)
         editor/tools/EntityTool.cpp
         editor/tools/ToolUtils.cpp
         editor/ui/LayerUI.cpp
-        editor/ui/CameraUI.cpp
         editor/ui/Grid.cpp
         editor/ui/JsonView.cpp
         editor/ui/ResourceViewer.cpp

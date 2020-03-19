@@ -2,10 +2,7 @@
 
 ## Priority
 
-* adapt default snap distance in player entity
-* property
-    * property flags (readonly!)
-    * uint property
+* add functionality to preload everything from a resource folder
 * Component
     * Add enable()/disable() function
 * Make components more interface-y to prevent diamond problems
@@ -30,7 +27,6 @@
 * tracker component
 * sound system
 * collision layers and layer masks
-* cameras as resources
 
 ## improvements
 
@@ -67,6 +63,7 @@
     * e.g. SpriteComponent doesn't need RenderComponents's "texture" property, because it defines its own "sprite"
 * Hierachy clone
 * EventManager: Allow respective event pointer in callbacks instead of EventPtr
+* adapt default snap distance in player entity
 
 RenderSystem:
     * Write an IPointSet adapter to edit meshes
@@ -177,7 +174,6 @@ RenderSystem:
     * Split Updatable in Updatable and BaseUpdatable
         * BaseUpdatable <- Updatable
         * BaseUpdatable <- PhysicsComponent
-    * CameraComponent
 
 * json
     * loadFromJson update bool to differentiate between load and update from json
@@ -298,7 +294,9 @@ RenderSystem:
         * resource handle gets reinterpret_casted to BaseResourceHandle
         * works fine as long as the resource is of type Resource<T>
         * if not, things might break if the resource type uses multiple inheritance
-* log * warn if null
+    * uint property
+* log
+    * warn if null
     * assert
     * live update support (e.g. currently rendered instances)
         * "log entry\r" fix

@@ -28,7 +28,7 @@ namespace gamelib
 
     void drawDragBoxes(sf::RenderTarget& target, const math::AbstractPolygon<float>& pol, size_t selected = -1);
 
-    void drawRectOutline(sf::RenderTarget& target, const math::AABBf& box, sf::Color col = sf::Color::Magenta);
+    void drawRectOutline(sf::RenderTarget& target, const math::AABBf& box, sf::Color col = sf::Color::Magenta, const sf::Transform& transform = sf::Transform::Identity);
 
     void drawCollisions(sf::RenderTarget& target, const Entity& ent, unsigned int flags, sf::Color col = sf::Color::Red);
     void drawNormals(sf::RenderTarget& target, const math::AbstractPolygon<float>& pol, sf::Color col = sf::Color::Green);

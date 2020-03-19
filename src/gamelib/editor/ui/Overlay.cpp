@@ -72,18 +72,15 @@ namespace gamelib
             for (size_t i = 0; i < camsys->size(); ++i)
             {
                 auto cam = camsys->get(i);
-                math::AABBf baserect(cam->pos, cam->size);
-                drawRectOutline(target, baserect, col);
+                const math::AABBf baserect(math::Point2f(), cam->getSize());
+                drawRectOutline(target, baserect, col, cam->getMatrix());
 
-                if (!math::almostEquals(cam->zoom, 1.f))
-                {
-                    math::AABBf rect = cam->getCamRect();
-                    drawRectOutline(target, rect, col);
-                    drawLine(target, rect.pos.asPoint(), baserect.pos.asPoint(), col);
-                    drawLine(target, math::Point2f(rect.x + rect.w, rect.y), math::Point2f(baserect.x + baserect.w, baserect.y), col);
-                    drawLine(target, math::Point2f(rect.x, rect.y + rect.h), math::Point2f(baserect.x, baserect.y + baserect.h), col);
-                    drawLine(target, rect.pos.asPoint() + rect.size, baserect.pos.asPoint() + baserect.size, col);
-                }
+                // if (!math::almostEquals(cam->getZoom(), 1.f))
+                // {
+                //     auto nozoomTransform = cam->getTransformation();
+                //     nozoomTransform.scale.fill(1);
+                //     drawRectOutline(target, baserect, col, nozoomTransform.getMatrix());
+                // }
             }
         }
 

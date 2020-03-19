@@ -1,19 +1,4 @@
 {
-   "cameras" : [
-      {
-         "active" : true,
-         "name" : "main",
-         "pos" : [ -138.22633361816406, 62.441802978515625 ],
-         "ratio" : 1,
-         "size" : [ 640, 360 ],
-         "velocity" : [ 0, 0 ],
-         "viewport" : {
-            "pos" : [ 0, 0 ],
-            "size" : [ 1, 1 ]
-         },
-         "zoom" : 1
-      }
-   ],
    "entmgr" : [
       {
          "children" : [
@@ -125,7 +110,23 @@
          }
       },
       {
+         "children" : [
+            {
+               "components" : {
+                  "CameraComponent#1" : {
+                     "size" : [ 720, 405 ],
+                     "transform" : {
+                        "origin" : [ 360, 202.5 ]
+                     }
+                  }
+               },
+               "name" : "camera"
+            }
+         ],
          "components" : {
+            "CameraTracker#1" : {
+               "camera" : 9
+            },
             "QPhysicsComponent#1" : {
                "Snap distance" : 2
             },
@@ -143,7 +144,7 @@
          },
          "name" : "player",
          "transform" : {
-            "pos" : [ 181.77366638183594, 242.44180297851562 ]
+            "pos" : [ 394.26834106445312, 281.07720947265625 ]
          }
       },
       {

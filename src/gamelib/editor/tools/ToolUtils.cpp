@@ -81,7 +81,7 @@ namespace gamelib
             drawDragBox(target, pol.get(i), i == selected);
     }
 
-    void drawRectOutline(sf::RenderTarget& target, const math::AABBf& box, sf::Color col)
+    void drawRectOutline(sf::RenderTarget& target, const math::AABBf& box, sf::Color col, const sf::Transform& transform)
     {
         sf::Vertex v[] = {
             sf::Vertex(sf::Vector2f(box.x, box.y), col),
@@ -90,7 +90,7 @@ namespace gamelib
             sf::Vertex(sf::Vector2f(box.x, box.y + box.h), col),
             sf::Vertex(sf::Vector2f(box.x, box.y), col)
         };
-        target.draw(v, 5, sf::LineStrip);
+        target.draw(v, 5, sf::LineStrip, transform);
     }
 
     void drawCollisions(sf::RenderTarget& target, const Entity& ent, unsigned int flags, sf::Color col)

@@ -1,13 +1,13 @@
 #include "gamelib/Engine.hpp"
 #include "gamelib/core/Game.hpp"
 #include "gamelib/core/res/resources.hpp"
+#include "gamelib/components/CameraComponent.hpp"
 #include "gamelib/components/geometry/Polygon.hpp"
 #include "gamelib/components/geometry/AABB.hpp"
 #include "gamelib/components/geometry/PixelCollision.hpp"
 #include "gamelib/components/geometry/AABBMask.hpp"
 #include "gamelib/components/update/QPhysics.hpp"
 #include "gamelib/components/update/QController.hpp"
-#include "gamelib/components/update/CameraTracker.hpp"
 #include "gamelib/components/update/ActorComponent.hpp"
 #include "gamelib/components/rendering/SpriteComponent.hpp"
 #include "gamelib/components/rendering/MeshRenderer.hpp"
@@ -27,11 +27,11 @@ namespace gamelib
         _REGISTER_COMPONENT(QConfig);
         _REGISTER_COMPONENT(QController);
         _REGISTER_COMPONENT(SpriteComponent);
-        _REGISTER_COMPONENT(CameraTracker);
         _REGISTER_COMPONENT(MeshRenderer);
         _REGISTER_COMPONENT(PolygonBrushComponent);
         _REGISTER_COMPONENT(LineBrushComponent);
         _REGISTER_COMPONENT(ActorComponent);
+        _REGISTER_COMPONENT(CameraComponent);
 #undef _REGISTER_COMPONENT
     }
 

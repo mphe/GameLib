@@ -5,6 +5,9 @@
     ],
     "forcereload": false,
     "preload": {
+        "": [
+            "camera.ent"
+        ],
         "tex" : [
             "dirt.png",
             "dirt2.png",

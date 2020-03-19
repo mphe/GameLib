@@ -43,10 +43,9 @@ namespace gamelib
             cam->move(0, -speed);
 
         if (input->isKeyDown(sf::Keyboard::O))
-            cam->zoom += speed / 400;
+            cam->zoom(speed / 400);
 
         if (input->isKeyDown(sf::Keyboard::I))
-            cam->zoom -= speed / 400;
+            cam->zoom(-speed / 400);
     }
-
 }

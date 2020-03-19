@@ -3,6 +3,7 @@
 #include "gamelib/export.hpp"
 #include "gamelib/utils/log.hpp"
 #include "gamelib/utils/string.hpp"
+#include "gamelib/utils/conversions.hpp"
 #include "gamelib/core/rendering/flags.hpp"
 #include "gamelib/core/rendering/RenderSystem.hpp"
 #include "gamelib/core/ecs/Entity.hpp"
@@ -19,7 +20,6 @@
 #include "gamelib/imgui/inputs.hpp"
 #include "gamelib/imgui/FileDialog.hpp"
 #include "gamelib/editor/ui/LayerUI.hpp"
-#include "gamelib/editor/ui/CameraUI.hpp"
 #include "gamelib/editor/ui/EntityList.hpp"
 #include "gamelib/editor/ui/GlobalGameConfig.hpp"
 #include "gamelib/editor/EditorShared.hpp"
@@ -67,7 +67,8 @@ namespace gamelib
         LOG_DEBUG("Init Editor...");
         EditorShared::_editor = this;
 
-        _cam.loadFromFile("assets/editorcam.json");
+        // _cam.loadFromFile("assets/editorcam.json");
+        _cam.setSize(convert(game->getWindow().getSize()));
 
         _updateRunFlags();
 
@@ -142,7 +143,7 @@ namespace gamelib
             auto rensys = getSubsystem<RenderSystem>();
 
             showRenderSystem();
-            rensys->render(target, _cam.getCamRect());
+            rensys->render(target, _cam.getBBox());
             hideRenderSystem();
 
             _cam.apply(target);
@@ -247,7 +248,6 @@ namespace gamelib
         static bool toolbar = true;
         static bool toolprops = true;
         static bool layerbox = false;
-        static bool cambox = false;
         static bool entprops = true;
         static bool entlist = true;
         static bool entfac = false;
@@ -345,7 +345,6 @@ namespace gamelib
                 ImGui::MenuItem("Entity properties", nullptr, &entprops);
                 ImGui::MenuItem("Entity list", nullptr, &entlist);
                 ImGui::MenuItem("Layer settings", nullptr, &layerbox);
-                ImGui::MenuItem("Camera settings", nullptr, &cambox);
                 ImGui::MenuItem("Global game config", nullptr, &gamecfg);
                 ImGui::Separator();
                 ImGui::MenuItem("Json viewer", nullptr, &jsonwindow);
@@ -427,9 +426,6 @@ namespace gamelib
             if (layerbox)
                 drawLayerUI(&layerbox);
 
-            if (cambox)
-                drawCameraUI(&cambox);
-
             if (entlist)
                 drawEntityList(&entlist);
 
@@ -492,8 +488,8 @@ namespace gamelib
                 auto selected = getSelectTool().getSelected();
                 if (selected)
                 {
-                    _cam.center(selected->getTransform().getPosition());
-                    _cam.zoom = 1;
+                    _cam.setPosition(selected->getTransform().getPosition());
+                    _cam.setZoom(1);
                 }
             }
         }

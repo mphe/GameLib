@@ -3,49 +3,58 @@
 
 namespace gamelib
 {
-    math::AABBf applyAspectRatio(const math::AABBf& rect, const math::AABBf& screen, AspectRatio ratio)
+    math::AABBf applyAspectRatio(const math::Vec2f& camsize, const math::AABBf& screen, AspectRatio ratio)
     {
         if (ratio == Fit)
         {
-            auto ratio = screen.size / rect.size;
-            float fac = std::min(ratio.x, ratio.y);
-            auto size = rect.size * fac;
-            auto pos = screen.pos + (screen.size - size) / 2;
-            return math::AABBf(pos.asPoint(), size);
+            const auto r = (screen.size / camsize);
+            const auto endsize = camsize * std::min(r.x, r.y);
+            const auto pos = screen.pos + (screen.size - endsize) / 2;
+            return math::AABBf(pos.asPoint(), endsize);
         }
         else if (ratio == Centered)
         {
-            auto pos = screen.pos + (screen.size - rect.size) / 2;
-            return math::AABBf(pos.asPoint(), rect.size);
+            const auto pos = screen.pos + (screen.size - camsize) / 2;
+            return math::AABBf(pos.asPoint(), camsize);
         }
         else if (ratio == CenteredFit)
         {
-            if (rect.size < screen.size)
-                return applyAspectRatio(rect, screen, Centered);
-            return applyAspectRatio(rect, screen, Fit);
+            if (camsize < screen.size)
+                return applyAspectRatio(camsize, screen, Centered);
+            return applyAspectRatio(camsize, screen, Fit);
         }
         else
             return screen;
     }
 
+    math::AABBf applyAspectRatio(
+            const math::Vec2f& camsize, const math::AABBf& viewport,
+            const math::Vec2f& canvasSize, AspectRatio ratio)
+    {
+        // Calculate viewport rect in pixels
+        auto screen = math::AABBf::fromPoints(
+                (viewport.pos * canvasSize).asPoint(),
+                (viewport.size * canvasSize).asPoint());
+
+        // Apply aspect ratio
+        auto newrect = applyAspectRatio(camsize, screen, ratio);
+
+        // Convert back to 0-1 range
+        newrect.pos /= canvasSize;
+        newrect.size /= canvasSize;
+
+        return newrect;
+    }
+
     sf::View applyAspectRatio(const sf::View& view, const sf::RenderTarget& target, AspectRatio ratio)
     {
-        // get view rect
-        auto& size = convert(view.getSize());
-        auto pos = convert(view.getCenter()) - size / 2;
-        math::AABBf rect(pos.asPoint(), size);
-
-        // Create view rect from 2 points
-        auto screensize = convert(target.getSize());
-        auto& viewport = convert(view.getViewport());
-        auto screen = math::AABBf::fromPoints((viewport.pos * screensize).asPoint(), (viewport.size * screensize).asPoint());
-
-        auto newrect = applyAspectRatio(rect, screen, ratio);
-        newrect.pos /= screensize;
-        newrect.size /= screensize;
+        const auto& camsize = convert(view.getSize());
+        const auto screensize = convert(target.getSize());
+        const auto& viewport = convert(view.getViewport());
 
         auto newview = view;
-        newview.setViewport(convert(newrect));
+        newview.setViewport(convert(
+                    applyAspectRatio(camsize, viewport, screensize, ratio)));
 
         return newview;
     }

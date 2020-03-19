@@ -1,55 +1,48 @@
 #ifndef GAMELIB_CAMERA_HPP
 #define GAMELIB_CAMERA_HPP
 
-#include "math/geometry/AABB.hpp"
 #include "gamelib/core/update/Updatable.hpp"
-#include "gamelib/json/JsonSerializer.hpp"
+#include "gamelib/core/geometry/Transformable.hpp"
 #include "gamelib/utils/aspectratio.hpp"
 #include <SFML/Graphics.hpp>
+#include <string>
 
 namespace gamelib
 {
-    class Camera : public Updatable, public JsonSerializer
+    class Camera : public Updatable, public Transformable
     {
         public:
             Camera();
             Camera(const std::string& name);
+            Camera(const math::Point2f& pos, const math::Vec2f& size);
             Camera(const std::string& name, const math::Point2f& pos, const math::Vec2f& size);
-            virtual ~Camera() {}
 
-            virtual bool loadFromJson(const Json::Value& node) override;
-            virtual void writeToJson(Json::Value& node) const override;
+            auto getSize() const -> const math::Vec2f&;
+            auto setSize(const math::Vec2f& size) -> void;
 
-            virtual void update(float elapsed) override;
+            auto zoom(float zoom)                                -> void;
+            auto setZoom(float zoom)                             -> void;
+            auto getZoom() const                                 -> float;
+            auto zoomTowards(const math::Point2f& p, float zoom) -> void;
+            auto zoomTowards(float x, float y, float zoom)       -> void;
 
-            void setMotion(float speed, float dir);
-            void addMotion(float speed, float dir);
+            auto getBBox() const              -> math::AABBf final;
+            auto update(UNUSED float elapsed) -> void override {};
 
-            void center(float x, float y);
-            void center(const math::Point2f& pos);
-            void move(float x, float y);
+            auto getView() const                               -> sf::View;
+            auto getView(const sf::RenderTarget& target) const -> sf::View;
 
-            void zoomTowards(float x, float y, float zoom);
-
-            auto getCamRect() const -> math::AABB<float>;
-            auto getName() const -> const std::string&;
-
-            sf::View getView() const;
-            sf::View getView(const sf::RenderTarget& target) const;
-
-            void apply(sf::RenderTarget& target) const;
+            // Shortcut for target.setView(getView(target))
+            auto apply(sf::RenderTarget& target) const -> void;
 
         public:
-            float zoom;
-            math::Point2f pos;
-            math::Vec2f size;
             math::AABBf viewport;
-            math::Vec2f vel;
             AspectRatio ratio;
             bool active;
+            std::string name;
 
-        private:
-            std::string _name;
+        protected:
+            math::Vec2f _size;
     };
 }
 

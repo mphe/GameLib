@@ -3,7 +3,6 @@
 #include "gamelib/json/json-utils.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
 #include "gamelib/core/ecs/EntityFactory.hpp"
-#include "gamelib/core/rendering/CameraSystem.hpp"
 #include "gamelib/core/rendering/RenderSystem.hpp"
 #include "gamelib/core/ecs/serialization.hpp"
 
@@ -25,10 +24,6 @@ namespace gamelib
     {
         LOG("Loading game...");
 
-        auto camsys = getSubsystem<CameraSystem>();
-        if (camsys && node.isMember("cameras"))
-            camsys->loadFromJson(node["cameras"]);
-
         auto rensys = getSubsystem<RenderSystem>();
         if (rensys && node.isMember("rendersystem"))
             rensys->loadFromJson(node["rendersystem"]);
@@ -42,10 +37,6 @@ namespace gamelib
     bool saveToJson(Json::Value& node)
     {
         LOG("Saving game...");
-
-        auto camsys = getSubsystem<CameraSystem>();
-        if (camsys)
-            camsys->writeToJson(node["cameras"]);
 
         auto rensys = getSubsystem<RenderSystem>();
         if (rensys)

@@ -18,7 +18,6 @@ namespace gamelib
 
     bool inputRenderOptions(const char* label, RenderOptions* options);
     bool inputLayer(const char* label, LayerHandle* handle, const RenderSystem* sys);
-    bool inputCamera(Camera& cam);
 
     bool inputTransform(Transformable& trans);
 

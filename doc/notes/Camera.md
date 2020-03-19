@@ -36,7 +36,7 @@
     * by index -> returns handle/pointer
         * not available in SlotMap
 
-# Conclusions
+## Ideas
 * gamemaker style view system
 
 * if owned outside scene
@@ -66,3 +66,17 @@
     -> simpler
     -> cleaner
     -> implemented with array of ptr approach for better access
+
+## Solution
+
+The current implementation uses the cameras-as-entity approach.
+
+CameraSystem stores a vector of raw pointers to camera objects. It does not take ownership of them.
+Cameras can be instantiated and registered to the CameraSystem for manually managing cameras (e.g. Editor).
+
+For gameplay, there is now a camera entity and a CameraComponent.
+CameraComponent registers as CameraSystem and uses a Transformable internally.
+
+Serialization is done through regular entity serialization
+
+This approach is better as it streamlines the implementation to the ECS.

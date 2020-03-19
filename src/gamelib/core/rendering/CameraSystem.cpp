@@ -10,45 +10,43 @@ namespace gamelib
         _currentcam(nullptr)
     { }
 
-    Camera& CameraSystem::create(const std::string& name)
+    void CameraSystem::add(Camera* cam)
     {
-        auto cam = find(name);
-        if (cam)
-        {
-            LOG_WARN("Camera already exists: ", name, " -> using existing one");
-            return *cam;
-        }
-
-        _cams.emplace_back(new Camera(name));
-        LOG_DEBUG("Camera added: ", name);
-        return *_cams.back();
+        _cams.emplace_back(cam);
+        LOG_DEBUG("Camera added: ", cam->name);
     }
 
     auto CameraSystem::remove(const std::string& name) -> void
     {
-        auto it = _find(name);
-        if (it != _cams.end())
-        {
-            _cams.erase(it);
-            LOG_DEBUG("Camera removed: ", name);
-        }
+        for (size_t i = 0; i < _cams.size(); ++i)
+            if (_cams[i]->name == name)
+                return remove(i);
     }
 
     void CameraSystem::remove(const Camera* cam)
     {
-        if (cam)
-            remove(cam->getName());
+        for (size_t i = 0; i < _cams.size(); ++i)
+            if (_cams[i] == cam)
+                return remove(i);
     }
 
-    Camera* CameraSystem::find(const std::string& name)
+    auto CameraSystem::remove(size_t i) -> void
     {
-        return CALL_CONST_OVERLOAD(Camera*, find, name);
+        LOG_DEBUG("Camera removed: ", _cams[i]->name);
+        _cams.erase(_cams.begin() + i);
     }
 
-    const Camera* CameraSystem::find(const std::string& name) const
+    Camera* CameraSystem::get(const std::string& name)
     {
-        auto it = _find(name);
-        return it != _cams.end() ? it->get() : nullptr;
+        return CALL_CONST_OVERLOAD(Camera*, get, name);
+    }
+
+    const Camera* CameraSystem::get(const std::string& name) const
+    {
+        for (size_t i = 0; i < _cams.size(); ++i)
+            if (_cams[i]->name == name)
+                return _cams[i];
+        return nullptr;
     }
 
     Camera* CameraSystem::get(size_t index)
@@ -58,7 +56,7 @@ namespace gamelib
 
     const Camera* CameraSystem::get(size_t index) const
     {
-        return (index < _cams.size()) ? _cams[index].get() : nullptr;
+        return (index < _cams.size()) ? _cams[index] : nullptr;
     }
 
     const Camera* CameraSystem::getCurrent() const
@@ -74,14 +72,6 @@ namespace gamelib
     void CameraSystem::clear()
     {
         _cams.clear();
-    }
-
-    auto CameraSystem::_find(const std::string& name) const -> std::vector<CameraPtr>::const_iterator
-    {
-        for (auto it = _cams.begin(), end = _cams.end(); it != end; ++it)
-            if ((*it)->getName() == name)
-                return it;
-        return _cams.end();
     }
 
     auto CameraSystem::update(float elapsed) -> void
@@ -115,9 +105,9 @@ namespace gamelib
                 if (!i->active)
                     continue;
 
-                _currentcam = i.get();
+                _currentcam = i;
                 i->apply(target);
-                _numrendered += sys->render(target, i->getCamRect());
+                _numrendered += sys->render(target, i->getBBox());
             }
 
             target.setView(reset); // reset view
@@ -130,34 +120,5 @@ namespace gamelib
     auto CameraSystem::getNumRendered() const -> size_t
     {
         return _numrendered;
-    }
-
-    bool CameraSystem::loadFromJson(const Json::Value& node)
-    {
-        clear();
-
-        if (!node.isArray())
-        {
-            LOG_ERROR("Json node is not an array");
-            return false;
-        }
-
-        // Use an array to save cams to keep their order
-        for (Json::ArrayIndex i = 0; i < node.size(); ++i)
-        {
-            CameraPtr cam(new Camera(""));
-            if (!cam->loadFromJson(node[i]))
-                // Don't remove it, because code might rely on the camera count
-                LOG_WARN("Invalid config for camera ", cam->getName());
-            _cams.emplace_back(std::move(cam));
-        }
-
-        return true;
-    }
-
-    void CameraSystem::writeToJson(Json::Value& node) const
-    {
-        for (size_t i = 0; i < _cams.size(); ++i)
-            _cams[i]->writeToJson(node[static_cast<Json::ArrayIndex>(i)]);
     }
 }

@@ -87,21 +87,6 @@ namespace gamelib
         return false;
     }
 
-    bool inputCamera(Camera& cam)
-    {
-        bool changed = false;
-        changed |= ImGui::InputFloat2("Pos", &cam.pos.x, 2);
-        changed |= ImGui::InputFloat2("Size", &cam.size.x, 2);
-        changed |= ImGui::InputFloat("Zoom", &cam.zoom, 0.5, 1, 2);
-        changed |= ImGui::Combo("Aspect Ratio", (int*)(&cam.ratio), str_aspectratios, NumRatios);
-        ImGui::NewLine();
-        changed |= ImGui::InputFloat2("Velocity", &cam.vel.x, 2);
-        ImGui::NewLine();
-        changed |= ImGui::InputFloat2("Viewport Start", &cam.viewport.x, 2);
-        changed |= ImGui::InputFloat2("Viewport Stop", &cam.viewport.w, 2);
-        return changed;
-    }
-
     bool inputTransform(Transformable& trans)
     {
         if (!(trans.isMovable() || trans.isScalable() || trans.isRotatable()))
