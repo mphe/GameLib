@@ -57,7 +57,7 @@ namespace gamelib
     bool Game::init()
     {
         LOG("Initializing game...");
-        _window.create(sf::VideoMode(_size.x, _size.y), _title, sf::Style::Close);
+        _window.create(sf::VideoMode(_size.x, _size.y), _title);
         _window.setFramerateLimit(_maxfps);
         _window.setVerticalSyncEnabled(_vsync);
         _window.setKeyRepeatEnabled(_repeatkeys);
