@@ -68,7 +68,7 @@ namespace gamelib
         ImGui::GetStyle().WindowBorderSize = 0;
         ImGui::GetStyle().WindowRounding = 0;
         ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        ImGui::GetIO().ConfigDockingWithShift = false;
+        ImGui::GetIO().ConfigDockingWithShift = true;
         ImGui::GetIO().ConfigWindowsResizeFromEdges = true;
 
         _initialized = true;
