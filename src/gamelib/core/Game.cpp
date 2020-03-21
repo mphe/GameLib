@@ -26,28 +26,15 @@ namespace gamelib
         _vsync(true),
         _initialized(false)
     {
+#define WIN_PROP_SET_LAMBDA(varname, winfunc) \
+        +[](const decltype(varname)* val, Game* self) { \
+            self->varname = *val; \
+            if (self->_window.isOpen()) \
+                self->_window.winfunc(*val); \
+        }
+
         auto setSize = +[](const math::Vec2i* val, Game* self) {
             self->resize(sf::Vector2u(val->x, val->y));
-        };
-        auto setFPS = +[](const int* val, Game* self) {
-            self->_maxfps = *val;
-            if (self->_window.isOpen())
-                self->_window.setFramerateLimit(*val);
-        };
-        auto setVsync = +[](const bool* val, Game* self) {
-            self->_vsync = *val;
-            if (self->_window.isOpen())
-                self->_window.setVerticalSyncEnabled(*val);
-        };
-        auto setTitle = +[](const std::string* val, Game* self) {
-            self->_title = *val;
-            if (self->_window.isOpen())
-                self->_window.setTitle(*val);
-        };
-        auto setRepeat = +[](const bool* val, Game* self) {
-            self->_repeatkeys = *val;
-            if (self->_window.isOpen())
-                self->_window.setKeyRepeatEnabled(*val);
         };
 
         _props.registerProperty("bgcolor", bgcolor);
@@ -55,10 +42,10 @@ namespace gamelib
         _props.registerProperty("escclose", escclose);
         _props.registerProperty("unfocusPause", unfocusPause);
         _props.registerProperty("size", _size, setSize, this);
-        _props.registerProperty("maxfps", _maxfps, setFPS, this, 0, INT_MAX);
-        _props.registerProperty("vsync", _vsync, setVsync, this);
-        _props.registerProperty("title", _title, setTitle, this);
-        _props.registerProperty("repeatkeys", _repeatkeys, setRepeat, this);
+        _props.registerProperty("maxfps", _maxfps, WIN_PROP_SET_LAMBDA(_maxfps, setFramerateLimit), this, 0, INT_MAX);
+        _props.registerProperty("vsync", _vsync, WIN_PROP_SET_LAMBDA(_vsync, setVerticalSyncEnabled), this);
+        _props.registerProperty("title", _title, WIN_PROP_SET_LAMBDA(_title, setTitle), this);
+        _props.registerProperty("repeatkeys", _repeatkeys, WIN_PROP_SET_LAMBDA(_repeatkeys, setKeyRepeatEnabled), this);
     }
 
     Game::~Game()
