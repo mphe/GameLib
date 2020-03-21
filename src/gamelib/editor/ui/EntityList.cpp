@@ -70,6 +70,7 @@ namespace gamelib
 
         ImGui::PushID(ent.get());
         auto flags = current == ent ? ImGuiTreeNodeFlags_Selected : 0;
+        flags |= ent->getChildren().empty() ?  ImGuiTreeNodeFlags_Leaf : 0;
         bool open = ImGui::TreeNodeEx(entname,
                 flags | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow);
 
@@ -118,6 +119,7 @@ namespace gamelib
                     ret = true;
                     break;
                 }
+
 #if 0
             // Show Components
             for (auto& comp : *ent)
@@ -131,6 +133,7 @@ namespace gamelib
                 ImGui::PopID();
             }
 #endif
+
             ImGui::TreePop();
         }
 
