@@ -19,6 +19,7 @@
 #include "gamelib/editor/ui/JsonView.hpp"
 #include "gamelib/imgui/inputs.hpp"
 #include "gamelib/imgui/FileDialog.hpp"
+#include "gamelib/imgui/iconfont.hpp"
 #include "gamelib/editor/ui/LayerUI.hpp"
 #include "gamelib/editor/ui/EntityList.hpp"
 #include "gamelib/editor/ui/GlobalGameConfig.hpp"
@@ -29,11 +30,11 @@
 namespace gamelib
 {
     constexpr const char* buttonStrings[] = {
-        "Select Tool",
-        "Sprite Tool",
-        "Brush Tool",
-        "Vertex Tool",
-        "Entity Tool"
+        ICON_FA_MOUSE_POINTER " Select Tool",
+        ICON_FA_IMAGE " Sprite Tool",
+        ICON_FA_SHAPES " Brush Tool",
+        ICON_FA_DRAW_POLYGON " Vertex Tool",
+        ICON_FA_BOX " Entity Tool"
     };
 
     // Strips PolygonBrushComponents from output
@@ -286,29 +287,29 @@ namespace gamelib
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("Save", nullptr, nullptr, !_savefile.empty()))
+                if (ImGui::MenuItem(ICON_FA_SAVE " Save", nullptr, nullptr, !_savefile.empty()))
                     save();
 
-                if (ImGui::MenuItem("Save as"))
+                if (ImGui::MenuItem(ICON_FA_SAVE " Save as"))
                     savedlg.open();
 
-                if (ImGui::MenuItem("Load"))
+                if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Load"))
                     loaddlg.open();
 
-                if (ImGui::MenuItem("Reload"))
+                if (ImGui::MenuItem(ICON_FA_REDO " Reload"))
                     load();
 
-                if (ImGui::MenuItem("Export"))
+                if (ImGui::MenuItem(ICON_FA_FILE_EXPORT " Export"))
                     exportdlg.open();
 
-                if (ImGui::MenuItem("Quit"))
+                if (ImGui::MenuItem(ICON_FA_WINDOW_CLOSE " Quit"))
                     getSubsystem<Game>()->close();
 
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Edit"))
             {
-                if (ImGui::MenuItem("Run", "F5", &_run))
+                if (ImGui::MenuItem(ICON_FA_PLAY " Run", "F5", &_run))
                     _updateRunFlags();
                 ImGui::EndMenu();
             }
@@ -359,9 +360,9 @@ namespace gamelib
             {
                 ImGui::MenuItem("Snap to grid", "G", &_snap);
                 ImGui::MenuItem("Grid on top", nullptr, &_gridontop);
-                if (ImGui::MenuItem("Increase", "Q"))
+                if (ImGui::MenuItem(ICON_FA_PLUS " Increase", "Q"))
                     _grid.increase();
-                if (ImGui::MenuItem("Decrease", "E"))
+                if (ImGui::MenuItem(ICON_FA_MINUS " Decrease", "E"))
                     _grid.decrease();
                 ImGui::EndMenu();
             }

@@ -1,6 +1,7 @@
 #include "gamelib/editor/ui/EntityList.hpp"
 #include "gamelib/imgui/buttons.hpp"
 #include "gamelib/imgui/inputs.hpp"
+#include "gamelib/imgui/iconfont.hpp"
 #include "gamelib/editor/EditorShared.hpp"
 #include "gamelib/editor/tools/SelectTool.hpp"
 #include "gamelib/core/ecs/EntityManager.hpp"
@@ -68,15 +69,16 @@ namespace gamelib
         auto entname = ent->getName().c_str();
         bool ret = false;
 
-        ImGui::PushID(ent.get());
-        auto flags = current == ent ? ImGuiTreeNodeFlags_Selected : 0;
+        auto flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow;
+        flags |= current == ent ? ImGuiTreeNodeFlags_Selected : 0;
         flags |= ent->getChildren().empty() ?  ImGuiTreeNodeFlags_Leaf : 0;
-        bool open = ImGui::TreeNodeEx(entname,
-                flags | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow);
+
+        ImGui::PushID(ent.get());
+        bool open = ImGui::TreeNodeEx(ent.get(), flags, ICON_FA_CUBE " %s", entname);
 
         if (ImGui::BeginPopupContextItem("Context Menu##enttree", sf::Mouse::Right))
         {
-            if (ImGui::Selectable("Ungroup"))
+            if (ImGui::Selectable(ICON_FA_OBJECT_UNGROUP " Ungroup"))
                 while (!ent->getChildren().empty())
                     ent->getChildren()[0]->reparent(ent->getParent());
             ImGui::EndPopup();
