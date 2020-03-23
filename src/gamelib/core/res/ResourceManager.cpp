@@ -117,7 +117,7 @@ namespace gamelib
         if (!res)
             return nullptr;
 
-        auto path = _canonicalize(res.getResource()->getFullPath());
+        auto path = findFile(res.getResource()->getFullPath());
         auto pathstring = path.string();
 
         // Fire a reload event if the resource was reloaded
@@ -148,7 +148,7 @@ namespace gamelib
             return nullptr;
         }
 
-        auto loadpath = _canonicalize(fname);
+        auto loadpath = findFile(fname);
         if (loadpath.empty())
             return nullptr;
 
@@ -179,7 +179,7 @@ namespace gamelib
 
     void ResourceManager::free(const boost::filesystem::path& fname)
     {
-        auto it = _res.find(_canonicalize(fname).string());
+        auto it = _res.find(findFile(fname).string());
         if (it != _res.end() && it->second.use_count() == 1)
         {
             LOG_DEBUG_WARN("Freeing resource ", it->first);
@@ -205,7 +205,7 @@ namespace gamelib
 
     BaseResourceHandle ResourceManager::find(const boost::filesystem::path& fname)
     {
-        auto it = _res.find(_canonicalize(fname).string());
+        auto it = _res.find(findFile(fname).string());
         if (it == _res.end())
             return nullptr;
         return it->second;
@@ -296,7 +296,7 @@ namespace gamelib
         LOG_DEBUG_WARN("ResourceManager destroyed");
     }
 
-    auto ResourceManager::_canonicalize(const boost::filesystem::path& fname) const -> boost::filesystem::path
+    auto ResourceManager::findFile(const boost::filesystem::path& fname) const -> boost::filesystem::path
     {
         // TODO: maybe allow files not to exist
 

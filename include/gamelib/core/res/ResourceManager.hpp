@@ -115,6 +115,10 @@ namespace gamelib
                 return find(T::id).template as<T>();
             }
 
+            // Don't load anything, only search for the given file and
+            // return its full path or empty path if it doesn't exist.
+            auto findFile(const boost::filesystem::path& fname) const -> boost::filesystem::path;
+
             // Link a file extension to a loader-callback
             auto registerFileType(const std::string& ext, LoaderCallback cb) -> void;
 
@@ -144,7 +148,6 @@ namespace gamelib
             }
 
         private:
-            auto _canonicalize(const boost::filesystem::path& fname) const -> boost::filesystem::path;
             auto _extractSearchpath(
                     const boost::filesystem::path& fullpath,
                     const boost::filesystem::path** searchpath,

@@ -7,3 +7,6 @@
 [submodule "extlib/imgui-sfml"]
 	path = extlib/imgui-sfml
 	url = https://github.com/eliasdaler/imgui-sfml.git
+[submodule "extlib/IconFontCppHeaders"]
+	path = extlib/IconFontCppHeaders
+	url = https://github.com/juliettef/IconFontCppHeaders

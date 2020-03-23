@@ -83,6 +83,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/extlib/imgui
     ${PROJECT_SOURCE_DIR}/extlib/imgui-sfml
     ${PROJECT_SOURCE_DIR}/extlib/imguifilesystem
+    ${PROJECT_SOURCE_DIR}/extlib/IconFontCppHeaders
 )
 
 add_subdirectory(src/gamelib)

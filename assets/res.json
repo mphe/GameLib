@@ -1,7 +1,8 @@
 {
     "searchpath": [
         "assets",
-        "assets/entities"
+        "assets/entities",
+        "assets/fonts"
     ],
     "forcereload": false,
     "preload": {

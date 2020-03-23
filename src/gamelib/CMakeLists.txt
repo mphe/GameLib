@@ -72,6 +72,7 @@ set(GAMELIB_SOURCES
     imgui/buttons.cpp
     imgui/resources.cpp
     imgui/FileDialog.cpp
+    imgui/iconfont.cpp
 
     core/input/InputSystem.cpp
     core/Game.cpp
