@@ -32,6 +32,9 @@ gen_test_full(rendersystem rendersystem.cpp)
 gen_test_full(signal signal.cpp)
 gen_test_full(lifetime lifetime.cpp)
 
+add_executable(imguitest imguitest.cpp)
+target_link_libraries(imguitest  ${EXT_LIBRARIES})
+
 if (GAMELIB_BUILD_TOOLS)
     find_program(BASH_PROGRAM bash)
     if (BASH_PROGRAM)
