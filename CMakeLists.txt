@@ -27,6 +27,17 @@ set(CMAKE_CXX_STANDARD 14)
 set(CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Use ccache if available
+if(GAMELIB_USE_CCACHE)
+    find_program(CCACHE_FOUND ccache)
+    if(CCACHE_FOUND)
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+    endif()
+endif()
+# }}}
+
+# Compile flags {{{
 if (CMAKE_COMPILER_IS_GNUCC)
     add_definitions(
         -Wall
@@ -60,21 +71,27 @@ if(GAMELIB_DISABLE_LOGGING)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDISABLE_LOGGING")
 endif()
 
-# Use ccache if available
-if(GAMELIB_USE_CCACHE)
-    find_program(CCACHE_FOUND ccache)
-    if(CCACHE_FOUND)
-        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
-        set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
-    endif()
-endif()
-
 # }}}
 
+set(OpenGL_GL_PREFERENCE GLVND)
+find_package(OpenGL)
+find_package(Boost COMPONENTS system filesystem REQUIRED)
 find_package(SFML 2.5 COMPONENTS system window graphics audio REQUIRED)
 
-# build external libraries first
-add_subdirectory(extlib)
+set(EXT_LIBRARIES
+    sfml-audio
+    sfml-graphics
+    sfml-window
+    sfml-system
+    cppmath
+    jsoncpp
+    imgui
+    ${OPENGL_LIBRARIES}
+    ${Boost_FILESYSTEM_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY}
+)
+
+include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
@@ -86,6 +103,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/extlib/IconFontCppHeaders
 )
 
+add_subdirectory(extlib)
 add_subdirectory(src/gamelib)
 
 if (GAMELIB_BUILD_EXAMPLES)

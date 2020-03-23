@@ -1,27 +1,7 @@
-set(OpenGL_GL_PREFERENCE GLVND)
-find_package(OpenGL)
-find_package(Boost COMPONENTS system filesystem REQUIRED)
-
-include_directories(SYSTEM ${Boost_INCLUDE_DIR})
-
 macro(gen_binary BINNAME SOURCES)
     add_executable(${BINNAME} ${SOURCES} ${ARGN})
     target_link_libraries(${BINNAME} gamelib)
 endmacro()
-
-
-set(EXT_LIBRARIES
-    sfml-audio
-    sfml-graphics
-    sfml-window
-    sfml-system
-    cppmath
-    jsoncpp
-    imgui
-    ${OPENGL_LIBRARIES}
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
-)
 
 #  gamelib sources {{{
 set(GAMELIB_SOURCES

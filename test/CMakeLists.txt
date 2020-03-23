@@ -10,7 +10,7 @@ endmacro()
 
 macro(gen_test_extlib TESTNAME SOURCE)
     gen_test(${TESTNAME} ${SOURCE} ${ARGN})
-    target_link_libraries(${TESTNAME} cppmath jsoncpp imgui)
+    target_link_libraries(${TESTNAME} ${EXT_LIBRARIES})
 endmacro()
 
 
