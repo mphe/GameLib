@@ -171,7 +171,7 @@ namespace gamelib
         ImGui::End();
     }
 
-    void drawEntityProperties(bool* open)
+    void drawEntityProperties(bool* open, bool detachTransform)
     {
         SelectTool& select = EditorShared::getSelectTool();
         auto ent = select.getSelected();
@@ -180,10 +180,25 @@ namespace gamelib
         if (ImGui::Begin(entity_properties_window_name, open, ImVec2(250, 285)))
         {
             if (comp)
-                inputComponent(*comp);
+                inputComponent(*comp, detachTransform);
             else if (ent)
-                inputEntityProps(*ent);
+                inputEntityProps(*ent, detachTransform);
         }
+
+        if (detachTransform)
+        {
+            if (ImGui::Begin("Transform##detached_transform_window"))
+            {
+                ImGui::PushItemWidth(0.55 * ImGui::GetWindowContentRegionWidth());
+                if (comp)
+                    inputTransform(*comp->getTransform());
+                else if (ent)
+                    inputTransform(ent->getTransform());
+                ImGui::PopItemWidth();
+            }
+            ImGui::End();
+        }
+
         ImGui::End();
     }
 }

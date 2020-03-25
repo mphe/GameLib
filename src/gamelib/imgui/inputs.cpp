@@ -164,11 +164,12 @@ namespace gamelib
     }
 
 
-    void inputEntityProps(Entity& ent)
+    void inputEntityProps(Entity& ent, bool noEntityTransform)
     {
-        inputEntity(ent);
+        inputEntity(ent, noEntityTransform);
 
-        ImGui::Separator();
+        if (!noEntityTransform)
+            ImGui::Separator();
 
         for (auto& i : ent)
         {
@@ -184,7 +185,7 @@ namespace gamelib
         }
     }
 
-    void inputEntity(Entity& ent)
+    void inputEntity(Entity& ent, bool noEntityTransform)
     {
         // static constexpr const char* entityFlags[] { "Persistent (Unimplemented)", "Static (Unimplemented)" };
         ImGui::PushItemWidth(0.5 * ImGui::GetWindowContentRegionWidth());
@@ -192,7 +193,7 @@ namespace gamelib
         // ImGui::InputText("name", const_cast<char*>(ent.getName().c_str()), ent.getName().size(), ImGuiInputTextFlags_ReadOnly);
         // ImGui::NewLine();
 
-        if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+        if (!noEntityTransform && ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
             inputTransform(ent.getTransform());
 
         // if (ImGui::CollapsingHeader("Flags"))
@@ -200,11 +201,12 @@ namespace gamelib
         ImGui::PopItemWidth();
     }
 
-    void inputComponent(Component& comp)
+    void inputComponent(Component& comp, bool noTransform)
     {
         ImGui::PushID(&comp);
         ImGui::PushItemWidth(0.5 * ImGui::GetWindowContentRegionWidth());
-        if (comp.getTransform() && ImGui::TreeNode("Transform"))
+
+        if (!noTransform && comp.getTransform() && ImGui::TreeNode("Transform"))
         {
             inputTransform(*comp.getTransform());
             ImGui::TreePop();

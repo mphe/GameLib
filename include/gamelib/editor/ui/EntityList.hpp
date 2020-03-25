@@ -7,7 +7,7 @@ namespace gamelib
 
     void drawSearchPopup(bool* open = nullptr);
     void drawEntityList(bool* open = nullptr);
-    void drawEntityProperties(bool* open = nullptr);
+    void drawEntityProperties(bool* open = nullptr, bool detachTransformWindow = true);
 }
 
 #endif
