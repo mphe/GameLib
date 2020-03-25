@@ -46,7 +46,7 @@ namespace gamelib
         if (!entmgr)
             return true;
 
-        writeEntityManagerToJson(node["entmgr"]);
+        writeEntityManagerToJson(&node["entmgr"]);
 
         LOG("Saving finished");
         return true;
@@ -98,53 +98,40 @@ namespace gamelib
         return ent;
     }
 
-    auto _recurseWriteHierachyToJson(Json::Value& out, const Entity& ent, std::unordered_map<std::string, Json::Value>& normalizedcache) -> void
+    auto _recurseWriteHierachyToJson(Json::Value* out, const Entity& ent) -> void
     {
         auto factory = getSubsystem<EntityFactory>();
-        auto& name = ent.getName();
-        auto cacheit = normalizedcache.find(name);
+        const auto& name = ent.getName();
+        auto handle = factory->findEntity(name);
 
-        // If normalized config not in cache, create it
-        if (cacheit == normalizedcache.end())
+        if (!getConfigDelta(ent, out, *factory))
         {
-            Json::Value enttemplate;
-            // insert returns pair of insert position iterator and bool if insertion took place
-            if (getNormalizedEntityTemplate(ent, &enttemplate, *factory))
-                cacheit = normalizedcache.insert(std::make_pair(name, std::move(enttemplate))).first;
-        }
-
-        if (cacheit != normalizedcache.end())
-            getConfigDelta(ent, cacheit->second, &out);
-        else
-        {
-            LOG_WARN("Could not get a normalized entity template for ", name);
-            writeToJson(out, ent);
+            LOG_WARN("Could not get deltas for entity: ", name);
+            writeToJson(*out, ent);
         }
 
         const auto& children = ent.getChildren();
         if (children.empty())
             return;
 
-        auto& childrennode = out["children"];
+        auto& childrennode = (*out)["children"];
         childrennode.resize(children.size());
 
         for (Json::ArrayIndex i = 0; i < children.size(); ++i)
-            _recurseWriteHierachyToJson(childrennode[i], *children[i], normalizedcache);
+            _recurseWriteHierachyToJson(&childrennode[i], *children[i]);
     }
 
-    auto writeHierachyToJson(Json::Value& out, const Entity& ent) -> void
+    auto writeHierachyToJson(Json::Value* out, const Entity& ent) -> void
     {
-        // Cache normalized entity templates
-        std::unordered_map<std::string, Json::Value> normalizedcache;
-        _recurseWriteHierachyToJson(out, ent, normalizedcache);
+        _recurseWriteHierachyToJson(out, ent);
     }
 
 
-    auto writeEntityManagerToJson(Json::Value& node) -> void
+    auto writeEntityManagerToJson(Json::Value* node) -> void
     {
         auto entmgr = getSubsystem<EntityManager>();
         writeHierachyToJson(node, *entmgr->getRoot());
-        node = node["children"];    // trim root node
+        *node = (*node)["children"];    // trim root node
     }
 
     auto loadEntityManagerFromJson(const Json::Value& node, bool clear, bool direct) -> bool

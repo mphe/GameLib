@@ -70,7 +70,7 @@ set(GAMELIB_SOURCES
     core/res/TextureResource.cpp
     core/res/JsonResource.cpp
     core/res/SpriteResource.cpp
-    core/res/EntityConfigResource.cpp
+    core/res/EntityResource.cpp
     core/res/SoundResource.cpp
     core/rendering/Camera.cpp
     core/rendering/FreeCam.cpp

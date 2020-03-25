@@ -18,7 +18,7 @@ class ComponentB : public Identifier<0x650e189e, Component>
         ASSIGN_NAMETAG("ComponentB");
         ComponentB() {}
 
-        bool loadFromJson(const Json::Value& node) final override
+        bool loadFromJson(const Json::Value& node) final
         {
             x = node.get("x", 0).asInt();
             return Component::loadFromJson(node);
@@ -42,7 +42,9 @@ void testEntity(Entity& entity)
 
 int main()
 {
-    Json::Value res;
+    // Temporary store json strings
+    Json::Value tmp;
+
     Json::Reader().parse("{\
             \"name\": \"testentity\",\
             \"transform\": {\
@@ -57,9 +59,9 @@ int main()
                     \"x\": 42\
                 }\
             }\
-        }", res);
+        }", tmp);
+    auto res = EntityResource::create(tmp);
 
-    Json::Value shortenedres;
     Json::Reader().parse("{\
             \"name\": \"testentity\",\
             \"components\": {\
@@ -69,9 +71,9 @@ int main()
                     \"x\": 42\
                 }\
             }\
-        }", shortenedres);
+        }", tmp);
+    auto shortenedres = EntityResource::create(tmp);
 
-    Json::Value shortenedres2;
     Json::Reader().parse("{\
             \"name\": \"testentity\",\
             \"transform\": {\
@@ -84,7 +86,8 @@ int main()
                     \"x\": 42\
                 }\
             }\
-        }", shortenedres2);
+        }", tmp);
+    auto shortenedres2 = EntityResource::create(tmp);
 
 
     EntityManager manager;
@@ -98,15 +101,15 @@ int main()
     testEntity(entity);
 
     entity.destroy();
-    factory.createFromJson(res, &entity);
+    factory.createFromJson(res->getConfig(), &entity);
     testEntity(entity);
 
     entity.destroy();
-    factory.createFromJson(shortenedres, &entity);
+    factory.createFromJson(shortenedres->getConfig(), &entity);
     // no special tests, just to see if it handles incomplete configs correctly
 
     entity.destroy();
-    factory.createFromJson(shortenedres2, &entity);
+    factory.createFromJson(shortenedres2->getConfig(), &entity);
     // no special tests, just to see if it handles incomplete configs correctly
 
     entity.destroy();

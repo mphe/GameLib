@@ -3,7 +3,7 @@
 #include "gamelib/core/res/TextureResource.hpp"
 #include "gamelib/core/res/JsonResource.hpp"
 #include "gamelib/core/res/SpriteResource.hpp"
-#include "gamelib/core/res/EntityConfigResource.hpp"
+#include "gamelib/core/res/EntityResource.hpp"
 #include "gamelib/core/res/SoundResource.hpp"
 #include "gamelib/core/res/ResourceManager.hpp"
 

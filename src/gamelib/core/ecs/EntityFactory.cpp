@@ -52,7 +52,7 @@ namespace gamelib
     {
         auto found = _findTemplate(name);
         if (found)
-            return createFromJson(*found);
+            return createFromJson(found->getConfig());
         return nullptr;
     }
 
@@ -60,7 +60,7 @@ namespace gamelib
     {
         auto found = _findTemplate(name);
         if (found)
-            return createFromJson(*found, ent);
+            return createFromJson(found->getConfig(), ent);
         return false;
     }
 
@@ -97,26 +97,26 @@ namespace gamelib
         return nullptr;
     }
 
-
-    void EntityFactory::add(const Json::Value& cfg)
+    auto EntityFactory::add(EntityResource::Handle entcfg) -> void
     {
-        add(cfg["name"].asString(), cfg);
-    }
-
-    void EntityFactory::add(const std::string& name, const Json::Value& cfg)
-    {
+        const auto name = entcfg->getName();
         if (name.empty())
         {
             LOG_ERROR("Entity name must not be empty");
             return;
         }
 
-        _entdata[name] = cfg;
+        _entdata[name] = entcfg;
         LOG_DEBUG("Registered entity ", name);
     }
 
     void EntityFactory::addComponent(const std::string& name, ComponentFactory::CreatorFunction callback)
     {
+        if (name.empty())
+        {
+            LOG_ERROR("Entity name must not be empty");
+            return;
+        }
         _compfactory.add(name, callback);
         LOG_DEBUG("Registered component ", name);
     }
@@ -144,15 +144,15 @@ namespace gamelib
         return _entdata.size();
     }
 
-    const Json::Value* EntityFactory::findEntity(const std::string& name) const
+    EntityResource::Handle EntityFactory::findEntity(const std::string& name) const
     {
         auto it = _entdata.find(name);
         if (it != _entdata.end())
-            return &it->second;
+            return it->second;
         return nullptr;
     }
 
-    auto EntityFactory::_findTemplate(const std::string& name) -> const Json::Value*
+    auto EntityFactory::_findTemplate(const std::string& name) -> EntityResource::Handle
     {
         auto found = findEntity(name);
         if (!found)
@@ -162,11 +162,9 @@ namespace gamelib
             {
                 // If found, the entity autoregisters at the factory.
                 // Won't work if EntityFactory::getActive() returns another factory than this.
-                auto handle = resmgr->getOnce(name + ".ent");
-                if (!handle)
-                    handle = resmgr->getOnce(name + ".entity");
-                if (handle)
-                    found = findEntity(name);
+                found = resmgr->getOnce(name + ".ent");
+                if (!found)
+                    found = resmgr->getOnce(name + ".entity");
             }
         }
         return found;

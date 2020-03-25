@@ -2,7 +2,6 @@
 #include "gamelib/imgui/buttons.hpp"
 #include "gamelib/core/res/SpriteResource.hpp"
 #include "gamelib/core/res/JsonResource.hpp"
-#include "gamelib/core/res/EntityConfigResource.hpp"
 #include "gamelib/core/Game.hpp"
 #include "imgui.h"
 #include "imgui_internal.h" // for imgui context

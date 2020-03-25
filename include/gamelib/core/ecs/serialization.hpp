@@ -57,7 +57,7 @@ namespace gamelib
     auto getConfigDelta(const Entity& ent, Json::Value* out, EntityFactory& factory)        -> bool;
     auto getConfigDelta(const Entity& ent, const Json::Value& normalized, Json::Value* out) -> bool;
 
-    auto getNormalizedEntityTemplate(const Entity& ent, Json::Value* out, EntityFactory& factory) -> bool;
+    // Shortcut for createComponent()->writeToJson()
     auto getDefaultComponentConfig(const std::string& name, Json::Value* out, EntityFactory& factory) -> void;
 }
 

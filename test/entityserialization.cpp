@@ -13,7 +13,7 @@ struct SomeStruct
 class PropTest : public PropType<0x4933b918, SomeStruct>
 {
     public:
-        bool loadFromJson(const PropertyHandle&, SomeStruct* ptr, const Json::Value& node) const final override
+        bool loadFromJson(const PropertyHandle&, SomeStruct* ptr, const Json::Value& node) const final
         {
             ptr->a = node.get("a", -1).asInt();
             ptr->b = node.get("b", -1).asInt();
@@ -21,14 +21,14 @@ class PropTest : public PropType<0x4933b918, SomeStruct>
             return true;
         }
 
-        void writeToJson(UNUSED const PropertyHandle& prop, const SomeStruct* ptr, Json::Value& node) const final override
+        void writeToJson(UNUSED const PropertyHandle& prop, const SomeStruct* ptr, Json::Value& node) const final
         {
             node["a"] = ptr->a;
             node["b"] = ptr->b;
             node["c"] = ptr->c;
         }
 
-        bool drawGui(const PropertyHandle&, const std::string&, SomeStruct*) const final override
+        bool drawGui(const PropertyHandle&, const std::string&, SomeStruct*) const final
         {
             return false;
         }
@@ -76,7 +76,9 @@ void testSubdict(Entity& ent)
 
 int main()
 {
-    Json::Value res;
+    // Temporary store json strings
+    Json::Value tmp;
+
     Json::Reader().parse("{\
             \"name\": \"testentity\",\
             \"components\": {\
@@ -98,9 +100,9 @@ int main()
                     \"x\": 42\
                 }\
             }\
-        }", res);
+        }", tmp);
+    auto res = EntityResource::create(tmp);
 
-    Json::Value res2;
     Json::Reader().parse("{\
             \"name\": \"testentity\",\
             \"components\": {\
@@ -114,7 +116,8 @@ int main()
                     \"x\": 42\
                 }\
             }\
-        }", res2);
+        }", tmp);
+    auto res2 = EntityResource::create(tmp);
 
 
 

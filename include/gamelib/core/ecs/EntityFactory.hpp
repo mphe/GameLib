@@ -2,11 +2,10 @@
 #define GAMELIB_ENTITYFACTORY_HPP
 
 #include "gamelib/utils/Factory.hpp"
-#include "gamelib/core/res/JsonResource.hpp"
+#include "gamelib/core/res/EntityResource.hpp"
 #include "gamelib/core/Subsystem.hpp"
 #include "Component.hpp"
 #include "Entity.hpp"
-#include "json/json.h"
 
 namespace gamelib
 {
@@ -34,16 +33,13 @@ namespace gamelib
             auto createComponent(const std::string& name)                                  -> ComponentPtr;
             auto createComponentFromJson(const std::string& name, const Json::Value& node) -> ComponentPtr;
 
-            auto add(const Json::Value& cfg)                          -> void;
-            auto add(const std::string& name, const Json::Value& cfg) -> void;
+            auto add(EntityResource::Handle entcfg) -> void;
             auto addComponent(const std::string& name, ComponentFactory::CreatorFunction callback) -> void;
-
             auto removeEntity(const std::string& name)    -> void;
             auto removeComponent(const std::string& name) -> void;
             auto clear()       -> void;
             auto size() const  -> size_t;
-
-            auto findEntity(const std::string& name) const -> const Json::Value*;
+            auto findEntity(const std::string& name) const -> EntityResource::Handle;
 
             template <typename T>
             void addComponent(const std::string& name)
@@ -55,8 +51,7 @@ namespace gamelib
             template <typename T, typename std::enable_if<has_nametag<T>(), int>::type = 0>
             void addComponent()
             {
-                _compfactory.add<T>(T::name());
-                LOG_DEBUG("Registered component ", T::name());
+                addComponent<T>(T::name());
             }
 
             // Signature: bool(const std::string&)
@@ -70,10 +65,10 @@ namespace gamelib
             }
 
         private:
-            auto _findTemplate(const std::string& name) -> const Json::Value*;
+            auto _findTemplate(const std::string& name) -> EntityResource::Handle;
 
         private:
-            std::unordered_map<std::string, Json::Value> _entdata;
+            std::unordered_map<std::string, EntityResource::Handle> _entdata;
             ComponentFactory _compfactory;
     };
 }

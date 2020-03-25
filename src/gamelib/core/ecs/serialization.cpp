@@ -103,36 +103,19 @@ namespace gamelib
         return good;
     }
 
-
-    auto getNormalizedEntityTemplate(const Entity& ent, Json::Value* out, EntityFactory& factory) -> bool
-    {
-        assert(out && "out must not be null");
-
-        const std::string& name = ent.getName();
-        const Json::Value* enttemplate = factory.findEntity(name);
-
-        if (!enttemplate)
-        {
-            LOG_WARN("Entity is not registered, can't compute delta config: ", name);
-            return false;
-        }
-
-        normalizeConfig(*enttemplate, out, factory);
-        return true;
-    }
-
     auto getConfigDelta(const Entity& ent, Json::Value* out, EntityFactory& factory) -> bool
     {
         assert(out && "out must not be null");
 
+        auto handle = factory.findEntity(ent.getName());
         Json::Value normtemplate;
-        if (!getNormalizedEntityTemplate(ent, &normtemplate, factory))
+        if (!handle)
         {
-            writeToJson(*out, ent);
+            LOG_WARN("Can't find entity template: ", ent.getName());
             return false;
         }
 
-        getConfigDelta(ent, normtemplate, out);
+        getConfigDelta(ent, handle->getNormalizedConfig(), out);
         return true;
     }
 

@@ -9,6 +9,7 @@
 #include "gamelib/json/json-file.hpp"
 #include "gamelib/json/json-utils.hpp"
 #include "imgui.h"
+#include <fstream>
 
 namespace gamelib
 {
@@ -41,13 +42,10 @@ namespace gamelib
                 break;
         }
 
-        if (obj || ent)
-        {
-            if (ent)
-                writeToJson(*out, *ent);
-            else
-                obj->writeToJson(*out);
-        }
+        if (ent)
+            writeToJson(*out, *ent);
+        else if (obj)
+            obj->writeToJson(*out);
 
         *stringout = out->toStyledString();
     }
@@ -105,7 +103,7 @@ namespace gamelib
 
     void drawEntityFactory(bool* isopen)
     {
-        static Json::Value node, diff, norm;
+        static EntityResource::Handle handle;
         static std::string jsonstring, diffstring, normstring;
         static FileDialog savedlg(FileDialog::Save);
         static std::string current;
@@ -130,16 +128,14 @@ namespace gamelib
 
                             refresh = false;
                             current = name;
-                            diff.clear();
-                            norm.clear();
-                            node = *factory->findEntity(name);
-                            jsonstring = node.toStyledString();
-                            normalizeConfig(node, &norm, *factory);
-                            normstring = norm.toStyledString();
+                            handle = factory->findEntity(name);
+                            jsonstring = handle->getConfig().toStyledString();
+                            normstring = handle->getNormalizedConfig().toStyledString();
 
                             if (selected && selected->getName() == name)
                             {
-                                getConfigDelta(*selected, norm, &diff);
+                                Json::Value diff;
+                                getConfigDelta(*selected, handle->getNormalizedConfig(), &diff);
                                 diffstring = diff.toStyledString();
                             }
                             else
@@ -184,9 +180,13 @@ namespace gamelib
                 if (savedlg.process())
                 {
                     if (diffsave)
-                        writeJsonToFile(savedlg.getPath(), diff);
+                    {
+                        std::ofstream file(savedlg.getPath());
+                        file << diffstring;
+                        file.close();
+                    }
                     else
-                        writeJsonToFile(savedlg.getPath(), node);
+                        writeJsonToFile(savedlg.getPath(), handle->getConfig());
                     diffsave = false;
                 }
 

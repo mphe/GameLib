@@ -8,7 +8,7 @@
 namespace gamelib
 {
     // Calculates deltas and writes the entity and the entire sub hierachy to json.
-    auto writeHierachyToJson(Json::Value& out, const Entity& ent) -> void;
+    auto writeHierachyToJson(Json::Value* out, const Entity& ent) -> void;
 
     // Loads the entity and the entire sub hierachy to/from json.
     // If direct is set, it loads entities directly as they are defined in json.
@@ -16,13 +16,13 @@ namespace gamelib
     auto createHierachyFromJson(const Json::Value& node, bool direct = false) -> EntityReference;
 
     // Calculate deltas and write/load all entities in EntityManager to/from json
-    void writeEntityManagerToJson(Json::Value& node);
+    void writeEntityManagerToJson(Json::Value* node);
     bool loadEntityManagerFromJson(const Json::Value& node, bool clear, bool direct = false);
 
 
     // Save/load the game including all necessary subsystems
     bool save(const std::string& fname);
-    bool saveToJson(Json::Value& node);
+    bool saveToJson(Json::Value* node);
     bool loadSave(const std::string& fname, bool direct = false);
     bool loadSaveFromJson(const Json::Value& node, bool direct = false);
 }
