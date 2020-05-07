@@ -157,7 +157,7 @@ namespace gamelib
             return;
         }
 
-        if (!_cloned && input->isKeyDown(sf::Keyboard::LShift))
+        if (!_cloned && input->isDown(sf::Keyboard::LShift))
         {
             Json::Value cfg;
             writeToJson(cfg, *ent);

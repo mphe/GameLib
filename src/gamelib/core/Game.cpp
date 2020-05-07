@@ -139,7 +139,7 @@ namespace gamelib
                         frozen = true;
                 }
 
-                if (escclose && inputsys && inputsys->isKeyPressed(sf::Keyboard::Escape))
+                if (escclose && inputsys && inputsys->isPressed(sf::Keyboard::Escape))
                 {
                     close();
                     return;

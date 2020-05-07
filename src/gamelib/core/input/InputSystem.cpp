@@ -5,7 +5,10 @@
 namespace gamelib
 {
     InputSystem::InputSystem() :
-        _window(nullptr)
+        _window(nullptr),
+        _currentBuffer(0),
+        _mbuttons{},
+        _keys{}
     { }
 
     InputSystem::InputSystem(const sf::RenderWindow& win) :
@@ -19,161 +22,106 @@ namespace gamelib
 
     void InputSystem::beginFrame()
     {
-        _states.clear();
         _mouse.wheel = 0;
         _mouse.moved = false;
         _mouse.world = convert(_window->mapPixelToCoords(sf::Mouse::getPosition(*_window))).asPoint();
         _consumedMouse = _consumedKeyboard = false;
+
+        // Flip and update buffer
+        _currentBuffer ^= 1;
+        for (size_t i = 0; i < sf::Keyboard::KeyCount; ++i)
+            _keys[_currentBuffer][i] = sf::Keyboard::isKeyPressed(sf::Keyboard::Key(i));
+        for (size_t i = 0; i < sf::Mouse::ButtonCount; ++i)
+            _mbuttons[_currentBuffer][i] = sf::Mouse::isButtonPressed(sf::Mouse::Button(i));
     }
 
     void InputSystem::process(const sf::Event& ev)
     {
-        if (ev.type == sf::Event::KeyPressed ||
-            ev.type == sf::Event::KeyReleased ||
-            ev.type == sf::Event::MouseButtonPressed ||
-            ev.type == sf::Event::MouseButtonReleased)
+        if (ev.type == sf::Event::MouseMoved)
         {
-            _states.emplace_back();
-            auto& state = _states.back();
-
-            switch (ev.type)
-            {
-                case sf::Event::KeyPressed:
-                    state.keyboard = true;
-                    state.key = ev.key.code;
-                    state.state = Pressed;
-                    break;
-
-                case sf::Event::KeyReleased:
-                    state.keyboard = true;
-                    state.key = ev.key.code;
-                    state.state = Released;
-                    break;
-
-                case sf::Event::MouseButtonPressed:
-                    state.keyboard = false;
-                    state.btn = ev.mouseButton.button;
-                    state.state = Pressed;
-                    break;
-
-                case sf::Event::MouseButtonReleased:
-                    state.keyboard = false;
-                    state.btn = ev.mouseButton.button;
-                    state.state = Released;
-                    break;
-
-                default: break; // removes switch warning
-            }
+            auto m = sf::Mouse::getPosition(*_window);
+            _mouse.desktop = convert(sf::Mouse::getPosition()).asPoint();
+            _mouse.win = convert(m).asPoint();
+            _mouse.moved = true;
         }
-        else
-        {
-            if (ev.type == sf::Event::MouseMoved)
-            {
-                auto m = sf::Mouse::getPosition(*_window);
-                _mouse.desktop = convert(sf::Mouse::getPosition()).asPoint();
-                _mouse.win = convert(m).asPoint();
-                _mouse.moved = true;
-            }
-            else if (ev.type == sf::Event::MouseWheelMoved)
-                _mouse.wheel = ev.mouseWheel.delta;
-        }
+        else if (ev.type == sf::Event::MouseWheelMoved)
+            _mouse.wheel = ev.mouseWheel.delta;
     }
 
 
     void InputSystem::markConsumed(bool keyboard, bool mouse)
     {
-        if (keyboard)
-            _consumedKeyboard = true;
-        if (mouse)
-            _consumedMouse = true;
+        _consumedKeyboard |= keyboard;
+        _consumedMouse |= mouse;
     }
 
     bool InputSystem::isKeyboardConsumed() const
     {
-        return _consumedKeyboard || ImGui::GetIO().WantCaptureKeyboard;
+        return _consumedKeyboard || ImGui::GetIO().WantCaptureKeyboard
+                || (_window && !_window->hasFocus());
     }
 
     bool InputSystem::isMouseConsumed() const
     {
-        return _consumedMouse || ImGui::GetIO().WantCaptureMouse;
+        return _consumedMouse || ImGui::GetIO().WantCaptureMouse
+            || (_window && !_window->hasFocus());
     }
 
 
-    bool InputSystem::isKeyPressed(sf::Keyboard::Key key) const
+    bool InputSystem::isPressed(sf::Keyboard::Key key) const
     {
-        return isKey(key, Pressed);
+        return !isLastDownDirect(key) && isDown(key);
     }
 
-    bool InputSystem::isKeyReleased(sf::Keyboard::Key key) const
+    bool InputSystem::isReleased(sf::Keyboard::Key key) const
     {
-        return isKey(key, Released);
+        return isLastDownDirect(key) && !isDown(key);
     }
 
-    bool InputSystem::isKeyDown(sf::Keyboard::Key key) const
+    bool InputSystem::isDown(sf::Keyboard::Key key) const
     {
-        return isKey(key, Down);
+        return isDownDirect(key) && !isKeyboardConsumed();
     }
 
-
-    bool InputSystem::isMousePressed(sf::Mouse::Button btn) const
+    bool InputSystem::isDownDirect(sf::Keyboard::Key key) const
     {
-        return isMouse(btn, Pressed);
+        return _keys[_currentBuffer][key];
     }
 
-    bool InputSystem::isMouseReleased(sf::Mouse::Button btn) const
+    bool InputSystem::isLastDownDirect(sf::Keyboard::Key key) const
     {
-        return isMouse(btn, Released);
+        return _keys[_currentBuffer ^ 1][key];
     }
 
-    bool InputSystem::isMouseDown(sf::Mouse::Button btn) const
+
+    bool InputSystem::isPressed(sf::Mouse::Button btn) const
     {
-        return isMouse(btn, Down);
+        return !isLastDownDirect(btn) && isDown(btn);
     }
 
-    bool InputSystem::isKey(sf::Keyboard::Key key, ButtonState state) const
+    bool InputSystem::isReleased(sf::Mouse::Button btn) const
     {
-        return getKeyState(key) == state;
+        return isLastDownDirect(btn) && !isDown(btn);
     }
 
-    bool InputSystem::isMouse(sf::Mouse::Button btn, ButtonState state) const
+    bool InputSystem::isDown(sf::Mouse::Button btn) const
     {
-        return getMouseState(btn) == state;
+        return isDownDirect(btn) && !isMouseConsumed();
     }
 
-
-    InputSystem::ButtonState InputSystem::getKeyState(sf::Keyboard::Key key) const
+    bool InputSystem::isDownDirect(sf::Mouse::Button btn) const
     {
-        if (!_check(true, false))
-            return None;
-
-        for (auto& i : _states)
-            if (i.keyboard && i.key == key)
-                return i.state;
-
-        return sf::Keyboard::isKeyPressed(key) ? Down : None;
+        return _mbuttons[_currentBuffer][btn];
     }
 
-    InputSystem::ButtonState InputSystem::getMouseState(sf::Mouse::Button btn) const
+    bool InputSystem::isLastDownDirect(sf::Mouse::Button btn) const
     {
-        if (!_check(false, true))
-            return None;
-
-        for (auto& i : _states)
-            if (!i.keyboard && i.btn == btn)
-                return i.state;
-
-        return sf::Mouse::isButtonPressed(btn) ? Down : None;
+        return _mbuttons[_currentBuffer ^ 1][btn];
     }
+
 
     const InputSystem::MouseData& InputSystem::getMouse() const
     {
         return _mouse;
-    }
-
-    bool InputSystem::_check(bool keyboard, bool mouse) const
-    {
-        if ((keyboard && isKeyboardConsumed()) || (mouse && isMouseConsumed()))
-            return false;
-        return _window->hasFocus();
     }
 }

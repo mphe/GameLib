@@ -36,13 +36,13 @@ namespace gamelib
             auto input = InputSystem::getActive();
             unsigned int buttons = 0;
 
-            if (input->isKeyDown(sf::Keyboard::A))
+            if (input->isDown(sf::Keyboard::A))
                 buttons |= input_left;
 
-            if (input->isKeyDown(sf::Keyboard::D))
+            if (input->isDown(sf::Keyboard::D))
                 buttons |= input_right;
 
-            if (input->isKeyDown(sf::Keyboard::W))
+            if (input->isDown(sf::Keyboard::W))
                 buttons |= input_up;
 
             setInput(buttons);

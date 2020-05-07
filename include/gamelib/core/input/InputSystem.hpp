@@ -14,10 +14,10 @@ namespace gamelib
 
             enum ButtonState
             {
+                None,
                 Pressed,
                 Released,
                 Down,
-                None
             };
 
             struct MouseData
@@ -42,42 +42,30 @@ namespace gamelib
             auto isKeyboardConsumed() const -> bool;
             auto isMouseConsumed() const    -> bool;
 
-            auto isKeyPressed(sf::Keyboard::Key key) const  -> bool;
-            auto isKeyReleased(sf::Keyboard::Key key) const -> bool;
-            auto isKeyDown(sf::Keyboard::Key key) const     -> bool;
+            auto isPressed(sf::Keyboard::Key key) const        -> bool;
+            auto isReleased(sf::Keyboard::Key key) const       -> bool;
+            auto isDown(sf::Keyboard::Key key) const           -> bool;
+            auto isDownDirect(sf::Keyboard::Key key) const     -> bool;
+            auto isLastDownDirect(sf::Keyboard::Key key) const -> bool;
 
-            auto isMousePressed(sf::Mouse::Button btn) const  -> bool;
-            auto isMouseReleased(sf::Mouse::Button btn) const -> bool;
-            auto isMouseDown(sf::Mouse::Button btn) const     -> bool;
-
-            auto isKey(sf::Keyboard::Key key, ButtonState state) const   -> bool;
-            auto isMouse(sf::Mouse::Button btn, ButtonState state) const -> bool;
-
-            auto getKeyState(sf::Keyboard::Key key) const   -> ButtonState;
-            auto getMouseState(sf::Mouse::Button btn) const -> ButtonState;
+            auto isPressed(sf::Mouse::Button btn) const        -> bool;
+            auto isReleased(sf::Mouse::Button btn) const       -> bool;
+            auto isDown(sf::Mouse::Button btn) const           -> bool;
+            auto isDownDirect(sf::Mouse::Button btn) const     -> bool;
+            auto isLastDownDirect(sf::Mouse::Button btn) const -> bool;
 
             auto getMouse() const -> const MouseData&;
 
-        private:
-            auto _check(bool keyboard, bool mouse) const -> bool;
-
-        private:
-            struct StateStruct
-            {
-                bool keyboard;
-                ButtonState state;
-                union {
-                    sf::Mouse::Button btn;
-                    sf::Keyboard::Key key;
-                };
-            };
-
-        private:
+        public:
             MouseData _mouse;
             const sf::RenderWindow* _window;
+
+            unsigned int _currentBuffer;
+            bool _mbuttons[2][sf::Mouse::ButtonCount];
+            bool _keys[2][sf::Keyboard::Key::KeyCount];
+
             bool _consumedKeyboard;
             bool _consumedMouse;
-            std::vector<StateStruct> _states;
     };
 }
 

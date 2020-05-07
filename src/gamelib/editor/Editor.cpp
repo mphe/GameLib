@@ -110,7 +110,7 @@ namespace gamelib
         if (!_run)
             showRenderSystem();
 
-        if (input->isKeyPressed(sf::Keyboard::F5))
+        if (input->isPressed(sf::Keyboard::F5))
         {
             _run = !_run;
             _updateRunFlags();
@@ -453,38 +453,38 @@ namespace gamelib
         Tool* realtool = _currenttool;  // backup
 
         { // Keyboard
-            if (input->isKeyDown(sf::Keyboard::LControl))
+            if (input->isDown(sf::Keyboard::LControl))
             {
                 _currenttool = &getSelectTool();
 
-                if (input->isKeyPressed(sf::Keyboard::S))
+                if (input->isPressed(sf::Keyboard::S))
                     save();
-                else if (input->isKeyPressed(sf::Keyboard::R))
+                else if (input->isPressed(sf::Keyboard::R))
                 {
                     getSelectTool().select(nullptr);
                     load();
                 }
             }
 
-            if (input->isKeyPressed(sf::Keyboard::F))
+            if (input->isPressed(sf::Keyboard::F))
                 _entsearch = true;
 
-            if (input->isKeyPressed(sf::Keyboard::Delete) && getSelectTool().getSelected())
+            if (input->isPressed(sf::Keyboard::Delete) && getSelectTool().getSelected())
             {
                 getSelectTool().getSelected()->destroy();
                 getSelectTool().select(nullptr);
             }
 
-            if (input->isKeyPressed(sf::Keyboard::Q))
+            if (input->isPressed(sf::Keyboard::Q))
                 _grid.increase();
 
-            if (input->isKeyPressed(sf::Keyboard::E))
+            if (input->isPressed(sf::Keyboard::E))
                 _grid.decrease();
 
-            if (input->isKeyPressed(sf::Keyboard::G))
+            if (input->isPressed(sf::Keyboard::G))
                 _snap = !_snap;
 
-            if (input->isKeyPressed(sf::Keyboard::Z))
+            if (input->isPressed(sf::Keyboard::Z))
             {
                 auto selected = getSelectTool().getSelected();
                 if (selected)
@@ -512,12 +512,12 @@ namespace gamelib
                     _currenttool->onMouseMove();
             }
 
-            if (input->isMousePressed(sf::Mouse::Left))
+            if (input->isPressed(sf::Mouse::Left))
             {
                 _currenttool->onMousePressed();
                 _drag = true;
             }
-            else if (_drag && !input->isMouseDown(sf::Mouse::Left))
+            else if (_drag && !input->isDown(sf::Mouse::Left))
                 // Use !mouseDown because if mouse is consumed, mouseReleased will never be true
             {
                 _currenttool->onMouseRelease();
