@@ -1,4 +1,8 @@
-# Building
+# GameLib
+
+A (discontinued) WIP game engine written in C++ and based on SFML.
+
+
 ## Requirements
 - [cmake](https://cmake.org)
 - [git](https://git-scm.com/)
@@ -16,12 +20,9 @@
     ```
 
 2. Open cmake-gui
-
 3. Use the path to the repository you just cloned as source directory. Although it is recommended to use seperate directories, the build directory and the source directory can be the same.
-
 4. Hit "Configure", select the generator you need and let it configure.
-
-6. Configure the project as you wish and run "Configure" again when you make changes.
+5. Configure the project as you wish and run "Configure" again when you make changes.
 
     Flag                        |   Function
     ----------------------------|-------------------------------------------------
@@ -36,8 +37,13 @@
 
     Don't touch anything else unless you know what you do.
 
-7. After successful configuration hit "Generate" to generate the project files.
+6. After successful configuration hit "Generate" to generate the project files.
+7. Compile it using the generated project files
+8. The output files are stored in the build directory under "bin" and "lib".
 
-8. Compile it using the generated project files
 
-9. The output files are stored in the build directory under "bin" and "lib".
+## Screenshots
+
+![](img/editor1.png)
+![](img/editor2.png)
+![](img/editor3.png)
