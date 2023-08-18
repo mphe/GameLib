@@ -412,6 +412,8 @@ namespace gamelib
 
             if (!(options.flags & render_noparallax) && !math::almostEquals(parallax, 1.0f))
             {
+                // If a camera is given, scale around camera center, otherwise,
+                // when rendering the whole scene, scale around object center.
                 math::Point2f vcenter = (rect ? rect : &bbox)->getCenter();
                 math::Vec2f translate = (bbox.getCenter() - vcenter) * (parallax - 1);
                 bbox.pos += translate;

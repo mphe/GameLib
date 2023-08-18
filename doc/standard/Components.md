@@ -21,13 +21,13 @@ Attempting to modify the component during this state in any way (members, proper
 
 It is therefore safe to use functions like `writeToJson()` or reading properties and other members.
 
-After the entity has been added to an entity, the component can be used in a normal way without side effects.
+After the component has been added to an entity, the component can be used in a normal way without side effects.
 
 `Entity` takes care of calling `init()` and `quit()` when adding or removing components.
 
 
 #### Implementation info
-The order of initialization/quitting and adding/removing to an entity is important.
+The order of initialization/quitting and adding/removing to an entity is crucial.
 The component must be initialized first, then added to the entity.
 Doing this out of order, results in undefined behavior.
 
